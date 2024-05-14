@@ -1,6 +1,6 @@
 import './inputs.scss';
 
-function Input(props) {
+export default function Input(props) {
     const numero = props.numero ? props.numero : 30;
     return (
         <div className="input-container" style={{ '--numero': `${numero}px` }}>
@@ -13,4 +13,3 @@ function Input(props) {
     );
 }
 
-export default Input;

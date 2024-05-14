@@ -4,9 +4,8 @@ const data = [
     { name: "Megha", age: 19, gender: "Female" },
     { name: "Subham", age: 25, gender: "Male" },
 ]
-class Table extends Component{
 
-    render(){
+export default function Table(props) {
         const tdStyle={textAlign: 'center',};
         const thStyle={borderBottom: '1px solid black',};
         const tableStyle={
@@ -33,6 +32,4 @@ class Table extends Component{
                 })}
             </table>
     );
-    }
 }
-export default Table;
