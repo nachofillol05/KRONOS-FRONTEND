@@ -1,0 +1,32 @@
+@import '../../scss/index.scss';
+
+button{
+    width: calc(var(--numero) * $proporcion-aurea-cuadrado*2 + var(--numero)*$proporcion-aurea);
+    padding-block: calc(var(--numero)*$proporcion-aurea-inversa);
+    transition: all 0.3s;
+    font-size: calc(var(--numero) * $proporcion-aurea-inversa);
+}
+.solid-button {
+    border: none;
+    border-radius: calc(var(--numero)*$proporcion-aurea-inversa-cuadrado);
+    color: white;
+    background-color: $color2;
+    font-family: $fuente-titulo;
+
+    &:hover {
+        background-color: $color3;
+        box-shadow: 
+        0 5px 5px rgba(0, 0, 0, 0.5),
+    }
+}
+
+.transparent-button {
+    border: 3px solid $color-black;
+    color: $color-black;
+    background-color: transparent;
+    font-family: $fuente-general;
+    &:hover {
+        border-color: $color2;
+        color: $color2;
+    }
+}

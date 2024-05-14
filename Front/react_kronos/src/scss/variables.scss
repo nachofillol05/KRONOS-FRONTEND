@@ -1,3 +1,19 @@
+$color1: rgb(53, 60, 153); // Azul oscuro
+$color2: rgb(31, 97, 141); // Azul medio
+$color3: rgb(61, 133, 171); // Azul claro
+$color-black: #333;
+$color-white: #f8f8f8;
+
+$fuente-titulo: 'Alata';
+$fuente-general: 'LatoRegular';
+$fuente-general-ligth: 'LatoLigth';
+$fuente-general-thin: 'LatoThin';
+
+$proporcion-aurea-cuadrado: 2.618;
+$proporcion-aurea: 1.618;
+$proporcion-aurea-inversa: 0.618;
+$proporcion-aurea-inversa-cuadrado: 0.382;
+
 
 @font-face {
     font-family: 'Alata';
@@ -30,5 +46,3 @@
     font-weight: bold;
     font-style: normal;
 }
-
-
