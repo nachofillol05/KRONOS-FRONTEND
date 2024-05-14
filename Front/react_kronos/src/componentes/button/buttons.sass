@@ -1,0 +1,42 @@
+@import '../../styles/index.scss';
+
+
+$numero: 40;
+
+div {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+
+    label {
+        color: $color1;
+        margin: ($numero * $proporcion-aurea-inversa-cuadrado * $proporcion-aurea-inversa-cuadrado) + px;
+        margin-left: ($numero * $proporcion-aurea-inversa-cuadrado) + px;
+
+        font-size: $numero + px;
+
+        &::first-letter { // No es necesario usar "label::first-letter"
+            text-transform: uppercase;
+        }
+    }
+
+    input {
+        outline: none;
+        padding: 0 ($numero * $proporcion-aurea-inversa-cuadrado) + px;
+        width: ($numero * 10.36) + px;
+        height: ($numero * $proporcion-aurea) + px;
+        border-radius: ($numero * $proporcion-aurea-inversa-cuadrado) + px;
+        font-size: ($numero * $proporcion-aurea-inversa) + px;
+        border: 3px solid $color3;
+        &::placeholder { // No es necesario usar "::placeholder"
+            color: $color3;
+        }
+
+        &:focus{
+            border: 3px solid $color1;
+            &::placeholder {
+                color: $color1;
+            }
+        }
+    }
+}

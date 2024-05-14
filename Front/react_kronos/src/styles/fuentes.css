@@ -1,0 +1,34 @@
+
+@font-face {
+    font-family: 'Alata';
+    src: url('../../public/fonts/Alata-Regular.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'LatoThin' ;
+    src: url('../../public/fonts/Lato-Thin.ttf') format('truetype');
+}
+
+
+@font-face {
+    font-family: 'LatoLigth';
+    src: url('../../public/fonts/Lato-Light.ttf') format('truetype');
+}
+
+/* Lato Regular */
+@font-face {
+    font-family: 'LatoRegular';
+    src: url('../../public/fonts/Lato-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+/* Lato Bold */
+@font-face {
+    font-family: 'LatoBold';
+    src: url('../../public/fonts/Lato-Bold.ttf') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+}
+
+

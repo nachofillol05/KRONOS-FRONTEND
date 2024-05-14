@@ -1,0 +1,42 @@
+@import '../../styles/index.scss';
+
+.input-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+
+    label {
+        color: $color1;
+        margin: calc(var(--numero) * $proporcion-aurea-inversa-cuadrado * $proporcion-aurea-inversa-cuadrado);
+        margin-left: calc(var(--numero) * $proporcion-aurea-inversa-cuadrado);
+        font-size: var(--numero); // Utiliza la variable CSS personalizada
+
+        &::first-letter {
+            text-transform: uppercase;
+        }
+    }
+
+    input {
+        outline: none;
+        padding: 0 calc(var(--numero)*$proporcion-aurea-inversa-cuadrado); // Utiliza la variable CSS personalizada
+        width: calc(var(--numero) * 10.36); // Utiliza la variable CSS personalizada
+        height: calc(var(--numero) * $proporcion-aurea); // Utiliza la variable CSS personalizada
+        border-radius: calc(var(--numero)*$proporcion-aurea-inversa-cuadrado); // Utiliza la variable CSS personalizada
+        font-size: calc(var(--numero) / $proporcion-aurea); // Utiliza la variable CSS personalizada
+        border: 3px solid $color3;
+        color: $color3;
+
+        &::placeholder {
+            color: $color3;
+        }
+
+        &:focus {
+            color: $color1;
+            border: 3px solid $color1;
+
+            &::placeholder {
+                color: $color1;
+            }
+        }
+    }
+}
