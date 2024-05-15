@@ -1,1 +1,54 @@
 @import '../../scss/index.scss';
+
+.grid-table {
+    display: grid;
+    grid-template-areas:
+        "header header header"
+        "data data data";
+    border: 2px solid #0E4942;
+    overflow: hidden;
+}   
+
+.header-container {
+    grid-area: header;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    border: 3px solid #0E4942;
+    background-color: #006D62;
+    color: white;
+}
+
+
+.header {
+    background-color: transparent; /* Background se aplica al contenedor */
+    text-align: center;
+    padding: 10px;
+    font-weight: bold;
+}
+
+.data-container {
+    grid-area: data;
+    display: grid;
+}
+
+.row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    background-color: white;
+    border-bottom: 1px solid #0E4942;
+    height: 40px;
+}
+
+
+.cell {
+    text-align: center;
+    padding: 10px;
+}
+
+.row:hover {
+    background-color: #006D62;
+}
+.row:hover .cell {
+    color: white;
+}
+

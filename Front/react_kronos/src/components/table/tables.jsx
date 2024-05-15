@@ -1,35 +1,36 @@
 import {React, Component} from 'react';
+import './tables.scss';
+
 const data = [
-    { name: "Anom", age: 19, gender: "Male" },
-    { name: "Megha", age: 19, gender: "Female" },
-    { name: "Subham", age: 25, gender: "Male" },
+    { Nombre: "Anom", Documento: 1923244, Color: 30, Materia: "Matematica" },
+    { Nombre: "Megha", Documento: 19234234, Color: 30, Materia: "Biologia" },
+    { Nombre: "Subham", Documento: 2532432432, Color: 30, Materia: "Lengua" },
 ]
 
 export default function Table(props) {
-        const tdStyle={textAlign: 'center',};
-        const thStyle={borderBottom: '1px solid black',};
-        const tableStyle={
-            border: '2px solid forestgreen',
-            width: '800px',
-            height: '200px',
-        };
         
         return(
-            <table style={tableStyle}>
-                <tr>
-                    <th style={thStyle}>Name</th>
-                    <th style={thStyle}>Age</th>
-                    <th style={thStyle}>Gender</th>
-                </tr>
-                {data.map((val, key) => {
-                    return (
-                        <tr key={key}>
-                            <td style={tdStyle}>{val.name}</td>
-                            <td style={tdStyle}>{val.age}</td>
-                            <td style={tdStyle}>{val.gender}</td>
-                        </tr>
-                    )
-                })}
-            </table>
+
+    <div class="grid-table">
+        <div class="header-container">
+            <div class="header">Nombre/s Apellido/s</div>
+            <div class="header">Documento</div>
+            <div class="header">Color</div>
+            <div class="header">Materia/s</div>
+        </div>
+        <div class="data-container">
+            {data.map((val, key) => {
+                return (
+                    <div class="row">
+                        <div class="cell">{val.Nombre}</div>
+                        <div class="cell">{val.Documento}</div>
+                        <div class="cell">{val.Color}</div>
+                        <div class="cell">{val.Materia}</div>
+                    </div>
+                )
+            })}
+        </div>
+    </div>
+
     );
 }
