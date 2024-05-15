@@ -1,4 +1,3 @@
-import {React, Component} from 'react';
 const data = [
     { name: "Anom", age: 19, gender: "Male" },
     { name: "Megha", age: 19, gender: "Female" },

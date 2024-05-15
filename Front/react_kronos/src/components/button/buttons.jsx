@@ -1,9 +1,8 @@
-import React, { Component } from 'react';
 import './buttons.scss';
 
 export default function Button(props) {
 
-    const numero = props.numero ? props.numero : 40;
+    const numero = props.numero ? props.numero : 30;
     const text = props.text ? props.text : 'Button';
 
     return (
