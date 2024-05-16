@@ -1,4 +1,4 @@
-import {React, Component} from 'react';
+import {React, Component, useState, useEffect } from 'react';
 import './tables.scss';
 
 const data = [
@@ -8,6 +8,31 @@ const data = [
 ]
 
 export default function Table(props) {
+    const [teachers, setTeachers] = useState([]);
+
+    useEffect(() => {
+        fetch('http://localhost:8000/Kronosapp/teachers/', {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                school_id: 1
+            })
+            }
+        )
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log(data);
+                setTeachers(data);
+            })
+            .catch(error => console.error('Error fetching data:', error));
+    }, []);
         
         return(
 
@@ -15,17 +40,17 @@ export default function Table(props) {
         <div class="header-container">
             <div class="header">Nombre/s Apellido/s</div>
             <div class="header">Documento</div>
-            <div class="header">Color</div>
-            <div class="header">Materia/s</div>
+            <div class="header">Genero</div>
+            <div class="header">Email</div>
         </div>
         <div class="data-container">
-            {data.map((val, key) => {
+            {teachers.map((teacher, key) => {
                 return (
                     <div class="row">
-                        <div class="cell">{val.Nombre}</div>
-                        <div class="cell">{val.Documento}</div>
-                        <div class="cell">{val.Color}</div>
-                        <div class="cell">{val.Materia}</div>
+                        <div class="cell">{teacher.first_name}</div>
+                        <div class="cell">{teacher.document}</div>
+                        <div class="cell">{teacher.gender}</div>
+                        <div class="cell">{teacher.email}</div>
                     </div>
                 )
             })}
