@@ -1,15 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Button from './components/button/index.js';
-import Table from './components/table/index.js';
+import Barra from './components/navBar/navBars.jsx';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <Button text="Button 1" life={false}/>
-    <Button/>
-    <Button text="Button 1" life={true}/>
-    <Table/>
+    <Barra />
   </React.StrictMode>,
   document.getElementById('root')
 );

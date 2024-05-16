@@ -1,10 +1,10 @@
 @import '../../scss/index.scss';
 
 button{
-    width: calc(var(--numero) * $proporcion-aurea-cuadrado*2 + var(--numero)*$proporcion-aurea);
-    padding-block: calc(var(--numero)*$proporcion-aurea-inversa);
+    width: calc(var(--numero)*$proporcion-aurea-cuadrado*3);
+    height: calc(var(--numero)*$proporcion-aurea-cuadrado);
     transition: all 0.3s;
-    font-size: calc(var(--numero) * $proporcion-aurea-inversa);
+    font-size: calc(var(--numero)*$proporcion-aurea-inversa);
 }
 .solid-button {
     border: none;
