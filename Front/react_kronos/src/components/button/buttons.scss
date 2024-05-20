@@ -9,7 +9,7 @@ button{
 .solid-button {
     border: none;
     border-radius: calc(var(--numero)*$proporcion-aurea-inversa-cuadrado);
-    color: white;
+    color: $color-principal;
     background-color: $color2;
     font-family: $fuente-titulo;
 
@@ -21,8 +21,8 @@ button{
 }
 
 .transparent-button {
-    border: 3px solid $color-black;
-    color: $color-black;
+    border: 3px solid $color-secundario;
+    color: $color-secundario;
     background-color: transparent;
     font-family: $fuente-general;
     &:hover {

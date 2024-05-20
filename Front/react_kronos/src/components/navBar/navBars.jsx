@@ -1,14 +1,15 @@
 import React from 'react';
 import './navBars.scss';
-import NavBar from '../enlace/enlaces';
+import Enlace from '../enlace/enlaces';
+import Colegio from '../colegio/colegios';
+import Persona from '../persona/personas';
 
-export default function Barra(props) {
-
+export default function NavBar() {
     return (
         <aside>
-            <div className="colegio"></div>
-            <NavBar />
-            <div className="colegio"></div>
+            <Colegio/>
+            <Enlace /> 
+            <Persona />
         </aside>
     );
 }

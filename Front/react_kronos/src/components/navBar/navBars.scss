@@ -1,14 +1,16 @@
 @import '../../scss/index.scss';
 
 aside {
-    background-color: green;
+    background: linear-gradient(to bottom, $color3, $color1);  /* Degradado lineal de arriba a abajo */
     height: 100vh;
+    display: flex;
+    flex-direction: column;
     position: fixed;
     left: 0;
-    max-width: 300px;
-    width: 20%;
+    width: 300px;
     .colegio{
-        height: 30%;
+        height: 30vh;
+        width: 100%;
     }
 
 
