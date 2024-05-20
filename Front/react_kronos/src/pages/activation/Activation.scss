@@ -1,0 +1,26 @@
+@import '../../scss/index.scss';
+
+h1 {
+    font-family: $fuente-titulo;
+    color: #006D6C;
+    margin-bottom: 50px;
+}
+
+.container {
+    display: grid;
+    grid-template-columns: 1fr 1fr; 
+    gap: 20px; 
+    align-items: center; 
+    padding: 20px;
+    margin-top: 100px;
+}
+
+.left-column {
+    display: flex;
+    justify-content: center; 
+}
+.right-column {
+    display: flex;
+    flex-direction: column;
+    align-items: center; 
+}
