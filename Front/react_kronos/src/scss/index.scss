@@ -8,3 +8,12 @@
     display: flex;
     justify-content: space-around;
 }
+
+a{
+    font-size: 18px;
+    text-decoration: none;
+    color: $color3;
+    &:hover{
+        color: $color1;
+    }
+}

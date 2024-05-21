@@ -8,9 +8,9 @@ export default function Persona() {
     return (
         <div className='contenedor-persona'>
         <div className="botones">
-            <a href="">0</a>
-            <a href="">0</a>
-            <a href="">0</a>
+            <a href="#0">0</a>
+            <a href="#0">0</a>
+            <a href="#0">0</a>
         </div>
         <hr />
         <div className="informacion">

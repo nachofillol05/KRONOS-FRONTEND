@@ -1,4 +1,4 @@
-import {React, Component, useState, useEffect } from 'react';
+import {React} from 'react';
 import './tables.scss';
  
 export default function Table({ data = [], columns = []}) {
