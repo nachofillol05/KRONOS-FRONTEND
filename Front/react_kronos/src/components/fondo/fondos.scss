@@ -1,6 +1,7 @@
 @import "../../scss/index.scss";
 
 section {
+    position: relative;
     background-color: $color-principal;
     width: calc(100% - 275px);
     height: 100vh;
