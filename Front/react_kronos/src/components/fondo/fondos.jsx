@@ -17,7 +17,7 @@ export default function Fondo() {
     return (
         <section>
             <Button onClick={handleButtonClick} text="Boton genial" life />
-            {isModalOpen && <Modal onClose={handleCloseModal} title="Titulo del Modal" />}
+            {isModalOpen && <Modal onClose={handleCloseModal} titulo="Titulo Modal" contenido={<Button/>} />}
         </section>
     );
 }
