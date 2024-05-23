@@ -20,23 +20,24 @@
 
 
 .header {
-    background-color: transparent; /* Background se aplica al contenedor */
+    background-color: transparent;
     text-align: center;
     padding: 10px;
     font-weight: bold;
 }
 
-.data-container {
+.data-row {
     grid-area: data;
+    display: table-row;
     display: grid;
+    grid-template-columns: repeat(4, 1fr);
 }
 
 .row {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
     background-color: white;
     border-bottom: 1px solid #0E4942;
     height: 40px;
+    text-align: center;
 }
 
 
@@ -45,10 +46,23 @@
     padding: 10px;
 }
 
-.row:hover {
+.data-container {
+    display: table;
+    width: 100%;
+}
+
+
+
+.data-cell {
+    display: table-cell;
+    padding: 8px;
+    text-align: center;
+}
+
+.data-row:hover {
     background-color: #006D62;
 }
-.row:hover .cell {
-    color: white;
+.data-row:hover .data-cell{
+    color: #ffffff;
 }
 
