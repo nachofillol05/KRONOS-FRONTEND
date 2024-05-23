@@ -2,7 +2,7 @@
 
 .solid-select {
     height: 33px;
-    width: calc(var(--largo)*$proporcion-aurea-cuadrado);
+    width: var(--largo);
     background-color: $color2;
     border-radius: 5px;
     color: white;
@@ -21,6 +21,8 @@
 }
 
 .transparent-select {
+    height: 33px;
+    width: var(--largo);
     border: 3px solid $color-secundario;
     color: $color-secundario;
     background-color: transparent;
