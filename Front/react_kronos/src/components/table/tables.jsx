@@ -1,4 +1,4 @@
-import {React, Component, useState, useEffect } from 'react';
+import {React} from 'react';
 import './tables.scss';
 
 
@@ -25,10 +25,8 @@ export default function Table(props) {
                             )
                         })}
                     </div>
-                )
-            })}
+                ))}
+            </div>
         </div>
-    </div>
-
     );
 }

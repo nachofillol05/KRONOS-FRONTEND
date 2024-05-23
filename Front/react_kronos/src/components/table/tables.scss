@@ -5,19 +5,17 @@
     grid-template-areas:
         "header header header"
         "data data data";
-    border: 2px solid #0E4942;
     overflow: hidden;
-}   
 
-.header-container {
-    grid-area: header;
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    border: 3px solid #0E4942;
-    background-color: #006D62;  
-    color: white;
-}
-
+    .header-container {
+        font-family: $fuente-titulo;
+        font-size: 18px;
+        grid-area: header;
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        border: 3px solid $color1;
+        background-color: $color2;  
+        color: $color-principal;
 
 .header {
     background-color: transparent;
@@ -41,10 +39,10 @@
 }
 
 
-.cell {
-    text-align: center;
-    padding: 10px;
-}
+            .cell {
+                text-align: center;
+                padding: 10px;
+            }
 
 .data-container {
     display: table;

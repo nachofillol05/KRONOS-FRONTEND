@@ -1,13 +1,12 @@
+import React from 'react';
 import './buttons.scss';
 
-export default function Button(props) {
-
-    const numero = props.numero ? props.numero : 30;
-    const text = props.text ? props.text : 'Button';
-
+export default function Button({ onClick, text = 'Button', life, numero = 30 }) {
     return (
-        <button style={{ '--numero': `${numero}px` }}
-            className={props.life ? 'solid-button' : 'transparent-button'}
+        <button 
+            onClick={onClick}
+            style={{ '--numero': `${numero}px` }}
+            className={life ? 'solid-button' : 'transparent-button'}
         >
             {text}
         </button>

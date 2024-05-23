@@ -7,9 +7,7 @@
 
     label {
         color: $color1;
-        margin: calc(var(--numero) * $proporcion-aurea-inversa-cuadrado * $proporcion-aurea-inversa-cuadrado);
-        margin-left: calc(var(--numero) * $proporcion-aurea-inversa-cuadrado);
-        font-size: var(--numero); // Utiliza la variable CSS personalizada
+        margin-bottom: calc(var(--numero) * $proporcion-aurea-inversa-cuadrado);        font-size: var(--numero); // Utiliza la variable CSS personalizada
 
         &::first-letter {
             text-transform: uppercase;
@@ -23,16 +21,17 @@
         height: calc(var(--numero) * $proporcion-aurea); // Utiliza la variable CSS personalizada
         border-radius: calc(var(--numero)*$proporcion-aurea-inversa-cuadrado); // Utiliza la variable CSS personalizada
         font-size: calc(var(--numero) / $proporcion-aurea); // Utiliza la variable CSS personalizada
-        border: 3px solid $color3;
+        border: 2px solid $color3;
         color: $color3;
 
         &::placeholder {
             color: $color3;
+            font-family: $fuente-general-ligth;
         }
 
         &:focus {
             color: $color1;
-            border: 3px solid $color1;
+            border: 2px solid $color1;
 
             &::placeholder {
                 color: $color1;

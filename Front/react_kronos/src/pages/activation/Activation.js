@@ -1,5 +1,4 @@
 import React from 'react';
-import Barra from '../../components/navBar/navBars';
 import Button from '../../components/button/buttons';
 import './Activation.scss'
 import mailIcon from './mail.svg';
