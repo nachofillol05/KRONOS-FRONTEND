@@ -9,10 +9,10 @@ export default function Table(props) {
     return(
     <div class="grid-table">
         <div class="header-container">
-            {columns.map((column, key) => {
-                return (
-                    <div class="cell">{column.header}</div>
-                )
+        {columns.map((column, key) => {
+            return (
+                <div class="cell">{column.header}</div>
+            )
             })}
         </div>
         <div class="data-container">
@@ -25,8 +25,8 @@ export default function Table(props) {
                             )
                         })}
                     </div>
-                ))}
-            </div>
+                )
+            })}
         </div>
-    );
-}
+    </div>
+    )}
