@@ -54,7 +54,11 @@
         height: 100px;
     }
 }
-.contenedor{
-    flex-direction: row;
+.children-container {
+    text-align: left;
     display: flex;
-}
+    flex-direction: column;
+    align-items: center;
+    height: 100%;
+    gap: 50px;
+  }

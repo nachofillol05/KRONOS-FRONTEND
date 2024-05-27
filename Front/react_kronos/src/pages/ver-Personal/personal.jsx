@@ -13,6 +13,7 @@ import './personal.scss';
 
 export default function Personal() {
     const [teachers, setTeachers] = useState([]);
+    const [subjects, setSubjects] = useState([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
     
     useEffect(() => {
@@ -34,7 +35,7 @@ export default function Personal() {
         })
         .catch(error => console.error('Error fetching data:', error));
     }, []);
-    
+
     const columns = [
         { header: 'Nombre', field: 'first_name' },
         { header: 'Apellido', field: 'last_name' },
@@ -44,13 +45,37 @@ export default function Personal() {
         { header: 'Horas por semana', field: 'availability' }
     ];
 
+
+    useEffect(() => {
+        fetch('http://127.0.0.1:8000/Kronosapp/subjects/', {
+            method: "GET",
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            const subjectNames = data.map(subject => subject.name);
+            setSubjects(subjectNames);
+          })
+        .catch(error => console.error('Error fetching data:', error));
+    }, []);
+    
+    
+
     const handleButtonClick = () => {
         setIsModalOpen(true);
-      };
+    };
     
-      const handleCloseModal = () => {
+    const handleCloseModal = () => {
         setIsModalOpen(false);
-      };
+    };
+
+    const anios = ['1', '2', '3', '4', '5', '6']
+    const cursos = ["A", "B", "C"]
+      
 
     
     /*<RangeSlider /> agregar esto para los sliders*/
@@ -59,10 +84,12 @@ export default function Personal() {
         <NavBar />
         <Fondo>
         <div Class="filtros-container">
+            <div Class="botones">
                 <Button text="Profesores" life />
                 <Button text="Preceptores"/>
                 <Button text="Directivos"/>
-                <Select name="Materia" style={{'--largo': `50`}}/>
+            </div>
+                <Select datos={subjects} name="Materia" style={{'--largo': `50`}}/>
                 <Buscador />
                 <Button onClick={handleButtonClick} text='+'/>
             </div>
@@ -70,20 +97,18 @@ export default function Personal() {
             <Table data={teachers} columns={columns} />
             </div>
         </Fondo>
-        {isModalOpen && <Modal onClose={handleCloseModal} title="Crear Profesor">
+        
+        {isModalOpen && <Modal onClose={handleCloseModal} title="Crear Curso">
             <div>
-                <h1>nombre</h1>
+                <h1>Nombre</h1>
                 <Input />
             </div>
-            <div Class='Contenedor'>
-                <div>
+            <div Class='Contenedor' style={{display: 'flex',flexDirection: 'row', gap: '20px'}}>
+
                     <h1>Año</h1>
-                    <Select name="Año" style={{'--largo': `500`}} solid/>
-                </div>
-                <div>
+                    <Select datos={anios} name="Año" style={{'--largo': `500`}} solid/>
                     <h1>Curso</h1>
-                    <Select name="Curso" style={{'--largo': `500`}} solid/>
-                </div>
+                    <Select datos={cursos} name="Curso" style={{'--largo': `500`}} solid/>
             </div>
             <div>
                 <h1>Descripción</h1>

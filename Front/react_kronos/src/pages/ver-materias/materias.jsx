@@ -46,6 +46,8 @@ export default function Materias() {
     const handleCloseModal = () => {
         setIsModalOpen(false);
     };
+
+    const datos = ['Profesor', 'Preceptor', 'Directivo']
     
     
     /*<RangeSlider /> agregar esto para los sliders*/
@@ -54,8 +56,8 @@ export default function Materias() {
         <NavBar />
         <Fondo >
         <div Class="filtros-container">
-            <Select name="Materia" style={{'--largo': `50`}}/>
-            <Select name="General" style={{'--largo': `50`}}/>
+            <Select datos={datos} name="Materia" style={{'--largo': `50`}}/>
+            <Select datos={datos} name="General" style={{'--largo': `50`}}/>
             <Buscador />
             </div>
             <div Class="tabla-container">
