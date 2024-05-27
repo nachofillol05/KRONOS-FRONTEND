@@ -4,6 +4,7 @@ import Activation from "./pages/activation/Activation";
 import ActivationSent from "./pages/activation_sent/ActivationSent";
 import Login from "./pages/login/Login";
 import Materias from "./pages/ver-materias/materias";
+import Personal from "./pages/ver-Personal/personal"
 
 export default function App() {
   return (
@@ -14,6 +15,7 @@ export default function App() {
         <Route path='/activation_sent' element={<ActivationSent />} />
         <Route path='/login' element={<Login />} />
         <Route path='/materias' element={<Materias />} />
+        <Route path='/personal' element={<Personal />} />
       </Routes>
     </BrowserRouter>
   );

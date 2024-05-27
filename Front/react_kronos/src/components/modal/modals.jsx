@@ -1,7 +1,8 @@
 import React from 'react';
 import './modals.scss';
 
-export default function Modal({ title = 'Titulo', onClose }) {
+
+export default function Modal({ title = 'Titulo', onClose, children }) {
     return (
         <>
             <div className="modal">
@@ -12,6 +13,7 @@ export default function Modal({ title = 'Titulo', onClose }) {
                     </svg>
                 </div>
                 <div className="relleno"></div>
+                {children}
             </div>
             <div className="overlay" onClick={onClose}></div>
         </>
