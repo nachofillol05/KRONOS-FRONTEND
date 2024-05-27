@@ -1,0 +1,18 @@
+.filtros-container {
+    display: flex;
+    justify-content: space-between;
+    margin: 10px;
+}
+
+.container{
+    background-color: red;
+    flex-direction: column;
+    flex-grow: 1;
+    display: flex;
+}
+
+.navbar {
+    position: fixed;
+    width: 100%;
+    z-index: 9999;
+}
