@@ -1,11 +1,10 @@
 import React from 'react';
 import './Login.scss'
-import {useState, useEffect } from 'react';
+import {useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 
 export default function Login() {
-    const [Response, setResponse] = useState([]);
     const [showError, setShowError] = useState(false);
     const navigate = useNavigate();
     
@@ -39,10 +38,6 @@ export default function Login() {
             }
             return response.json();
             
-        })
-        .then(data => {
-            console.log(data);
-            setResponse(data);
         })
         .catch(error => setShowError(true));
     };

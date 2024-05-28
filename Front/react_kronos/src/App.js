@@ -5,6 +5,7 @@ import ActivationSent from "./pages/activation_sent/ActivationSent";
 import Login from "./pages/login/Login";
 import Materias from "./pages/ver-materias/materias";
 import Personal from "./pages/ver-Personal/personal"
+import Prueba from "./pages/prueba/prueba"
 
 export default function App() {
   return (
@@ -16,6 +17,8 @@ export default function App() {
         <Route path='/login' element={<Login />} />
         <Route path='/materias' element={<Materias />} />
         <Route path='/personal' element={<Personal />} />
+
+        <Route path='/prueba' element={<Prueba/>} />
       </Routes>
     </BrowserRouter>
   );
