@@ -1,0 +1,35 @@
+@import '../../scss/index.scss';
+.filtros-container {
+    display: flex;
+    justify-content: space-between;
+}
+
+.container{
+    background-color: red;
+    flex-direction: column;
+    flex-grow: 1;
+    display: flex;
+}
+
+.navbar {
+    position: fixed;
+    width: 100%;
+    z-index: 9999;
+}
+.botones {
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    width: 100%; 
+    margin-top: 0px;
+    width: 240px;
+    height: 80px;
+    position: relative;
+    top: 0px; 
+    right: 10px;
+  }
+  h1{
+    font-size: 25px;
+    color: $color2;
+  }
+  
