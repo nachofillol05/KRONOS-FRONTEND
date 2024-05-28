@@ -5,7 +5,7 @@ import Table from '../../components/table/tables.jsx';
 import Select from '../../components/select/select.jsx';
 import Buscador from '../../components/Buscador/buscador.jsx';
 import Button from '../../components/button/buttons.jsx';
-import Modal from '../../components/modal/modals.jsx';
+import Drawer from '../../layout/drawer/drawers.jsx';
 import Input from "../../components/input/inputs.jsx";
 import './personal.scss';
 
@@ -98,7 +98,7 @@ export default function Personal() {
                 </div>
             </Fondo>
 
-            {isModalOpen && <Modal onClose={handleCloseModal} title="Crear Curso">
+            {isModalOpen && <Drawer onClose={handleCloseModal} title="Crear Curso">
                 <div>
                     <h1>Nombre</h1>
                     <Input />
@@ -114,7 +114,7 @@ export default function Personal() {
                     <h1>Descripción</h1>
                     <Input />
                 </div>
-            </Modal>}
+            </Drawer>}
         </React.StrictMode>
     )
 }
