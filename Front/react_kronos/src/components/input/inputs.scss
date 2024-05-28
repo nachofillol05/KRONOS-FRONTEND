@@ -38,4 +38,8 @@
             }
         }
     }
+
+    .textArea{
+        height: calc(var(--numero) * 7.35); ;
+    }
 }
