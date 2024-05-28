@@ -5,6 +5,7 @@ import Table from '../../components/table/tables.jsx';
 import Select from '../../components/select/select.jsx';
 import Buscador from '../../components/Buscador/buscador.jsx';
 import Modal from '../../components/modal/modals.jsx';
+import RangeSlider from '../../components/timerangeslider/timerange.jsx';
 import './materias.scss';
 
 
