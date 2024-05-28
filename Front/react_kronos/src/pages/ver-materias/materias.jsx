@@ -6,6 +6,7 @@ import Select from '../../components/select/select.jsx';
 import Buscador from '../../components/Buscador/buscador.jsx';
 import Modal from '../../components/modal/modals.jsx';
 import RangeSlider from '../../components/timerangeslider/timerange.jsx';
+import Button from '../../components/button/buttons.jsx';
 import './materias.scss';
 
 
@@ -60,6 +61,10 @@ export default function Materias() {
         .catch(error => console.error('Error fetching data:', error));
     }, []);
     
+    const handleButtonClick = () => {
+        setIsModalOpen(true);
+    };
+    
     const handleCloseModal = () => {
         setIsModalOpen(false);
     };
@@ -72,15 +77,20 @@ export default function Materias() {
         <React.StrictMode>
         <NavBar />
         <Fondo >
-        <div Class="filtros-container">
+        <div Class="filtros-contenedor">
             <RangeSlider />
             <Select datos={teachers} name="Teachers" style={{'--largo': `50`}}/>
             <Select datos={cursos} name="General" style={{'--largo': `50`}}/>
             <Buscador />
+            <div>
+                <Button onClick={handleButtonClick} text='+' numero={10}/>
             </div>
+            </div>
+            
             <div Class="tabla-container">
             <Table data={materias} columns={columns} />
         </div>
+        
         </Fondo>
         {isModalOpen && <Modal onClose={handleCloseModal} title="Agregar materia" />}
     </React.StrictMode>
