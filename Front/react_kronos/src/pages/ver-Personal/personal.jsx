@@ -15,6 +15,7 @@ export default function Personal() {
     const [teachers, setTeachers] = useState([]);
     const [subjects, setSubjects] = useState([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [activeButton, setActiveButton] = useState('Profesores');
     
     useEffect(() => {
         fetch('http://127.0.0.1:8000/Kronosapp/teachers/', {
@@ -62,6 +63,13 @@ export default function Personal() {
           })
         .catch(error => console.error('Error fetching data:', error));
     }, []);
+
+    
+
+  // Función para manejar el clic en un botón
+    const buttonSelected = (buttonText) => {
+        setActiveButton(buttonText);
+    };
     
     
 
@@ -85,11 +93,23 @@ export default function Personal() {
         <React.StrictMode>
         <NavBar />
         <Fondo>
-        <div Class="filtros-container" style={{alignItems: 'center'}}>
-            <div Class="botones">
-                <Button text="Profesores" life />
-                <Button text="Preceptores"/>
-                <Button text="Directivos"/>
+        <div Class="filtros-container">
+            <div className="botones">
+                <Button 
+                    text="Profesores" 
+                    life={activeButton === 'Profesores'} 
+                    onClick={() => buttonSelected('Profesores')}
+                />
+                <Button 
+                    text="Preceptores" 
+                    life={activeButton === 'Preceptores'} 
+                    onClick={() => buttonSelected('Preceptores')}
+                />
+                <Button 
+                    text="Directivos" 
+                    life={activeButton === 'Directivos'} 
+                    onClick={() => buttonSelected('Directivos')}
+                />
             </div>
                 <Select datos={subjects} name="Materia" style={{'--largo': `50`}}/>
                 <Buscador />
