@@ -4,7 +4,7 @@ import Fondo from '../../components/fondo/fondos.jsx';
 import Table from '../../components/table/tables.jsx';
 import Select from '../../components/select/select.jsx';
 import Buscador from '../../components/Buscador/buscador.jsx';
-import Modal from '../../components/modal/modals.jsx';
+import Drawer from '../../layout/drawer/drawers.jsx';
 import RangeSlider from '../../components/timerangeslider/timerange.jsx';
 import Button from '../../components/button/buttons.jsx';
 import './materias.scss';
@@ -120,7 +120,7 @@ export default function Materias() {
         </div>
         
         </Fondo>
-        {isModalOpen && <Modal onClose={handleCloseModal} title="Agregar materia" />}
+        {isModalOpen && <Drawer onClose={handleCloseModal} title="Agregar materia" />}
     </React.StrictMode>
     )
 }

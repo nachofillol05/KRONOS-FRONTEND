@@ -5,7 +5,7 @@ import Table from '../../components/table/tables.jsx';
 import Select from '../../components/select/select.jsx';
 import Buscador from '../../components/Buscador/buscador.jsx';
 import Button from '../../components/button/buttons.jsx';
-import Modal from '../../components/modal/modals.jsx';
+import Drawer from '../../layout/drawer/drawers.jsx';
 import Input from "../../components/input/inputs.jsx";
 import './personal.scss';
 
@@ -122,7 +122,7 @@ export default function Personal() {
             <Table data={teachers} columns={columns} />
             </div>
         </Fondo>
-            {isModalOpen && <Modal onClose={handleCloseModal} title="Agregar Personal">
+            {isModalOpen && <Drawer onClose={handleCloseModal} title="Agregar Personal">
                     <div Class='Contenedor' style={{display: 'flex',flexDirection: 'row', gap: '20px',  alignItems: 'center'}}>
                     <Select datos={tipoDocumento} name="Tipo Documento" style={{'--largo': `60`}} solid/>
                     <Input />
@@ -151,14 +151,14 @@ export default function Personal() {
                     <div Class='Contenedor' style={{display: 'flex',flexDirection: 'row', gap: '20px'}}>
                         <Select datos={rol} name="Rol" largo="345" solid />
                     </div>
-                </Modal>}
+                </Drawer>}
         
     </React.StrictMode>
     )
 }
 
 
-/*{isModalOpen && <Modal onClose={handleCloseModal} title="Crear Curso">
+/*{isModalOpen && <Drawer onClose={handleCloseModal} title="Crear Curso">
             <div>
                 <h1>Nombre</h1>
                 <Input />
@@ -168,11 +168,13 @@ export default function Personal() {
                     <h1>Año</h1>
                     <Select datos={anios} name="Año" style={{'--largo': `500`}} solid/>
                     <h1>Curso</h1>
-                    <Select datos={cursos} name="Curso" style={{'--largo': `500`}} solid/>
-            </div>
-            <div>
-                <h1>Descripción</h1>
-                <Input/>
-            </div>
-        </Modal>}*/
-        
+                    <Select datos={cursos} name="Curso" style={{ '--largo': `500` }} solid />
+                </div>
+                <div>
+                    <h1>Descripción</h1>
+                    <Input />
+                </div>
+            </Drawer>}
+        </React.StrictMode>
+    )
+}
