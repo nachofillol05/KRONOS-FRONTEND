@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import './enlaces.scss';
+import NavBar from '../navBar/navBars';
 
 
 export default function Enlace(props) {
     const listaElementos = [];
     const [posicion, setPosicion] = useState({ top: 0});
-    const [elementoClickeado, setElementoClickeado] = useState(null);
+    const [elementoClickeado, setElementoClickeado] = useState(1);
+    const [navBarElements, setnavBarElements] = useState(['Menu','Horarios','Personal','Materias','Eventos']);
     
     
     useEffect(() => {
@@ -14,32 +16,33 @@ export default function Enlace(props) {
         if (primerElemento) {
             const nuevaPosicion = primerElemento.getBoundingClientRect();
             setPosicion({ top: nuevaPosicion.top});
-            setElementoClickeado(1);
+            setElementoClickeado('Menu');
         }
     }, []); 
 
     const handleClick = (event, index) => {
+        console.log(index);
         const nuevaPosicion = event.target.getBoundingClientRect();
         setPosicion({ top: nuevaPosicion.top });
         setElementoClickeado(index);
     }
-
-    for (let i = 1; i < 7; i++) {
-        listaElementos.push(
-            <h2 
-            key={i} onClick={(e) => handleClick(e, i)} 
+    navBarElements.map((element, index) => {
+        listaElementos.push(<h2 
+            key={element} onClick={(e) => handleClick(e, element)} 
             style={{ 
-                color: elementoClickeado === i ? '' : 'white'
+                color: elementoClickeado === element ? '' : 'white'
             }}
-            >{i}</h2>
-        );
-    }
+            >{element}</h2>);
+        })
+
+    
+
+    
 
     return (
         <div className="contenedor-enlace">
             <div 
             style={{ position: 'absolute', top: posicion.top }}>
-
             </div>
             {listaElementos}
         </div>

@@ -3,6 +3,7 @@
 button{
     width: calc(var(--numero)*$proporcion-aurea-cuadrado*3);
     height: calc(var(--numero)*$proporcion-aurea-cuadrado);
+    border-radius: var(--radius);
     transition: all 0.3s;
     font-size: calc(var(--numero));
 }
@@ -29,4 +30,8 @@ button{
         border-color: $color2;
         color: $color2;
     }
+}
+
+.circular-button {
+    border-radius: 50%;
 }
