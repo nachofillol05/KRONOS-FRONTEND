@@ -9,6 +9,7 @@ export default function Navegacion({ children }) {
     const [drawerContent, setDrawerContent] = useState(null);
     const [drawerTitle, setDrawerTitle] = useState("");
 
+    //funcion para abrir y cerrar el drawer donde se pasa el contenido del drawer y el titulo
     const handleOpenDrawer = (content, title) => {
         setDrawerContent(content);
         setDrawerTitle(title);
@@ -25,7 +26,8 @@ export default function Navegacion({ children }) {
         <React.StrictMode>
             <NavBar />
             <Fondo>
-                {typeof children === 'function' ? children(handleOpenDrawer) : children}
+                {/*se pasa la funcion handleOpenDrawer como prop a los hijos */}
+                {typeof children === 'function' ? children(handleOpenDrawer, handleCloseDrawer) : children}
                 {isDrawerOpen && (
                     <Drawer onClose={handleCloseDrawer} title={drawerTitle} content={drawerContent} />
                 )}

@@ -39,7 +39,31 @@
         }
     }
 
-    .textArea{
-        height: calc(var(--numero) * 7.35); ;
+    textarea{
+        outline: none;
+        padding: calc(var(--numero)*$proporcion-aurea-inversa-cuadrado); // Utiliza la variable CSS personalizada
+        width: calc(var(--numero) * 10.36); // Utiliza la variable CSS personalizada
+        height: calc(var(--numero) * 7.24); // Utiliza la variable CSS personalizada
+        border-radius: calc(var(--numero)*$proporcion-aurea-inversa-cuadrado); // Utiliza la variable CSS personalizada
+        font-size: calc(var(--numero) / $proporcion-aurea); // Utiliza la variable CSS personalizada
+        border: 2px solid $color3;
+        color: $color3;
+        resize:none;
+
+        &::placeholder {
+            color: $color3;
+            font-family: $fuente-general-ligth;
+        }
+
+        &:focus {
+            color: $color1;
+            border: 2px solid $color1;
+
+            &::placeholder {
+                color: $color1;
+            }
+        }
     }
+
+
 }
