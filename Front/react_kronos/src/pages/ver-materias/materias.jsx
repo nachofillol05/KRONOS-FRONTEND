@@ -4,17 +4,18 @@ import Fondo from '../../components/fondo/fondos.jsx';
 import Table from '../../components/table/tables.jsx';
 import Select from '../../components/select/select.jsx';
 import Buscador from '../../components/Buscador/buscador.jsx';
-import Modal from '../../components/modal/modals.jsx';
 import Input from "../../components/input/inputs.jsx";
+import Drawer from '../../layout/drawer/drawers.jsx';
 import RangeSlider from '../../components/timerangeslider/timerange.jsx';
+import Button from '../../components/button/buttons.jsx';
 import './materias.scss';
 
 
 export default function Materias() {
-    const [teachers, setTeachers] = useState([]);
     const [materias, setMaterias] = useState([]);
-    const [isModalOpen, setIsModalOpen] = useState(true);
-    
+    const [teachers, setTeachers] = useState([]);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [selectedCourse, setSelectedCourse] = useState('');
     useEffect(() => {
         fetch('http://127.0.0.1:8000/Kronosapp/subjects/', {
             method: "GET",
@@ -26,7 +27,7 @@ export default function Materias() {
             return response.json();
         })
         .then(data => {
-            setMaterias (data);
+            setMaterias(data);
         })
         .catch(error => console.error('Error fetching data:', error));
     }, []);
@@ -40,56 +41,54 @@ export default function Materias() {
         { header: 'Descripcion', field: 'description' }
     ];
 
-
     useEffect(() => {
         fetch('http://127.0.0.1:8000/Kronosapp/teachers/', {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({"school_id": 1 })
+            body: JSON.stringify({ "school_id": 1 })
         })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-        })
-        .then(data => {
-            const teacherNames = data.map(teacher => teacher.first_name + ' ' + teacher.last_name);
-            setTeachers(teacherNames);
-          })
-        .catch(error => console.error('Error fetching data:', error));
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                const teacherNames = data.map(teacher => teacher.first_name + ' ' + teacher.last_name);
+                setTeachers(teacherNames);
+            })
+            .catch(error => console.error('Error fetching data:', error));
     }, []);
     
-    const anios = ['1', '2', '3', '4', '5', '6']
-    const cursos = ['A', 'B', 'C']
-    
-    const handleButtonClick = () => {
-        setIsModalOpen(true);
-    };
-
     const handleCloseModal = () => {
         setIsModalOpen(false);
     };
 
-    const datos = ['Profesor', 'Preceptor', 'Directivo']
-    
-    
+    const handleCourseChange = (event) => {
+        setSelectedCourse(event.target.value);
+    };
+
+    const cursos = ['1A', '1B', '1C', '2A', '2B', '2C', '3A', '3B', '3C', '4A', '4B', '4C', '5A', '5B', '5C', '6A', '6B', '6C'];
+
+
     /*<RangeSlider /> agregar esto para los sliders*/
     return (
         <React.StrictMode>
         <NavBar />
         <Fondo >
         <div Class="filtros-container">
-            <Select datos={teachers} name="Materia" style={{'--largo': `50`}}/>
-            <Select datos={datos} name="General" style={{'--largo': `50`}}/>
+            <RangeSlider />
+            <Select datos={teachers} name="Teachers" style={{'--largo': `50`}}/>
+            <Select datos={cursos} name="General" style={{'--largo': `50`}}/>
             <Buscador />
             </div>
             <div Class="tabla-container">
             <Table data={materias} columns={columns} />
         </div>
         </Fondo>
+
         {isModalOpen && <Modal onClose={handleCloseModal} title="Agregar materia" >
                 <div Class='Contenedor' style={{display: 'flex',flexDirection: 'row', gap: '20px',  alignItems: 'center'}}>
                     <div>
@@ -126,6 +125,8 @@ export default function Materias() {
 
 
             </Modal>}
+
+      /*   {isModalOpen && <Drawer onClose={handleCloseModal} title="Agregar materia" />} */
     </React.StrictMode>
     )
 }

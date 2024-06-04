@@ -18,4 +18,3 @@ export default function Button({ onClick, text = 'Button', life, numero = 30, ci
     );
 }
 
-

@@ -1,0 +1,48 @@
+@import '../../scss/index.scss';
+
+.contactar{
+    background-color: transparent;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: left;
+    width: 80%;
+    height: 90%;
+    background-color: $color-principal;
+    border: $color1 5px solid;
+    border-radius: 15px;
+
+    .identidad{
+        background-color: $color1;
+        padding: 25px 50px;
+        border-radius: 5px 5px 0 0;
+
+        h1, h2{
+            font-family: $fuente-titulo;
+            color: $color-principal;
+            font-size: 1.5rem;
+        }
+        h2{
+            font-size: 1.25rem;
+            font-weight: lighter;
+        }
+        }
+    .email{
+        align-items: center;
+        display: flex;
+        flex-direction: column;
+        overflow-y: scroll;
+        padding: 25px 0;
+        padding-inline: auto;
+        gap: 25px;
+        label{
+            text-align: left;
+            font-family: $fuente-general;
+            font-size: 1.25rem;
+            color: $color1;
+        }
+        Button{
+            align-self: center;
+        }
+    }
+}

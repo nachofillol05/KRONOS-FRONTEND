@@ -4,10 +4,11 @@ import './select.scss';
 export default function Select(props) {
         const largo = props.largo;
         const datos = props.datos;
+        const onChange = props.onChange;
         
         return(
             <>
-            <select name="TipoDocumento" style={{ '--largo': `${largo}px` }} className={props.solid ? 'solid-select' : 'transparent-select'}>
+            <select onChange={onChange} name="TipoDocumento" style={{'--largo': `${largo}px`}} className={props.solid ? 'solid-select' : 'transparent-select'}>
             {datos.map((dato) => {
                             return (
                                 <option value={dato}>{dato}</option>
