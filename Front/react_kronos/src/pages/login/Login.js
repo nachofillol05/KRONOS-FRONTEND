@@ -1,17 +1,29 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import './Login.scss'
-import {useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+
 
 
 export default function Login() {
     const [showError, setShowError] = useState(false);
     const navigate = useNavigate();
+    useEffect(() => {
+        const token=localStorage.getItem('token')
+        console.log(token)
+        if (token != '') {
+            console.log('hay token baaaaaaaaaai')
+            navigate('/');
+        } else {
+            console.log('no hay token')
+        }
+      });
     
     function handleLogin(event) {
         event.preventDefault();
         const usernameValue = document.getElementById('input_user').value;
         const passwordValue = document.getElementById('input_password').value;
+
+        
         
         fetch('http://localhost:8000/Kronosapp/login/', {
             method: "POST",
@@ -28,15 +40,20 @@ export default function Login() {
                 throw new Error('Network response was not ok');
             }
             if (response.status === 200) {
+                response.json()
+                .then(responseData => {
+                    localStorage.setItem('token', responseData.Token); 
+                })
                 console.log('Login success');
                 setShowError(false);
-                navigate('/activation');
+                console.log(localStorage.getItem('token'));
+                navigate('/');
             }
             else {
                 console.log('Login failed');
                 setShowError(true);
             }
-            return response.json();
+            
             
         })
         .catch(error => setShowError(true));
