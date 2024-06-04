@@ -1,13 +1,17 @@
 import './inputs.scss';
 
 export default function Input(props) {
-    const numero = props.numero ? props.numero : 30;
+    const { numero = 30, label, placeholder, type, name, value, onChange } = props;
     return (
         <div className="input-container" style={{ '--numero': `${numero}px` }}>
-            <label>{props.label}</label>
+            {label && <label htmlFor={name}>{label}</label>}
             <input
-                placeholder={props.placeholder}
-                type={props.type}
+                id={name}
+                name={name}
+                placeholder={placeholder}
+                type={type}
+                value={value}
+                onChange={onChange}
             />
         </div>
     );
