@@ -2,7 +2,7 @@ import {React} from "react";
 import './select.scss';
 
 export default function Select(props) {
-        const largo = props.largo ? props.numero: 30;
+        const largo = props.largo;
         const datos = props.datos;
         const onChange = props.onChange;
         

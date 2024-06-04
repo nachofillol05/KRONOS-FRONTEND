@@ -4,6 +4,7 @@ import Fondo from '../../components/fondo/fondos.jsx';
 import Table from '../../components/table/tables.jsx';
 import Select from '../../components/select/select.jsx';
 import Buscador from '../../components/Buscador/buscador.jsx';
+import Input from "../../components/input/inputs.jsx";
 import Drawer from '../../layout/drawer/drawers.jsx';
 import RangeSlider from '../../components/timerangeslider/timerange.jsx';
 import Button from '../../components/button/buttons.jsx';
@@ -15,7 +16,6 @@ export default function Materias() {
     const [teachers, setTeachers] = useState([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedCourse, setSelectedCourse] = useState('');
-
     useEffect(() => {
         fetch('http://127.0.0.1:8000/Kronosapp/subjects/', {
             method: "GET",
@@ -88,7 +88,45 @@ export default function Materias() {
             <Table data={materias} columns={columns} />
         </div>
         </Fondo>
-        {isModalOpen && <Drawer onClose={handleCloseModal} title="Agregar materia" />}
+
+        {isModalOpen && <Modal onClose={handleCloseModal} title="Agregar materia" >
+                <div Class='Contenedor' style={{display: 'flex',flexDirection: 'row', gap: '20px',  alignItems: 'center'}}>
+                    <div>
+                        <h1>Materia</h1>
+                        <Input />
+                    </div>
+                    <div>
+                        <h1>Abreviacion</h1>
+                        <Input />
+                    </div>
+                </div>
+                <div Class='Contenedor' style={{display: 'flex',flexDirection: 'row', gap: '20px',  alignItems: 'center'}}>
+                    <Select datos={teachers} name="Profesor" style={{'--largo': `1000`}}/>
+                    <Select datos={anios} name="años" style={{'--largo': `700`}}/>
+                </div>
+                <div Class='Contenedor' style={{display: 'flex',flexDirection: 'row', gap: '20px',  alignItems: 'center'}}>
+                    <div>
+                        <h1>Horas Semanales</h1>
+                        <Input type="number"/>
+                    </div>
+                    <div>
+                        <h1>Color</h1>
+                        <Input type="color"/>
+                    </div>
+                </div>
+                <div>
+                    <h1>Plan de Estudio</h1>
+                    <Input textArea/>
+                </div>
+                <div>
+                    <h1>Descripción</h1>
+                    <Input textArea/>
+                </div>
+
+
+            </Modal>}
+
+      /*   {isModalOpen && <Drawer onClose={handleCloseModal} title="Agregar materia" />} */
     </React.StrictMode>
     )
 }

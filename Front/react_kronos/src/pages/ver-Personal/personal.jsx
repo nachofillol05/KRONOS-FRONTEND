@@ -152,10 +152,10 @@ export default function Personal() {
                         <Select datos={rol} name="Rol" largo="345" solid />
                     </div>
                 </Drawer>}
-        
     </React.StrictMode>
     )
 }
+
 
 
 /*{isModalOpen && <Drawer onClose={handleCloseModal} title="Crear Curso">
