@@ -3,8 +3,8 @@ import Home from "./pages/home/Home";
 import Activation from "./pages/activation/Activation";
 import ActivationSent from "./pages/activation_sent/ActivationSent";
 import Login from "./pages/login/Login";
-import Materias from "./pages/ver-materias/materias";
-import Personal from "./pages/ver-Personal/personal"
+import Materias from "./pages/materias/materias";
+import Personal from "./pages/personal/personal"
 import Prueba from "./pages/prueba/prueba"
 
 export default function App() {

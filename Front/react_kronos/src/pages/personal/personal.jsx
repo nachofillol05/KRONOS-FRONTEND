@@ -3,7 +3,7 @@ import NavBar from '../../components/navBar/navBars.jsx';
 import Fondo from '../../components/fondo/fondos.jsx';
 import Table from '../../components/table/tables.jsx';
 import Select from '../../components/select/select.jsx';
-import Buscador from '../../components/Buscador/buscador.jsx';
+import Buscador from '../../components/buscador/buscador.jsx';
 import Button from '../../components/button/buttons.jsx';
 import Drawer from '../../layout/drawer/drawers.jsx';
 import Input from "../../components/input/inputs.jsx";
@@ -85,7 +85,6 @@ export default function Personal() {
     const cursos = ['A', 'B', 'C']
     const tipoDocumento = ['DNI', 'Pasaporte']
     const rol = ['Profesor', 'Preceptor', 'Directivo']
-      
 
     
     /*<RangeSlider /> agregar esto para los sliders*/

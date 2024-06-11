@@ -3,7 +3,7 @@ import NavBar from '../../components/navBar/navBars.jsx';
 import Fondo from '../../components/fondo/fondos.jsx';
 import Table from '../../components/table/tables.jsx';
 import Select from '../../components/select/select.jsx';
-import Buscador from '../../components/Buscador/buscador.jsx';
+import Buscador from '../../components/buscador/buscador.jsx';
 import Input from "../../components/input/inputs.jsx";
 import Drawer from '../../layout/drawer/drawers.jsx';
 import RangeSlider from '../../components/timerangeslider/timerange.jsx';
@@ -89,7 +89,7 @@ export default function Materias() {
         </div>
         </Fondo>
 
-        {isModalOpen && <Modal onClose={handleCloseModal} title="Agregar materia" >
+        {isModalOpen && <Drawer onClose={handleCloseModal} title="Agregar materia" >
                 <div Class='Contenedor' style={{display: 'flex',flexDirection: 'row', gap: '20px',  alignItems: 'center'}}>
                     <div>
                         <h1>Materia</h1>
@@ -102,7 +102,7 @@ export default function Materias() {
                 </div>
                 <div Class='Contenedor' style={{display: 'flex',flexDirection: 'row', gap: '20px',  alignItems: 'center'}}>
                     <Select datos={teachers} name="Profesor" style={{'--largo': `1000`}}/>
-                    <Select datos={anios} name="años" style={{'--largo': `700`}}/>
+                    <Select datos={"anios"} name="años" style={{'--largo': `700`}}/>
                 </div>
                 <div Class='Contenedor' style={{display: 'flex',flexDirection: 'row', gap: '20px',  alignItems: 'center'}}>
                     <div>
@@ -124,7 +124,7 @@ export default function Materias() {
                 </div>
 
 
-            </Modal>}
+            </Drawer>}
 
       /*   {isModalOpen && <Drawer onClose={handleCloseModal} title="Agregar materia" />} */
     </React.StrictMode>

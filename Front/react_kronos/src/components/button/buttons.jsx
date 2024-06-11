@@ -1,20 +1,20 @@
 import React from 'react';
 import './buttons.scss';
 
-export default function Button({ onClick, text = 'Button', life, numero = 30, circular}) {
+export default function Button({ onClick, text = "Button", life, numero = 25, icon = null }) {
 
     const baseClass = life ? 'solid-button' : 'transparent-button';
-
-    const circularClass = circular ? 'circular-button' : '';
+    const iconClass = icon ? (text ? 'having-both' : 'having-only-icon') : '';
 
     return (
-        <button 
+        <button
             onClick={onClick}
             style={{ '--numero': `${numero}px` }}
-            className={`${baseClass} ${circularClass}`}
+            className={`${baseClass} ${iconClass}`}
         >
-            {text}
+
+            {text && <span className="span-text">{text}</span>}
+            {icon && <span className="span-icon">{icon}</span>}
         </button>
     );
 }
-

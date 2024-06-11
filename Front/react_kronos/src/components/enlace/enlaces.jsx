@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import './enlaces.scss';
-import NavBar from '../navBar/navBars';
 
 
 export default function Enlace(props) {
