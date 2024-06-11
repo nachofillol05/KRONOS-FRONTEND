@@ -6,7 +6,7 @@ import {useState } from 'react';
 export default function Home() {
     const navigate = useNavigate();
     const [userData, setUserData] = useState([{}]);
-    fetch('http://localhost:8000/Kronosapp/verifyToken/', {
+    fetch('http://localhost:8000/api/verifyToken/', {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json'

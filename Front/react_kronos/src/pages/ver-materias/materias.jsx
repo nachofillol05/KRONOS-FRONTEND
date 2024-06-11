@@ -17,7 +17,7 @@ export default function Materias() {
     const [selectedCourse, setSelectedCourse] = useState('');
 
     useEffect(() => {
-        fetch('http://127.0.0.1:8000/Kronosapp/subjects/', {
+        fetch('http://127.0.0.1:8000/api/subjects/', {
             method: "GET",
         })
         .then(response => {
@@ -42,7 +42,7 @@ export default function Materias() {
     ];
 
     useEffect(() => {
-        fetch('http://127.0.0.1:8000/Kronosapp/teachers/', {
+        fetch('http://127.0.0.1:8000/api/teachers/', {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json',
