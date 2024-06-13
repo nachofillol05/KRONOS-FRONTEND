@@ -18,7 +18,7 @@ export default function Personal() {
     const [activeButton, setActiveButton] = useState('Profesores');
     
     useEffect(() => {
-        fetch('http://127.0.0.1:8000/Kronosapp/teachers/', {
+        fetch('http://127.0.0.1:8000/api/teachers/', {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json',
@@ -48,7 +48,7 @@ export default function Personal() {
 
 
     useEffect(() => {
-        fetch('http://127.0.0.1:8000/Kronosapp/subjects/', {
+        fetch('http://127.0.0.1:8000/api/subjects/', {
             method: "GET",
         })
         .then(response => {
