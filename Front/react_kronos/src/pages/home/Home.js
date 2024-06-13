@@ -5,29 +5,7 @@ import {useState } from 'react';
 
 export default function Home() {
     const navigate = useNavigate();
-    const [userData, setUserData] = useState([{}]);
-    fetch('http://localhost:8000/api/verifyToken/', {
-            method: "POST",
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                "token": localStorage.getItem('token'),
-            })
-        })
-        .then(response => {
-            if (!response.ok) {
-                console.log('No es valido el token');
-                navigate('/login'); 
-            }
-            if (response.status === 200) {
-                console.log('funciono el token');
-                setUserData(response.data);
-            }
-            else {
-                navigate('/login');
-            }
-        })
+    
     function logOut(){
         console.log('logout')
         localStorage.setItem('token', '');
