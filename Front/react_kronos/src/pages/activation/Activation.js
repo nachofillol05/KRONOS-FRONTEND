@@ -8,7 +8,7 @@ export default function Activation() {
         <React.StrictMode>
             <div className="container">
                 <div className='left-column'>                
-                    <img src={mailIcon} alt="Email"></img>
+                    <img src={maliIcon} alt="Email"></img>
                 </div>
                 <div className='right-column'>
                     <h1>Su mail fue verificado con éxito</h1>

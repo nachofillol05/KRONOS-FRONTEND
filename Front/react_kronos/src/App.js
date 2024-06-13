@@ -1,5 +1,8 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { routes } from "./config/routes";
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { routes } from './config/routes'; // Asegúrate de ajustar la ruta al archivo de rutas
+import PrivateRoute from './components/privateRoute/privateRoute.jsx'; // Asegúrate de ajustar la ruta
+
 export default function App() {
   return (
     <Router>
@@ -9,15 +12,21 @@ export default function App() {
             key={route.path}
             path={route.path}
             element={
-              <route.layout>
-                <route.component />
-              </route.layout>
+              route.private ? (
+                <PrivateRoute>
+                  <route.layout>
+                    <route.component />
+                  </route.layout>
+                </PrivateRoute>
+              ) : (
+                <route.layout>
+                  <route.component />
+                </route.layout>
+              )
             }
           />
         ))}
       </Routes>
     </Router>
   );
-};
-
-
+}
