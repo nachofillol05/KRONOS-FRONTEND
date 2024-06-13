@@ -1,5 +1,4 @@
 import React from 'react';
-import Navegacion from '../../layout/navegacion/navegaciones';
 import { useNavigate } from 'react-router-dom';
 import {useState } from 'react';
 import Button from '../../components/button/buttons';
@@ -35,10 +34,8 @@ export default function Home() {
     }
 
     return (
-        <React.StrictMode>
-            <Navegacion>
-                <Button life/>
-            </Navegacion>
-        </React.StrictMode>
+            <>
+            
+            </>
 );
 }

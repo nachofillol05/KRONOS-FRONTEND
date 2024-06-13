@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Fondo from '../../components/fondo/fondos.jsx';
-import Drawer from '../../layout/drawer/drawers.jsx';
+import Drawer from '../../components/drawer/drawers.jsx';
 import NavBar from '../../components/navBar/navBars.jsx';
 import './navegaciones.scss';
 
@@ -9,7 +9,7 @@ export default function Navegacion({ children }) {
     const [drawerContent, setDrawerContent] = useState(null);
     const [drawerTitle, setDrawerTitle] = useState("");
 
-    //funcion para abrir y cerrar el drawer donde se pasa el contenido del drawer y el titulo
+    // Función para abrir y cerrar el drawer donde se pasa el contenido del drawer y el título
     const handleOpenDrawer = (content, title) => {
         setDrawerContent(content);
         setDrawerTitle(title);
@@ -22,12 +22,16 @@ export default function Navegacion({ children }) {
         setDrawerTitle("");
     };
 
+    // Clonar y pasar props a los hijos
+    const childrenWithProps = React.Children.map(children, child =>
+        React.cloneElement(child, { handleOpenDrawer, handleCloseDrawer })
+    );
+
     return (
         <React.StrictMode>
             <NavBar />
             <Fondo>
-                {/*se pasa la funcion handleOpenDrawer como prop a los hijos */}
-                {typeof children === 'function' ? children(handleOpenDrawer, handleCloseDrawer) : children}
+                {childrenWithProps}
                 {isDrawerOpen && (
                     <Drawer onClose={handleCloseDrawer} title={drawerTitle} content={drawerContent} />
                 )}

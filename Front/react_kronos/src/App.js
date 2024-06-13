@@ -1,26 +1,23 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Home from "./pages/home/Home";
-import Activation from "./pages/activation/Activation";
-import ActivationSent from "./pages/activation_sent/ActivationSent";
-import Login from "./pages/login/Login";
-import Materias from "./pages/materias/materias";
-import Personal from "./pages/personal/personal"
-import Prueba from "./pages/prueba/prueba"
-
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { routes } from "./config/routes";
 export default function App() {
   return (
-    <BrowserRouter>
+    <Router>
       <Routes>
-        <Route index element={<Home />} />
-        <Route path='/activation' element={<Activation />} />
-        <Route path='/activation_sent' element={<ActivationSent />} />
-        <Route path='/login' element={<Login />} />
-        <Route path='/materias' element={<Materias />} />
-        <Route path='/personal' element={<Personal />} />
-
-        <Route path='/prueba' element={<Prueba/>} />
+        {routes.map((route) => (
+          <Route
+            key={route.path}
+            path={route.path}
+            element={
+              <route.layout>
+                <route.component />
+              </route.layout>
+            }
+          />
+        ))}
       </Routes>
-    </BrowserRouter>
+    </Router>
   );
-}
+};
+
 
