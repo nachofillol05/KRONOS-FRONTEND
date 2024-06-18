@@ -1,11 +1,11 @@
 import React from 'react';
-
+import Switcher from '../../components/switcher/switchers';
 
 export default function Home() {
 
     return (
             <>
-                <a href="/prueba">holaaaa</a>
+                <Switcher/>
             </>
 );
 }

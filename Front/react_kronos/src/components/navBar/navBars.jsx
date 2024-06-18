@@ -1,7 +1,6 @@
 import React from 'react';
 import './navBars.scss';
 import Enlace from '../enlace/enlaces';
-import Colegio from '../colegio/colegios';
 
 export default function NavBar() {
     return (

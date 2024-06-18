@@ -1,1 +1,9 @@
 @import '../../scss/index.scss';
+
+
+.switch-button{
+    cursor: pointer;
+    border: 1.5px $color-secundario solid;
+    width: 125px;
+    height: 50px;
+}
