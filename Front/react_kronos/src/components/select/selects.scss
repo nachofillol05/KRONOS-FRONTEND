@@ -1,0 +1,43 @@
+@import '../../scss/index.scss';
+
+select{
+    width: calc(var(--numero)*$proporcion-aurea-cuadrado*3);
+    height: calc(var(--numero)*$proporcion-aurea-cuadrado);
+    transition: all 0.3s;
+    font-size: calc(var(--numero));
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    text-align: center;
+    outline: none;
+
+    &.solid-select {
+        border: none;
+        border-radius: calc(var(--numero)*$proporcion-aurea-inversa-cuadrado);
+        color: $color-principal;
+        background-color: $color2;
+        font-family: $fuente-titulo;
+
+
+        &:hover {
+            background-color: $color3;
+            box-shadow: 
+            0 5px 5px rgba(0, 0, 0, 0.5),
+        }
+    }
+
+    &.transparent-select {
+        border: 1.5px solid $color-secundario;
+        color: $color-secundario;
+        background-color: transparent;
+        font-family: $fuente-general-light;
+        appearance: none;
+
+        &:hover {
+            border-color: $color2;
+            color: $color2;
+        }
+
+    }
+
+}

@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import './enlaces.scss';
+import { useNavigate } from 'react-router-dom';
 
 
 export default function Enlace(props) {
+    const navigate = useNavigate();
     const listaElementos = [];
     const [posicion, setPosicion] = useState({ top: 0});
     const [elementoClickeado, setElementoClickeado] = useState(1);
@@ -24,6 +26,7 @@ export default function Enlace(props) {
         const nuevaPosicion = event.target.getBoundingClientRect();
         setPosicion({ top: nuevaPosicion.top });
         setElementoClickeado(index);
+        //navigate(index)
     }
     navBarElements.map((element, index) => {
         listaElementos.push(<h2 

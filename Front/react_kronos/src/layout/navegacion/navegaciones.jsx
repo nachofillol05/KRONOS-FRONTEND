@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import Fondo from '../../components/fondo/fondos.jsx';
 import Drawer from '../../components/drawer/drawers.jsx';
 import NavBar from '../../components/navBar/navBars.jsx';
 import './navegaciones.scss';
@@ -30,12 +29,12 @@ export default function Navegacion({ children }) {
     return (
         <React.StrictMode>
             <NavBar />
-            <Fondo>
-                {childrenWithProps}
+            <section>
+            {childrenWithProps}
                 {isDrawerOpen && (
                     <Drawer onClose={handleCloseDrawer} title={drawerTitle} content={drawerContent} />
                 )}
-            </Fondo>
+            </section>
         </React.StrictMode>
     );
 }

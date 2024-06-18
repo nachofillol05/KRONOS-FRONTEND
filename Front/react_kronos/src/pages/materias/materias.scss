@@ -1,21 +1,11 @@
-.filtros-contenedor {
-    display: flex;
-    justify-content: space-between;
-    margin: 40px;
-    margin-left: 250px;
-    margin-right: 250px;
-    align-items: center;
-}
+@import '../../scss/index.scss';
 
-.container{
-    background-color: red;
-    flex-direction: column;
-    flex-grow: 1;
+.filtros-container{
     display: flex;
-}
+    justify-content: space-evenly;
+    align-items: center; 
+    margin-block: 25px;
+    min-width: 100%;
+    width: fit-content;
 
-.navbar {
-    position: fixed;
-    width: 100%;
-    z-index: 9999;
 }

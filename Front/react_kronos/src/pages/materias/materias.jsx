@@ -1,13 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import NavBar from '../../components/navBar/navBars.jsx';
-import Fondo from '../../components/fondo/fondos.jsx';
 import Table from '../../components/table/tables.jsx';
-import Select from '../../components/select/select.jsx';
+import Select from '../../components/select/selects.jsx';
 import Buscador from '../../components/buscador/buscador.jsx';
 import Input from "../../components/input/inputs.jsx";
-import Drawer from '../../layout/drawer/drawers.jsx';
+import Drawer from '../../components/drawer/drawers.jsx';
 import RangeSlider from '../../components/timerangeslider/timerange.jsx';
-import Button from '../../components/button/buttons.jsx';
 import './materias.scss';
 
 
@@ -76,18 +73,15 @@ export default function Materias() {
     /*<RangeSlider /> agregar esto para los sliders*/
     return (
         <React.StrictMode>
-        <NavBar />
-        <Fondo >
-        <div Class="filtros-container">
+        <div className="filtros-container">
             <RangeSlider />
-            <Select datos={teachers} name="Teachers" style={{'--largo': `50`}}/>
-            <Select datos={cursos} name="General" style={{'--largo': `50`}}/>
+            <Select datos={teachers} name="Teachers"/>
+            <Select datos={cursos} name="General"  />
             <Buscador />
-            </div>
-            <div Class="tabla-container">
+        </div>
+        <div Class="tabla-container">
             <Table data={materias} columns={columns} />
         </div>
-        </Fondo>
 
         {isModalOpen && <Drawer onClose={handleCloseModal} title="Agregar materia" >
                 <div Class='Contenedor' style={{display: 'flex',flexDirection: 'row', gap: '20px',  alignItems: 'center'}}>
@@ -122,8 +116,6 @@ export default function Materias() {
                     <h1>Descripción</h1>
                     <Input textArea/>
                 </div>
-
-
             </Drawer>}
 
       /*   {isModalOpen && <Drawer onClose={handleCloseModal} title="Agregar materia" />} */

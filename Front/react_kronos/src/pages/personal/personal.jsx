@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import NavBar from '../../components/navBar/navBars.jsx';
-import Fondo from '../../components/fondo/fondos.jsx';
 import Table from '../../components/table/tables.jsx';
-import Select from '../../components/select/select.jsx';
+import Select from '../../components/select/selects.jsx';
 import Buscador from '../../components/buscador/buscador.jsx';
 import Button from '../../components/button/buttons.jsx';
-import Drawer from '../../layout/drawer/drawers.jsx';
 import Input from "../../components/input/inputs.jsx";
+import Drawer from '../../components/drawer/drawers.jsx';
 import './personal.scss';
 
 
@@ -60,7 +58,7 @@ export default function Personal() {
         .then(data => {
             const subjectNames = data.map(subject => subject.name);
             setSubjects(subjectNames);
-          })
+        })
         .catch(error => console.error('Error fetching data:', error));
     }, []);
 
@@ -81,8 +79,8 @@ export default function Personal() {
         setIsModalOpen(false);
     };
 
-    const anios = ['1', '2', '3', '4', '5', '6']
-    const cursos = ['A', 'B', 'C']
+    //const anios = ['1', '2', '3', '4', '5', '6']
+    //const cursos = ['A', 'B', 'C']
     const tipoDocumento = ['DNI', 'Pasaporte']
     const rol = ['Profesor', 'Preceptor', 'Directivo']
 
@@ -90,10 +88,8 @@ export default function Personal() {
     /*<RangeSlider /> agregar esto para los sliders*/
     return (
         <React.StrictMode>
-        <NavBar />
-        <Fondo>
         <div Class="filtros-container">
-            <div className="botones">
+            <div className="switch">
                 <Button 
                     text="Profesores" 
                     life={activeButton === 'Profesores'} 
@@ -120,7 +116,6 @@ export default function Personal() {
             <div Class="tabla-container">
             <Table data={teachers} columns={columns} />
             </div>
-        </Fondo>
             {isModalOpen && <Drawer onClose={handleCloseModal} title="Agregar Personal">
                     <div Class='Contenedor' style={{display: 'flex',flexDirection: 'row', gap: '20px',  alignItems: 'center'}}>
                     <Select datos={tipoDocumento} name="Tipo Documento" style={{'--largo': `60`}} solid/>

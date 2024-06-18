@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Range, getTrackBackground } from 'react-range';
+import './timerange.scss';
 
 const RangeSlider = () => {
   const [values, setValues] = useState([0, 12]);
@@ -15,8 +16,8 @@ const RangeSlider = () => {
   };
 
   return (
-    <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
-      <h2 style={{ fontSize: '20px' }}>Horas</h2>
+    <div className='parent'>
+      <h2 style={{ fontSize: '15px' }}>Horas</h2>
       <Range
         values={values}
         step={STEP}
@@ -25,6 +26,7 @@ const RangeSlider = () => {
         onChange={(values) => setValues(values)}
         renderTrack={({ props, children }) => (
           <div
+            className='A'
             {...props}
             style={{ 
               ...props.style,
@@ -32,7 +34,7 @@ const RangeSlider = () => {
               width: '175px',
               background: getTrackBackground({
                 values,
-                colors: ['#ccc', '#006D6C', '#ccc'],
+                colors: ['#ccc', 'var(--color)', '#ccc'],
                 min: MIN,
                 max: MAX,
               }),
@@ -51,7 +53,7 @@ const RangeSlider = () => {
               height: '15px',
               width: '15px',
               borderRadius: '50%',
-              backgroundColor: '#006D6C',
+              backgroundColor: 'var(--color)',
               display: 'flex',
               justifyContent: 'center',
               alignItems: 'center',
@@ -62,7 +64,7 @@ const RangeSlider = () => {
               style={{
                 position: 'absolute',
                 top: '-25px',
-                color: '#006D6C',
+                color: 'var(--color)',
                 padding: '4px',
                 whiteSpace: 'nowrap',
                 fontSize: '12px',
