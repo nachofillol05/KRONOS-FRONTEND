@@ -8,7 +8,7 @@ export default function Enlace(props) {
     const listaElementos = [];
     const [posicion, setPosicion] = useState({ top: 0});
     const [elementoClickeado, setElementoClickeado] = useState(1);
-    const [navBarElements, setnavBarElements] = useState(['Menu','Horarios','Personal','Materias','Eventos']);
+    const [navBarElements, setnavBarElements] = useState({'Menu':"/",'Horarios':"",'Personal':'/personal','Materias':'/materias','Eventos':''});
     
     
     useEffect(() => {
@@ -26,16 +26,16 @@ export default function Enlace(props) {
         const nuevaPosicion = event.target.getBoundingClientRect();
         setPosicion({ top: nuevaPosicion.top });
         setElementoClickeado(index);
-        //navigate(index)
+        navigate(navBarElements[index])
     }
-    navBarElements.map((element, index) => {
+    for (const element in navBarElements) {
         listaElementos.push(<h2 
             key={element} onClick={(e) => handleClick(e, element)} 
             style={{ 
                 color: elementoClickeado === element ? '' : 'white'
             }}
             >{element}</h2>);
-        })
+    }
 
     
 
