@@ -5,6 +5,7 @@ import Buscador from '../../components/buscador/buscador.jsx';
 import Button from '../../components/button/buttons.jsx';
 import Input from "../../components/input/inputs.jsx";
 import Drawer from '../../components/drawer/drawers.jsx';
+import Switcher from '../../components/switcher/switchers.jsx';
 import './personal.scss';
 
 
@@ -88,35 +89,24 @@ export default function Personal() {
     /*<RangeSlider /> agregar esto para los sliders*/
     return (
         <React.StrictMode>
-        <div Class="filtros-container">
-            <div className="switch">
-                <Button 
-                    text="Profesores" 
-                    life={activeButton === 'Profesores'} 
-                    onClick={() => buttonSelected('Profesores')}
-                />
-                <Button 
-                    text="Preceptores" 
-                    life={activeButton === 'Preceptores'} 
-                    onClick={() => buttonSelected('Preceptores')}
-                />
-                <Button 
-                    text="Directivos" 
-                    life={activeButton === 'Directivos'} 
-                    onClick={() => buttonSelected('Directivos')}
-                />
-            </div>
+        <div className="filtros-container">
+                <Switcher items = {{
+                            'Profesores': 1,
+                            'Preceptores': 2,
+                            }}/>
                 <Select datos={subjects} name="Materia" style={{'--largo': `50`}}/>
                 <Buscador />
             <div>
                 <Button onClick={handleButtonClick} text='+' numero={10}/>
             </div>
                 
-            </div>
-            <div Class="tabla-container">
+        </div>
+
+        <div className="contenedor-tabla">
             <Table data={teachers} columns={columns} />
-            </div>
-            {isModalOpen && <Drawer onClose={handleCloseModal} title="Agregar Personal">
+        </div>
+        
+            {isModalOpen && <Drawer onClose={handleCloseModal} title="Buscar personal">
                     <div Class='Contenedor' style={{display: 'flex',flexDirection: 'row', gap: '20px',  alignItems: 'center'}}>
                     <Select datos={tipoDocumento} name="Tipo Documento" style={{'--largo': `60`}} solid/>
                     <Input />

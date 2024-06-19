@@ -1,48 +1,40 @@
-.data-row {
-    grid-area: data;
-    display: table-row;
-    display: grid;
-    grid-template-columns: repeat(6, 1fr);
-    border-bottom: 1px solid #0E4942;
+@import "../../scss/index.scss";
+
+.MuiDataGrid-filler{
+    background-color: $color3;
 }
 
-.header-container{
-    grid-area: data;
-    font-size: larger;
-    display: table-row;
-    display: grid;
-    grid-template-columns: repeat(6, 1fr);
-    background-color: #006D62;
-    color: white;
-    text-align: center;
-    border: solid 3px #0E4942;
+.MuiDataGrid-columnHeaderTitleContainer{
+    background-color: transparent;  }
 
+.css-n3fyjk-MuiDataGrid-root .MuiDataGrid-columnHeader--sortable {
+    background-color: $color3;
+
+    .MuiDataGrid-columnHeaderTitleContainer{
+        background-color: transparent; 
+        color: $color-principal;
+        font-family: $fuente-titulo;
+    }
+
+    svg{
+        color: $color-principal;
+    }
 }
 
-.row {
-    background-color: white;
-    border-bottom: 1px solid #0E4942;
-    height: 40px;
-    text-align: center;
+.css-n3fyjk-MuiDataGrid-root .MuiDataGrid-cell--textLeft {
+    font-family: $fuente-general-light;
+    border-block: $color2 solid 1px;
+}
+
+.css-n3fyjk-MuiDataGrid-root .MuiDataGrid-cellEmpty{
+    border-block: $color2 solid 1px;
+}
+
+.MuiDataGrid-footerContainer .MuiDataGrid-withBorderColor .css-wop1k0-MuiDataGrid-footerContainer{
+    display: none;
     
 }
 
-.data-container {
-    display: table;
-    width: 100%;
-}
-
-
-
-.data-cell {
-    display: table-cell;
-    padding: 8px;
-    text-align: center;
-}
-
-.data-row:hover {
-    background-color: #006D62;
-}
-.data-row:hover .data-cell{
-    color: #ffffff;
+.css-n3fyjk-MuiDataGrid-root{
+    border: none !important;
 }

@@ -79,6 +79,8 @@ export default function Materias() {
             <Select datos={cursos} name="General"  />
             <Buscador />
         </div>
+
+
         <div Class="tabla-container">
             <Table data={materias} columns={columns} />
         </div>

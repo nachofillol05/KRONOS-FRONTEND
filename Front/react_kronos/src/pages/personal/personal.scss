@@ -1,7 +1,12 @@
 @import '../../scss/index.scss';
 
+.filtros-container{
+  height: 50px;
 
-.switch{
-  display: flex;
-  
+}
+.contenedor-tabla{
+  width: 100%;
+  height: calc(100% - 100px);
+  overflow: hidden;
+  border-radius: 0 0 0 25px;
 }
