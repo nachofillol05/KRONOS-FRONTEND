@@ -4,7 +4,7 @@ import './tables.scss';
 
 export default function Table(props) {
     const { data, columns } = props;
-    console.log("las teachers son ",data);
+    console.log("las datos son ",data);
     console.log(columns);
     return(
     <div class="grid-table">

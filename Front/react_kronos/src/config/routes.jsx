@@ -21,9 +21,10 @@ export const routes = [
     {
         path: "/",
         exact: true,
+        private: true,
         layout: Navegacion,
         component: Home,
-
+        
     },
     
     {

@@ -17,11 +17,13 @@ export default function Personal() {
     
     useEffect(() => {
         fetch('http://127.0.0.1:8000/api/teachers/', {
-            method: "POST",
+            method: "GET",
             headers: {
-                'Content-Type': 'application/json',
+                'Authorization': 'Token '+ localStorage.getItem('token'),
+                'School-ID':1,
             },
-            body: JSON.stringify({"school_id": 1 })
+
+
         })
         .then(response => {
             if (!response.ok) {
@@ -48,6 +50,13 @@ export default function Personal() {
     useEffect(() => {
         fetch('http://127.0.0.1:8000/api/subjects/', {
             method: "GET",
+            headers: {
+                'Authorization': 'Token '+ localStorage.getItem('token'),
+                'School-ID':1,
+                
+                
+            },
+            
         })
         .then(response => {
             if (!response.ok) {
