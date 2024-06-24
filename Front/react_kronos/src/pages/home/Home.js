@@ -1,11 +1,11 @@
 import React from 'react';
-import Switcher from '../../components/switcher/switchers';
+import Lateral from '../../components/lateral/laterals';
 
 export default function Home() {
 
     return (
             <>
-                <Switcher/>
+                <Lateral/>
             </>
 );
 }

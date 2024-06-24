@@ -6,6 +6,7 @@ import Input from "../../components/input/inputs.jsx";
 import Drawer from '../../components/drawer/drawers.jsx';
 import RangeSlider from '../../components/timerangeslider/timerange.jsx';
 import './materias.scss';
+import Lateral from '../../components/lateral/laterals.jsx';
 
 
 export default function Materias() {
@@ -78,12 +79,10 @@ export default function Materias() {
             <Select datos={teachers} name="Teachers"/>
             <Select datos={cursos} name="General"  />
             <Buscador />
+            <Lateral/>
         </div>
 
-
-        <div Class="tabla-container">
-            <Table data={materias} columns={columns} />
-        </div>
+        <Table data={materias} columns={columns} />
 
         {isModalOpen && <Drawer onClose={handleCloseModal} title="Agregar materia" >
                 <div Class='Contenedor' style={{display: 'flex',flexDirection: 'row', gap: '20px',  alignItems: 'center'}}>
@@ -120,7 +119,7 @@ export default function Materias() {
                 </div>
             </Drawer>}
 
-      /*   {isModalOpen && <Drawer onClose={handleCloseModal} title="Agregar materia" />} */
+        {isModalOpen && <Drawer onClose={handleCloseModal} title="Agregar materia" />}
     </React.StrictMode>
     )
 }

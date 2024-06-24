@@ -23,12 +23,9 @@
 
 .css-n3fyjk-MuiDataGrid-root .MuiDataGrid-cell--textLeft {
     font-family: $fuente-general-light;
-    border-block: $color2 solid 1px;
 }
 
-.css-n3fyjk-MuiDataGrid-root .MuiDataGrid-cellEmpty{
-    border-block: $color2 solid 1px;
-}
+
 
 .MuiDataGrid-footerContainer .MuiDataGrid-withBorderColor .css-wop1k0-MuiDataGrid-footerContainer{
     display: none;
@@ -37,4 +34,13 @@
 
 .css-n3fyjk-MuiDataGrid-root{
     border: none !important;
+}
+
+
+
+.contenedor-tabla{
+    width: 100%;
+    height: calc(100% - 100px);
+    overflow: hidden;
+    border-radius: 0 0 0 25px;
 }

@@ -38,10 +38,11 @@ const columns = [
     { field: 'col2', headerName: 'Column 2', width: 150 },
 ];
 
-const Table = () => {
+export default function Table(){
     return (
+        <div className="contenedor-tabla">
             <DataGrid rows={rows} columns={columns} hideFooter/>
+        </div>
     );
 };
 
-export default Table;

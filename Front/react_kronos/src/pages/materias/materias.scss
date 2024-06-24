@@ -2,10 +2,9 @@
 
 .filtros-container{
     display: flex;
-    justify-content: space-evenly;
+    justify-content: space-between;
     align-items: center; 
     margin-block: 25px;
-    min-width: 100%;
-    width: fit-content;
-
+    width:auto;
+    padding-left:50px;
 }

@@ -7,6 +7,7 @@ import Input from "../../components/input/inputs.jsx";
 import Drawer from '../../components/drawer/drawers.jsx';
 import Switcher from '../../components/switcher/switchers.jsx';
 import './personal.scss';
+import Lateral from '../../components/lateral/laterals.jsx';
 
 
 
@@ -99,13 +100,11 @@ export default function Personal() {
             <div>
                 <Button onClick={handleButtonClick} text='+' numero={10}/>
             </div>
-                
+            <Lateral />  
         </div>
 
-        <div className="contenedor-tabla">
             <Table data={teachers} columns={columns} />
-        </div>
-        
+
             {isModalOpen && <Drawer onClose={handleCloseModal} title="Buscar personal">
                     <div Class='Contenedor' style={{display: 'flex',flexDirection: 'row', gap: '20px',  alignItems: 'center'}}>
                     <Select datos={tipoDocumento} name="Tipo Documento" style={{'--largo': `60`}} solid/>
