@@ -12,9 +12,25 @@ export default function Materias() {
     const [materias, setMaterias] = useState([]);
     const [teachers, setTeachers] = useState([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [selectedCourse, setSelectedCourse] = useState('');
+    const [teacher, setTeacher] = useState('');
+    const [Subjectname, setSubjectname] = useState('');
+    const [start_time, setStart_time] = useState('');
+    const [end_time, setEnd_time] = useState('');
+
     useEffect(() => {
-        fetch('http://127.0.0.1:8000/api/subjects/', {
+        const url = new URL('http://127.0.0.1:8000/api/subjects/');
+        if (end_time && start_time) {
+            url.searchParams.append('start_time', start_time);
+            url.searchParams.append('end_time', end_time);
+        };
+        if (teacher) {
+            url.searchParams.append('teacher', teacher);
+        };
+        if (Subjectname){
+            url.searchParams.append('name', Subjectname);
+        };
+        console.log("aaaaaaaaaaaaaaaaaaaaaaa", url.toString())
+        fetch(url.toString(), {
             method: "GET",
             headers: {
                 'Authorization': 'Token '+ localStorage.getItem('token'),
@@ -31,7 +47,7 @@ export default function Materias() {
             setMaterias(data);
         })
         .catch(error => console.error('Error fetching data:', error));
-    }, []);
+    }, [start_time,end_time,Subjectname,teacher]);
     
     const columns = [
         { header: 'Nombre', field: 'name' },
@@ -71,25 +87,34 @@ export default function Materias() {
         setIsModalOpen(false);
     };
 
-    const handleCourseChange = (event) => {
-        setSelectedCourse(event.target.value);
-    };
-
     const openModal = () => {
         setIsModalOpen(true);
     }
-    const handleSelectChange = (value) => { console.log(value) };
+    const handleSelectTeacher = (value) => { 
+        setTeacher(value)
+        console.log(value) 
+    };
 
-    const cursos = ['1A', '1B', '1C', '2A', '2B', '2C', '3A', '3B', '3C', '4A', '4B', '4C', '5A', '5B', '5C', '6A', '6B', '6C'];
+    const handleSearch = (searchText) => {
+        setSubjectname(searchText);
+    };
+
+    const handleFinalRangeChange = (newValues) => {
+        setStart_time(newValues[0]);
+        setEnd_time(newValues[1]);
+        console.log('New range values:', newValues);
+      };
+
+    const cursos = [{id: 1, name: '1A'}, {id: 2, name: '1B'}, {id: 3, name: '2A'}, {id: 4, name: '2B'}, {id: 5, name: '3A'}, {id: 6, name: '3B'}, {id: 7, name: '4A'}, {id: 8, name: '4B'}, {id: 9, name: '5A'}, {id: 10, name: '5B'}];
 
 
     return (
         <React.StrictMode>
         <div className="filtros-container">
-            <RangeSlider />
-            <Select onChange={handleSelectChange} datos={teachers} name="Teachers"/>
-            <Select onChange={handleSelectChange} datos={cursos} name="General"  />
-            <Buscador />
+            <RangeSlider onFinalChange={handleFinalRangeChange} />
+            <Select onChange={handleSelectTeacher} datos={teachers} name="Teachers"/>
+            <Select onChange={handleSelectTeacher} datos={cursos} name="General"  />
+            <Buscador onSearch={handleSearch}/>
             <button onClick={openModal}></button>
         </div>
         <div Class="tabla-container">

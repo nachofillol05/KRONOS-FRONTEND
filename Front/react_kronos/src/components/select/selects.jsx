@@ -9,8 +9,6 @@ export default function Select(props) {
             <option value="">Seleccionar</option>
             
             {datos.map((dato) => (
-                
-                console.log(dato),
                 <option key={dato.id} value={dato.id}>{dato.name}</option>
             ))}
         </select>

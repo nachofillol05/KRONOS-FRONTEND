@@ -2,17 +2,22 @@ import React, { useState } from 'react';
 import { Range, getTrackBackground } from 'react-range';
 import './timerange.scss';
 
-const RangeSlider = () => {
-  const [values, setValues] = useState([0, 12]);
+const RangeSlider = ({ onFinalChange }) => {
+  const [values, setValues] = useState([6.5, 23.5]);
 
   const STEP = 0.5;
-  const MIN = 0;
-  const MAX = 24;
+  const MIN = 6.5;
+  const MAX = 23.5;
 
   const formatHours = (value) => {
     const hours = Math.floor(value);
     const minutes = (value - hours) * 60;
     return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
+  };
+
+  const handleFinalChange = (values) => {
+    const formattedValues = values.map(value => formatHours(value));
+    onFinalChange && onFinalChange(formattedValues);
   };
 
   return (
@@ -24,11 +29,12 @@ const RangeSlider = () => {
         min={MIN}
         max={MAX}
         onChange={(values) => setValues(values)}
+        onFinalChange={handleFinalChange}
         renderTrack={({ props, children }) => (
           <div
             className='A'
             {...props}
-            style={{ 
+            style={{
               ...props.style,
               height: '3px',
               width: '175px',
@@ -74,9 +80,8 @@ const RangeSlider = () => {
             </div>
           </div>
         )}
-        thumbCount={1} // Solo se muestra un pulgar en el rango deslizante
+        thumbCount={2}
       />
-      
     </div>
   );
 };
