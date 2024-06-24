@@ -57,7 +57,11 @@ export default function Materias() {
                 return response.json();
             })
             .then(data => {
-                const teacherNames = data.map(teacher => teacher.first_name + ' ' + teacher.last_name);
+                const teacherNames = data.map(teacher => ({
+                    id: teacher.id,
+                    name: teacher.first_name + ' ' + teacher.last_name,
+                }));
+            
                 setTeachers(teacherNames);
             })
             .catch(error => console.error('Error fetching data:', error));
@@ -70,6 +74,7 @@ export default function Materias() {
     const handleCourseChange = (event) => {
         setSelectedCourse(event.target.value);
     };
+    const handleSelectChange = (value) => { console.log(value) };
 
     const cursos = ['1A', '1B', '1C', '2A', '2B', '2C', '3A', '3B', '3C', '4A', '4B', '4C', '5A', '5B', '5C', '6A', '6B', '6C'];
 
@@ -79,8 +84,8 @@ export default function Materias() {
         <React.StrictMode>
         <div className="filtros-container">
             <RangeSlider />
-            <Select datos={teachers} name="Teachers"/>
-            <Select datos={cursos} name="General"  />
+            <Select onChange={handleSelectChange} datos={teachers} name="Teachers"/>
+            <Select onChange={handleSelectChange} datos={cursos} name="General"  />
             <Buscador />
         </div>
         <div Class="tabla-container">
