@@ -1,8 +1,16 @@
 import React from 'react';
 import './navBars.scss';
 import Enlace from '../enlace/enlaces';
+import { useNavigate } from 'react-router-dom';
+
 
 export default function NavBar() {
+    const navigate = useNavigate();
+    const LogOut = () => {
+        console.log('se desloguea');
+        localStorage.setItem('token', '');
+        navigate('/login')
+    }
     return (
         <aside>
             <div className="contenedor-colegio">
@@ -15,9 +23,7 @@ export default function NavBar() {
             <Enlace /> 
             <div className='contenedor-persona'>
             <div className="botones">
-                <a href="#0">0</a>
-                <a href="#0">0</a>
-                <a href="#0">0</a>
+                <a onClick={LogOut}>Cerrar sesion</a>
             </div>
             <hr />
             <div className="informacion">

@@ -74,12 +74,15 @@ export default function Materias() {
     const handleCourseChange = (event) => {
         setSelectedCourse(event.target.value);
     };
+
+    const openModal = () => {
+        setIsModalOpen(true);
+    }
     const handleSelectChange = (value) => { console.log(value) };
 
     const cursos = ['1A', '1B', '1C', '2A', '2B', '2C', '3A', '3B', '3C', '4A', '4B', '4C', '5A', '5B', '5C', '6A', '6B', '6C'];
 
 
-    /*<RangeSlider /> agregar esto para los sliders. soy gay*/
     return (
         <React.StrictMode>
         <div className="filtros-container">
@@ -87,6 +90,7 @@ export default function Materias() {
             <Select onChange={handleSelectChange} datos={teachers} name="Teachers"/>
             <Select onChange={handleSelectChange} datos={cursos} name="General"  />
             <Buscador />
+            <button onClick={openModal}></button>
         </div>
         <div Class="tabla-container">
             <Table data={materias} columns={columns} />
@@ -126,8 +130,6 @@ export default function Materias() {
                     <Input textArea/>
                 </div>
             </Drawer>}
-
-         {isModalOpen && <Drawer onClose={handleCloseModal} title="Agregar materia" />}
     </React.StrictMode>
     )
 }

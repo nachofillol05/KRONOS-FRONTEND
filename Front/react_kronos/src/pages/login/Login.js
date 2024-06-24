@@ -79,7 +79,7 @@ export default function Login() {
                             <p className="register-link">Regístrate</p>
                             <button type="submit" onClick={handleLogin}>Entrar</button>
                         </div>
-                        <p className="error-message">Mensaje de error</p>
+                        <p className="error-message">El usuario y la contraseña no coinciden</p>
                     </form>
                 </div>
             </div>
