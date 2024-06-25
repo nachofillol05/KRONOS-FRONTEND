@@ -154,9 +154,7 @@ export default function Personal({ handleOpenDrawer, handleCloseDrawer }) {
                         "Título del botón Prueba"
                     )}]} />
             </div>
-            <div className="tabla-container">
-                <Table data={teachers} columns={columns} />
-            </div>
+            <Table data={teachers} columns={columns} />
 
         </React.StrictMode>
     )
