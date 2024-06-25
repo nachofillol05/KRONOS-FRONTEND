@@ -1,16 +1,33 @@
-import React from "react";
-import './selects.scss';
+import * as React from 'react';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
 
-export default function Select(props) {
-    const { datos, onChange, solid } = props;
+export default function SelectVariants(props) {
+    const { datos, label } = props;
+    const [age, setAge] = React.useState('');
+
+    const handleChange = (event) => {
+        setAge(event.target.value);
+    };
 
     return (
-        <select onChange={(e) => onChange(e.target.value)} className={solid ? 'solid-select' : 'transparent-select'}>
-            <option value="">Seleccionar</option>
-            
-            {datos.map((dato) => (
-                <option key={dato.id} value={dato.id}>{dato.name}</option>
-            ))}
-        </select>
+        <div>
+            <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
+                <InputLabel id="demo-simple-select-standard-label">{props.label}</InputLabel>
+                <Select
+                    labelId="demo-simple-select-standard-label"
+                    id="demo-simple-select-standard"
+                    value={age}
+                    onChange={handleChange}
+                    label="Age"
+                >
+                {datos.map((dato) => (
+                    <MenuItem key={dato.id} value={dato.id}>{dato.name}</MenuItem>
+                ))}
+                </Select>
+            </FormControl>
+        </div>
     );
 }

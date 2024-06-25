@@ -1,7 +1,7 @@
 @import "../../scss/index.scss";
 
 .MuiDataGrid-filler{
-    background-color: $color3;
+    background-color: transparent;
 }
 
 .MuiDataGrid-columnHeaderTitleContainer{
@@ -9,7 +9,7 @@
 
 .css-n3fyjk-MuiDataGrid-root .MuiDataGrid-columnHeader--sortable {
     background-color: $color3;
-
+    
     .MuiDataGrid-columnHeaderTitleContainer{
         background-color: transparent; 
         color: $color-principal;

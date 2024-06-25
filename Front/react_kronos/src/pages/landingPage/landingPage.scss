@@ -1,0 +1,274 @@
+@import '../../scss/index.scss';
+
+  
+
+.botones {
+  margin-top: 50px;
+  display: flex;
+
+
+}
+
+
+.flex {
+  display: flex;
+  align-items: center;
+
+
+}
+
+
+.botones a {
+    margin-right: 40px; 
+
+  }
+
+.input-land {
+  padding-left: 50px;
+
+
+
+}
+
+.container-land {
+    margin: 0 auto;
+    padding: 20px;
+    overflow: auto;
+    overflow-x: hidden;
+    width: 100vw;
+    box-sizing: border-box
+}
+
+
+
+.card {
+  margin-top: 50px;
+  margin-left: 150px;
+  align-items: left;
+  margin-bottom: 200px;
+  justify-content: center;
+  padding: 80px;
+  background-color: #fff;   
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+}
+
+
+.card h1 {
+  margin-bottom: 35px;
+}
+
+.card label {
+  margin-top: 35px;
+}
+
+
+.input-group {
+  margin-bottom: 1rem;
+}
+
+.input-group label {
+  display: block;
+  color: #4a5568;
+  margin-bottom: 0.5rem;
+}
+
+
+
+.flex {
+  display: flex;
+}
+
+.justify-between {
+  justify-content: space-between;
+}
+
+.items-center {
+  align-items: center;
+}
+
+.text-link {
+  color: #38a169;
+  font-size: 0.875rem;
+  text-decoration: none;
+}
+
+.text-link:hover {
+  color: #2c7a7b;
+}
+
+
+
+.imageland1 {
+  margin-bottom: 50px;
+  width: 400px; 
+  height: auto; 
+  overflow: hidden; 
+}
+
+.imageland2 {
+  width: 300px; 
+  height: auto; 
+  overflow: hidden; 
+}
+
+
+
+.sidebar {
+  margin-bottom: 100px;
+  margin-left: 150px;
+}
+
+.sidebar h1 {
+  font-size: 40px;
+  font-weight: bold;
+  margin-bottom: 1rem;
+}
+
+.sidebar img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+}
+
+
+.highlighted-section {
+  background-color: #006D62;
+  color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.highlighted-section .flex {
+  justify-content: space-between;
+}
+
+.highlighted-section h1 {
+  font-size: 2.25rem;
+  font-weight: 300;
+  line-height: 2.5rem;
+}
+
+.highlighted-section .content {
+  width: 60%;
+}
+
+.highlighted-section .image img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+}
+
+
+.colegios-land {
+  text-align: center;
+  margin-top: 125px;
+}
+
+.colegios-land h1 {
+  font-size: 35px;
+}
+
+.reviews-land {
+  text-align: center;
+}
+
+.reviews-land h1 {
+  font-size: 35px;
+}
+
+
+.logos {
+  display: flex;
+  justify-content: center;
+  margin-top: 100px;
+  margin-bottom: 125px;
+
+}
+
+
+.reviews {
+  display: flex;
+  justify-content: center;
+  margin-top: 100px;
+  margin-bottom: 125px;
+
+}
+
+.reviewland-img {
+  width: 600px; 
+  height: auto; 
+  overflow: hidden;
+}
+
+
+
+.logos img {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  margin-right: 20px;
+}
+
+.logocole {
+  margin-left: 50px;
+  margin-right: 50px;
+
+}
+
+
+
+
+
+
+
+.hero-section {
+    background-color: #006d6c; 
+    border-radius: 15px;
+    display: flex;
+    padding: 100px;
+    justify-content: center;
+    align-items: center;
+    max-width: 100%;
+
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.hero-content {
+
+    background-color: #ffffff; 
+    display: flex;
+    border-radius: 30px;
+    padding-bottom: 50px;
+    padding-top: 50px;
+    justify-content: space-between;
+    align-items: center;
+    width: 70%;
+}
+
+.text-section {
+    flex: 1;
+    padding-right: 20px;
+    margin-left: 30px;
+}
+
+
+.text-section h1 {
+  text-align: left;
+  font-size: 40px;
+  margin-left: 20px;
+  
+}
+
+
+.image-section {
+    flex: 1;
+    text-align: center;
+}
+
+.image-section img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 15px;
+}

@@ -14,9 +14,7 @@ export default function Personal({ handleOpenDrawer, handleCloseDrawer }) {
     const [activeButton, setActiveButton] = useState('Profesores');
     const [searchName, setSearchName] = useState('');
     const [subject, setSubject] = useState('');
-
     const asuntoRef = useRef(null);
-
     const contenidoRef = useRef(null);
 
     const handleEnviar = (event) => {
@@ -30,7 +28,7 @@ export default function Personal({ handleOpenDrawer, handleCloseDrawer }) {
             const jsonData = JSON.stringify({ email, asunto, contenido });
             console.log('JSON:', jsonData);
 
-            fetch('http://localhost:8000/Kronosapp/contacting-staff/', {
+            fetch('http://localhost:8000/api/contacting-staff/', {
                 method: "POST",
                 body: jsonData,
                 headers: {
@@ -83,12 +81,12 @@ export default function Personal({ handleOpenDrawer, handleCloseDrawer }) {
     }, [searchName, subject]);
 
     const columns = [
-        { header: 'Nombre', field: 'first_name' },
-        { header: 'Apellido', field: 'last_name' },
-        { header: 'Documento', field: 'document' },
-        { header: 'Genero', field: 'gender' },
-        { header: 'Email', field: 'email' },
-        { header: 'Horas por semana', field: 'availability' }
+        { header: 'Nombre', field: 'first_name' , flex: 1},
+        { header: 'Apellido', field: 'last_name', flex: 1},
+        { header: 'Documento', field: 'document', flex: 1 },
+        { header: 'Genero', field: 'gender', flex: 1 },
+        { header: 'Email', field: 'email', flex: 1 },
+        { header: 'Horas por semana', field: 'availability', flex: 1 }
     ];
 
     useEffect(() => {
@@ -128,20 +126,15 @@ export default function Personal({ handleOpenDrawer, handleCloseDrawer }) {
         setSubject(selectedId);
     };
 
-    const tipoDocumento = ['DNI', 'Pasaporte'];
-    const rol = ['Profesor', 'Preceptor', 'Directivo'];
+    //const tipoDocumento = ['DNI', 'Pasaporte'];
+    //const rol = ['Profesor', 'Preceptor', 'Directivo'];
 
     return (
         <React.StrictMode>
             <div className="filtros-container">
                 <Switcher onClick={buttonSelected} activeButton={activeButton} />
-                <Select datos={subjects} name="Materia" style={{ '--largo': `50` }} onChange={handleSelectChange} />
+                <Select data={subjects} label="Materia" onChange={handleSelectChange} />
                 <Buscador onSearch={handleSearch} />
-                <div>
-                    <Button onClick={() => handleOpenDrawer(
-
-                    )} text='+' numero={10} />
-                </div>
                 <Lateral botones={[{
                     solid: true,
                     icono: (

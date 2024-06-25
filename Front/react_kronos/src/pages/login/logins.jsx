@@ -66,7 +66,6 @@ export default function Login() {
                     <a href="#0">Recuerda tu contraseña</a>
                 </div>
                 <div className='botones'>
-                    <a href="#0">Regístrate</a>
                     <Button text='Iniciar sesión' life onClick={handleLogin} />
                 </div>
             </form>
