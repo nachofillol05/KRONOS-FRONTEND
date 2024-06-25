@@ -21,15 +21,16 @@ export const routes = [
     {
         path: "/",
         exact: true,
+        private: true,
         layout: Navegacion,
         component: Home,
-
+        
     },
     
     {
         path: "/prueba",
         exact: true,
-        private: true,
+        private: false,
         layout: Navegacion,
         component: Prueba
     },

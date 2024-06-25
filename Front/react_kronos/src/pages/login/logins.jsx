@@ -70,7 +70,7 @@ export default function Login() {
                     <Button text='Iniciar sesión' life onClick={handleLogin} />
                 </div>
             </form>
-            {showError && <p>Mensaje de error</p>}
+            {showError && <p>El usuario y la contraseña no coinciden</p>}
         </div>
     );
 }

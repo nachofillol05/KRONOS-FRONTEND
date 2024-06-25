@@ -4,7 +4,9 @@ import { useNavigate } from 'react-router-dom';
 const PrivateRoute = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(null);
   const navigate = useNavigate();
-
+  if (localStorage.getItem('token') === "" || localStorage.getItem('token') === null){
+    navigate('/login');
+  }
   useEffect(() => {
     const verifyToken = async () => {
       try {
@@ -38,7 +40,7 @@ const PrivateRoute = ({ children }) => {
     return <div>Loading...</div>; // Puedes renderizar un spinner u otro indicador de carga aquí
   }
 
-  return isAuthenticated ? children : null;
+  return isAuthenticated ? children : navigate('/login');
 };
 
 export default PrivateRoute;
