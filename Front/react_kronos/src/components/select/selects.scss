@@ -1,8 +1,8 @@
 @import '../../scss/index.scss';
 
 select{
-    width: calc(var(--numero)*$proporcion-aurea-cuadrado*3);
-    height: calc(var(--numero)*$proporcion-aurea-cuadrado);
+    width: 125px;
+    height: 50px;
     transition: all 0.3s;
     font-size: calc(var(--numero));
     display: flex;

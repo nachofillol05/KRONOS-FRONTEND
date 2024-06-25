@@ -1,11 +1,11 @@
 import React from 'react';
-import Lateral from '../../components/lateral/laterals';
+import Input from '../../components/input/inputs.jsx';
 
 export default function Home() {
 
     return (
             <>
-                <Lateral/>
+                <Input placeholder="adgshfdaf"/>
             </>
 );
 }

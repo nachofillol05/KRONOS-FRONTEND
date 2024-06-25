@@ -9,10 +9,9 @@ import Switcher from '../../components/switcher/switchers.jsx';
 import './personal.scss';
 import Lateral from '../../components/lateral/laterals.jsx';
 
-export default function Personal(handleOpenDrawer, handleCloseDrawer) {
+export default function Personal({ handleOpenDrawer, handleCloseDrawer }) {
     const [teachers, setTeachers] = useState([]);
     const [subjects, setSubjects] = useState([]);
-    const [isModalOpen, setIsModalOpen] = useState(false);
     const [activeButton, setActiveButton] = useState('Profesores');
     const [searchName, setSearchName] = useState('');
     const [subject, setSubject] = useState('');
@@ -83,13 +82,7 @@ export default function Personal(handleOpenDrawer, handleCloseDrawer) {
         setActiveButton(buttonText);
     };
 
-    const handleButtonClick = () => {
-        setIsModalOpen(true);
-    };
 
-    const handleCloseModal = () => {
-        setIsModalOpen(false);
-    };
 
     const handleSearch = (searchText) => {
         setSearchName(searchText);
@@ -105,60 +98,61 @@ export default function Personal(handleOpenDrawer, handleCloseDrawer) {
     return (
         <React.StrictMode>
             <div className="filtros-container">
-                <div className="switch">
-                    <Button
-                        text="Profesores"
-                        life={activeButton === 'Profesores'}
-                        onClick={() => buttonSelected('Profesores')}
-                    />
-                    <Button
-                        text="Preceptores"
-                        life={activeButton === 'Preceptores'}
-                        onClick={() => buttonSelected('Preceptores')}
-                    />
-                    <Button
-                        text="Directivos"
-                        life={activeButton === 'Directivos'}
-                        onClick={() => buttonSelected('Directivos')}
-                    />
-                </div>
+                <Switcher onClick={buttonSelected} activeButton={activeButton} />
                 <Select datos={subjects} name="Materia" style={{ '--largo': `50` }} onChange={handleSelectChange} />
                 <Buscador onSearch={handleSearch} />
                 <div>
                     <Button onClick={() => handleOpenDrawer(
-                        <div>
-                            <div className='Contenedor' style={{ display: 'flex', flexDirection: 'row', gap: '20px', alignItems: 'center' }}>
-                                <Select datos={tipoDocumento} name="Tipo Documento" style={{ '--largo': `60` }} solid />
-                                <Input />
-                                <Button id="botonCircular" text={
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
-                                        <path d="M10 2a8 8 0 1 0 5.3 14.3l4.6 4.6 1.4-1.4-4.6-4.6A8 8 0 0 0 10 2zm0 2a6 6 0 1 1 0 12 6 6 0 0 1 0-12z" />
-                                    </svg>}
-                                    numero={20} circular
-                                />
-                            </div>
-                            <div>
-                                <h1>Nombre</h1>
-                                <Input />
-                            </div>
-                            <div>
-                                <h1>Apellido</h1>
-                                <Input />
-                            </div>
-                            <div>
-                                <h1>Telefono</h1>
-                                <Input />
-                            </div>
-                            <div>
-                                <h1>Email</h1>
-                                <Input />
-                            </div>
-                            <div className='Contenedor' style={{ display: 'flex', flexDirection: 'row', gap: '20px' }}>
-                                <Select datos={rol} name="Rol" largo="345" solid />
-                            </div>
-                        </div>
+
                     )} text='+' numero={10} />
                 </div>
+                <Lateral botones={[{
+                    solid: true,
+                    icono: (
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 24 24"
+                            width="24px"
+                            height="24px"
+                            fill="#0E4942"
+                        >
+                            <path d="M 10 3 L 10 8 L 4 8 L 4 20 L 20 20 L 20 8 L 14 8 L 14 3 Z M 12 5 L 13 5 L 13 8 L 11 8 L 11 5 Z M 6 10 L 18 10 L 18 18 L 6 18 Z" />
+                        </svg>
+                    ),
+                    function: () => handleOpenDrawer(
+                        <div>
+                        <div className='Contenedor' style={{ display: 'flex', flexDirection: 'row', gap: '20px', alignItems: 'center' }}>
+                            <Select datos={tipoDocumento} name="Tipo Documento" style={{ '--largo': `60` }} solid />
+                            <Input />
+                            <Button id="botonCircular" text={
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                                    <path d="M10 2a8 8 0 1 0 5.3 14.3l4.6 4.6 1.4-1.4-4.6-4.6A8 8 0 0 0 10 2zm0 2a6 6 0 1 1 0 12 6 6 0 0 1 0-12z" />
+                                </svg>}
+                                numero={20} circular
+                            />
+                        </div>
+                        <div>
+                            
+                            <Input label="Nombres"/>
+                        </div>
+                        <div>
+                            <h1>Apellido</h1>
+                            <Input />
+                        </div>
+                        <div>
+                            <h1>Telefono</h1>
+                            <Input />
+                        </div>
+                        <div>
+                            <h1>Email</h1>
+                            <Input />
+                        </div>
+                        <div className='Contenedor' style={{ display: 'flex', flexDirection: 'row', gap: '20px' }}>
+                            <Select datos={rol} name="Rol" largo="345" solid />
+                        </div>
+                    </div>,
+                        "Título del botón Prueba"
+                    )}]} />
             </div>
             <div className="tabla-container">
                 <Table data={teachers} columns={columns} />

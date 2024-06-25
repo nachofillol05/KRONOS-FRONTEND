@@ -9,7 +9,7 @@ import './materias.scss';
 import Lateral from '../../components/lateral/laterals.jsx';
 
 
-export default function Materias() {
+export default function Materias({ handleOpenDrawer, handleCloseDrawer }) {
     const [materias, setMaterias] = useState([]);
     const [teachers, setTeachers] = useState([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -117,6 +117,7 @@ export default function Materias() {
             <Select onChange={handleSelectTeacher} datos={cursos} name="General"  />
             <Buscador onSearch={handleSearch}/>
             <button onClick={openModal}></button>
+            <Lateral />
         </div>
 
         <Table data={materias} columns={columns} />
