@@ -30,7 +30,7 @@ export const routes = [
     {
         path: "/prueba",
         exact: true,
-        private: true,
+        private: false,
         layout: Navegacion,
         component: Prueba
     },
@@ -56,14 +56,14 @@ export const routes = [
     {
         path: "/materias",
         exact: true,
-        private: true,
+        private: false,
         layout: Navegacion,
         component: Materias
     },
     {
         path: "/personal",
         exact: true,
-        private: true,
+        private: false,
         layout: Navegacion,
         component: Personal
     }
