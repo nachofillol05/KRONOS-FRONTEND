@@ -113,7 +113,6 @@ export default function Materias({ handleOpenDrawer, handleCloseDrawer }) {
                 <RangeSlider onFinalChange={handleFinalRangeChange} />
                 <Select onChange={handleSelectTeacher} datos={teachers} label="Profe" />
                 <Select onChange={handleSelectTeacher} datos={cursos} label="Curso" />
-                <Buscador onSearch={handleSearch} />
                 <Lateral />
             </div>
 
