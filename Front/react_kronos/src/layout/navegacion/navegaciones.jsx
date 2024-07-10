@@ -1,40 +1,55 @@
 import React, { useState } from 'react';
-import Drawer from '../../components/drawer/drawers.jsx';
-import NavBar from '../../components/navBar/navBars.jsx';
-import './navegaciones.scss';
-
-export default function Navegacion({ children }) {
-    const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-    const [drawerContent, setDrawerContent] = useState(null);
-    const [drawerTitle, setDrawerTitle] = useState("");
-
-    // Función para abrir y cerrar el drawer donde se pasa el contenido del drawer y el título
-    const handleOpenDrawer = (content, title) => {
-        setDrawerContent(content);
-        setDrawerTitle(title);
-        setIsDrawerOpen(true);
+import {
+    DesktopOutlined,
+    FileOutlined,
+    PieChartOutlined,
+    TeamOutlined,
+    UserOutlined,
+} from '@ant-design/icons';
+import { Breadcrumb, Layout, Menu, theme } from 'antd';
+const { Header, Content, Footer, Sider } = Layout;
+function getItem(label, key, icon, children) {
+    return {
+        key,
+        icon,
+        children,
+        label,
     };
-
-    const handleCloseDrawer = () => {
-        setIsDrawerOpen(false);
-        setDrawerContent(null);
-        setDrawerTitle("");
-    };
-
-    // Clonar y pasar props a los hijos
-    const childrenWithProps = React.Children.map(children, child =>
-        React.cloneElement(child, { handleOpenDrawer, handleCloseDrawer })
-    );
-
-    return (
-        <React.StrictMode>
-            <NavBar />
-            <section>
-            {childrenWithProps}
-                {isDrawerOpen && (
-                    <Drawer onClose={handleCloseDrawer} title={drawerTitle} content={drawerContent} />
-                )}
-            </section>
-        </React.StrictMode>
-    );
 }
+const items = [
+    getItem('Option 1', '1', <PieChartOutlined />),
+    getItem('Option 2', '2', <DesktopOutlined />),
+    getItem('User', 'sub1', <UserOutlined />, [
+        getItem('Tom', '3'),
+        getItem('Bill', '4'),
+        getItem('Alex', '5'),
+    ]),
+    getItem('Team', 'sub2', <TeamOutlined />, [getItem('Team 1', '6'), getItem('Team 2', '8')]),
+    getItem('Files', '9', <FileOutlined />),
+];
+
+
+const App = ({children}) => {
+    const [collapsed, setCollapsed] = useState(false);
+    const {
+        token: { colorBgContainer, borderRadiusLG },
+    } = theme.useToken();
+    return (
+        <Layout
+            style={{
+                minHeight: '100vh',
+            }}
+        >
+            <Sider collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}>
+                <div className="demo-logo-vertical" />
+                <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline" items={items} />
+            </Sider>
+            <Layout>
+                <Content >
+                    {children}
+                </Content>
+            </Layout>
+        </Layout>
+    );
+};
+export default App;

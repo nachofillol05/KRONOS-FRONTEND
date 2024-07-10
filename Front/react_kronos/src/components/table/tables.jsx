@@ -17,7 +17,14 @@ export default function Table(props){
 
     return (
         <div className="contenedor-tabla">
-            <DataGrid rows={rows} columns={columns} hideFooter/>
+            <DataGrid rows={rows} columns={columns} 
+            
+            disableColumnFilter={true}
+            disableColumnMenu={true}
+            hideFooter
+            columnHeaderHeight={50}
+            checkboxSelection={true}
+            />
         </div>
     );
 };

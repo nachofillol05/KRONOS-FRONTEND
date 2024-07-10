@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import Table from '../../components/table/tables.jsx';
-import Select from '../../components/select/selects.jsx';
 import Buscador from '../../components/buscador/buscador.jsx';
 import Input from "../../components/input/inputs.jsx";
 import Drawer from '../../components/drawer/drawers.jsx';
-import RangeSlider from '../../components/timerangeslider/timerange.jsx';
 import './materias.scss';
-import Lateral from '../../components/lateral/laterals.jsx';
+import { Button, TextField, Autocomplete, Box, Slider } from '@mui/material';
+
 
 
 export default function Materias({ handleOpenDrawer, handleCloseDrawer }) {
@@ -17,6 +16,20 @@ export default function Materias({ handleOpenDrawer, handleCloseDrawer }) {
     const [Subjectname, setSubjectname] = useState('');
     const [start_time, setStart_time] = useState('');
     const [end_time, setEnd_time] = useState('');
+
+    const [value, setValue] = React.useState([20, 80]);
+
+    const handleChange = (event, newValue) => {
+        setValue(newValue);
+    };
+
+    const onChange = (value) => {
+        console.log(`selected ${value}`);
+    };
+
+    const onSearch = (value) => {
+        console.log('search:', value);
+    };
 
     useEffect(() => {
         const url = new URL('http://127.0.0.1:8000/api/subjects/');
@@ -110,10 +123,106 @@ export default function Materias({ handleOpenDrawer, handleCloseDrawer }) {
     return (
         <React.StrictMode>
             <div className="filtros-container">
-                <RangeSlider onFinalChange={handleFinalRangeChange} />
-                <Select onChange={handleSelectTeacher} datos={teachers} label="Profe" />
-                <Select onChange={handleSelectTeacher} datos={cursos} label="Curso" />
-                <Lateral />
+                <Box className='kronos-slider'>
+                    <Slider
+                        size='medium'
+                        getAriaLabel={() => 'Rango horario'}
+                        value={value}
+                        onChange={handleChange}
+                        valueLabelDisplay="auto"
+                    />
+                </Box>
+
+                <Autocomplete 
+                    className='kronos-select'
+                    disablePortal
+                    size='small'
+                    id="combo-box-demo"
+                    options={[
+                        { label: 'The Shawshank Redemption', year: 1994 },
+                        { label: 'The Godfather', year: 1972 },
+                        { label: 'The Godfather: Part II', year: 1974 },
+                        { label: 'The Dark Knight', year: 2008 },
+                        { label: '12 Angry Men', year: 1957 },
+                        { label: "Schindler's List", year: 1993 },
+                        { label: 'Pulp Fiction', year: 1994 }]}
+                    renderInput={(params) => <TextField {...params} label="Movie" />}
+                />
+                
+                <Autocomplete 
+                    className='kronos-select'
+                    disablePortal
+                    size='small'
+                    id="combo-box-demo"
+                    options={[
+                        { label: 'The Shawshank Redemption', year: 1994 },
+                        { label: 'The Godfather', year: 1972 },
+                        { label: 'The Godfather: Part II', year: 1974 },
+                        { label: 'The Dark Knight', year: 2008 },
+                        { label: '12 Angry Men', year: 1957 },
+                        { label: "Schindler's List", year: 1993 },
+                        { label: 'Pulp Fiction', year: 1994 }]}
+                    sx={{
+                        width: 150,
+                        '& .MuiInputBase-root': { // Estilo para el contenedor del input
+                        },
+                    }}
+                    renderInput={(params) => <TextField {...params} label="Movie" />}
+                />
+                <Buscador className='kronos-buscador' datos={materias} agrupacion="name" extra="course" label="Buscar una materia" />
+                <Box display="flex" alignItems="center" gap={1}>
+                    <Button
+                        variant="contained"
+                        sx={{
+                            minWidth: 0,
+                            width: 40,
+                            height: 40,
+                            borderRadius: '50%',
+                            padding: 0,
+                            backgroundColor: '#1976d2',
+                            color: '#fff',
+                            '&:hover': {
+                                backgroundColor: '#1565c0',
+                            },
+                        }}
+                    >
+                        1
+                    </Button>
+                    <Button
+                        variant="contained"
+                        sx={{
+                            minWidth: 0,
+                            width: 40,
+                            height: 40,
+                            borderRadius: '50%',
+                            padding: 0,
+                            backgroundColor: '#1976d2',
+                            color: '#fff',
+                            '&:hover': {
+                                backgroundColor: '#1565c0',
+                            },
+                        }}
+                    >
+                        2
+                    </Button>
+                    <Button
+                        variant="contained"
+                        sx={{
+                            minWidth: 0,
+                            width: 40,
+                            height: 40,
+                            borderRadius: '50%',
+                            padding: 0,
+                            backgroundColor: '#1976d2',
+                            color: '#fff',
+                            '&:hover': {
+                                backgroundColor: '#1565c0',
+                            },
+                        }}
+                    >
+                        3
+                    </Button>
+                </Box>
             </div>
 
             <Table data={materias} columns={columns} />
@@ -128,10 +237,6 @@ export default function Materias({ handleOpenDrawer, handleCloseDrawer }) {
                         <h1>Abreviacion</h1>
                         <Input />
                     </div>
-                </div>
-                <div Class='Contenedor' style={{ display: 'flex', flexDirection: 'row', gap: '20px', alignItems: 'center' }}>
-                    <Select datos={teachers} name="Profesor" style={{ '--largo': `1000` }} />
-                    <Select datos={"anios"} name="años" style={{ '--largo': `700` }} />
                 </div>
                 <div Class='Contenedor' style={{ display: 'flex', flexDirection: 'row', gap: '20px', alignItems: 'center' }}>
                     <div>

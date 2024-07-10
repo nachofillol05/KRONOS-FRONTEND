@@ -14,11 +14,14 @@ export default function Grouped(props) {
 
     return (
         <Autocomplete
+            columnHeaderHeight={150}
+            checkboxSelection={true}
+            size='small'
+            className='kronos-buscador'
             id="grouped-demo"
             options={options.sort((a, b) => -b.firstLetter.localeCompare(a.firstLetter))}
             groupBy={(option) => option.firstLetter}
             getOptionLabel={(option) => option[agrupacion] + ' ' + option[extra]}
-            sx={{ width: 300 }}
             renderInput={(params) => <TextField {...params} label={label} />}
         />
     );
