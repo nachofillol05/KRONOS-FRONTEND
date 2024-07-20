@@ -1,9 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
-import Table from '../../components/table/tables.jsx';
 import Buscador from '../../components/buscador/buscador.jsx';
-import Button from '../../components/button/buttons.jsx';
-import Input from "../../components/input/inputs.jsx";
-import Switcher from '../../components/switcher/switchers.jsx';
+import { Table } from "antd";
+import { ToggleButton, ToggleButtonGroup, Button, DataGrid } from '@mui/material';
 import './personal.scss';
 import Lateral from '../../components/lateral/laterals.jsx';
 
@@ -15,6 +13,12 @@ export default function Personal({ handleOpenDrawer, handleCloseDrawer }) {
     const [subject, setSubject] = useState('');
     const asuntoRef = useRef(null);
     const contenidoRef = useRef(null);
+
+    const [alignment, setAlignment] = React.useState('web');
+
+    const handleChange = (event, newAlignment) => {
+        setAlignment(newAlignment);
+    };
 
     const handleEnviar = (event) => {
         event.preventDefault();
@@ -127,59 +131,26 @@ export default function Personal({ handleOpenDrawer, handleCloseDrawer }) {
     return (
         <React.StrictMode>
             <div className="filtros-container">
-                <Switcher onClick={buttonSelected} activeButton={activeButton} />
+                <ToggleButtonGroup
+                    value={alignment}
+                    color="primary"
+                    exclusive
+                    onChange={handleChange}
+                    aria-label="Platform"
+                >
+                    <ToggleButton value="web">Web</ToggleButton>
+                    <ToggleButton value="android">Android</ToggleButton>
+                    <ToggleButton value="ios">iOS</ToggleButton>
+                </ToggleButtonGroup>
                 <Buscador datos={teachers} agrupacion="last_name" extra="first_name" label="Busca un profesor" />
-                <Lateral
-                    botones={[
-                        {
-                            solid: true,
-                            icono: (
-                                <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    viewBox="0 0 24 24"
-                                    width="24px"
-                                    height="24px"
-                                    fill="#0E4942"
-                                >
-                                    <path d="M 10 3 L 10 8 L 4 8 L 4 20 L 20 20 L 20 8 L 14 8 L 14 3 Z M 12 5 L 13 5 L 13 8 L 11 8 L 11 5 Z M 6 10 L 18 10 L 18 18 L 6 18 Z" />
-                                </svg>
-                            ),
-                            function: () =>
-                                handleOpenDrawer(
-                                    <div className="contactar">
-                                        <div className="identidad">
-                                            <h1>Pepe Daniel Lazaro vashesian</h1>
-                                            <h2>25167856</h2>
-                                        </div>
-                                        <form className="email">
-                                            <label>
-                                                Email: <span>aguchealezama@gmail.com</span>
-                                            </label>
-                                            <Input
-                                                required
-                                                label="Asunto"
-                                                placeholder="Siguiente acto"
-                                                numero={35}
-                                                inputRef={asuntoRef}
-                                            />
-                                            <Input
-                                                label="Contenido"
-                                                placeholder="El acto de la siguiente fecha"
-                                                numero={35}
-                                                textArea
-                                                inputRef={contenidoRef}
-                                            />
-                                            <Button life text="Enviar" onClick={handleEnviar} />
-                                        </form>
-                                    </div>,
-                                    'Contactar personal'
-                                ),
-                        },
-                    ]}
-                />
             </div>
 
-            <Table data={teachers} columns={columns} />
+            <Table dataSource={teachers} columns={columns} 
+            loading	={true}
+            tableLayout = {'fixed'}
+            filterDropdownOpen={true}
+            filtered={true}
+            />;
         </React.StrictMode>
     );
 }

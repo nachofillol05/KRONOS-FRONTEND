@@ -1,11 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import Table from '../../components/table/tables.jsx';
-import Buscador from '../../components/buscador/buscador.jsx';
 import Input from "../../components/input/inputs.jsx";
 import Drawer from '../../components/drawer/drawers.jsx';
 import './materias.scss';
-import { Button, TextField, Autocomplete, Box, Slider } from '@mui/material';
-
+import { Table, Slider, Select, AutoComplete } from "antd";
 
 
 export default function Materias({ handleOpenDrawer, handleCloseDrawer }) {
@@ -123,110 +120,71 @@ export default function Materias({ handleOpenDrawer, handleCloseDrawer }) {
     return (
         <React.StrictMode>
             <div className="filtros-container">
-                <Box className='kronos-slider'>
-                    <Slider
-                        size='medium'
-                        getAriaLabel={() => 'Rango horario'}
-                        value={value}
-                        onChange={handleChange}
-                        valueLabelDisplay="auto"
-                    />
-                </Box>
+                <div style={{width: '200px'}}>
+                    <Slider range defaultValue={[20, 50]} />
+                </div>
 
-                <Autocomplete 
-                    className='kronos-select'
-                    disablePortal
-                    size='small'
-                    id="combo-box-demo"
+
+                <Select
+                    size='large'
+                    showSearch
+                    placeholder="Select a person"
+                    onChange={onChange}
+                    onSearch={onSearch}
                     options={[
-                        { label: 'The Shawshank Redemption', year: 1994 },
-                        { label: 'The Godfather', year: 1972 },
-                        { label: 'The Godfather: Part II', year: 1974 },
-                        { label: 'The Dark Knight', year: 2008 },
-                        { label: '12 Angry Men', year: 1957 },
-                        { label: "Schindler's List", year: 1993 },
-                        { label: 'Pulp Fiction', year: 1994 }]}
-                    renderInput={(params) => <TextField {...params} label="Movie" />}
-                />
-                
-                <Autocomplete 
-                    className='kronos-select'
-                    disablePortal
-                    size='small'
-                    id="combo-box-demo"
-                    options={[
-                        { label: 'The Shawshank Redemption', year: 1994 },
-                        { label: 'The Godfather', year: 1972 },
-                        { label: 'The Godfather: Part II', year: 1974 },
-                        { label: 'The Dark Knight', year: 2008 },
-                        { label: '12 Angry Men', year: 1957 },
-                        { label: "Schindler's List", year: 1993 },
-                        { label: 'Pulp Fiction', year: 1994 }]}
-                    sx={{
-                        width: 150,
-                        '& .MuiInputBase-root': { // Estilo para el contenedor del input
+                        {
+                            value: 'jack',
+                            label: 'Jack',
                         },
-                    }}
-                    renderInput={(params) => <TextField {...params} label="Movie" />}
+                        {
+                            value: 'lucy',
+                            label: 'Lucy',
+                        },
+                        {
+                            value: 'tom',
+                            label: 'Tom',
+                        },
+                    ]}
                 />
-                <Buscador className='kronos-buscador' datos={materias} agrupacion="name" extra="course" label="Buscar una materia" />
-                <Box display="flex" alignItems="center" gap={1}>
-                    <Button
-                        variant="contained"
-                        sx={{
-                            minWidth: 0,
-                            width: 40,
-                            height: 40,
-                            borderRadius: '50%',
-                            padding: 0,
-                            backgroundColor: '#1976d2',
-                            color: '#fff',
-                            '&:hover': {
-                                backgroundColor: '#1565c0',
-                            },
-                        }}
-                    >
-                        1
-                    </Button>
-                    <Button
-                        variant="contained"
-                        sx={{
-                            minWidth: 0,
-                            width: 40,
-                            height: 40,
-                            borderRadius: '50%',
-                            padding: 0,
-                            backgroundColor: '#1976d2',
-                            color: '#fff',
-                            '&:hover': {
-                                backgroundColor: '#1565c0',
-                            },
-                        }}
-                    >
-                        2
-                    </Button>
-                    <Button
-                        variant="contained"
-                        sx={{
-                            minWidth: 0,
-                            width: 40,
-                            height: 40,
-                            borderRadius: '50%',
-                            padding: 0,
-                            backgroundColor: '#1976d2',
-                            color: '#fff',
-                            '&:hover': {
-                                backgroundColor: '#1565c0',
-                            },
-                        }}
-                    >
-                        3
-                    </Button>
-                </Box>
-            </div>
 
-            <Table data={materias} columns={columns} />
+                <Select
+                    showSearch
+                    placeholder="Select a person"
+                    optionFilterProp="label"
+                    onChange={onChange}
+                    onSearch={onSearch}
+                    options={[
+                        {
+                            value: 'jack',
+                            label: 'Jack',
+                        },
+                        {
+                            value: 'lucy',
+                            label: 'Lucy',
+                        },
+                        {
+                            value: 'tom',
+                            label: 'Tom',
+                        },
+                    ]}
+                />
+                <AutoComplete
+                    style={{
+                        width: 200,
+                    }}
+                    options={materias}
+                    placeholder="try to type `b`"
+                    filterOption={(inputValue, option) =>
+                        option.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1
+                    }
+                />            </div>
 
+            <Table dataSource={teachers} columns={columns}
+                loading={true}
+                tableLayout={'fixed'}
+                filterDropdownOpen={true}
+                filtered={true}
+            />;
             {isModalOpen && <Drawer onClose={handleCloseModal} title="Agregar materia" >
                 <div Class='Contenedor' style={{ display: 'flex', flexDirection: 'row', gap: '20px', alignItems: 'center' }}>
                     <div>
