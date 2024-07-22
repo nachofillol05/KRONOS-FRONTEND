@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Buscador from '../../components/buscador/buscador.jsx';
-import { Table } from "antd";
+import { Table, Select } from "antd";
 import { ToggleButton, ToggleButtonGroup, Button, DataGrid } from '@mui/material';
 import './personal.scss';
 import Lateral from '../../components/lateral/laterals.jsx';
+import Materias from '../materias/materias.jsx';
 
 export default function Personal({ handleOpenDrawer, handleCloseDrawer }) {
     const [teachers, setTeachers] = useState([]);
@@ -11,6 +12,7 @@ export default function Personal({ handleOpenDrawer, handleCloseDrawer }) {
     const [activeButton, setActiveButton] = useState('Profesores');
     const [searchName, setSearchName] = useState('');
     const [subject, setSubject] = useState('');
+    const [loading, setLoading] = useState(true);
     const asuntoRef = useRef(null);
     const contenidoRef = useRef(null);
 
@@ -79,17 +81,18 @@ export default function Personal({ handleOpenDrawer, handleCloseDrawer }) {
             })
             .then((data) => {
                 setTeachers(data);
+                setLoading(false)
             })
             .catch((error) => console.error('Error fetching data:', error));
     }, [searchName, subject]);
 
     const columns = [
-        { header: 'Nombre', field: 'first_name', flex: 1 },
-        { header: 'Apellido', field: 'last_name', flex: 1 },
-        { header: 'Documento', field: 'document', flex: 1 },
-        { header: 'Genero', field: 'gender', flex: 1 },
-        { header: 'Email', field: 'email', flex: 1 },
-        { header: 'Horas por semana', field: 'availability', flex: 1 },
+        { title: 'Nombre', dataIndex: 'first_name', key: 'Nombre'},
+        { title: 'Apellido', dataIndex: 'last_name', key: 'Apellido' },
+        { title: 'Documento', dataIndex: 'document', key: 'Documento' },
+        { title: 'Genero', dataIndex: 'gender', key: 'Genero' },
+        { title: 'Email', dataIndex: 'email', key: 'Email' },
+        { title: 'Horas por semana', dataIndex: 'availability', key: 'Horaspsemana'},
     ];
 
     useEffect(() => {
@@ -108,10 +111,12 @@ export default function Personal({ handleOpenDrawer, handleCloseDrawer }) {
             })
             .then((data) => {
                 const subjectsData = data.map((subject) => ({
-                    id: subject.id,
-                    name: subject.name,
+                    value: subject.id,
+                    label: subject.name,
                 }));
+                subjectsData.push({value: '', label: 'Todas'})
                 setSubjects(subjectsData);
+                console.log(subjectsData);
             })
             .catch((error) => console.error('Error fetching data:', error));
     }, []);
@@ -120,13 +125,19 @@ export default function Personal({ handleOpenDrawer, handleCloseDrawer }) {
         setActiveButton(buttonText);
     };
 
-    const handleSearch = (searchText) => {
+    const onSearch = (searchText) => {
         setSearchName(searchText);
+        console.log(searchName)
     };
 
     const handleSelectChange = (event) => {
         setSubject(event.target.value);
     };
+    const onChange = (value) => {
+        console.log(`selected ${value}`);
+        setSubject(value);
+    };
+
 
     return (
         <React.StrictMode>
@@ -138,15 +149,23 @@ export default function Personal({ handleOpenDrawer, handleCloseDrawer }) {
                     onChange={handleChange}
                     aria-label="Platform"
                 >
-                    <ToggleButton value="web">Web</ToggleButton>
-                    <ToggleButton value="android">Android</ToggleButton>
-                    <ToggleButton value="ios">iOS</ToggleButton>
+                    <ToggleButton value="Profesores">Profesores</ToggleButton>
+                    <ToggleButton value="Directivos">Directivos</ToggleButton>
+                    <ToggleButton value="Preceptores">Preceptores</ToggleButton>
                 </ToggleButtonGroup>
-                <Buscador datos={teachers} agrupacion="last_name" extra="first_name" label="Busca un profesor" />
+                <Select
+                    size='large'
+                    showSearch
+                    placeholder="Seleccione una materia"
+                    onChange={onChange}
+                    onSearch={onSearch}
+                    options={subjects}
+                />
+                <Buscador datos={teachers} agrupacion="last_name" extra="first_name" label="Busca un profesor"/>
             </div>
 
-            <Table dataSource={teachers} columns={columns} 
-            loading	={true}
+            <Table dataSource={teachers.map(teacher => ({ ...teacher, key: teacher.id }))}  columns={columns} 
+            loading	={loading}
             tableLayout = {'fixed'}
             filterDropdownOpen={true}
             filtered={true}

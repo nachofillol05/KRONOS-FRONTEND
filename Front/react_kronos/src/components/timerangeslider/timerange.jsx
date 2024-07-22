@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { Range, getTrackBackground } from 'react-range';
-import './timerange.scss';
+import { Slider } from 'antd';
 
 const RangeSlider = ({ onFinalChange }) => {
   const [values, setValues] = useState([6.5, 23.5]);
@@ -15,7 +14,11 @@ const RangeSlider = ({ onFinalChange }) => {
     return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
   };
 
-  const handleFinalChange = (values) => {
+  const handleChange = (values) => {
+    setValues(values);
+  };
+
+  const handleAfterChange = (values) => {
     const formattedValues = values.map(value => formatHours(value));
     onFinalChange && onFinalChange(formattedValues);
   };
@@ -23,64 +26,17 @@ const RangeSlider = ({ onFinalChange }) => {
   return (
     <div className='parent'>
       <h2 style={{ fontSize: '15px' }}>Horas</h2>
-      <Range
-        values={values}
+      <Slider
+        range
         step={STEP}
         min={MIN}
         max={MAX}
-        onChange={(values) => setValues(values)}
-        onFinalChange={handleFinalChange}
-        renderTrack={({ props, children }) => (
-          <div
-            className='A'
-            {...props}
-            style={{
-              ...props.style,
-              height: '3px',
-              width: '175px',
-              background: getTrackBackground({
-                values,
-                colors: ['#ccc', 'var(--color)', '#ccc'],
-                min: MIN,
-                max: MAX,
-              }),
-              alignSelf: 'center',
-              position: 'relative',
-            }}
-          >
-            {children}
-          </div>
-        )}
-        renderThumb={({ props, value }) => (
-          <div
-            {...props}
-            style={{
-              ...props.style,
-              height: '15px',
-              width: '15px',
-              borderRadius: '50%',
-              backgroundColor: 'var(--color)',
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              boxShadow: '0px 2px 6px #AAA',
-            }}
-          >
-            <div
-              style={{
-                position: 'absolute',
-                top: '-25px',
-                color: 'var(--color)',
-                padding: '4px',
-                whiteSpace: 'nowrap',
-                fontSize: '12px',
-              }}
-            >
-              {formatHours(value)}
-            </div>
-          </div>
-        )}
-        thumbCount={2}
+        value={values}
+        onChange={handleChange}
+        onAfterChange={handleAfterChange}
+        tooltip={{
+          formatter: (value) => formatHours(value),
+        }}
       />
     </div>
   );

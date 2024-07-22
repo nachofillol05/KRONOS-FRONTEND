@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Input from "../../components/input/inputs.jsx";
 import Drawer from '../../components/drawer/drawers.jsx';
 import './materias.scss';
+import RangeSlider from '../../components/timerangeslider/timerange.jsx';
 import { Table, Slider, Select, AutoComplete } from "antd";
 
 
@@ -13,6 +14,8 @@ export default function Materias({ handleOpenDrawer, handleCloseDrawer }) {
     const [Subjectname, setSubjectname] = useState('');
     const [start_time, setStart_time] = useState('');
     const [end_time, setEnd_time] = useState('');
+    const [loading, setLoading] = useState(true);
+    const [materiasMap, setMateriasMap] = useState([]);
 
     const [value, setValue] = React.useState([20, 80]);
 
@@ -22,6 +25,7 @@ export default function Materias({ handleOpenDrawer, handleCloseDrawer }) {
 
     const onChange = (value) => {
         console.log(`selected ${value}`);
+        setTeacher(value)
     };
 
     const onSearch = (value) => {
@@ -55,19 +59,20 @@ export default function Materias({ handleOpenDrawer, handleCloseDrawer }) {
                 return response.json();
             })
             .then(data => {
-                console.log(data);
-                setMaterias(data);
+                console.log("data: ",data);
+                setMaterias(data.map(materia => ({ ...materia, key: materia.id })))
+                setLoading(false);
             })
             .catch(error => console.error('Error fetching data:', error));
     }, [start_time, end_time, Subjectname, teacher]);
 
     const columns = [
-        { header: 'Nombre', field: 'name', flex: 1 },
-        { header: 'Abreviacion', field: 'abbreviation', flex: 1 },
-        { header: 'Curso', field: 'course', flex: 1 },
-        { header: 'Horas catedra semanales', field: 'weeklyHours', flex: 1 },
-        { header: 'Color', field: 'color', flex: 1 },
-        { header: 'Descripcion', field: 'description', flex: 1 }
+        { title: 'Nombre', dataIndex: 'name', key: 'name' },
+        { title: 'Abreviacion', dataIndex: 'abbreviation', key: 'abbreviation' },
+        { title: 'Curso', dataIndex: 'course', key: 'course' },
+        { title: 'Horas catedra semanales', dataIndex: 'weeklyHours', key: 'weeklyHours' },
+        { title: 'Color', dataIndex: 'color', key: 'color' },
+        { title: 'Descripcion', dataIndex: 'description', key: 'description' }
     ];
 
     useEffect(() => {
@@ -86,8 +91,8 @@ export default function Materias({ handleOpenDrawer, handleCloseDrawer }) {
             })
             .then(data => {
                 const teacherNames = data.map(teacher => ({
-                    id: teacher.id,
-                    name: teacher.first_name + ' ' + teacher.last_name,
+                    value: teacher.id,
+                    label: teacher.first_name + ' ' + teacher.last_name,
                 }));
 
                 setTeachers(teacherNames);
@@ -106,85 +111,57 @@ export default function Materias({ handleOpenDrawer, handleCloseDrawer }) {
 
     const handleSearch = (searchText) => {
         setSubjectname(searchText);
+        console.log("entro")
     };
 
     const handleFinalRangeChange = (newValues) => {
+        console.log("hola")
         setStart_time(newValues[0]);
         setEnd_time(newValues[1]);
         console.log('New range values:', newValues);
-    };
+      };
 
     const cursos = [{ id: 1, name: '1A' }, { id: 2, name: '1B' }, { id: 3, name: '2A' }, { id: 4, name: '2B' }, { id: 5, name: '3A' }, { id: 6, name: '3B' }, { id: 7, name: '4A' }, { id: 8, name: '4B' }, { id: 9, name: '5A' }, { id: 10, name: '5B' }];
 
-
+    console.log("Las materias son: ", materias);
+    //hacer que el select sea unico si o si de los profesores osea qu eno se repitan
     return (
         <React.StrictMode>
             <div className="filtros-container">
                 <div style={{width: '200px'}}>
-                    <Slider range defaultValue={[20, 50]} />
+                    <RangeSlider onFinalChange={handleFinalRangeChange} />
                 </div>
 
 
                 <Select
                     size='large'
                     showSearch
-                    placeholder="Select a person"
+                    placeholder="Seleccione un Profesor"
                     onChange={onChange}
                     onSearch={onSearch}
-                    options={[
-                        {
-                            value: 'jack',
-                            label: 'Jack',
-                        },
-                        {
-                            value: 'lucy',
-                            label: 'Lucy',
-                        },
-                        {
-                            value: 'tom',
-                            label: 'Tom',
-                        },
-                    ]}
-                />
-
-                <Select
-                    showSearch
-                    placeholder="Select a person"
-                    optionFilterProp="label"
-                    onChange={onChange}
-                    onSearch={onSearch}
-                    options={[
-                        {
-                            value: 'jack',
-                            label: 'Jack',
-                        },
-                        {
-                            value: 'lucy',
-                            label: 'Lucy',
-                        },
-                        {
-                            value: 'tom',
-                            label: 'Tom',
-                        },
-                    ]}
+                    options={teachers}
                 />
                 <AutoComplete
+                    onChange={handleSearch}
                     style={{
                         width: 200,
                     }}
-                    options={materias}
-                    placeholder="try to type `b`"
+                    options={materias.map(materia => ({
+                        value: materia.id,
+                        label: materia.name,
+                    }))}
+                    placeholder="Buscar Materia"
                     filterOption={(inputValue, option) =>
                         option.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1
-                    }
-                />            </div>
+                    } 
+                /></div>
 
-            <Table dataSource={teachers} columns={columns}
-                loading={true}
+            <Table dataSource={materias} columns={columns}
+                loading={loading}
                 tableLayout={'fixed'}
                 filterDropdownOpen={true}
                 filtered={true}
-            />;
+            />
             {isModalOpen && <Drawer onClose={handleCloseModal} title="Agregar materia" >
                 <div Class='Contenedor' style={{ display: 'flex', flexDirection: 'row', gap: '20px', alignItems: 'center' }}>
                     <div>
