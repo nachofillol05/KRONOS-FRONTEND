@@ -20,3 +20,27 @@ a{
         color: $color1;
     }
 }
+
+
+.kronos-select{
+    flex: 1 1 auto;
+    max-width: 150px;
+}
+
+.kronos-slider{
+    flex: 10 1 auto;
+    max-width: 250px;
+}
+.kronos-buscador{
+    flex: 10 1 auto;
+    max-width: 300px;
+
+}
+
+.MuiAutocomplete-inputFocused{
+    background-color: red;
+}
+
+.MuiAutocomplete-input{
+    font-family: $fuente-general !important;
+}

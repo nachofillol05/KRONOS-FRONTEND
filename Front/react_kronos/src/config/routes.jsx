@@ -1,18 +1,17 @@
-/*Layouts*/
 import Navegacion from "../layout/navegacion/navegaciones";
 import Landig from "../layout/landing/landings";
 
 /*Pages*/
 import Home from "../pages/home/Home";
 import Prueba from "../pages/prueba/prueba";
-import Login from "../pages/login/logins";
+//import Login from "../pages/login/logins"
+import Page from "../pages/landingPage/landingPage";
 import Activation from "../pages/activation/activations";
 import ActivationSent from "../pages/activationSent/activationSents";
 
 import Materias from "../pages/materias/materias";
 import Personal from "../pages/personal/personal";
 import EventsPage from "../pages/events/eventsPage";
-
 
 export const routes = [
   {
@@ -35,7 +34,7 @@ export const routes = [
     path: "/login",
     exact: true,
     layout: Landig,
-    component: Login,
+    component: Page,
   },
   {
     path: "/activation",
@@ -52,14 +51,14 @@ export const routes = [
   {
     path: "/materias",
     exact: true,
-    private: false,
+    private: true,
     layout: Navegacion,
     component: Materias,
   },
   {
     path: "/personal",
     exact: true,
-    private: false,
+    private: true,
     layout: Navegacion,
     component: Personal,
   },

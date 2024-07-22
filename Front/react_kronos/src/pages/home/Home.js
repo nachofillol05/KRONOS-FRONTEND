@@ -1,11 +1,14 @@
 import React from 'react';
-import Input from '../../components/input/inputs.jsx';
-
+import { useNavigate } from 'react-router-dom';
 export default function Home() {
-
+    const navigate = useNavigate();
+    function cerrarSesion(){
+        localStorage.setItem('token', '');
+        navigate('/login');
+    }
     return (
             <>
-                <Input placeholder="adgshfdaf"/>
+            <button onClick={cerrarSesion}>Cerrar sesion</button>
             </>
 );
 }

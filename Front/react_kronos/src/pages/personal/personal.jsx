@@ -1,12 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
-import Table from '../../components/table/tables.jsx';
-import Select from '../../components/select/selects.jsx';
 import Buscador from '../../components/buscador/buscador.jsx';
-import Button from '../../components/button/buttons.jsx';
-import Input from "../../components/input/inputs.jsx";
-import Switcher from '../../components/switcher/switchers.jsx';
+import { Table, Select } from "antd";
+import { ToggleButton, ToggleButtonGroup, Button, DataGrid } from '@mui/material';
 import './personal.scss';
 import Lateral from '../../components/lateral/laterals.jsx';
+import Materias from '../materias/materias.jsx';
 
 export default function Personal({ handleOpenDrawer, handleCloseDrawer }) {
     const [teachers, setTeachers] = useState([]);
@@ -14,10 +12,15 @@ export default function Personal({ handleOpenDrawer, handleCloseDrawer }) {
     const [activeButton, setActiveButton] = useState('Profesores');
     const [searchName, setSearchName] = useState('');
     const [subject, setSubject] = useState('');
-
+    const [loading, setLoading] = useState(true);
     const asuntoRef = useRef(null);
-
     const contenidoRef = useRef(null);
+
+    const [alignment, setAlignment] = React.useState('web');
+
+    const handleChange = (event, newAlignment) => {
+        setAlignment(newAlignment);
+    };
 
     const handleEnviar = (event) => {
         event.preventDefault();
@@ -30,23 +33,23 @@ export default function Personal({ handleOpenDrawer, handleCloseDrawer }) {
             const jsonData = JSON.stringify({ email, asunto, contenido });
             console.log('JSON:', jsonData);
 
-            fetch('http://localhost:8000/Kronosapp/contacting-staff/', {
-                method: "POST",
+            fetch('http://localhost:8000/api/contacting-staff/', {
+                method: 'POST',
                 body: jsonData,
                 headers: {
-                    "Content-Type": "application/json"
-                }
+                    'Content-Type': 'application/json',
+                },
             })
-                .then(response => {
+                .then((response) => {
                     if (!response.ok) {
                         throw new Error('Error al enviar los datos.');
                     }
                     return response.json();
                 })
-                .then(data => {
+                .then((data) => {
                     // Manejar los datos de la respuesta si es necesario
                 })
-                .catch(error => {
+                .catch((error) => {
                     console.error('Error:', error);
                 });
 
@@ -63,140 +66,110 @@ export default function Personal({ handleOpenDrawer, handleCloseDrawer }) {
             url.searchParams.append('subject_id', subject);
         }
         fetch(url.toString(), {
-            method: "GET",
+            method: 'GET',
             headers: {
                 'Authorization': 'Token ' + localStorage.getItem('token'),
                 'School-ID': 1,
             },
         })
-            .then(response => {
+            .then((response) => {
                 if (!response.ok) {
                     setTeachers([]);
                     throw new Error('Network response was not ok');
                 }
                 return response.json();
             })
-            .then(data => {
+            .then((data) => {
                 setTeachers(data);
+                setLoading(false)
             })
-            .catch(error => console.error('Error fetching data:', error));
+            .catch((error) => console.error('Error fetching data:', error));
     }, [searchName, subject]);
 
     const columns = [
-        { header: 'Nombre', field: 'first_name' },
-        { header: 'Apellido', field: 'last_name' },
-        { header: 'Documento', field: 'document' },
-        { header: 'Genero', field: 'gender' },
-        { header: 'Email', field: 'email' },
-        { header: 'Horas por semana', field: 'availability' }
+        { title: 'Nombre', dataIndex: 'first_name', key: 'Nombre'},
+        { title: 'Apellido', dataIndex: 'last_name', key: 'Apellido' },
+        { title: 'Documento', dataIndex: 'document', key: 'Documento' },
+        { title: 'Genero', dataIndex: 'gender', key: 'Genero' },
+        { title: 'Email', dataIndex: 'email', key: 'Email' },
+        { title: 'Horas por semana', dataIndex: 'availability', key: 'Horaspsemana'},
     ];
 
     useEffect(() => {
         fetch('http://127.0.0.1:8000/api/subjects/', {
-            method: "GET",
+            method: 'GET',
             headers: {
                 'Authorization': 'Token ' + localStorage.getItem('token'),
                 'School-ID': 1,
             },
         })
-            .then(response => {
+            .then((response) => {
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
                 return response.json();
             })
-            .then(data => {
-                console.log(data);
-                const SubjectsData = data.map(subject => ({
-                    id: subject.id,
-                    name: subject.name,
+            .then((data) => {
+                const subjectsData = data.map((subject) => ({
+                    value: subject.id,
+                    label: subject.name,
                 }));
-                setSubjects(SubjectsData);
+                subjectsData.push({value: '', label: 'Todas'})
+                setSubjects(subjectsData);
+                console.log(subjectsData);
             })
-            .catch(error => console.error('Error fetching data:', error));
+            .catch((error) => console.error('Error fetching data:', error));
     }, []);
 
     const buttonSelected = (buttonText) => {
         setActiveButton(buttonText);
     };
 
-    const handleSearch = (searchText) => {
+    const onSearch = (searchText) => {
         setSearchName(searchText);
+        console.log(searchName)
     };
 
-    const handleSelectChange = (selectedId) => {
-        setSubject(selectedId);
+    const handleSelectChange = (event) => {
+        setSubject(event.target.value);
+    };
+    const onChange = (value) => {
+        console.log(`selected ${value}`);
+        setSubject(value);
     };
 
-    const tipoDocumento = ['DNI', 'Pasaporte'];
-    const rol = ['Profesor', 'Preceptor', 'Directivo'];
 
     return (
         <React.StrictMode>
             <div className="filtros-container">
-                <Switcher onClick={buttonSelected} activeButton={activeButton} />
-                <Select datos={subjects} name="Materia" style={{ '--largo': `50` }} onChange={handleSelectChange} />
-                <Buscador onSearch={handleSearch} />
-                <div>
-                    <Button onClick={() => handleOpenDrawer(
-
-                    )} text='+' numero={10} />
-                </div>
-                <Lateral botones={[{
-                    solid: true,
-                    icono: (
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            viewBox="0 0 24 24"
-                            width="24px"
-                            height="24px"
-                            fill="#0E4942"
-                        >
-                            <path d="M 10 3 L 10 8 L 4 8 L 4 20 L 20 20 L 20 8 L 14 8 L 14 3 Z M 12 5 L 13 5 L 13 8 L 11 8 L 11 5 Z M 6 10 L 18 10 L 18 18 L 6 18 Z" />
-                        </svg>
-                    ),
-                    function: () => handleOpenDrawer(
-                        <div className='contactar'>
-                            <div className='identidad'>
-                                <h1>Pepe Daniel Lazaro vashesian</h1>
-                                <h2>25167856</h2>
-                            </div>
-                            <form className='email'>
-                                <label>Email: <span>aguchealezama@gmail.com</span></label>
-                                <Input required label='Asunto' placeholder='Siguiente acto' numero={35} inputRef={asuntoRef} />
-                                <Input label='Contenido' placeholder='El acto de la siguiente fecha' numero={35} textArea inputRef={contenidoRef} />
-                                <Button life text="Enviar" onClick={handleEnviar} />
-                            </form>
-                        </div>,
-                        "Contactar personal"
-                    )}]} />
+                <ToggleButtonGroup
+                    value={alignment}
+                    color="primary"
+                    exclusive
+                    onChange={handleChange}
+                    aria-label="Platform"
+                >
+                    <ToggleButton value="Profesores">Profesores</ToggleButton>
+                    <ToggleButton value="Directivos">Directivos</ToggleButton>
+                    <ToggleButton value="Preceptores">Preceptores</ToggleButton>
+                </ToggleButtonGroup>
+                <Select
+                    size='large'
+                    showSearch
+                    placeholder="Seleccione una materia"
+                    onChange={onChange}
+                    onSearch={onSearch}
+                    options={subjects}
+                />
+                <Buscador datos={teachers} agrupacion="last_name" extra="first_name" label="Busca un profesor"/>
             </div>
-                <Table data={teachers} columns={columns} />
 
+            <Table dataSource={teachers.map(teacher => ({ ...teacher, key: teacher.id }))}  columns={columns} 
+            loading	={loading}
+            tableLayout = {'fixed'}
+            filterDropdownOpen={true}
+            filtered={true}
+            />;
         </React.StrictMode>
-    )
+    );
 }
-
-
-
-
-/*{isModalOpen && <Drawer onClose={handleCloseModal} title="Crear Curso">
-            <div>
-                <h1>Nombre</h1>
-                <Input />
-            </div>
-            <div Class='Contenedor' style={{display: 'flex',flexDirection: 'row', gap: '20px'}}>
-
-                    <h1>Año</h1>
-                    <Select datos={anios} name="Año" style={{'--largo': `500`}} solid/>
-                    <h1>Curso</h1>
-                    <Select datos={cursos} name="Curso" style={{ '--largo': `500` }} solid />
-                </div>
-                <div>
-                    <h1>Descripción</h1>
-                    <Input />
-                </div>
-            </Drawer>}
-        </React.StrictMode>
-    )
-}*/

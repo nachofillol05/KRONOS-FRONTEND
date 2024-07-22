@@ -1,7 +1,8 @@
 @import '../../scss/index.scss';
 
 h1{
-    color: $color1
+    color: $color2;
+    text-align: center;
 }
 
 form{
@@ -16,7 +17,7 @@ form{
 
     .botones{
         display: flex;
-        justify-content: space-between;
+        justify-content: end;
         align-items: center;
     }
     
