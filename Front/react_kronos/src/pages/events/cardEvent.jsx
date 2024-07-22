@@ -18,7 +18,7 @@ export default function CardEvent({ title, description, type_event }) {
             {description}
           </Typography>
           <Typography sx={{ fontSize: 10 }} color="text.secondary" gutterBottom>
-            {type_event}
+            {type_event.name}
           </Typography>
         </CardContent>
 

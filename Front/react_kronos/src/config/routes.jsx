@@ -11,7 +11,7 @@ import ActivationSent from "../pages/activationSent/activationSents";
 
 import Materias from "../pages/materias/materias";
 import Personal from "../pages/personal/personal";
-import EventsPage from "../pages/eventos/eventsPage";
+import EventsPage from "../pages/events/eventsPage";
 
 
 export const routes = [
