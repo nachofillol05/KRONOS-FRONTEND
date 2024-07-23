@@ -130,7 +130,7 @@ export default function EventsPage() {
       <Typography variant="h3">Eventos</Typography>
 
       <EventFilters 
-        isDirective={true} 
+        isDirective={false} 
         setTypeEvent={setTypeEvent}
         openForm={() => setOpenDrawer(true)} 
       />

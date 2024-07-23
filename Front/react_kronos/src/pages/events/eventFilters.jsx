@@ -1,5 +1,5 @@
 import Buscador from "./../../components/buscador/buscador";
-import Select from "./../../components/select/selects";
+import Select from "./../../components/select/select";
 import Button from "./../../components/button/buttons";
 import Input from "./../../components/input/inputs";
 
@@ -86,11 +86,11 @@ export default function EventFilters(props) {
   }
   return (
     <form className="event-filters">
-      <Select
+      {/* <Select
         onChange={(value) => handlerChangeTypeEvent(value)}
         datos={dataTypeEvents}
         solid={true}
-      />
+      /> */}
       <Buscador />
       <Input 
         type={"date"}

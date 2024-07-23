@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import Input from "./../../components/input/inputs"
-import Select from "./../../components/select/selects"
+import Select from "./../../components/select/select";
 
 const dataTypeEvents = [
   {
@@ -129,12 +129,12 @@ export default function FormEvent ({event, onSave}) {
       </div>
       <div>
         <label>Tipo de Evento:</label>
-        <Select 
+        {/* <Select 
           onChange={(v) => alert(v)}
           datos={dataTypeEvents}
           solid={true}
           // falta el llenar el valor en todosada
-        />
+        /> */}
       </div>
       <button type="submit">Save</button>
     </form>
