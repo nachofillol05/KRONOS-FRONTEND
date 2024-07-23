@@ -1,0 +1,18 @@
+
+
+:where(.css-dev-only-do-not-override-m4timi).ant-float-btn-group-circle .ant-float-btn-circle:not(:last-child) .ant-float-btn-body {
+    width: 55px !important;
+    height: 55px !important;
+}
+
+.ant-float-btn-circle{
+    width: 55px !important;
+    height: 55px !important;
+}
+
+
+:where(.css-dev-only-do-not-override-m4timi).ant-float-btn-group {
+    inset-inline-end: 75px !important;
+    inset-block-end: 50px !important;
+
+}

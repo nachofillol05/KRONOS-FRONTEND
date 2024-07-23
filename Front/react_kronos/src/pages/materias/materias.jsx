@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import Input from "../../components/input/inputs.jsx";
-import Drawer from '../../components/drawer/drawers.jsx';
 import './materias.scss';
-import RangeSlider from '../../components/timerangeslider/timerange.jsx';
-import { Table, Slider, Select, AutoComplete } from "antd";
+import RangeSlider from "../../components/timerangeslider/timerange.jsx"
+import { Table, Select, AutoComplete, FloatButton, Drawer } from "antd";
+import { FileAddOutlined, DownOutlined , UpOutlined, DownloadOutlined } from '@ant-design/icons';
 
 
 export default function Materias({ handleOpenDrawer, handleCloseDrawer }) {
@@ -16,11 +15,23 @@ export default function Materias({ handleOpenDrawer, handleCloseDrawer }) {
     const [end_time, setEnd_time] = useState('');
     const [loading, setLoading] = useState(true);
     const [materiasMap, setMateriasMap] = useState([]);
+    const [open, setOpen] = useState(false);
+    const [drawerContent, setDrawerContent] = useState(null);
 
     const [value, setValue] = React.useState([20, 80]);
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
+    };
+
+    const showDrawer = (content) => {
+        setDrawerContent(content);
+        setOpen(true);
+    };
+
+    const onClose = () => {
+        setOpen(false);
+        setDrawerContent(null);
     };
 
     const onChange = (value) => {
@@ -162,36 +173,23 @@ export default function Materias({ handleOpenDrawer, handleCloseDrawer }) {
                 filterDropdownOpen={true}
                 filtered={true}
             />
-            {isModalOpen && <Drawer onClose={handleCloseModal} title="Agregar materia" >
-                <div Class='Contenedor' style={{ display: 'flex', flexDirection: 'row', gap: '20px', alignItems: 'center' }}>
-                    <div>
-                        <h1>Materia</h1>
-                        <Input />
-                    </div>
-                    <div>
-                        <h1>Abreviacion</h1>
-                        <Input />
-                    </div>
+
+            <FloatButton.Group
+                visibilityHeight={1500}
+                trigger="click"
+                type="primary"
+                closeIcon={<DownOutlined />}
+                icon={<UpOutlined />}
+            >
+                <FloatButton icon={<DownloadOutlined />} tooltip="Descargar tabla"/>
+                <FloatButton icon={<FileAddOutlined />} type='primary'  tooltip="Agregar una materia" onClick={() => showDrawer(<p>Hola mundo cruel</p>)} />
+            </FloatButton.Group>
+
+            <Drawer width={600} title="Basic Drawer" onClose={onClose} open={open}>
+                <div style={{ width: '100%' , height: '100%' }}>
+                    {drawerContent}
                 </div>
-                <div Class='Contenedor' style={{ display: 'flex', flexDirection: 'row', gap: '20px', alignItems: 'center' }}>
-                    <div>
-                        <h1>Horas Semanales</h1>
-                        <Input type="number" />
-                    </div>
-                    <div>
-                        <h1>Color</h1>
-                        <Input type="color" />
-                    </div>
-                </div>
-                <div>
-                    <h1>Plan de Estudio</h1>
-                    <Input textArea />
-                </div>
-                <div>
-                    <h1>Descripción</h1>
-                    <Input textArea />
-                </div>
-            </Drawer>}
+            </Drawer>
         </React.StrictMode>
     )
 }
