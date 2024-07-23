@@ -160,35 +160,10 @@ export default function Personal({ handleOpenDrawer, handleCloseDrawer }) {
                 <Select
                     size='large'
                     showSearch
-                    placeholder="Select a person"
+                    placeholder="Seleccione una materia"
                     onChange={onChange}
                     onSearch={onSearch}
-                    options={[
-                        {
-                            value: 'jack',
-                            label: 'Jack',
-                        },
-                        {
-                            value: 'lucy',
-                            label: 'Lucy',
-                        },
-                        {
-                            value: 'tom',
-                            label: 'Tom',
-                        },
-                    ]}
-                />
-
-                <AutoComplete
-                    size='large'
-                    style={{
-                        width: 200,
-                    }}
-                    options={teachers}
-                    placeholder="try to type `b`"
-                    filterOption={(inputValue, option) =>
-                        option.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1
-                    }
+                    options={subjects}
                 />
                 <AutoComplete
                     size='large'
@@ -202,6 +177,7 @@ export default function Personal({ handleOpenDrawer, handleCloseDrawer }) {
                     }
                 />
             </div>
+
 
             <Table dataSource={teachers.map(teacher => ({ ...teacher, key: teacher.id }))}  columns={columns} 
             loading	={loading}

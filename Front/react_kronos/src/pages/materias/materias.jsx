@@ -133,7 +133,7 @@ export default function Materias({ handleOpenDrawer, handleCloseDrawer }) {
         <React.StrictMode>
             <div className="filtros-container">
                 <div style={{ width: '200px' }}>
-                    <Slider range defaultValue={[20, 50]} />
+                    <RangeSlider range defaultValue={[20, 50]} />
                 </div>
 
                 <Select
