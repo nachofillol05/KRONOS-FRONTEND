@@ -11,6 +11,8 @@ export default function Materias({ handleOpenDrawer, handleCloseDrawer }) {
     const [Subjectname, setSubjectname] = useState('');
     const [start_time, setStart_time] = useState('');
     const [end_time, setEnd_time] = useState('');
+    const [loading, setLoading] = useState(true);
+    const [materiasMap, setMateriasMap] = useState([]);
 
     const [open, setOpen] = useState(false);
     const [drawerContent, setDrawerContent] = useState(null);
@@ -33,6 +35,7 @@ export default function Materias({ handleOpenDrawer, handleCloseDrawer }) {
 
     const onChange = (value) => {
         console.log(`selected ${value}`);
+        setTeacher(value)
     };
 
     const onSearch = (value) => {
@@ -66,19 +69,20 @@ export default function Materias({ handleOpenDrawer, handleCloseDrawer }) {
                 return response.json();
             })
             .then(data => {
-                console.log(data);
-                setMaterias(data);
+                console.log("data: ",data);
+                setMaterias(data.map(materia => ({ ...materia, key: materia.id })))
+                setLoading(false);
             })
             .catch(error => console.error('Error fetching data:', error));
     }, [start_time, end_time, Subjectname, teacher]);
 
     const columns = [
-        { title: 'Nombre', dataIndex: 'name', key: 'name', flex: 1 },
-        { title: 'Abreviacion', dataIndex: 'abbreviation', key: 'abbreviation', flex: 1 },
-        { title: 'Curso', dataIndex: 'course', key: 'course', flex: 1 },
-        { title: 'Horas catedra semanales', dataIndex: 'weeklyHours', key: 'weeklyHours', flex: 1 },
-        { title: 'Color', dataIndex: 'color', key: 'color', flex: 1 },
-        { title: 'Descripcion', dataIndex: 'description', key: 'description', flex: 1 }
+        { title: 'Nombre', dataIndex: 'name', key: 'name' },
+        { title: 'Abreviacion', dataIndex: 'abbreviation', key: 'abbreviation' },
+        { title: 'Curso', dataIndex: 'course', key: 'course' },
+        { title: 'Horas catedra semanales', dataIndex: 'weeklyHours', key: 'weeklyHours' },
+        { title: 'Color', dataIndex: 'color', key: 'color' },
+        { title: 'Descripcion', dataIndex: 'description', key: 'description' }
     ];
 
     useEffect(() => {
@@ -97,8 +101,8 @@ export default function Materias({ handleOpenDrawer, handleCloseDrawer }) {
             })
             .then(data => {
                 const teacherNames = data.map(teacher => ({
-                    id: teacher.id,
-                    name: teacher.first_name + ' ' + teacher.last_name,
+                    value: teacher.id,
+                    label: teacher.first_name + ' ' + teacher.last_name,
                 }));
 
                 setTeachers(teacherNames);
@@ -117,13 +121,15 @@ export default function Materias({ handleOpenDrawer, handleCloseDrawer }) {
 
     const handleSearch = (searchText) => {
         setSubjectname(searchText);
+        console.log("entro")
     };
 
     const handleFinalRangeChange = (newValues) => {
+        console.log("hola")
         setStart_time(newValues[0]);
         setEnd_time(newValues[1]);
         console.log('New range values:', newValues);
-    };
+      };
 
     const cursos = [{ id: 1, name: '1A' }, { id: 2, name: '1B' }, { id: 3, name: '2A' }, { id: 4, name: '2B' }, { id: 5, name: '3A' }, { id: 6, name: '3B' }, { id: 7, name: '4A' }, { id: 8, name: '4B' }, { id: 9, name: '5A' }, { id: 10, name: '5B' }];
 
@@ -137,7 +143,7 @@ export default function Materias({ handleOpenDrawer, handleCloseDrawer }) {
                 <Select
                     size='large'
                     showSearch
-                    placeholder="Select a person"
+                    placeholder="Seleccione un Profesor"
                     onChange={onChange}
                     onSearch={onSearch}
                     options={[
@@ -183,8 +189,11 @@ export default function Materias({ handleOpenDrawer, handleCloseDrawer }) {
                     style={{
                         width: 200,
                     }}
-                    options={materias}
-                    placeholder="try to type `b`"
+                    options={materias.map(materia => ({
+                        value: materia.id,
+                        label: materia.name,
+                    }))}
+                    placeholder="Buscar Materia"
                     filterOption={(inputValue, option) =>
                         option.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1
                     }

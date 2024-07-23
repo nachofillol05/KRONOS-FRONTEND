@@ -8,6 +8,7 @@ export default function Personal({ handleOpenDrawer, handleCloseDrawer }) {
     const [activeButton, setActiveButton] = useState('Profesores');
     const [searchName, setSearchName] = useState('');
     const [subject, setSubject] = useState('');
+    const [loading, setLoading] = useState(true);
     const asuntoRef = useRef(null);
     const contenidoRef = useRef(null);
 
@@ -22,14 +23,6 @@ export default function Personal({ handleOpenDrawer, handleCloseDrawer }) {
     const onClose = () => {
         setOpen(false);
         setDrawerContent(null);
-    };
-
-    const onChange = (value) => {
-        console.log(`selected ${value}`);
-    };
-
-    const onSearch = (value) => {
-        console.log('search:', value);
     };
 
     const [alignment, setAlignment] = React.useState('web');
@@ -97,17 +90,18 @@ export default function Personal({ handleOpenDrawer, handleCloseDrawer }) {
             })
             .then((data) => {
                 setTeachers(data);
+                setLoading(false)
             })
             .catch((error) => console.error('Error fetching data:', error));
     }, [searchName, subject]);
 
     const columns = [
-        { header: 'Nombre', field: 'first_name', flex: 1 },
-        { header: 'Apellido', field: 'last_name', flex: 1 },
-        { header: 'Documento', field: 'document', flex: 1 },
-        { header: 'Genero', field: 'gender', flex: 1 },
-        { header: 'Email', field: 'email', flex: 1 },
-        { header: 'Horas por semana', field: 'availability', flex: 1 },
+        { title: 'Nombre', dataIndex: 'first_name', key: 'Nombre'},
+        { title: 'Apellido', dataIndex: 'last_name', key: 'Apellido' },
+        { title: 'Documento', dataIndex: 'document', key: 'Documento' },
+        { title: 'Genero', dataIndex: 'gender', key: 'Genero' },
+        { title: 'Email', dataIndex: 'email', key: 'Email' },
+        { title: 'Horas por semana', dataIndex: 'availability', key: 'Horaspsemana'},
     ];
 
     useEffect(() => {
@@ -126,10 +120,12 @@ export default function Personal({ handleOpenDrawer, handleCloseDrawer }) {
             })
             .then((data) => {
                 const subjectsData = data.map((subject) => ({
-                    id: subject.id,
-                    name: subject.name,
+                    value: subject.id,
+                    label: subject.name,
                 }));
+                subjectsData.push({value: '', label: 'Todas'})
                 setSubjects(subjectsData);
+                console.log(subjectsData);
             })
             .catch((error) => console.error('Error fetching data:', error));
     }, []);
@@ -138,13 +134,19 @@ export default function Personal({ handleOpenDrawer, handleCloseDrawer }) {
         setActiveButton(buttonText);
     };
 
-    const handleSearch = (searchText) => {
+    const onSearch = (searchText) => {
         setSearchName(searchText);
+        console.log(searchName)
     };
 
     const handleSelectChange = (event) => {
         setSubject(event.target.value);
     };
+    const onChange = (value) => {
+        console.log(`selected ${value}`);
+        setSubject(value);
+    };
+
 
     return (
         <React.StrictMode>

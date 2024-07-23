@@ -11,6 +11,7 @@ export default function Login() {
         const token=localStorage.getItem('token')
         console.log(token)
         if (token != '') {
+            //agregar el verify token si o si porque sino alguine lo puede cambiar y entrar
             console.log('hay token baaaaaaaaaai')
             navigate('/');
         } else {
