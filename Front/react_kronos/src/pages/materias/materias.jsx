@@ -133,7 +133,7 @@ export default function Materias({ handleOpenDrawer, handleCloseDrawer }) {
         <React.StrictMode>
             <div className="filtros-container">
                 <div style={{ width: '200px' }}>
-                    <RangeSlider range defaultValue={[20, 50]} />
+                    <RangeSlider range onFinalChange={handleFinalRangeChange} defaultValue={[20, 50]} />
                 </div>
 
                 <Select
@@ -142,40 +142,27 @@ export default function Materias({ handleOpenDrawer, handleCloseDrawer }) {
                     placeholder="Seleccione un Profesor"
                     onChange={onChange}
                     onSearch={onSearch}
-                    options={[
-                        {
-                            value: 'jack',
-                            label: 'Jack',
-                        },
-                        {
-                            value: 'lucy',
-                            label: 'Lucy',
-                        },
-                        {
-                            value: 'tom',
-                            label: 'Tom',
-                        },
-                    ]}
+                    options={teachers}
                 />
 
                 <Select
                     size='large'
                     showSearch
-                    placeholder="Select a person"
+                    placeholder="Seleccione un curso"
                     onChange={onChange}
                     onSearch={onSearch}
                     options={[
                         {
-                            value: 'jack',
-                            label: 'Jack',
+                            value: '1',
+                            label: '1',
                         },
                         {
-                            value: 'lucy',
-                            label: 'Lucy',
+                            value: '2',
+                            label: '2',
                         },
                         {
-                            value: 'tom',
-                            label: 'Tom',
+                            value: '3',
+                            label: '3',
                         },
                     ]}
                 />
@@ -196,7 +183,7 @@ export default function Materias({ handleOpenDrawer, handleCloseDrawer }) {
                 />
             </div>
 
-            <Table dataSource={teachers} columns={columns}
+            <Table dataSource={materias} columns={columns}
                 tableLayout={'fixed'}
                 filterDropdownOpen={true}
                 filtered={true}
