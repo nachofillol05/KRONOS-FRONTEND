@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import './materias.scss';
-import { Table, Slider, Select, AutoComplete, FloatButton, Drawer } from "antd";
+import RangeSlider from "../../components/timerangeslider/timerange.jsx"
+import { Table, Select, AutoComplete, FloatButton, Drawer } from "antd";
 import { FileAddOutlined, DownOutlined , UpOutlined, DownloadOutlined } from '@ant-design/icons';
+
 
 export default function Materias({ handleOpenDrawer, handleCloseDrawer }) {
     const [materias, setMaterias] = useState([]);
@@ -13,7 +15,6 @@ export default function Materias({ handleOpenDrawer, handleCloseDrawer }) {
     const [end_time, setEnd_time] = useState('');
     const [loading, setLoading] = useState(true);
     const [materiasMap, setMateriasMap] = useState([]);
-
     const [open, setOpen] = useState(false);
     const [drawerContent, setDrawerContent] = useState(null);
 
@@ -27,11 +28,6 @@ export default function Materias({ handleOpenDrawer, handleCloseDrawer }) {
         setDrawerContent(null);
     };
 
-    const [value, setValue] = React.useState([20, 80]);
-
-    const handleChange = (event, newValue) => {
-        setValue(newValue);
-    };
 
     const onChange = (value) => {
         console.log(`selected ${value}`);

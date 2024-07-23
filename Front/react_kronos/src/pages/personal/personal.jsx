@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
-import './personal.scss';
+import "./personal.scss"
 import { Table, Select, AutoComplete, FloatButton, Drawer, Radio } from "antd";
 import { UsergroupAddOutlined, DownOutlined, UpOutlined, DownloadOutlined } from '@ant-design/icons';
+
 export default function Personal({ handleOpenDrawer, handleCloseDrawer }) {
     const [teachers, setTeachers] = useState([]);
     const [subjects, setSubjects] = useState([]);
@@ -11,7 +12,6 @@ export default function Personal({ handleOpenDrawer, handleCloseDrawer }) {
     const [loading, setLoading] = useState(true);
     const asuntoRef = useRef(null);
     const contenidoRef = useRef(null);
-
     const [open, setOpen] = useState(false);
     const [drawerContent, setDrawerContent] = useState(null);
 
@@ -24,6 +24,7 @@ export default function Personal({ handleOpenDrawer, handleCloseDrawer }) {
         setOpen(false);
         setDrawerContent(null);
     };
+
 
     const [alignment, setAlignment] = React.useState('web');
 
@@ -189,14 +190,25 @@ export default function Personal({ handleOpenDrawer, handleCloseDrawer }) {
                         option.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1
                     }
                 />
+                <AutoComplete
+                    size='large'
+                    style={{
+                        width: 200,
+                    }}
+                    options={teachers}
+                    placeholder="try to type b"
+                    filterOption={(inputValue, option) =>
+                        option.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1
+                    }
+                />
             </div>
 
-            <Table dataSource={teachers} columns={columns}
-                tableLayout={'fixed'}
-                filterDropdownOpen={true}
-                filtered={true}
-            />
-
+            <Table dataSource={teachers.map(teacher => ({ ...teacher, key: teacher.id }))}  columns={columns} 
+            loading	={loading}
+            tableLayout = {'fixed'}
+            filterDropdownOpen={true}
+            filtered={true}
+            />;
             <FloatButton.Group
                 visibilityHeight={1500}
                 trigger="click"
