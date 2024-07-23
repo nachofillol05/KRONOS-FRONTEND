@@ -1,5 +1,4 @@
 import React from 'react';
-import './buttons.scss';
 
 export default function Button({ onClick, text = "Button", life, numero = 25, icon = null }) {
 

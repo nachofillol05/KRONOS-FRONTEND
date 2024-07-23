@@ -1,10 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
-import Buscador from '../../components/buscador/buscador.jsx';
-import { Table } from "antd";
-import { ToggleButton, ToggleButtonGroup, Button, DataGrid } from '@mui/material';
 import './personal.scss';
-import Lateral from '../../components/lateral/laterals.jsx';
-
+import { Table, Select, AutoComplete, FloatButton, Drawer, Radio } from "antd";
+import { UsergroupAddOutlined, DownOutlined, UpOutlined, DownloadOutlined } from '@ant-design/icons';
 export default function Personal({ handleOpenDrawer, handleCloseDrawer }) {
     const [teachers, setTeachers] = useState([]);
     const [subjects, setSubjects] = useState([]);
@@ -13,6 +10,27 @@ export default function Personal({ handleOpenDrawer, handleCloseDrawer }) {
     const [subject, setSubject] = useState('');
     const asuntoRef = useRef(null);
     const contenidoRef = useRef(null);
+
+    const [open, setOpen] = useState(false);
+    const [drawerContent, setDrawerContent] = useState(null);
+
+    const showDrawer = (content) => {
+        setDrawerContent(content);
+        setOpen(true);
+    };
+
+    const onClose = () => {
+        setOpen(false);
+        setDrawerContent(null);
+    };
+
+    const onChange = (value) => {
+        console.log(`selected ${value}`);
+    };
+
+    const onSearch = (value) => {
+        console.log('search:', value);
+    };
 
     const [alignment, setAlignment] = React.useState('web');
 
@@ -131,26 +149,68 @@ export default function Personal({ handleOpenDrawer, handleCloseDrawer }) {
     return (
         <React.StrictMode>
             <div className="filtros-container">
-                <ToggleButtonGroup
-                    value={alignment}
-                    color="primary"
-                    exclusive
-                    onChange={handleChange}
-                    aria-label="Platform"
-                >
-                    <ToggleButton value="web">Web</ToggleButton>
-                    <ToggleButton value="android">Android</ToggleButton>
-                    <ToggleButton value="ios">iOS</ToggleButton>
-                </ToggleButtonGroup>
-                <Buscador datos={teachers} agrupacion="last_name" extra="first_name" label="Busca un profesor" />
+                <Radio.Group size='large' defaultValue="a" buttonStyle="solid">
+                    <Radio.Button value="a">Profesor</Radio.Button>
+                    <Radio.Button value="b">Preceptor</Radio.Button>
+                    <Radio.Button value="c">Directivo</Radio.Button>
+                </Radio.Group>
+                <Select
+                    size='large'
+                    showSearch
+                    placeholder="Select a person"
+                    onChange={onChange}
+                    onSearch={onSearch}
+                    options={[
+                        {
+                            value: 'jack',
+                            label: 'Jack',
+                        },
+                        {
+                            value: 'lucy',
+                            label: 'Lucy',
+                        },
+                        {
+                            value: 'tom',
+                            label: 'Tom',
+                        },
+                    ]}
+                />
+
+                <AutoComplete
+                    size='large'
+                    style={{
+                        width: 200,
+                    }}
+                    options={teachers}
+                    placeholder="try to type `b`"
+                    filterOption={(inputValue, option) =>
+                        option.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1
+                    }
+                />
             </div>
 
-            <Table dataSource={teachers} columns={columns} 
-            loading	={true}
-            tableLayout = {'fixed'}
-            filterDropdownOpen={true}
-            filtered={true}
-            />;
+            <Table dataSource={teachers} columns={columns}
+                tableLayout={'fixed'}
+                filterDropdownOpen={true}
+                filtered={true}
+            />
+
+            <FloatButton.Group
+                visibilityHeight={1500}
+                trigger="click"
+                type="primary"
+                closeIcon={<DownOutlined />}
+                icon={<UpOutlined />}
+            >
+                <FloatButton icon={<DownloadOutlined />} tooltip="Descargar tabla" />
+                <FloatButton icon={<UsergroupAddOutlined style={{ fontSize: '30px' }} />} type='primary' tooltip="Agregar personal" onClick={() => showDrawer(<p>Hola mundo cruel</p>)} />
+            </FloatButton.Group>
+
+            <Drawer width={600} title="Basic Drawer" onClose={onClose} open={open}>
+                <div style={{ width: '100%', height: '100%' }}>
+                    {drawerContent}
+                </div>
+            </Drawer>
         </React.StrictMode>
     );
 }

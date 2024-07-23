@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import Input from "../../components/input/inputs.jsx";
-import Drawer from '../../components/drawer/drawers.jsx';
 import './materias.scss';
-import { Table, Slider, Select, AutoComplete } from "antd";
-
+import { Table, Slider, Select, AutoComplete, FloatButton, Drawer } from "antd";
+import { FileAddOutlined, DownOutlined , UpOutlined, DownloadOutlined } from '@ant-design/icons';
 
 export default function Materias({ handleOpenDrawer, handleCloseDrawer }) {
     const [materias, setMaterias] = useState([]);
@@ -13,6 +11,19 @@ export default function Materias({ handleOpenDrawer, handleCloseDrawer }) {
     const [Subjectname, setSubjectname] = useState('');
     const [start_time, setStart_time] = useState('');
     const [end_time, setEnd_time] = useState('');
+
+    const [open, setOpen] = useState(false);
+    const [drawerContent, setDrawerContent] = useState(null);
+
+    const showDrawer = (content) => {
+        setDrawerContent(content);
+        setOpen(true);
+    };
+
+    const onClose = () => {
+        setOpen(false);
+        setDrawerContent(null);
+    };
 
     const [value, setValue] = React.useState([20, 80]);
 
@@ -33,13 +44,13 @@ export default function Materias({ handleOpenDrawer, handleCloseDrawer }) {
         if (end_time && start_time) {
             url.searchParams.append('start_time', start_time);
             url.searchParams.append('end_time', end_time);
-        };
+        }
         if (teacher) {
             url.searchParams.append('teacher', teacher);
-        };
+        }
         if (Subjectname) {
             url.searchParams.append('name', Subjectname);
-        };
+        }
         console.log("aaaaaaaaaaaaaaaaaaaaaaa", url.toString())
         fetch(url.toString(), {
             method: "GET",
@@ -62,12 +73,12 @@ export default function Materias({ handleOpenDrawer, handleCloseDrawer }) {
     }, [start_time, end_time, Subjectname, teacher]);
 
     const columns = [
-        { header: 'Nombre', field: 'name', flex: 1 },
-        { header: 'Abreviacion', field: 'abbreviation', flex: 1 },
-        { header: 'Curso', field: 'course', flex: 1 },
-        { header: 'Horas catedra semanales', field: 'weeklyHours', flex: 1 },
-        { header: 'Color', field: 'color', flex: 1 },
-        { header: 'Descripcion', field: 'description', flex: 1 }
+        { title: 'Nombre', dataIndex: 'name', key: 'name', flex: 1 },
+        { title: 'Abreviacion', dataIndex: 'abbreviation', key: 'abbreviation', flex: 1 },
+        { title: 'Curso', dataIndex: 'course', key: 'course', flex: 1 },
+        { title: 'Horas catedra semanales', dataIndex: 'weeklyHours', key: 'weeklyHours', flex: 1 },
+        { title: 'Color', dataIndex: 'color', key: 'color', flex: 1 },
+        { title: 'Descripcion', dataIndex: 'description', key: 'description', flex: 1 }
     ];
 
     useEffect(() => {
@@ -100,8 +111,8 @@ export default function Materias({ handleOpenDrawer, handleCloseDrawer }) {
     };
 
     const handleSelectTeacher = (value) => {
-        setTeacher(value)
-        console.log(value)
+        setTeacher(value);
+        console.log(value);
     };
 
     const handleSearch = (searchText) => {
@@ -116,14 +127,12 @@ export default function Materias({ handleOpenDrawer, handleCloseDrawer }) {
 
     const cursos = [{ id: 1, name: '1A' }, { id: 2, name: '1B' }, { id: 3, name: '2A' }, { id: 4, name: '2B' }, { id: 5, name: '3A' }, { id: 6, name: '3B' }, { id: 7, name: '4A' }, { id: 8, name: '4B' }, { id: 9, name: '5A' }, { id: 10, name: '5B' }];
 
-
     return (
         <React.StrictMode>
             <div className="filtros-container">
-                <div style={{width: '200px'}}>
+                <div style={{ width: '200px' }}>
                     <Slider range defaultValue={[20, 50]} />
                 </div>
-
 
                 <Select
                     size='large'
@@ -148,9 +157,9 @@ export default function Materias({ handleOpenDrawer, handleCloseDrawer }) {
                 />
 
                 <Select
+                    size='large'
                     showSearch
                     placeholder="Select a person"
-                    optionFilterProp="label"
                     onChange={onChange}
                     onSearch={onSearch}
                     options={[
@@ -168,7 +177,9 @@ export default function Materias({ handleOpenDrawer, handleCloseDrawer }) {
                         },
                     ]}
                 />
+
                 <AutoComplete
+                    size='large'
                     style={{
                         width: 200,
                     }}
@@ -177,44 +188,31 @@ export default function Materias({ handleOpenDrawer, handleCloseDrawer }) {
                     filterOption={(inputValue, option) =>
                         option.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1
                     }
-                />            </div>
+                />
+            </div>
 
             <Table dataSource={teachers} columns={columns}
-                loading={true}
                 tableLayout={'fixed'}
                 filterDropdownOpen={true}
                 filtered={true}
-            />;
-            {isModalOpen && <Drawer onClose={handleCloseModal} title="Agregar materia" >
-                <div Class='Contenedor' style={{ display: 'flex', flexDirection: 'row', gap: '20px', alignItems: 'center' }}>
-                    <div>
-                        <h1>Materia</h1>
-                        <Input />
-                    </div>
-                    <div>
-                        <h1>Abreviacion</h1>
-                        <Input />
-                    </div>
+            />
+
+            <FloatButton.Group
+                visibilityHeight={1500}
+                trigger="click"
+                type="primary"
+                closeIcon={<DownOutlined />}
+                icon={<UpOutlined />}
+            >
+                <FloatButton icon={<DownloadOutlined />} tooltip="Descargar tabla"/>
+                <FloatButton icon={<FileAddOutlined />} type='primary'  tooltip="Agregar una materia" onClick={() => showDrawer(<p>Hola mundo cruel</p>)} />
+            </FloatButton.Group>
+
+            <Drawer width={600} title="Basic Drawer" onClose={onClose} open={open}>
+                <div style={{ width: '100%' , height: '100%' }}>
+                    {drawerContent}
                 </div>
-                <div Class='Contenedor' style={{ display: 'flex', flexDirection: 'row', gap: '20px', alignItems: 'center' }}>
-                    <div>
-                        <h1>Horas Semanales</h1>
-                        <Input type="number" />
-                    </div>
-                    <div>
-                        <h1>Color</h1>
-                        <Input type="color" />
-                    </div>
-                </div>
-                <div>
-                    <h1>Plan de Estudio</h1>
-                    <Input textArea />
-                </div>
-                <div>
-                    <h1>Descripción</h1>
-                    <Input textArea />
-                </div>
-            </Drawer>}
+            </Drawer>
         </React.StrictMode>
-    )
+    );
 }
