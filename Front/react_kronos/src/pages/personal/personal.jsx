@@ -12,10 +12,12 @@ export default function Personal({ handleOpenDrawer, handleCloseDrawer }) {
     const [loading, setLoading] = useState(true);
     const asuntoRef = useRef(null);
     const contenidoRef = useRef(null);
-    const [open, setOpen] = useState(false);
+    const [open, setOpen] = useState(true);
     const [drawerContent, setDrawerContent] = useState(null);
+    const [drawerTitle, setDrawerTitle] = useState(null);
 
-    const showDrawer = (content) => {
+    const showDrawer = (content, title) => {
+        setDrawerTitle(title);
         setDrawerContent(content);
         setOpen(true);
     };
@@ -193,10 +195,10 @@ export default function Personal({ handleOpenDrawer, handleCloseDrawer }) {
                 icon={<UpOutlined />}
             >
                 <FloatButton icon={<DownloadOutlined />} tooltip="Descargar tabla" />
-                <FloatButton icon={<UsergroupAddOutlined style={{ fontSize: '30px' }} />} type='primary' tooltip="Agregar personal" onClick={() => showDrawer(<p>Hola mundo cruel</p>)} />
+                <FloatButton icon={<UsergroupAddOutlined style={{ fontSize: '30px' }} />} type='primary' tooltip="Agregar personal" onClick={() => showDrawer(<p>Hola mundo cruel</p>, 'hola a todods')} />
             </FloatButton.Group>
 
-            <Drawer width={600} title="Basic Drawer" onClose={onClose} open={open}>
+            <Drawer width={600} title="Hoal a todos" onClose={onClose} open={open}>
                 <div style={{ width: '100%', height: '100%' }}>
                     {drawerContent}
                 </div>

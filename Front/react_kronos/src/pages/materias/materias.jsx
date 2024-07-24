@@ -17,8 +17,10 @@ export default function Materias({ handleOpenDrawer, handleCloseDrawer }) {
     const [materiasMap, setMateriasMap] = useState([]);
     const [open, setOpen] = useState(false);
     const [drawerContent, setDrawerContent] = useState(null);
+    const [drawerTitle, setDrawerTitle] = useState(null);
 
-    const showDrawer = (content) => {
+    const showDrawer = (content, title) => {
+        setDrawerTitle(title);
         setDrawerContent(content);
         setOpen(true);
     };
@@ -210,10 +212,10 @@ export default function Materias({ handleOpenDrawer, handleCloseDrawer }) {
                 icon={<UpOutlined />}
             >
                 <FloatButton icon={<DownloadOutlined />} tooltip="Descargar tabla"/>
-                <FloatButton icon={<FileAddOutlined />} type='primary'  tooltip="Agregar una materia" onClick={() => showDrawer(<p>Hola mundo cruel</p>)} />
+                <FloatButton icon={<FileAddOutlined />} type='primary'  tooltip="Agregar una materia" onClick={() => showDrawer(<p>Hola mundo cruel</p>, 'hola a todods')} />
             </FloatButton.Group>
 
-            <Drawer width={600} title="Basic Drawer" onClose={onClose} open={open}>
+            <Drawer width={600} title={drawerTitle} onClose={onClose} open={open}>
                 <div style={{ width: '100%' , height: '100%' }}>
                     {drawerContent}
                 </div>
