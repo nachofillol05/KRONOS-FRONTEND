@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './materias.scss';
 import RangeSlider from "../../components/timerangeslider/timerange.jsx"
-import NumericInput from "../../components/numericInput/numericInput.jsx"
-import { Table, Select, AutoComplete, FloatButton, Drawer, Input, Flex, ColorPicker, Space, Tooltip } from "antd";
+import { Table, Select, AutoComplete, FloatButton, Drawer, Input, Flex, ColorPicker, Space, Form, Button } from "antd";
 import { FileAddOutlined, DownOutlined, UpOutlined, DownloadOutlined } from '@ant-design/icons';
 
 const { TextArea } = Input
@@ -207,61 +206,147 @@ export default function Materias({ handleOpenDrawer, handleCloseDrawer }) {
                 <FloatButton icon={<DownloadOutlined />} tooltip="Descargar tabla" />
                 <FloatButton icon={<FileAddOutlined />} type='primary' tooltip="Agregar una materia"
                     onClick={() => showDrawer(
-                        <Flex vertical gap={25}>
+                        <Form layout="vertical" hideRequiredMark>
                             <Space.Compact>
-                                <Input placeholder="Nombre de la materia" size='large' autoSize={true} />
-                                <Input placeholder="Abreviacion" size='large' autoSize={true} style={{ width: '40%' }} count={{ show: true, max: 5, }} />
-                            </Space.Compact>
-                            <Flex gap={10}>
-                                <Select
-                                    style={{ flexGrow: 1 }}
-                                    size='large'
-                                    showSearch
-                                    placeholder="Profesor"
-                                    onChange={onChange}
-                                    onSearch={onSearch}
-                                    options={teachers}
-                                />
-                                <Select
-                                    style={{ width: '150px' }}
-                                    size='large'
-                                    showSearch
-                                    placeholder="Curso"
-                                    onChange={onChange}
-                                    onSearch={onSearch}
-                                    options={[
+                                <Form.Item
+                                    style={{ width: '70%' }}
+                                    name="materia"
+                                    label="Nombre de la materia"
+                                    rules={[
                                         {
-                                            value: 'jack',
-                                            label: 'Jack',
-                                        },
-                                        {
-                                            value: 'lucy',
-                                            label: 'Lucy',
-                                        },
-                                        {
-                                            value: 'tom',
-                                            label: 'Tom',
+                                            required: true,
+                                            message: 'Porfavor ingrese el nombre de la materia',
                                         },
                                     ]}
-                                />
+                                >
+                                    <Input size='large' autoSize={true} placeholder="Ingrese el nombre de la materia" />
+                                </Form.Item>
+                                <Form.Item
+                                    style={{ width: '30%' }}
+                                    name="abreviacion"
+                                    label="Abreviacion"
+                                    rules={[
+                                        {
+                                            required: true,
+                                            message: 'Porfavor ingrese el nombre de la abreviacion',
+                                        },
+                                    ]}
+                                >
+                                    <Input size='large' autoSize placeholder="Abreviacion" count={{ show: true, max: 5 }} />
+                                </Form.Item>
+                            </Space.Compact>
+                            <Flex gap={10}>
+                                <Form.Item
+                                    style={{ width: '70%' }}
+                                    name="profesor"
+                                    label="Profesor"
+                                    rules={[
+                                        {
+                                            required: true,
+                                            message: 'Porfavor ingrese el profesor',
+                                        },
+                                    ]}
+                                >
+                                    <Select
+
+                                        size='large'
+                                        showSearch
+                                        placeholder="Profesor"
+                                        onChange={onChange}
+                                        onSearch={onSearch}
+                                        options={teachers}
+                                    />
+                                </Form.Item>
+                                <Form.Item
+                                    style={{ width: '30%' }}
+                                    name="curso"
+                                    label="Curso"
+                                    rules={[
+                                        {
+                                            required: true,
+                                            message: 'Porfavor ingrese el curso ',
+                                        },
+                                    ]}
+                                >
+                                    <Select
+                                        size='large'
+                                        placeholder="Curso"
+                                        onChange={onChange}
+                                        onSearch={onSearch}
+                                        options={{ '1': 1, '2': 2, '3': 3 }}
+                                    />
+                                </Form.Item>
                             </Flex>
                             <Flex gap={10}>
-                                <NumericInput     
-                                    style={{ flexGrow: 1 }}            
-                                    size='large'
-                                    value={value}
-                                    onChange={setValue}
-                                />
-                                <ColorPicker defaultValue="#1677ff" size="large" showText style={{ width: '170px' }} />
+                                <Form.Item
+                                    style={{ width: '50%' }}
+                                    name="horasCatedras"
+                                    label="Horas Catedras"
+                                    rules={[
+                                        {
+                                            required: true,
+                                            message: 'Porfavor ingrese las horas catedra ',
+                                        },
+                                    ]}
+                                >
+                                    <Input
+                                        autoSize
+                                        size='large'
+                                        value={value}
+                                        onChange={setValue}
+                                        type='number'
+                                        placeholder="Ingrese las horas Catedras"
+                                    />
+                                </Form.Item>
+                                <Form.Item
+                                    style={{ width: '50%' }}
+                                    name="color"
+                                    label="Color de la materia"
+                                    rules={[
+                                        {
+                                            required: true,
+                                            message: 'Porfavor ingrese el color de la materia ',
+                                        },
+                                    ]}
+                                >
+                                    <ColorPicker defaultValue="#1677ff" size="large" showText style={{ width: '100%' }} />
+                                </Form.Item>
                             </Flex>
-                            <TextArea size='large' placeholder="Plan de estudio" allowClear onChange={onChange} style={{ height: '150px' }} />
-                            <TextArea size='large' placeholder="Descrpcion" allowClear onChange={onChange} style={{ height: '150px' }} />
+                            <Form.Item
+                                name="planEstudio"
+                                label="Plan de estudio"
+                                rules={[
+                                    {
+                                        required: true,
+                                        message: 'Porfavor ingrese el plan de estudio ',
+                                    },
+                                ]}
+                            >
+                                <TextArea size='large' placeholder="Ingrese el plan de estudio" allowClear onChange={onChange} style={{ height: '90px' }} />
+                            </Form.Item>
+                            <Form.Item
+                                name="descripcion"
+                                label="Descripcion"
+                                rules={[
+                                    {
+                                        required: true,
+                                        message: 'Porfavor ingrese la descripcion ',
+                                    },
+                                ]}
+                            >
+                                <TextArea size='large' placeholder="Ingrese la descripcion" allowClear onChange={onChange} style={{ height: '90px' }} />
+                            </Form.Item>
+                            <Form.Item >
+                                <Flex justify='flex-end'>
+                                    <Button size='large' type="primary" onClick={onClose}>Submit</Button>
+                                </Flex>
+                            </Form.Item>
 
-                        </Flex>
-                        , 'hola a todods')} />
+                        </Form>
+                        , 'Agregar una materia')} />
             </FloatButton.Group>
 
-            <Drawer width={600} title={drawerTitle} onClose={onClose} open={open}>
+            <Drawer width={600} title={drawerTitle} onClose={onClose} open={open} closeIcon={false}>
                 <div style={{ width: '100%', height: '100%' }}>
                     {drawerContent}
                 </div>

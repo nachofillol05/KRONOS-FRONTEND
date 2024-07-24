@@ -25,25 +25,17 @@ a{
 }
 
 
-.kronos-select{
-    flex: 1 1 auto;
-    max-width: 150px;
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
 }
 
-.kronos-slider{
-    flex: 10 1 auto;
-    max-width: 250px;
-}
-.kronos-buscador{
-    flex: 10 1 auto;
-    max-width: 300px;
-
+/* Para Firefox */
+input[type="number"] {
+    -moz-appearance: textfield;
 }
 
-.MuiAutocomplete-inputFocused{
-    background-color: red;
-}
-
-.MuiAutocomplete-input{
-    font-family: $fuente-general !important;
+:where(.css-dev-only-do-not-override-m4timi).ant-color-picker-trigger {
+    justify-content: start !important;
 }
