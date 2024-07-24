@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import './materias.scss';
 import RangeSlider from "../../components/timerangeslider/timerange.jsx"
-import { Table, Select, AutoComplete, FloatButton, Drawer } from "antd";
-import { FileAddOutlined, DownOutlined , UpOutlined, DownloadOutlined } from '@ant-design/icons';
+import NumericInput from "../../components/numericInput/numericInput.jsx"
+import { Table, Select, AutoComplete, FloatButton, Drawer, Input, Flex, ColorPicker, Space, Tooltip } from "antd";
+import { FileAddOutlined, DownOutlined, UpOutlined, DownloadOutlined } from '@ant-design/icons';
 
+const { TextArea } = Input
 
 export default function Materias({ handleOpenDrawer, handleCloseDrawer }) {
     const [materias, setMaterias] = useState([]);
@@ -40,6 +42,8 @@ export default function Materias({ handleOpenDrawer, handleCloseDrawer }) {
         console.log('search:', value);
     };
 
+
+
     useEffect(() => {
         const url = new URL('http://127.0.0.1:8000/api/subjects/');
         if (end_time && start_time) {
@@ -67,7 +71,7 @@ export default function Materias({ handleOpenDrawer, handleCloseDrawer }) {
                 return response.json();
             })
             .then(data => {
-                console.log("data: ",data);
+                console.log("data: ", data);
                 setMaterias(data.map(materia => ({ ...materia, key: materia.id })))
                 setLoading(false);
             })
@@ -108,6 +112,8 @@ export default function Materias({ handleOpenDrawer, handleCloseDrawer }) {
             .catch(error => console.error('Error fetching data:', error));
     }, []);
 
+    const [value, setValue] = useState('');
+
     const handleCloseModal = () => {
         setIsModalOpen(false);
     };
@@ -127,7 +133,7 @@ export default function Materias({ handleOpenDrawer, handleCloseDrawer }) {
         setStart_time(newValues[0]);
         setEnd_time(newValues[1]);
         console.log('New range values:', newValues);
-      };
+    };
 
     const cursos = [{ id: 1, name: '1A' }, { id: 2, name: '1B' }, { id: 3, name: '2A' }, { id: 4, name: '2B' }, { id: 5, name: '3A' }, { id: 6, name: '3B' }, { id: 7, name: '4A' }, { id: 8, name: '4B' }, { id: 9, name: '5A' }, { id: 10, name: '5B' }];
 
@@ -144,40 +150,27 @@ export default function Materias({ handleOpenDrawer, handleCloseDrawer }) {
                     placeholder="Seleccione un Profesor"
                     onChange={onChange}
                     onSearch={onSearch}
-                    options={[
-                        {
-                            value: 'jack',
-                            label: 'Jack',
-                        },
-                        {
-                            value: 'lucy',
-                            label: 'Lucy',
-                        },
-                        {
-                            value: 'tom',
-                            label: 'Tom',
-                        },
-                    ]}
+                    options={teachers}
                 />
 
                 <Select
                     size='large'
                     showSearch
-                    placeholder="Select a person"
+                    placeholder="Seleccione un curso"
                     onChange={onChange}
                     onSearch={onSearch}
                     options={[
                         {
-                            value: 'jack',
-                            label: 'Jack',
+                            value: '1',
+                            label: '1',
                         },
                         {
-                            value: 'lucy',
-                            label: 'Lucy',
+                            value: '2',
+                            label: '2',
                         },
                         {
-                            value: 'tom',
-                            label: 'Tom',
+                            value: '3',
+                            label: '3',
                         },
                     ]}
                 />
@@ -211,12 +204,65 @@ export default function Materias({ handleOpenDrawer, handleCloseDrawer }) {
                 closeIcon={<DownOutlined />}
                 icon={<UpOutlined />}
             >
-                <FloatButton icon={<DownloadOutlined />} tooltip="Descargar tabla"/>
-                <FloatButton icon={<FileAddOutlined />} type='primary'  tooltip="Agregar una materia" onClick={() => showDrawer(<p>Hola mundo cruel</p>, 'hola a todods')} />
+                <FloatButton icon={<DownloadOutlined />} tooltip="Descargar tabla" />
+                <FloatButton icon={<FileAddOutlined />} type='primary' tooltip="Agregar una materia"
+                    onClick={() => showDrawer(
+                        <Flex vertical gap={25}>
+                            <Space.Compact>
+                                <Input placeholder="Nombre de la materia" size='large' autoSize={true} />
+                                <Input placeholder="Abreviacion" size='large' autoSize={true} style={{ width: '40%' }} count={{ show: true, max: 5, }} />
+                            </Space.Compact>
+                            <Flex gap={10}>
+                                <Select
+                                    style={{ flexGrow: 1 }}
+                                    size='large'
+                                    showSearch
+                                    placeholder="Profesor"
+                                    onChange={onChange}
+                                    onSearch={onSearch}
+                                    options={teachers}
+                                />
+                                <Select
+                                    style={{ width: '150px' }}
+                                    size='large'
+                                    showSearch
+                                    placeholder="Curso"
+                                    onChange={onChange}
+                                    onSearch={onSearch}
+                                    options={[
+                                        {
+                                            value: 'jack',
+                                            label: 'Jack',
+                                        },
+                                        {
+                                            value: 'lucy',
+                                            label: 'Lucy',
+                                        },
+                                        {
+                                            value: 'tom',
+                                            label: 'Tom',
+                                        },
+                                    ]}
+                                />
+                            </Flex>
+                            <Flex gap={10}>
+                                <NumericInput     
+                                    style={{ flexGrow: 1 }}            
+                                    size='large'
+                                    value={value}
+                                    onChange={setValue}
+                                />
+                                <ColorPicker defaultValue="#1677ff" size="large" showText style={{ width: '170px' }} />
+                            </Flex>
+                            <TextArea size='large' placeholder="Plan de estudio" allowClear onChange={onChange} style={{ height: '150px' }} />
+                            <TextArea size='large' placeholder="Descrpcion" allowClear onChange={onChange} style={{ height: '150px' }} />
+
+                        </Flex>
+                        , 'hola a todods')} />
             </FloatButton.Group>
 
             <Drawer width={600} title={drawerTitle} onClose={onClose} open={open}>
-                <div style={{ width: '100%' , height: '100%' }}>
+                <div style={{ width: '100%', height: '100%' }}>
                     {drawerContent}
                 </div>
             </Drawer>
