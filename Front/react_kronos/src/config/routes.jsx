@@ -12,6 +12,7 @@ import ActivationSent from "../pages/activationSent/activationSents";
 
 import Materias from "../pages/materias/materias";
 import Personal from "../pages/personal/personal";
+import Perfil from "../pages/Perfil/Perfil";
 
 
 
@@ -34,6 +35,13 @@ export const routes = [
         private: false,
         layout: Navegacion,
         component: Prueba
+    },
+    {
+        path: "/perfil",
+        exact: true,
+        private: false,
+        layout: Navegacion,
+        component: Perfil
     },
 
     {
