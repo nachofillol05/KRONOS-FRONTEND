@@ -1,28 +1,40 @@
-import React, { useState } from 'react';
-import { Button, Card, Form, Select, Input, Row, Col, Flex } from 'antd';
+import React, { useEffect, useState } from 'react';
+import { Button, Card, Form, Select, Input, Row, Col, Space } from 'antd';
 import './Perfil.scss';
 
-export default function Profile () {
+export default function Profile() {
   const [isEditing, setIsEditing] = useState(false);
+  const [profileData, setProfileData] = useState({});
   const [form] = Form.useForm();
 
-  const [profileData, setProfileData] = useState({
-    name: 'John Doe',
-    email: 'john.doe@example.com',
-    phone: '123-456-7890',
-    last_name: 'Fillol',
-    gender: 'Masculino',
-    documentType: 'DNI',
-    document: '123456789',
-    nationality: 'Argentino',
-    contactInfo: 'Calle falsa 123',
-    hoursToWork: 40,
-    postalCode: '1234',
-    street: 'Calle falsa',
-    streetNumber: '123',
-    city: 'Springfield',
-    province: 'Springfield',
-  });
+  useEffect(() => {
+    fetch('http://127.0.0.1:8000/api/profile/', {
+      method: "GET",
+      headers: {
+          'Authorization': 'Token ' + localStorage.getItem('token'),
+          'School-ID': 1,
+      },
+    })
+    .then((response) => {
+      if (!response.ok) {
+          throw new Error('Network response was not ok');
+      }
+      return response.json();
+    })
+    .then((data) => {
+      console.log(data);
+      setProfileData(data);
+      form.setFieldsValue({
+        ...data,
+        city: data.contactInfo.city,
+        postalCode: data.contactInfo.postalCode,
+        province: data.contactInfo.province,
+        street: data.contactInfo.street,
+        streetNumber: data.contactInfo.streetNumber,
+      });
+    })
+    .catch((error) => console.error('Error fetching data:', error));
+  }, [form]);
 
   const tiposDoc = [
     { value: 'DNI', label: 'DNI' },
@@ -35,8 +47,42 @@ export default function Profile () {
   };
 
   const handleFinish = (values) => {
-    setProfileData(values);
-    setIsEditing(false);
+    const updatedProfile = {
+      ...profileData,
+      ...values,
+      contactInfo: {
+        ...profileData.contactInfo,
+        city: values.city,
+        postalCode: values.postalCode,
+        province: values.province,
+        street: values.street,
+        streetNumber: values.streetNumber,
+      }
+    };
+
+    fetch('http://127.0.0.1:8000/api/profile/', {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Token ' + localStorage.getItem('token'),
+        'School-ID': 1,
+      },
+      body: JSON.stringify(updatedProfile),
+    })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return response.json();
+    })
+    .then((data) => {
+      console.log('Profile updated successfully:', data);
+      setProfileData(data);
+      setIsEditing(false);
+    })
+    .catch((error) => {
+      console.error('Error updating profile:', error);
+    });
   };
 
   const customDisabledStyle = {
@@ -46,31 +92,29 @@ export default function Profile () {
     cursor: 'default',
   };
 
+  console.log("este", profileData);
+
   return (
     <Row justify="center" align="middle" style={{ minHeight: '100vh' }}>
       <Col span={12}>
         <Card
           title='Informacion Personal'
           extra={
-            
             <Button type="primary" onClick={toggleEditMode}>
               {isEditing ? 'Cancelar' : 'Editar'}
             </Button>
           }
         >
-          
           <Form
             form={form}
             layout="vertical"
-            initialValues={profileData}
             onFinish={handleFinish}
           >
-            
-            
-            <Flex vertical gap='large' align='center'>
+            <Space direction="vertical" size="large" align="center">
+            <h1>Datos personales</h1>
               <img src="https://via.placeholder.com/150" alt="Profile" className="profile-image" />
-              <Flex gap='large'>
-                <Form.Item label="Nombre" name="name">
+              <Space size="large">
+                <Form.Item label="Nombre" name="first_name">
                   <Input
                     style={!isEditing ? customDisabledStyle : {}}
                     disabled={!isEditing}
@@ -88,34 +132,36 @@ export default function Profile () {
                     disabled={!isEditing}
                   />
                 </Form.Item>
-                </Flex>
-                <Flex gap='large'>
+              </Space>
+              <Space size="large">
                 <Form.Item label="Teléfono" name="phone">
                   <Input
                     style={!isEditing ? customDisabledStyle : {}}
                     disabled={!isEditing}
                   />
                 </Form.Item>
-                <Form.Item label="Tipo documento" name="documentType">
-                  {isEditing ? (
-                    <Select options={tiposDoc} />
-                  ) : (
+                <Space.Compact block>
+                  <Form.Item label="Tipo documento" name="documentType">
+                    {isEditing ? (
+                      <Select options={tiposDoc} />
+                    ) : (
+                      <Input
+                        value={profileData.documentType}
+                        disabled
+                        style={customDisabledStyle}
+                      />
+                    )}
+                  </Form.Item>
+                  <Form.Item label="Documento" name="document">
                     <Input
-                      value={profileData.documentType}
-                      disabled
-                      style={customDisabledStyle}
+                      type="number"
+                      style={!isEditing ? customDisabledStyle : {}}
+                      disabled={!isEditing}
                     />
-                  )}
-                </Form.Item>
-                <Form.Item label="Documento" name="document">
-                  <Input
-                    type="number"
-                    style={!isEditing ? customDisabledStyle : {}}
-                    disabled={!isEditing}
-                  />
-                </Form.Item>
-                </Flex>
-                <Flex gap='large'>
+                  </Form.Item>
+                </Space.Compact>
+              </Space>
+              <Space size="large">
                 <Form.Item label="Género" name="gender">
                   <Input
                     style={!isEditing ? customDisabledStyle : {}}
@@ -135,9 +181,9 @@ export default function Profile () {
                     disabled={!isEditing}
                   />
                 </Form.Item>
-                </Flex>
-                <h1>Informacion de contacto</h1>
-                <Flex gap='large'>
+              </Space>
+              <h1>Datos de contacto</h1>
+              <Space size="large">
                 <Form.Item label="Código postal" name="postalCode">
                   <Input
                     type="number"
@@ -158,8 +204,8 @@ export default function Profile () {
                     disabled={!isEditing}
                   />
                 </Form.Item>
-                </Flex>
-                <Flex gap='large'>
+              </Space>
+              <Space size="large">
                 <Form.Item label="Ciudad" name="city">
                   <Input
                     style={!isEditing ? customDisabledStyle : {}}
@@ -172,15 +218,13 @@ export default function Profile () {
                     disabled={!isEditing}
                   />
                 </Form.Item>
-                </Flex>
-                </Flex>
-                
-                <Form.Item style={{ visibility: isEditing ? 'visible' : 'hidden' }}>
-                  <Button type="primary" htmlType="submit">
-                    Guardar
-                  </Button>
-                </Form.Item>
-                
+              </Space>
+              <Form.Item style={{ visibility: isEditing ? 'visible' : 'hidden' }}>
+                <Button type="primary" htmlType="submit">
+                  Guardar
+                </Button>
+              </Form.Item>
+            </Space>
           </Form>
         </Card>
       </Col>
