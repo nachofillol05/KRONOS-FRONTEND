@@ -170,7 +170,7 @@ export default function Materias() {
             {contextHolder}
             <div className="filtros-container">
                 <div style={{ width: '200px' }}>
-                    <RangeSlider range defaultValue={[20, 50]} />
+                    <RangeSlider range onFinalChange={handleFinalRangeChange} defaultValue={[20, 50]} />
                 </div>
 
                 <Select

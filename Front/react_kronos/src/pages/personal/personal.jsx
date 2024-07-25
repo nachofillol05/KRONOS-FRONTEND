@@ -291,7 +291,7 @@ export default function Personal() {
                         width: 200,
                     }}
                     options={teachers}
-                    placeholder="try to type b"
+                    placeholder="Buscar personal"
                     filterOption={(inputValue, option) =>
                         option.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1
                     }
