@@ -1,15 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import './materias.scss';
-import RangeSlider from "../../components/timerangeslider/timerange.jsx"
-import { Table, Select, AutoComplete, FloatButton, Drawer, Input, Flex, ColorPicker, Space, Form, Button } from "antd";
-import { FileAddOutlined, DownOutlined, UpOutlined, DownloadOutlined } from '@ant-design/icons';
+import RangeSlider from "../../components/timerangeslider/timerange.jsx";
+import { Table, Select, AutoComplete, FloatButton, Drawer, Input, Flex, ColorPicker, Space, Form, Button, message } from "antd";
+import { FileAddOutlined, DownOutlined, UpOutlined, DownloadOutlined, CloseOutlined } from '@ant-design/icons';
 
-const { TextArea } = Input
+const { TextArea } = Input;
 
-export default function Materias({ handleOpenDrawer, handleCloseDrawer }) {
+export default function Materias() {
     const [materias, setMaterias] = useState([]);
     const [teachers, setTeachers] = useState([]);
-    const [isModalOpen, setIsModalOpen] = useState(false);
     const [teacher, setTeacher] = useState('');
     const [Subjectname, setSubjectname] = useState('');
     const [start_time, setStart_time] = useState('');
@@ -19,6 +18,19 @@ export default function Materias({ handleOpenDrawer, handleCloseDrawer }) {
     const [open, setOpen] = useState(false);
     const [drawerContent, setDrawerContent] = useState(null);
     const [drawerTitle, setDrawerTitle] = useState(null);
+    const [value, setValue] = useState('');
+    const [form] = Form.useForm();
+    const [messageApi, contextHolder] = message.useMessage();
+    const [messageConfig, setMessageConfig] = useState({ type: '', content: '' });
+
+    useEffect(() => {
+        if (messageConfig.type) {
+            // Mostrar el mensaje basado en la configuración
+            showMessage(messageConfig.type, messageConfig.content);
+            // Resetear la configuración del mensaje después de mostrarlo
+            setMessageConfig({ type: '', content: '' });
+        }
+    }, [messageConfig]);
 
     const showDrawer = (content, title) => {
         setDrawerTitle(title);
@@ -31,17 +43,46 @@ export default function Materias({ handleOpenDrawer, handleCloseDrawer }) {
         setDrawerContent(null);
     };
 
-
     const onChange = (value) => {
         console.log(`selected ${value}`);
-        setTeacher(value)
+        setTeacher(value);
     };
 
     const onSearch = (value) => {
         console.log('search:', value);
     };
 
+    const handleSubmit = () => {
+        form.validateFields()
+            .then(values => {
+                console.log('Formulario completado:', values);
+                onClose();
+            })
+            .catch(errorInfo => {
+                // Configurar el mensaje de error
+                setMessageConfig({ type: 'error', content: 'Por favor, complete todos los campos.' });
+            });
+    };
 
+    const showMessage = (type, content) => {
+        switch (type) {
+            case 'success':
+                messageApi.success(content);
+                break;
+            case 'error':
+                messageApi.error(content);
+                break;
+            case 'warning':
+                messageApi.warning(content);
+                break;
+            case 'info':
+                messageApi.info(content);
+                break;
+            default:
+                messageApi.info(content);
+                break;
+        }
+    };
 
     useEffect(() => {
         const url = new URL('http://127.0.0.1:8000/api/subjects/');
@@ -55,7 +96,7 @@ export default function Materias({ handleOpenDrawer, handleCloseDrawer }) {
         if (Subjectname) {
             url.searchParams.append('name', Subjectname);
         }
-        console.log("aaaaaaaaaaaaaaaaaaaaaaa", url.toString())
+        console.log("aaaaaaaaaaaaaaaaaaaaaaa", url.toString());
         fetch(url.toString(), {
             method: "GET",
             headers: {
@@ -71,7 +112,7 @@ export default function Materias({ handleOpenDrawer, handleCloseDrawer }) {
             })
             .then(data => {
                 console.log("data: ", data);
-                setMaterias(data.map(materia => ({ ...materia, key: materia.id })))
+                setMaterias(data.map(materia => ({ ...materia, key: materia.id })));
                 setLoading(false);
             })
             .catch(error => console.error('Error fetching data:', error));
@@ -111,12 +152,6 @@ export default function Materias({ handleOpenDrawer, handleCloseDrawer }) {
             .catch(error => console.error('Error fetching data:', error));
     }, []);
 
-    const [value, setValue] = useState('');
-
-    const handleCloseModal = () => {
-        setIsModalOpen(false);
-    };
-
     const handleSelectTeacher = (value) => {
         setTeacher(value);
         console.log(value);
@@ -124,20 +159,15 @@ export default function Materias({ handleOpenDrawer, handleCloseDrawer }) {
 
     const handleSearch = (searchText) => {
         setSubjectname(searchText);
-        console.log("entro")
+        console.log("entro");
     };
 
-    const handleFinalRangeChange = (newValues) => {
-        console.log("hola")
-        setStart_time(newValues[0]);
-        setEnd_time(newValues[1]);
-        console.log('New range values:', newValues);
-    };
-
-    const cursos = [{ id: 1, name: '1A' }, { id: 2, name: '1B' }, { id: 3, name: '2A' }, { id: 4, name: '2B' }, { id: 5, name: '3A' }, { id: 6, name: '3B' }, { id: 7, name: '4A' }, { id: 8, name: '4B' }, { id: 9, name: '5A' }, { id: 10, name: '5B' }];
+    const cursos = [{ value: 1, label: '1A' }, { value: 2, label: '1B' }, { value: 3, label: '2A' }, { value: 4, label: '2B' }, { value: 5, label: '3A' }, { value: 6, label: '3B' }, { value: 7, label: '4A' }, { value: 8, label: '4B' }, { value: 9, label: '5A' }, { value: 10, label: '5B' }];
 
     return (
-        <React.StrictMode>
+        
+        <>
+            {contextHolder}
             <div className="filtros-container">
                 <div style={{ width: '200px' }}>
                     <RangeSlider range defaultValue={[20, 50]} />
@@ -158,20 +188,7 @@ export default function Materias({ handleOpenDrawer, handleCloseDrawer }) {
                     placeholder="Seleccione un curso"
                     onChange={onChange}
                     onSearch={onSearch}
-                    options={[
-                        {
-                            value: '1',
-                            label: '1',
-                        },
-                        {
-                            value: '2',
-                            label: '2',
-                        },
-                        {
-                            value: '3',
-                            label: '3',
-                        },
-                    ]}
+                    options={cursos}
                 />
 
                 <AutoComplete
@@ -190,7 +207,7 @@ export default function Materias({ handleOpenDrawer, handleCloseDrawer }) {
                 />
             </div>
 
-            <Table dataSource={teachers} columns={columns}
+            <Table dataSource={materias} columns={columns}
                 tableLayout={'fixed'}
                 filterDropdownOpen={true}
                 filtered={true}
@@ -206,7 +223,7 @@ export default function Materias({ handleOpenDrawer, handleCloseDrawer }) {
                 <FloatButton icon={<DownloadOutlined />} tooltip="Descargar tabla" />
                 <FloatButton icon={<FileAddOutlined />} type='primary' tooltip="Agregar una materia"
                     onClick={() => showDrawer(
-                        <Form layout="vertical" hideRequiredMark>
+                        <Form form={form} layout="vertical" hideRequiredMark >
                             <Space.Compact>
                                 <Form.Item
                                     style={{ width: '70%' }}
@@ -248,12 +265,9 @@ export default function Materias({ handleOpenDrawer, handleCloseDrawer }) {
                                     ]}
                                 >
                                     <Select
-
                                         size='large'
                                         showSearch
                                         placeholder="Profesor"
-                                        onChange={onChange}
-                                        onSearch={onSearch}
                                         options={teachers}
                                     />
                                 </Form.Item>
@@ -271,9 +285,7 @@ export default function Materias({ handleOpenDrawer, handleCloseDrawer }) {
                                     <Select
                                         size='large'
                                         placeholder="Curso"
-                                        onChange={onChange}
-                                        onSearch={onSearch}
-                                        options={{ '1': 1, '2': 2, '3': 3 }}
+                                        options={cursos}
                                     />
                                 </Form.Item>
                             </Flex>
@@ -299,6 +311,7 @@ export default function Materias({ handleOpenDrawer, handleCloseDrawer }) {
                                     />
                                 </Form.Item>
                                 <Form.Item
+                                    initialValue={'#ff0000'}
                                     style={{ width: '50%' }}
                                     name="color"
                                     label="Color de la materia"
@@ -309,7 +322,7 @@ export default function Materias({ handleOpenDrawer, handleCloseDrawer }) {
                                         },
                                     ]}
                                 >
-                                    <ColorPicker defaultValue="#1677ff" size="large" showText style={{ width: '100%' }} />
+                                    <ColorPicker defaultValue="#ff0000" size="large" showText style={{ width: '100%' }} />
                                 </Form.Item>
                             </Flex>
                             <Form.Item
@@ -338,7 +351,7 @@ export default function Materias({ handleOpenDrawer, handleCloseDrawer }) {
                             </Form.Item>
                             <Form.Item >
                                 <Flex justify='flex-end'>
-                                    <Button size='large' type="primary" onClick={onClose}>Submit</Button>
+                                    <Button size='large' type="primary" onClick={handleSubmit}>Submit</Button>
                                 </Flex>
                             </Form.Item>
 
@@ -346,11 +359,20 @@ export default function Materias({ handleOpenDrawer, handleCloseDrawer }) {
                         , 'Agregar una materia')} />
             </FloatButton.Group>
 
-            <Drawer width={600} title={drawerTitle} onClose={onClose} open={open} closeIcon={false}>
+            <Drawer
+                width={600}
+                title={drawerTitle}
+                onClose={onClose}
+                open={open}
+                closeIcon={false}
+                extra={
+                    <Button onClick={onClose} type='primary' icon={<CloseOutlined />} />
+                }
+            >
                 <div style={{ width: '100%', height: '100%' }}>
                     {drawerContent}
                 </div>
             </Drawer>
-        </React.StrictMode>
+        </>
     );
 }

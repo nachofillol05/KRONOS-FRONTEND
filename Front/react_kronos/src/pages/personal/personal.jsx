@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import "./personal.scss";
-import { Table, Select, AutoComplete, FloatButton, Drawer, Radio, Form, Space, Input, Button } from "antd";
-import { UsergroupAddOutlined, DownOutlined, UpOutlined, DownloadOutlined, SearchOutlined } from '@ant-design/icons';
+import { Table, Select, AutoComplete, FloatButton, Drawer, Radio, Form, Space, Input, Button, Flex, message } from "antd";
+import { UsergroupAddOutlined, DownOutlined, UpOutlined, DownloadOutlined, SearchOutlined, CloseOutlined } from '@ant-design/icons';
 
-export default function Personal({ handleOpenDrawer, handleCloseDrawer }) {
+export default function Personal() {
     const [teachers, setTeachers] = useState([]);
     const [subjects, setSubjects] = useState([]);
     const [activeButton, setActiveButton] = useState('Profesores');
@@ -15,6 +15,19 @@ export default function Personal({ handleOpenDrawer, handleCloseDrawer }) {
     const [open, setOpen] = useState(false);
     const [drawerContent, setDrawerContent] = useState(null);
     const [drawerTitle, setDrawerTitle] = useState(null);
+    const formRef = useRef(null); // Referencia al formulario
+    const [form] = Form.useForm();
+    const [messageApi, contextHolder] = message.useMessage();
+    const [messageConfig, setMessageConfig] = useState({ type: '', content: '' });
+
+    useEffect(() => {
+        if (messageConfig.type) {
+            // Mostrar el mensaje basado en la configuración
+            showMessage(messageConfig.type, messageConfig.content);
+            // Resetear la configuración del mensaje después de mostrarlo
+            setMessageConfig({ type: '', content: '' });
+        }
+    }, [messageConfig]);
 
     const showDrawer = (content, title) => {
         setDrawerTitle(title);
@@ -25,12 +38,39 @@ export default function Personal({ handleOpenDrawer, handleCloseDrawer }) {
     const onClose = () => {
         setOpen(false);
         setDrawerContent(null);
+        form.resetFields();
     };
 
-    const [alignment, setAlignment] = React.useState('web');
+    const handleSubmit = () => {
+        form.validateFields()
+            .then(values => {
+                console.log('Formulario completado:', values);
+                onClose();
+            })
+            .catch(errorInfo => {
+                // Configurar el mensaje de error
+                setMessageConfig({ type: 'error', content: 'Por favor, complete todos los campos.' });
+            });
+    };
 
-    const handleChange = (event, newAlignment) => {
-        setAlignment(newAlignment);
+    const showMessage = (type, content) => {
+        switch (type) {
+            case 'success':
+                messageApi.success(content);
+                break;
+            case 'error':
+                messageApi.error(content);
+                break;
+            case 'warning':
+                messageApi.warning(content);
+                break;
+            case 'info':
+                messageApi.info(content);
+                break;
+            default:
+                messageApi.info(content);
+                break;
+        }
     };
 
     const handleEnviar = (event) => {
@@ -64,7 +104,7 @@ export default function Personal({ handleOpenDrawer, handleCloseDrawer }) {
                     console.error('Error:', error);
                 });
 
-            handleCloseDrawer();
+            onClose();
         }
     };
 
@@ -92,7 +132,7 @@ export default function Personal({ handleOpenDrawer, handleCloseDrawer }) {
             })
             .then((data) => {
                 setTeachers(data);
-                setLoading(false)
+                setLoading(false);
             })
             .catch((error) => console.error('Error fetching data:', error));
     }, [searchName, subject]);
@@ -132,10 +172,6 @@ export default function Personal({ handleOpenDrawer, handleCloseDrawer }) {
             .catch((error) => console.error('Error fetching data:', error));
     }, []);
 
-    const buttonSelected = (buttonText) => {
-        setActiveButton(buttonText);
-    };
-
     const onSearch = (searchText) => {
         setSearchName(searchText);
         console.log(searchName);
@@ -156,8 +192,85 @@ export default function Personal({ handleOpenDrawer, handleCloseDrawer }) {
         setLoading(false);
     };
 
+    const handleSearch = () => {
+        // Verificar si los campos están llenos antes de buscar
+        formRef.current.validateFields().then(values => {
+            console.log('Values:', values);
+            Buscar(
+                <Form form={form} layout="vertical">
+                    <Flex gap={10}>
+                        <Form.Item
+                            style={{ flexGrow: 1 }}
+                            name="nombre"
+                            label="Nombre"
+                            rules={[
+                                {
+                                    required: true,
+                                    message: 'Por favor ingrese el nombre',
+                                },
+                            ]}
+                        >
+                            <Input size='large' autoSize={true} placeholder="Ingrese el nombre de la persona" />
+                        </Form.Item>
+                        <Form.Item
+                            style={{ flex: '1 1 auto' }}
+                            name="apellido"
+                            label="Apellido"
+                            rules={[
+                                {
+                                    required: true,
+                                    message: 'Por favor ingrese el apellido de la persona',
+                                },
+                            ]}
+                        >
+                            <Input size='large' autoSize placeholder="Ingrese el apellido de la persona" />
+                        </Form.Item>
+                    </Flex>
+                    <Flex gap={10}>
+                        <Form.Item
+                            style={{ flex: '1 1 auto' }}
+                            name="telefono"
+                            label="Número de teléfono"
+                            rules={[
+                                {
+                                    required: true,
+                                    message: 'Por favor ingrese el número de teléfono',
+                                },
+                            ]}
+                        >
+                            <Input size='large' type='number' autoSize={true} placeholder="Ingrese el número de teléfono" />
+                        </Form.Item>
+                        <Form.Item
+                            style={{ flex: '1 1 auto' }}
+                            name="email"
+                            label="Email"
+                            rules={[
+                                {
+                                    required: true,
+                                    message: 'Por favor ingrese el email de la persona',
+                                },
+                            ]}
+                        >
+                            <Input size='large' type='email' autoSize placeholder="Ingrese el email" />
+                        </Form.Item>
+                    </Flex>
+                    <Form.Item >
+                        <Flex justify='flex-end'>
+                            <Button size='large' type="primary" onClick={handleSubmit}>Submit</Button>
+                        </Flex>
+                    </Form.Item>
+
+                </Form>
+                , 'Agregar una materia'
+            );
+        }).catch(info => {
+            console.log('Validate Failed:', info);
+        });
+    };
+
     return (
-        <React.StrictMode>
+        <>
+            {contextHolder}
             <div className="filtros-container">
                 <Radio.Group size='large' defaultValue="a" buttonStyle="solid">
                     <Radio.Button value="a">Profesor</Radio.Button>
@@ -201,15 +314,16 @@ export default function Personal({ handleOpenDrawer, handleCloseDrawer }) {
                 <FloatButton icon={<DownloadOutlined />} tooltip="Descargar tabla" />
                 <FloatButton icon={<UsergroupAddOutlined />} type='primary' tooltip="Agregar personal"
                     onClick={() => showDrawer(
-                        <Form layout="vertical" hideRequiredMark>
+                        <Form form={form} ref={formRef} layout="vertical" hideRequiredMark>
                             <Space.Compact>
                                 <Form.Item
-                                    style={{ width: '20%' }}
+                                    initialValue={1} // Establece un valor predeterminado
+                                    style={{ width: '30%' }}
                                     name="tipoDni"
                                     rules={[
                                         {
                                             required: true,
-                                            message: 'Porfavor ingrese tipo de documento',
+                                            message: 'Por favor ingrese el tipo de documento',
                                         },
                                     ]}
                                 >
@@ -218,16 +332,16 @@ export default function Personal({ handleOpenDrawer, handleCloseDrawer }) {
                                         defaultValue={1}
                                         onChange={onChange}
                                         onSearch={onSearch}
-                                        options={[{'label': 'DNI', 'value': 1}, {'label': 'Pasaporte', 'value': 2}, {'label': 'Carnet Extranjeria', 'value': 3}]}
+                                        options={[{ 'label': 'DNI', 'value': 1 }, { 'label': 'Pasaporte', 'value': 2 }, { 'label': 'Carnet Extranjería', 'value': 3 }]}
                                     />
                                 </Form.Item>
                                 <Form.Item
-                                    style={{ width: '70%' }}
+                                    style={{ width: '60%' }}
                                     name="documento"
                                     rules={[
                                         {
                                             required: true,
-                                            message: 'Porfavor ingrese el documento',
+                                            message: 'Por favor ingrese el documento',
                                         },
                                     ]}
                                 >
@@ -236,22 +350,32 @@ export default function Personal({ handleOpenDrawer, handleCloseDrawer }) {
                                 <Button
                                     style={{ width: '10%' }}
                                     size='large'
-                                    onClick={() => Buscar(<p>nuevo contenido</p>)}
+                                    onClick={handleSearch}
                                     type="primary"
                                     icon={<SearchOutlined />}
                                 />
                             </Space.Compact>
-                        </Form>, 
+                        </Form>,
                         'Agregar Personal'
                     )}
                 />
             </FloatButton.Group>
 
-            <Drawer width={600} title={drawerTitle} onClose={onClose} open={open} closeIcon={false} loading={loading}>
+            <Drawer
+                destroyOnClose={false}
+                width={600}
+                title={drawerTitle}
+                onClose={onClose}
+                open={open}
+                closeIcon={false}
+                extra={
+                    <Button onClick={onClose} type='primary' icon={<CloseOutlined />} />
+                }
+            >
                 <div style={{ width: '100%', height: '100%' }}>
                     {drawerContent}
                 </div>
             </Drawer>
-        </React.StrictMode>
+        </>
     );
 }
