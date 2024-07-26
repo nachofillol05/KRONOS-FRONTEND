@@ -2,6 +2,12 @@ import React, { useState, useEffect, useRef } from 'react';
 import "./personal.scss";
 import { Table, Select, AutoComplete, FloatButton, Drawer, Radio, Form, Space, Input, Button, Flex, message } from "antd";
 import { UsergroupAddOutlined, DownOutlined, UpOutlined, DownloadOutlined, SearchOutlined, CloseOutlined } from '@ant-design/icons';
+import FormSearchDni from './fromSearchDni';
+import InfoWorker from './infoWorker';
+import FormCreateWorker from './formCreateWorker';
+import ContacWorker from './contactWorker';
+
+
 
 export default function Personal() {
     const [teachers, setTeachers] = useState([]);
@@ -15,16 +21,69 @@ export default function Personal() {
     const [open, setOpen] = useState(false);
     const [drawerContent, setDrawerContent] = useState(null);
     const [drawerTitle, setDrawerTitle] = useState(null);
-    const formRef = useRef(null); // Referencia al formulario
     const [form] = Form.useForm();
     const [messageApi, contextHolder] = message.useMessage();
     const [messageConfig, setMessageConfig] = useState({ type: '', content: '' });
+    
+
+    const handleVolver = () => {
+        showDrawer(
+            <FormSearchDni handleSearch={handleSearch} />,
+            'Buscar personal'
+        );
+    };
+    
+    const handleAgregar = () => {
+        console.log('Agregar');
+    };
+    
+    const handleContactar = () => {
+        showDrawer(
+            <ContacWorker />, // Aquí pones el nuevo componente del drawer que crearás luego
+            'Contactar personal'
+        );
+    };
+
+    const showInfoWorker = () => {
+        showDrawer(
+            <InfoWorker 
+                handleVolver={handleVolver} 
+                handleAgregar={handleAgregar} 
+                handleContactar={handleContactar} 
+            />,
+            'Información del Trabajador'
+        );
+    };
+    
+
+    const handleSearch = (formRef) => {
+        formRef.current.validateFields()
+            .then(values => {
+                console.log('Values:', values);
+                showDrawer(
+                    <FormCreateWorker handleSubmit={handleSubmit} handleVolver={handleVolver} />,
+                    'Agregar Personal'
+                );
+            })
+            .catch(info => {
+                console.log('Validate Failed:', info);
+            });
+    };
+
+
+
+    const Buscar = () => {
+        setLoading(true);
+        if (true) {
+            setDrawerContent();
+        }
+
+        setLoading(false);
+    };
 
     useEffect(() => {
         if (messageConfig.type) {
-            // Mostrar el mensaje basado en la configuración
             showMessage(messageConfig.type, messageConfig.content);
-            // Resetear la configuración del mensaje después de mostrarlo
             setMessageConfig({ type: '', content: '' });
         }
     }, [messageConfig]);
@@ -41,17 +100,18 @@ export default function Personal() {
         form.resetFields();
     };
 
-    const handleSubmit = () => {
+    const handleSubmit = (form) => {
         form.validateFields()
             .then(values => {
                 console.log('Formulario completado:', values);
+                setMessageConfig({ type: 'success', content: 'Personal creado con exito' });
                 onClose();
             })
             .catch(errorInfo => {
-                // Configurar el mensaje de error
                 setMessageConfig({ type: 'error', content: 'Por favor, complete todos los campos.' });
             });
     };
+
 
     const showMessage = (type, content) => {
         switch (type) {
@@ -186,88 +246,6 @@ export default function Personal() {
         setSubject(value);
     };
 
-    const Buscar = (content) => {
-        setLoading(true);
-        setDrawerContent(content);
-        setLoading(false);
-    };
-
-    const handleSearch = () => {
-        // Verificar si los campos están llenos antes de buscar
-        formRef.current.validateFields().then(values => {
-            console.log('Values:', values);
-            Buscar(
-                <Form form={form} layout="vertical">
-                    <Flex gap={10}>
-                        <Form.Item
-                            style={{ flexGrow: 1 }}
-                            name="nombre"
-                            label="Nombre"
-                            rules={[
-                                {
-                                    required: true,
-                                    message: 'Por favor ingrese el nombre',
-                                },
-                            ]}
-                        >
-                            <Input size='large' autoSize={true} placeholder="Ingrese el nombre de la persona" />
-                        </Form.Item>
-                        <Form.Item
-                            style={{ flex: '1 1 auto' }}
-                            name="apellido"
-                            label="Apellido"
-                            rules={[
-                                {
-                                    required: true,
-                                    message: 'Por favor ingrese el apellido de la persona',
-                                },
-                            ]}
-                        >
-                            <Input size='large' autoSize placeholder="Ingrese el apellido de la persona" />
-                        </Form.Item>
-                    </Flex>
-                    <Flex gap={10}>
-                        <Form.Item
-                            style={{ flex: '1 1 auto' }}
-                            name="telefono"
-                            label="Número de teléfono"
-                            rules={[
-                                {
-                                    required: true,
-                                    message: 'Por favor ingrese el número de teléfono',
-                                },
-                            ]}
-                        >
-                            <Input size='large' type='number' autoSize={true} placeholder="Ingrese el número de teléfono" />
-                        </Form.Item>
-                        <Form.Item
-                            style={{ flex: '1 1 auto' }}
-                            name="email"
-                            label="Email"
-                            rules={[
-                                {
-                                    required: true,
-                                    message: 'Por favor ingrese el email de la persona',
-                                },
-                            ]}
-                        >
-                            <Input size='large' type='email' autoSize placeholder="Ingrese el email" />
-                        </Form.Item>
-                    </Flex>
-                    <Form.Item >
-                        <Flex justify='flex-end'>
-                            <Button size='large' type="primary" onClick={handleSubmit}>Submit</Button>
-                        </Flex>
-                    </Form.Item>
-
-                </Form>
-                , 'Agregar una materia'
-            );
-        }).catch(info => {
-            console.log('Validate Failed:', info);
-        });
-    };
-
     return (
         <>
             {contextHolder}
@@ -314,54 +292,14 @@ export default function Personal() {
                 <FloatButton icon={<DownloadOutlined />} tooltip="Descargar tabla" />
                 <FloatButton icon={<UsergroupAddOutlined />} type='primary' tooltip="Agregar personal"
                     onClick={() => showDrawer(
-                        <Form form={form} ref={formRef} layout="vertical" hideRequiredMark>
-                            <Space.Compact>
-                                <Form.Item
-                                    initialValue={1} // Establece un valor predeterminado
-                                    style={{ width: '30%' }}
-                                    name="tipoDni"
-                                    rules={[
-                                        {
-                                            required: true,
-                                            message: 'Por favor ingrese el tipo de documento',
-                                        },
-                                    ]}
-                                >
-                                    <Select
-                                        size='large'
-                                        defaultValue={1}
-                                        onChange={onChange}
-                                        onSearch={onSearch}
-                                        options={[{ 'label': 'DNI', 'value': 1 }, { 'label': 'Pasaporte', 'value': 2 }, { 'label': 'Carnet Extranjería', 'value': 3 }]}
-                                    />
-                                </Form.Item>
-                                <Form.Item
-                                    style={{ width: '60%' }}
-                                    name="documento"
-                                    rules={[
-                                        {
-                                            required: true,
-                                            message: 'Por favor ingrese el documento',
-                                        },
-                                    ]}
-                                >
-                                    <Input size='large' type="number" autoSize={true} placeholder="Documento" />
-                                </Form.Item>
-                                <Button
-                                    style={{ width: '10%' }}
-                                    size='large'
-                                    onClick={handleSearch}
-                                    type="primary"
-                                    icon={<SearchOutlined />}
-                                />
-                            </Space.Compact>
-                        </Form>,
-                        'Agregar Personal'
+                        <FormSearchDni handleSearch={showInfoWorker} />,
+                        'Buscar personal'
                     )}
                 />
             </FloatButton.Group>
 
             <Drawer
+            
                 destroyOnClose={false}
                 width={600}
                 title={drawerTitle}
@@ -369,13 +307,14 @@ export default function Personal() {
                 open={open}
                 closeIcon={false}
                 extra={
-                    <Button onClick={onClose} type='primary' icon={<CloseOutlined />} />
+                    <Button onClick={onClose} size='large' type='tertiary' icon={<CloseOutlined />} />
                 }
             >
                 <div style={{ width: '100%', height: '100%' }}>
                     {drawerContent}
                 </div>
             </Drawer>
+
         </>
     );
 }

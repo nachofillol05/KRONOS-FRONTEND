@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import './materias.scss';
 import RangeSlider from "../../components/timerangeslider/timerange.jsx";
-import { Table, Select, AutoComplete, FloatButton, Drawer, Input, Flex, ColorPicker, Space, Form, Button, message } from "antd";
-import { FileAddOutlined, DownOutlined, UpOutlined, DownloadOutlined, CloseOutlined } from '@ant-design/icons';
+import { Table, Select, AutoComplete, FloatButton, Drawer, Input, Flex, ColorPicker, Space, Form, Button, message, Tooltip } from "antd";
+import { FileAddOutlined, DownOutlined, UpOutlined, DownloadOutlined, CloseOutlined, InfoCircleOutlined } from '@ant-design/icons';
 
 const { TextArea } = Input;
 
@@ -20,6 +20,8 @@ export default function Materias() {
     const [drawerTitle, setDrawerTitle] = useState(null);
     const [value, setValue] = useState('');
     const [form] = Form.useForm();
+
+
     const [messageApi, contextHolder] = message.useMessage();
     const [messageConfig, setMessageConfig] = useState({ type: '', content: '' });
 
@@ -162,10 +164,17 @@ export default function Materias() {
         console.log("entro");
     };
 
+    const handleFinalRangeChange = (newValues) => {
+        console.log("hola")
+        setStart_time(newValues[0]);
+        setEnd_time(newValues[1]);
+        console.log('New range values:', newValues);
+    };
+
     const cursos = [{ value: 1, label: '1A' }, { value: 2, label: '1B' }, { value: 3, label: '2A' }, { value: 4, label: '2B' }, { value: 5, label: '3A' }, { value: 6, label: '3B' }, { value: 7, label: '4A' }, { value: 8, label: '4B' }, { value: 9, label: '5A' }, { value: 10, label: '5B' }];
 
     return (
-        
+
         <>
             {contextHolder}
             <div className="filtros-container">
@@ -245,7 +254,7 @@ export default function Materias() {
                                     rules={[
                                         {
                                             required: true,
-                                            message: 'Porfavor ingrese el nombre de la abreviacion',
+                                            message: '',
                                         },
                                     ]}
                                 >
@@ -301,6 +310,7 @@ export default function Materias() {
                                         },
                                     ]}
                                 >
+
                                     <Input
                                         autoSize
                                         size='large'
@@ -308,6 +318,11 @@ export default function Materias() {
                                         onChange={setValue}
                                         type='number'
                                         placeholder="Ingrese las horas Catedras"
+                                        suffix={
+                                            <Tooltip arrow={false} color='gray' title="Unidad de tiempo en la que se lleva a cabo una clase ">
+                                                <InfoCircleOutlined style={{ color: 'gray' }} />
+                                            </Tooltip>
+                                        }
                                     />
                                 </Form.Item>
                                 <Form.Item
@@ -335,7 +350,7 @@ export default function Materias() {
                                     },
                                 ]}
                             >
-                                <TextArea size='large' placeholder="Ingrese el plan de estudio" allowClear onChange={onChange} style={{ height: '90px' }} />
+                                <TextArea size='large' placeholder="Ingrese el plan de estudio" allowClear style={{ height: '80px' }} />
                             </Form.Item>
                             <Form.Item
                                 name="descripcion"
@@ -347,7 +362,7 @@ export default function Materias() {
                                     },
                                 ]}
                             >
-                                <TextArea size='large' placeholder="Ingrese la descripcion" allowClear onChange={onChange} style={{ height: '90px' }} />
+                                <TextArea size='large' placeholder="Ingrese la descripcion" allowClear style={{ height: '80px' }} />
                             </Form.Item>
                             <Form.Item >
                                 <Flex justify='flex-end'>
@@ -366,7 +381,7 @@ export default function Materias() {
                 open={open}
                 closeIcon={false}
                 extra={
-                    <Button onClick={onClose} type='primary' icon={<CloseOutlined />} />
+                    <Button onClick={onClose} size='large' type='tertiary' icon={<CloseOutlined />} />
                 }
             >
                 <div style={{ width: '100%', height: '100%' }}>

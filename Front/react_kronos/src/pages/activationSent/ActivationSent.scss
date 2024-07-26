@@ -1,13 +1,5 @@
 @import '../../scss/index.scss';
 
-
-h3 {
-    font-family: $fuente-titulo;
-    color: #006D6C;
-    margin-top: 50px;
-    text-align: center;
-}
-
 .container {
     display: grid;
     grid-template-columns: 1fr 1fr; 
