@@ -1,39 +1,72 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Card, Form, Select, Input, Row, Col, Space } from 'antd';
+import { Button, Card, Form, Select, Input, Row, Col, Space, FloatButton, Drawer, Alert } from 'antd';
+import { ClockCircleOutlined } from '@ant-design/icons';
 import './Perfil.scss';
 
 export default function Profile() {
   const [isEditing, setIsEditing] = useState(false);
   const [profileData, setProfileData] = useState({});
   const [form] = Form.useForm();
+  const [open, setOpen] = useState(false);
+  const [drawerContent, setDrawerContent] = useState(null);
+  const [drawerTitle, setDrawerTitle] = useState(null);
+  const [selectedCells, setSelectedCells] = useState([]);
+
+  const ActualizarAvaibility = () => {
+    console.log(selectedCells);
+    const jsonData = JSON.stringify({ module: selectedCells });
+    fetch('http://localhost:8000/api/contacting-staff/', {
+      method: 'PUT',
+      body: jsonData,
+      headers: {
+          'Content-Type': 'application/json',
+      },
+    });
+  }
+  const handleCellClick = (event, day, module) => {
+    const key = `${day}-${module}`;
+    const button = event.target;
+    if (button.classList.contains('selected')) {
+      button.classList.remove('selected');
+    } else {
+      button.classList.add('selected');
+    }
+    setSelectedCells((prevSelectedCells) => {
+      if (prevSelectedCells.includes(key)) {
+        return prevSelectedCells.filter((cell) => cell !== key);
+      } else {
+        return [...prevSelectedCells, key];
+      }
+    });
+  };
 
   useEffect(() => {
     fetch('http://127.0.0.1:8000/api/profile/', {
       method: "GET",
       headers: {
-          'Authorization': 'Token ' + localStorage.getItem('token'),
-          'School-ID': 1,
+        'Authorization': 'Token ' + localStorage.getItem('token'),
+        'School-ID': 1,
       },
     })
-    .then((response) => {
-      if (!response.ok) {
+      .then((response) => {
+        if (!response.ok) {
           throw new Error('Network response was not ok');
-      }
-      return response.json();
-    })
-    .then((data) => {
-      console.log(data);
-      setProfileData(data);
-      form.setFieldsValue({
-        ...data,
-        city: data.contactInfo.city,
-        postalCode: data.contactInfo.postalCode,
-        province: data.contactInfo.province,
-        street: data.contactInfo.street,
-        streetNumber: data.contactInfo.streetNumber,
-      });
-    })
-    .catch((error) => console.error('Error fetching data:', error));
+        }
+        return response.json();
+      })
+      .then((data) => {
+        console.log(data);
+        setProfileData(data);
+        form.setFieldsValue({
+          ...data,
+          city: data.contactInfo.city,
+          postalCode: data.contactInfo.postalCode,
+          province: data.contactInfo.province,
+          street: data.contactInfo.street,
+          streetNumber: data.contactInfo.streetNumber,
+        });
+      })
+      .catch((error) => console.error('Error fetching data:', error));
   }, [form]);
 
   const tiposDoc = [
@@ -69,20 +102,20 @@ export default function Profile() {
       },
       body: JSON.stringify(updatedProfile),
     })
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-      return response.json();
-    })
-    .then((data) => {
-      console.log('Profile updated successfully:', data);
-      setProfileData(data);
-      setIsEditing(false);
-    })
-    .catch((error) => {
-      console.error('Error updating profile:', error);
-    });
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json();
+      })
+      .then((data) => {
+        console.log('Profile updated successfully:', data);
+        setProfileData(data);
+        setIsEditing(false);
+      })
+      .catch((error) => {
+        console.error('Error updating profile:', error);
+      });
   };
 
   const customDisabledStyle = {
@@ -92,13 +125,26 @@ export default function Profile() {
     cursor: 'default',
   };
 
-  console.log("este", profileData);
+  const showDrawer = (content, title) => {
+    setDrawerTitle(title);
+    setDrawerContent(content);
+    setOpen(true);
+  };
+
+  const onClose = () => {
+    setOpen(false);
+    setDrawerContent(null);
+  };
+
+  const days = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes'];
+  const modules = ['Módulo 1', 'Módulo 2', 'Módulo 3', 'Módulo 4', 'Módulo 5'];
+  console.log(selectedCells);
 
   return (
     <Row justify="center" align="middle" style={{ minHeight: '100vh' }}>
       <Col span={12}>
         <Card
-          title='Informacion Personal'
+          title='Información Personal'
           extra={
             <Button type="primary" onClick={toggleEditMode}>
               {isEditing ? 'Cancelar' : 'Editar'}
@@ -111,7 +157,7 @@ export default function Profile() {
             onFinish={handleFinish}
           >
             <Space direction="vertical" size="large" align="center">
-            <h1>Datos personales</h1>
+              <h1>Datos personales</h1>
               <img src="https://via.placeholder.com/150" alt="Profile" className="profile-image" />
               <Space size="large">
                 <Form.Item label="Nombre" name="first_name">
@@ -224,6 +270,49 @@ export default function Profile() {
                   Guardar
                 </Button>
               </Form.Item>
+              <FloatButton
+                icon={<ClockCircleOutlined />}
+                tooltip="Cargar disponibilidad"
+                onClick={() => showDrawer(
+                  <>
+                    <h1>Cargue la disponibilidad</h1>
+                    <Row>
+                      <Col span={3}></Col>
+                      {days.map((day) => (
+                        <Col span={3} key={day}>
+                          <div className="header-cell">{day}</div>
+                        </Col>
+                      ))}
+                    </Row>
+                    {modules.map((module) => (
+                      <Row key={module}>
+                        <Col span={3}>
+                          <div className="header-cell">{module}</div>
+                        </Col>
+                        {days.map((day) => (
+                          <Col span={3} key={`${day}-${module}`}>
+                            <Button
+                              key={`${day}-${module}`}
+                              onClick={(event) => handleCellClick(event, day, module)}
+                              className={`grid-cell ${selectedCells.includes(`${day}-${module}`) ? 'selected' : ''}`}
+                            ></Button>
+                          </Col>
+                        ))}
+                      </Row>
+                    ))}
+                    <Button onClick={ActualizarAvaibility}>Actualizar</Button>
+                    <Alert
+                      message="Atención!"
+                      description="Esta información es de caracter legal, asegurese de que sea correcta, aunque podra ser modificada en el momento que lo desee"
+                      type="warning"
+                    />
+                  </>, "Disponibilidad")} 
+              />
+              <Drawer width={600} title={drawerTitle} onClose={onClose} open={open}>
+                <div style={{ width: '100%', height: '100%' }}>
+                  {drawerContent}
+                </div>
+              </Drawer>
             </Space>
           </Form>
         </Card>
