@@ -1,6 +1,5 @@
-/*Layouts*/
 import Navegacion from "../layout/navegacion/navegaciones";
-import Landig from "../layout/landing/landings"
+import Landig from "../layout/landing/landings";
 
 /*Pages*/
 import Home from "../pages/home/Home";
@@ -14,10 +13,7 @@ import Materias from "../pages/materias/materias";
 import Personal from "../pages/personal/personal";
 import Perfil from "../pages/Perfil/Perfil";
 import Horario from "../pages/horario/horario";
-
-
-
-
+import EventsPage from "../pages/events/eventsPage";
 
 
 export const routes = [
@@ -84,5 +80,11 @@ export const routes = [
         layout: Navegacion,
         component: Horario
     },
-
-]
+    {
+      path: "/eventos",
+      exact: true,
+      private: false,
+      layout: Navegacion,
+      component: EventsPage,
+    }
+];
