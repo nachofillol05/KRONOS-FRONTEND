@@ -1,5 +1,6 @@
 import React from 'react';
-import { Form, Input, Button, Flex } from 'antd';
+import { Form, Input, Button, Flex, Tooltip } from 'antd';
+import { RollbackOutlined, PlusOutlined } from '@ant-design/icons';
 
 export default function FormCreateWorker({ handleSubmit, handleVolver }) {
     const [form] = Form.useForm();
@@ -64,8 +65,13 @@ export default function FormCreateWorker({ handleSubmit, handleVolver }) {
                 </Flex>
                 <Form.Item>
                     <Flex justify='flex-end' gap={10}>
-                        <Button size='large' onClick={() => handleVolver()}>Submit</Button>
-                        <Button size='large' type="primary" onClick={() => handleSubmit(form)}>Submit</Button>
+                        <Tooltip title="Volver">
+                            <Button size='large' iconPosition='end' icon={<RollbackOutlined />} style={{ width: "100px" }} onClick={() => handleVolver()} />
+                        </Tooltip>
+                        <Tooltip title="Agregar">
+                            <Button type='primary' size='large' iconPosition='end' icon={<PlusOutlined />} style={{ width: "100px" }} onClick={() => handleSubmit(form)} />
+                        </Tooltip>
+
                     </Flex>
                 </Form.Item>
             </Flex>

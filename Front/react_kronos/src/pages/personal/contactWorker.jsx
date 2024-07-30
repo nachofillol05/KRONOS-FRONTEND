@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Button, Flex, Card, Form, Input, Tooltip } from 'antd';
-import { SendOutlined } from '@ant-design/icons';
+import { SendOutlined, RollbackOutlined } from '@ant-design/icons';
 
 
 const { TextArea } = Input;
 
 
-export default function contacWorker({ }) {
+export default function contacWorker({ handleVolver }) {
     const name = "Nombre de la persona";
 
     return (
@@ -17,35 +17,39 @@ export default function contacWorker({ }) {
             >
                 <Form layout="vertical">
                     <Flex vertical>
-                            <Form.Item
-                                name="titulo"
-                                label="Titulo"
-                                rules={[
-                                    {
-                                        required: true,
-                                        message: 'Por favor ingrese el titulo',
-                                    },
-                                ]}
-                            >
-                                <Input size='large' autoSize={true} placeholder="Ingrese el titulo" />
-                            </Form.Item>
-                            <Form.Item
-                                name="contenido"
-                                label="Contenido"
-                                rules={[
-                                    {
-                                        required: true,
-                                        message: 'Por favor ingrese el contenido',
-                                    },
-                                ]}
-                            >
-                                <TextArea size='large' placeholder="Ingrese el contenido" allowClear style={{ height: '80px' }} />
-                            </Form.Item>
+                        <Form.Item
+                            name="titulo"
+                            label="Titulo"
+                            rules={[
+                                {
+                                    required: true,
+                                    message: 'Por favor ingrese el titulo',
+                                },
+                            ]}
+                        >
+                            <Input size='large' autoSize={true} placeholder="Ingrese el titulo" />
+                        </Form.Item>
+                        <Form.Item
+                            name="contenido"
+                            label="Contenido"
+                            rules={[
+                                {
+                                    required: true,
+                                    message: 'Por favor ingrese el contenido',
+                                },
+                            ]}
+                        >
+                            <TextArea size='large' placeholder="Ingrese el contenido" allowClear style={{ height: '80px' }} />
+                        </Form.Item>
 
                         <Form.Item>
-                            <Flex justify='flex-end'>
+                            <Flex justify='flex-end' gap={10
+                            }>
+                                <Tooltip title="Volver">
+                                    <Button size='large' iconPosition='end' icon={<RollbackOutlined />} style={{ width: "100px" }} onClick={() => handleVolver()} />
+                                </Tooltip>
                                 <Tooltip title="Contactar">
-                                <Button size='large' type="primary" style={{ width:"100px"  }} icon={<SendOutlined />}/>
+                                    <Button size='large' type="primary" style={{ width: "100px" }} icon={<SendOutlined />} />
                                 </Tooltip>
                             </Flex>
                         </Form.Item>

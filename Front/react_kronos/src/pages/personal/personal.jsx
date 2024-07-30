@@ -39,7 +39,7 @@ export default function Personal() {
     
     const handleContactar = () => {
         showDrawer(
-            <ContacWorker />, // Aquí pones el nuevo componente del drawer que crearás luego
+            <ContacWorker handleVolver={handleVolver} />, // Aquí pones el nuevo componente del drawer que crearás luego
             'Contactar personal'
         );
     };
