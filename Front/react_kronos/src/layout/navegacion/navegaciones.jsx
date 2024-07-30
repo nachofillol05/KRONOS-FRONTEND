@@ -22,7 +22,7 @@ const items = [
     getItem(<a href="">Horarios</a>, '2', <TableOutlined  />),
     getItem(<a href="http://localhost:3000/personal">Personal</a>, '3', <TeamOutlined />),
     getItem(<a href="http://localhost:3000/materias">Materias</a>, '4', <ScheduleOutlined />),
-    getItem(<a href="">Eventos</a>, '5', <ContactsOutlined />)
+    getItem(<a href="http://localhost:3000/eventos">Eventos</a>, '5', <ContactsOutlined />)
 ];
 
 

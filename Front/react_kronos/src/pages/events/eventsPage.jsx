@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import Typography from "@mui/material/Typography";
+import { Typography }from "antd";
 import EventFilters from "./eventFilters";
 import CardEvents from "./cardEvent";
 import FormEvent from "./formEvent"
@@ -107,55 +107,33 @@ const data_events = [
 ];
 
 export default function EventsPage() {
-  const [isOpenDrawer, setOpenDrawer] = useState(true)
   const [events, setEvents] = useState([]);
-  const [eventsType, setTypeEvent] = useState("");
-
-  function handleChangeDrawer () {
-    setOpenDrawer(!isOpenDrawer)
-  }
 
   useEffect(() => {
     let data = data_events
-    // hacer todo devuelta
-
-    if (eventsType !== "") {
-      data = events.filter(event => {return event.type_event.id === eventsType})
-    }
     setEvents(data)
-  }, [eventsType])
+  })
+
+  const { Title } = Typography;
 
   return (
     <div className="page-events">
-      <Typography variant="h3">Eventos</Typography>
+      <Title level={1}>Eventos</Title>
 
       <EventFilters 
-        isDirective={false} 
-        setTypeEvent={setTypeEvent}
-        openForm={() => setOpenDrawer(true)} 
+        isDirective={true} 
       />
 
-      <div className="events-cards">
+      <div className="events-list">
         {events.map((event) => {
           return (
             <CardEvents
               key={event.id}
-              title={event.title}
-              description={event.description}
-              type_event={event.type_event}
+              event={event}
             />
           );
         })}
       </div>
-
-      {isOpenDrawer &&
-       <Drawer 
-          content={<FormEvent />}
-          onClose={handleChangeDrawer}
-          title="Agregar Materia"
-        />
-      }
-      
     </div>
   );
 }

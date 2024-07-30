@@ -9,10 +9,21 @@
     margin-bottom: 20px;
   }
 
-  .events-cards {
+  .events-list {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: 20px;
+  }
+
+  .event-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+  }
+  
+  .card-content {
+    flex-grow: 1;
   }
 }
 

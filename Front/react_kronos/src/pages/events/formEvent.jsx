@@ -1,142 +1,111 @@
 import { useState, useEffect } from "react";
-import Input from "./../../components/input/inputs"
-import Select from "./../../components/select/select";
+import { Form, Input, DatePicker, Select, Button } from 'antd';
+import moment from 'moment'
 
-const dataTypeEvents = [
+const { RangePicker } = DatePicker;
+const { TextArea } = Input
+
+var datos = [
   {
-    "id": 1,
-    "name": "Paro",
-    "description": "Paro de la empresa ERSA en la ciudad de Córdoba"
+    value: 1,
+    label: "Opción 1",
   },
   {
-    "id": 2,
-    "name": "Concierto",
-    "description": "Concierto de la banda Los Piojos en el estadio Mario Alberto Kempes"
+    value: 2,
+    label: "Opción 2",
   },
   {
-    "id": 3,
-    "name": "Deporte",
-    "description": "Maratón anual en el centro de la ciudad"
+    value: 3,
+    label: "Opción 3",
   },
   {
-    "id": 4,
-    "name": "Feria",
-    "description": "Feria de tecnología y startups en el predio ferial"
+    value: 4,
+    label: "Opción 4",
   },
-  {
-    "id": 5,
-    "name": "Taller",
-    "description": "Taller de cocina saludable en el parque Sarmiento"
-  },
-  {
-    "id": 6,
-    "name": "Exposición",
-    "description": "Exposición de arte contemporáneo en el museo Caraffa"
-  },
-  {
-    "id": 7,
-    "name": "Carrera",
-    "description": "Carrera de autos en el autódromo Oscar Cabalén"
-  },
-  {
-    "id": 8,
-    "name": "Festival",
-    "description": "Festival de Jazz en la Plaza de la Música"
-  },
-  {
-    "id": 9,
-    "name": "Curso",
-    "description": "Curso intensivo de fotografía en el centro cultural"
-  },
-  {
-    "id": 10,
-    "name": "Competencia",
-    "description": "Competencia de robótica en la facultad de ingeniería"
-  }
-]
+];
+
+const onFinish = (values) => {
+  console.log('Success:', values);
+};
+
+const onFinishFailed = (errorInfo) => {
+  console.log('Failed:', errorInfo);
+};
 
 export default function FormEvent ({event, onSave}) {
-  const [formData, setFormData] = useState({
-    name: '',
-    description: '',
-    startDate: '',
-    endDate: '',
-    status: ''
-  });
+  const [form] = Form.useForm()
 
   useEffect(() => {
     if (event) {
-      setFormData({
-        name: event.name,
+      form.setFieldsValue({
+        name: event.title,
         description: event.description,
-        startDate: event.startDate,
-        endDate: event.endDate,
-        type_event: event.type
+        dateRange: [moment(event.start_date), moment(event.end_date)],
+        typeEvent: event.type_event,
       });
     }
-  }, [event]);
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value
-    });
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    onSave(formData);
-  };
+  }, [event, form]);
 
   return (
-    <form onSubmit={handleSubmit}>
-      <div>
-        <Input
-          numero={25}
-          requerided={true}
-          placeholder="Nombre del evento"
-          type="text"
-          // falta el onChange={handleChange}
-        >{formData.name}</Input>
-      </div>
-      <div>
-      <Input
-          numero={25}
-          requerided={true}
-          placeholder="Descripcion del evento"
-          type="text"
-          // falta el onChange={handleChange}
-        >{formData.description}</Input>
-      </div>
-      <div>
-        <Input
-          label="Fecha de inicio del evento"
-          numero={20}
-          requerided={true}
-          type="date"
-          // falta el onChange={handleChange}
-        >{formData.startDate}</Input>
-      </div>
-      <div>
-      <Input
-          label="Fecha de fin del evento"
-          numero={20}
-          requerided={true}
-          type="date"
-          // falta el onChange={handleChange}
-        >{formData.endDate}</Input>
-      </div>
-      <div>
-        <label>Tipo de Evento:</label>
-        {/* <Select 
-          onChange={(v) => alert(v)}
-          datos={dataTypeEvents}
-          solid={true}
-          // falta el llenar el valor en todosada
-        /> */}
-      </div>
-      <button type="submit">Save</button>
-    </form>
+    <Form
+      name="basic"
+      onFinish={onFinish}
+      onFinishFailed={onFinishFailed}
+      autoComplete="off"
+      layout="vertical"
+      form={form}
+  >
+      <Form.Item
+        label="Nombre del Evento"
+        name="name"
+        rules={[{ required: true, message: 'Por favor ingresa el nombre del evento' }]}
+        style={{ marginBottom: '8px' }}
+      >
+        <Input placeholder="Nombre del evento"/>
+      </Form.Item>
+
+      <Form.Item
+        label="Descripción"
+        name="description"
+        rules={[{ required: true, message: 'Por favor ingresa la descripción del evento' }]}
+        style={{ marginBottom: '8px' }}
+      >
+        <TextArea rows={4} placeholder="Descripción del evento" />
+      </Form.Item>
+
+      <Form.Item
+        label="Fecha de Inicio y Fin"
+        name="dateRange"
+        rules={[{ required: true, message: 'Por favor selecciona la fecha de inicio y fin del evento' }]}
+        style={{ marginBottom: '8px' }}
+      >
+        <RangePicker
+          format="DD-MM-YYYY"
+        />
+      </Form.Item>
+
+      <Form.Item
+        style={{ marginBottom: '8px' }}
+        label="Tipo de Evento"
+        name="typeEvent"
+        rules={[{ required: true, message: 'Por favor selecciona el tipo de evento' }]}
+      >
+        <Select placeholder="Selecciona el tipo de evento">
+          {datos.map((type) => (
+            <Select.Option key={type.value} value={type.value}>
+              {type.label}
+            </Select.Option>
+          ))}
+        </Select>
+      </Form.Item>
+
+      <Form.Item
+        style={{ marginBottom: '8px' }}
+      >
+        <Button type="primary" htmlType="submit">
+          Crear Evento
+        </Button>
+      </Form.Item>
+    </Form>
   );
 };
