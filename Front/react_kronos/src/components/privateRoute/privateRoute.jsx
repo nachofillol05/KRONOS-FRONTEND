@@ -22,6 +22,9 @@ const PrivateRoute = ({ children }) => {
 
         if (response.ok) {
           setIsAuthenticated(true);
+          response.json().then(data => {
+            localStorage.setItem('user', JSON.stringify(data));
+        });
         } else {
           setIsAuthenticated(false);
           navigate('/login');

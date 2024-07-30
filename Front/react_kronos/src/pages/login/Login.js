@@ -43,7 +43,7 @@ export default function Login() {
             if (response.status === 200) {
                 response.json()
                 .then(responseData => {
-                    localStorage.setItem('token', responseData.Token); 
+                    console.log(responseData.token);
                 })
                 console.log('Login success');
                 setShowError(false);
