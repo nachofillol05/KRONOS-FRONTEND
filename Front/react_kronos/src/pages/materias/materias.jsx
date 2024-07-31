@@ -20,6 +20,7 @@ export default function Materias() {
     const [drawerTitle, setDrawerTitle] = useState(null);
     const [value, setValue] = useState('');
     const [form] = Form.useForm();
+    const [cursos, setCursos] = useState([]);
 
 
     const [messageApi, contextHolder] = message.useMessage();
@@ -57,11 +58,30 @@ export default function Materias() {
     const handleSubmit = () => {
         form.validateFields()
             .then(values => {
-                console.log('Formulario completado:', values);
+                const hexColor = values.color.toHexString();
+                const body = {
+                    name: values.materia,
+                    abbreviation: values.abreviacion,
+                    course: values.curso,
+                    weeklyHours: parseInt(values.horasCatedras, 10),
+                    color: hexColor,
+                    studyPlan: values.planEstudio,
+                    description: values.descripcion
+                };
+                fetch('http://127.0.0.1:8000/api/subjects/', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': 'Token ' + localStorage.getItem('token'),
+                        'School-ID': 1,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(body),
+                    
+                })
                 onClose();
             })
             .catch(errorInfo => {
-                // Configurar el mensaje de error
+
                 setMessageConfig({ type: 'error', content: 'Por favor, complete todos los campos.' });
             });
     };
@@ -125,9 +145,34 @@ export default function Materias() {
         { title: 'Abreviacion', dataIndex: 'abbreviation', key: 'abbreviation' },
         { title: 'Curso', dataIndex: 'course', key: 'course' },
         { title: 'Horas catedra semanales', dataIndex: 'weeklyHours', key: 'weeklyHours' },
-        { title: 'Color', dataIndex: 'color', key: 'color' },
+        { title: 'Color',dataIndex: 'color',key: 'color',render: (text) => (<div style={{ width: '24px', height: '24px', backgroundColor: text, borderRadius: '4px' }} />),},
         { title: 'Descripcion', dataIndex: 'description', key: 'description' }
     ];
+
+    useEffect(() => {
+        fetch('http://127.0.0.1:8000/api/courses/', {
+            method: "GET",
+            headers: {
+                'Authorization': 'Token ' + localStorage.getItem('token'),
+                'School-ID': 1,
+            },
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                const courses = data.map(curs => ({
+                    value: curs.id,
+                    label: curs.year.name + ' ' + curs.name,
+                }));
+
+                setCursos(courses);
+            })
+            .catch(error => console.error('Error fetching data:', error));
+    }, []);
 
     useEffect(() => {
         fetch('http://127.0.0.1:8000/api/teachers/', {
@@ -154,6 +199,7 @@ export default function Materias() {
             .catch(error => console.error('Error fetching data:', error));
     }, []);
 
+
     const handleSelectTeacher = (value) => {
         setTeacher(value);
         console.log(value);
@@ -171,7 +217,7 @@ export default function Materias() {
         console.log('New range values:', newValues);
     };
 
-    const cursos = [{ value: 1, label: '1A' }, { value: 2, label: '1B' }, { value: 3, label: '2A' }, { value: 4, label: '2B' }, { value: 5, label: '3A' }, { value: 6, label: '3B' }, { value: 7, label: '4A' }, { value: 8, label: '4B' }, { value: 9, label: '5A' }, { value: 10, label: '5B' }];
+    
 
     return (
 

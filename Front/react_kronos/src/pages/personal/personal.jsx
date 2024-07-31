@@ -24,6 +24,8 @@ export default function Personal() {
     const [form] = Form.useForm();
     const [messageApi, contextHolder] = message.useMessage();
     const [messageConfig, setMessageConfig] = useState({ type: '', content: '' });
+    const [tipoDocumento, setTipoDocumento] = useState(null);
+    const [documento, setDocumento] = useState(null);
     
 
     const handleVolver = () => {
@@ -61,7 +63,7 @@ export default function Personal() {
             .then(values => {
                 console.log('Values:', values);
                 showDrawer(
-                    <FormCreateWorker handleSubmit={handleSubmit} handleVolver={handleVolver} />,
+                    <FormCreateWorker tipoDocumento={values.tipoDni} documento={values.documento} handleSubmit={handleSubmit} handleVolver={handleVolver} />,
                     'Agregar Personal'
                 );
             })
@@ -103,7 +105,37 @@ export default function Personal() {
     const handleSubmit = (form) => {
         form.validateFields()
             .then(values => {
-                console.log('Formulario completado:', values);
+                console.log('Values:', values);
+                console.log('documento:', documento);
+                const body = JSON.stringify(
+                    {
+                        first_name: values.nombre,
+                        last_name: values.apellido,
+                        document: values.documento,
+                        documentType: values.tipoDocumento,
+                        email: values.email,
+                        phone: values.telefono,
+                        username: values.documento,
+                    });
+                    console.log('Body: ', body);
+                console.log('Formulario completado:', body);
+                fetch('http://localhost:8000/api/Register/', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': 'Token ' + localStorage.getItem('token'),
+                        'School-ID': 1,
+                        'Content-Type': 'application/json'
+                    },
+                    body: body,
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        console.log('Error:', response);
+                        throw new Error('Error al crear el personal');
+                    }
+                    console.log('Response:', response);
+                    return response.json();
+                })
                 setMessageConfig({ type: 'success', content: 'Personal creado con exito' });
                 onClose();
             })
@@ -213,7 +245,7 @@ export default function Personal() {
                 'Authorization': 'Token ' + localStorage.getItem('token'),
                 'School-ID': 1,
             },
-        })
+        })  
             .then((response) => {
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
@@ -245,7 +277,7 @@ export default function Personal() {
         console.log(`selected ${value}`);
         setSubject(value);
     };
-
+    console.log('teacher', teachers)
     return (
         <>
             {contextHolder}
