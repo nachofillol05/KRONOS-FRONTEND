@@ -56,7 +56,6 @@ export default function InfoWorker({ handleVolver, handleAgregar, handleContacta
                         <Button size='large' iconPosition='end' icon={<RollbackOutlined />} style={{ width: "150px" }} onClick={handleVolver} />
                     </Tooltip>
                     <Tooltip title="Agregar">
-                        <Button type='primary' size='large' iconPosition='end' icon={<PlusOutlined />} style={{ width: "150px" }} onClick={handleAgregar} />
                     </Tooltip>
                     <Tooltip title="Contactar">
                         <Button type='primary' size='large' iconPosition='end' icon={<MailOutlined />} style={{ width: "150px" }} onClick={handleContactar} />

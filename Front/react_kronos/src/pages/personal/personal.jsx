@@ -257,6 +257,9 @@ export default function Personal() {
                 </Radio.Group>
                 <Select
                     size='large'
+                    style={{
+                        width: 200,
+                    }}
                     showSearch
                     placeholder="Seleccione una materia"
                     onChange={onChange}
@@ -266,7 +269,7 @@ export default function Personal() {
                 <AutoComplete
                     size='large'
                     style={{
-                        width: 200,
+                        width: 300,
                     }}
                     options={teachers}
                     placeholder="Buscar personal"
