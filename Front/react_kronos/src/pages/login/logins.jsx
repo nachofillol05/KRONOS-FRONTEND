@@ -43,15 +43,47 @@ export default function Login() {
         })
         .then(responseData => {
             localStorage.setItem('token', responseData.Token); 
+
+
+            fetch('http://127.0.0.1:8000/api/user_schools/', {
+                method: "GET",
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Token ' + localStorage.getItem('token'),
+                }
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(responseData => {
+
+                sessionStorage.setItem('schools',JSON.stringify( responseData)); 
+                console.log('schools were obtained correctly');
+                console.log(sessionStorage.getItem('schools'));
+                setShowError(false);
+                navigate('/');
+            })
+            .catch(error => {
+                console.error('Login failed:', error);
+                setShowError(true);
+            });         
+            
+            
             console.log('Login success');
             setShowError(false);
             navigate('/');
+
         })
         .catch(error => {
             console.error('Login failed:', error);
             setShowError(true);
         });
     }
+
+
 
     return (
         <div className="login-container">

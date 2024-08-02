@@ -180,7 +180,7 @@ export default function Personal() {
             method: 'GET',
             headers: {
                 'Authorization': 'Token ' + localStorage.getItem('token'),
-                'School-ID': 1,
+                'School-ID': sessionStorage.getItem('actual_school'),
             },
         })
             .then((response) => {
@@ -192,6 +192,7 @@ export default function Personal() {
             })
             .then((data) => {
                 setTeachers(data);
+                console.log(data)
                 setLoading(false);
             })
             .catch((error) => console.error('Error fetching data:', error));
@@ -211,8 +212,9 @@ export default function Personal() {
             method: 'GET',
             headers: {
                 'Authorization': 'Token ' + localStorage.getItem('token'),
-                'School-ID': 1,
+                'School-ID': sessionStorage.getItem('actual_school'),
             },
+        
         })
             .then((response) => {
                 if (!response.ok) {
@@ -228,6 +230,7 @@ export default function Personal() {
                 subjectsData.push({ value: '', label: 'Todas' });
                 setSubjects(subjectsData);
                 console.log(subjectsData);
+
             })
             .catch((error) => console.error('Error fetching data:', error));
     }, []);
@@ -263,6 +266,7 @@ export default function Personal() {
                     onSearch={onSearch}
                     options={subjects}
                 />
+                
                 <AutoComplete
                     size='large'
                     style={{
@@ -275,7 +279,6 @@ export default function Personal() {
                     }
                 />
             </div>
-
             <Table dataSource={teachers.map(teacher => ({ ...teacher, key: teacher.id }))} columns={columns}
                 loading={loading}
                 tableLayout={'fixed'}
