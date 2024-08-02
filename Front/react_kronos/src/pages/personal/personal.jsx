@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import "./personal.scss";
-import { Table, Select, AutoComplete, FloatButton, Drawer, Radio, Form, Space, Input, Button, Flex, message } from "antd";
+import { Table, Select, AutoComplete, FloatButton, Drawer, Radio, Form, Space, Input, Button, Flex, message, Modal } from "antd";
 import { UsergroupAddOutlined, DownOutlined, UpOutlined, DownloadOutlined, SearchOutlined, CloseOutlined } from '@ant-design/icons';
 import FormSearchDni from './fromSearchDni';
 import InfoWorker from './infoWorker';
@@ -26,7 +26,23 @@ export default function Personal() {
     const [messageConfig, setMessageConfig] = useState({ type: '', content: '' });
     const [tipoDocumento, setTipoDocumento] = useState(null);
     const [documento, setDocumento] = useState(null);
+    const [isModalVisible, setIsModalVisible] = useState(false);
+
+    const showModal = () => {
+        setIsModalVisible(true);
+    };
     
+
+    const handleOk = () => {
+        setIsModalVisible(false);
+        //hacerle un update a colegio y agregarle a directivos
+        //createsuperUser aaaaaaaaaaaaaaaaaaaaaaaaacaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+    };
+
+    const handleCancel = () => {
+        setIsModalVisible(false);
+        console.log('Opción Directivo cancelada');
+    };
 
     const handleVolver = () => {
         showDrawer(
@@ -34,44 +50,90 @@ export default function Personal() {
             'Buscar personal'
         );
     };
-    
-    const handleAgregar = () => {
-        console.log('Agregar');
+    // agregar como directivo, como preceptor o como profesor
+    const handleAgregar = (e) => {
+        if (e.key === "Profesor") {
+            /*fetch('http://localhost:8000/api/create_tss/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    // personal: values.documento,
+                }),
+            });*/
+            
+            console.log('Profesor');
+        } else if (e.key === "Preceptor") {
+            console.log('Preceptor');
+        } else if (e.key === "Directivo") {
+            console.log('Directivo');
+            showModal();
+        }
     };
     
-    const handleContactar = () => {
+    const handleContactar = (user) => {
+
         showDrawer(
-            <ContacWorker handleVolver={handleVolver} />, // Aquí pones el nuevo componente del drawer que crearás luego
+            <ContacWorker user={user} handleVolver={handleVolver} />, 
             'Contactar personal'
         );
-    };
+    }
 
-    const showInfoWorker = () => {
-        showDrawer(
-            <InfoWorker 
-                handleVolver={handleVolver} 
-                handleAgregar={handleAgregar} 
-                handleContactar={handleContactar} 
-            />,
-            'Información del Trabajador'
-        );
+    /*const showInfoWorker = (documento) => {
+        
+
+        
     };
-    
+    */
 
     const handleSearch = (formRef) => {
         formRef.current.validateFields()
             .then(values => {
-                console.log('Values:', values);
-                showDrawer(
-                    <FormCreateWorker tipoDocumento={values.tipoDni} documento={values.documento} handleSubmit={handleSubmit} handleVolver={handleVolver} />,
-                    'Agregar Personal'
-                );
+                fetch('http://localhost:8000/api/create_teacher/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        document: values.documento,
+                    }),
+                })
+                .then(response => response.json().then(data => ({ status: response.status, body: data })))
+                .then(({ status, body }) => {
+                    if (status === 400) { 
+                        console.log('Dni encontrado:', body);
+                        showDrawer(
+                            <InfoWorker 
+                                user={body.user}
+                                handleVolver={handleVolver} 
+                                handleAgregar={handleAgregar} 
+                                handleContactar={() => handleContactar(body.user)} 
+                            />,
+                            'Información del Trabajador'
+                        );
+                    } else if (status === 200) {
+                        console.log('dni no encontrado:', body);
+                        showDrawer(
+                            <FormCreateWorker 
+                                tipoDocumento={values.tipoDni} 
+                                documento={values.documento} 
+                                handleSubmit={handleSubmit} 
+                                handleVolver={handleVolver} 
+                            />,
+                            'Agregar Personal'
+                        );
+                    }
+                })
+                .catch(error => {
+                    console.error('Error al realizar la búsqueda:', error);
+                });
             })
             .catch(info => {
                 console.log('Validate Failed:', info);
             });
     };
-
+    
 
 
     const Buscar = () => {
@@ -101,7 +163,7 @@ export default function Personal() {
         setDrawerContent(null);
         form.resetFields();
     };
-
+//AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAGREGAR QUE CREE UN TEACHER CON LA SCHOOL
     const handleSubmit = (form) => {
         form.validateFields()
             .then(values => {
@@ -324,7 +386,7 @@ export default function Personal() {
                 <FloatButton icon={<DownloadOutlined />} tooltip="Descargar tabla" />
                 <FloatButton icon={<UsergroupAddOutlined />} type='primary' tooltip="Agregar personal"
                     onClick={() => showDrawer(
-                        <FormSearchDni handleSearch={showInfoWorker} />,
+                        <FormSearchDni handleSearch={handleSearch} />,
                         'Buscar personal'
                     )}
                 />
@@ -346,6 +408,10 @@ export default function Personal() {
                     {drawerContent}
                 </div>
             </Drawer>
+            <Modal visible={isModalVisible} onOk={handleOk} onCancel={handleCancel} okText="Sí" cancelText="No">
+                <h1>Advertencia</h1>
+                <p>Si lo agregas como directivo podra tener acceso a toda la informacion y modificarla</p>
+            </Modal>
 
         </>
     );
