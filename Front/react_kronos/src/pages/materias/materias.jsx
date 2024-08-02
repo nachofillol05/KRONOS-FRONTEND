@@ -106,7 +106,7 @@ export default function Materias() {
             method: "GET",
             headers: {
                 'Authorization': 'Token ' + localStorage.getItem('token'),
-                'School-ID': 1,
+                'School-ID': 2,
             },
         })
             .then(response => {
@@ -137,7 +137,7 @@ export default function Materias() {
             method: "GET",
             headers: {
                 'Authorization': 'Token ' + localStorage.getItem('token'),
-                'School-ID': 1,
+                'School-ID': 2,
             },
         })
             .then(response => {

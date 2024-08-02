@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Card, Form, Select, Input, Row, Col, Space, FloatButton, Drawer, Alert } from 'antd';
-import { ClockCircleOutlined } from '@ant-design/icons';
+import { Button, Card, Form, Select, Input, Image, Flex, Space, FloatButton, Drawer, Upload, Tabs } from 'antd';
+import { ClockCircleOutlined, UploadOutlined } from '@ant-design/icons';
 import './Perfil.scss';
 
 export default function Profile() {
@@ -19,10 +19,11 @@ export default function Profile() {
       method: 'PUT',
       body: jsonData,
       headers: {
-          'Content-Type': 'application/json',
+        'Content-Type': 'application/json',
       },
     });
-  }
+  };
+
   const handleCellClick = (event, day, module) => {
     const key = `${day}-${module}`;
     const button = event.target;
@@ -121,7 +122,7 @@ export default function Profile() {
   const customDisabledStyle = {
     backgroundColor: 'transparent',
     color: 'black',
-    border: 'none',
+    borderColor: 'transparent',
     cursor: 'default',
   };
 
@@ -141,182 +142,180 @@ export default function Profile() {
   console.log(selectedCells);
 
   return (
-    <Row justify="center" align="middle" style={{ minHeight: '100vh' }}>
-      <Col span={12}>
-        <Card
-          title='Información Personal'
-          extra={
-            <Button type="primary" onClick={toggleEditMode}>
-              {isEditing ? 'Cancelar' : 'Editar'}
-            </Button>
-          }
-        >
-          <Form
-            form={form}
-            layout="vertical"
-            onFinish={handleFinish}
+    <>
+      <Tabs defaultActiveKey="1" style={{ margin: '20px 100px' }}>
+        <Tabs.TabPane tab="Datos personales" key="1">
+          <Card
+            title='Información Personal'
+            extra={
+              <Button style={{ width: '100px' }} onClick={toggleEditMode}
+                danger={isEditing}>
+                {isEditing ? 'Cancelar' : 'Editar'}
+              </Button>
+            }
           >
-            <Space direction="vertical" size="large" align="center">
-              <h1>Datos personales</h1>
-              <img src="https://via.placeholder.com/150" alt="Profile" className="profile-image" />
-              <Space size="large">
-                <Form.Item label="Nombre" name="first_name">
-                  <Input
-                    style={!isEditing ? customDisabledStyle : {}}
-                    disabled={!isEditing}
+            <Form
+              form={form}
+              layout="vertical"
+              onFinish={handleFinish}
+              style={{ flexGrow: 1 }}
+            >
+              <Flex gap={25} align='start'>
+
+                <Flex gap={25} vertical>  
+                  <Image
+                    width={250}
+                    height={250}
+                    style={{ minWidth: 250, minHeight: 250 }}
+                    src="https://via.placeholder.com/150"
                   />
-                </Form.Item>
-                <Form.Item label="Apellido" name="last_name">
-                  <Input
-                    style={!isEditing ? customDisabledStyle : {}}
-                    disabled={!isEditing}
-                  />
-                </Form.Item>
-                <Form.Item label="Email" name="email">
-                  <Input
-                    style={!isEditing ? customDisabledStyle : {}}
-                    disabled={!isEditing}
-                  />
-                </Form.Item>
-              </Space>
-              <Space size="large">
-                <Form.Item label="Teléfono" name="phone">
-                  <Input
-                    style={!isEditing ? customDisabledStyle : {}}
-                    disabled={!isEditing}
-                  />
-                </Form.Item>
-                <Space.Compact block>
-                  <Form.Item label="Tipo documento" name="documentType">
-                    {isEditing ? (
-                      <Select options={tiposDoc} />
-                    ) : (
+                  {isEditing ? 
+                    <Upload maxCount={1} style={{ width: '100%' }}>
+                      <Button 
+                        style={{minWidth: 250}}
+                        icon={<UploadOutlined />}>Click to Upload</Button>
+                    </Upload> : null}
+
+                </Flex>
+
+                <Flex vertical>
+
+                  <Flex gap={50}>
+                    <Form.Item align='end' label="Nombre" name="first_name" layout='horizontal' style={{ width: '50%' }} className="formItemProfile">
                       <Input
-                        value={profileData.documentType}
-                        disabled
-                        style={customDisabledStyle}
+                        size='large'
+                        autoSize
+                        style={!isEditing ? customDisabledStyle : {}}
+                        disabled={!isEditing}
                       />
-                    )}
-                  </Form.Item>
-                  <Form.Item label="Documento" name="document">
-                    <Input
-                      type="number"
-                      style={!isEditing ? customDisabledStyle : {}}
-                      disabled={!isEditing}
-                    />
-                  </Form.Item>
-                </Space.Compact>
-              </Space>
-              <Space size="large">
-                <Form.Item label="Género" name="gender">
-                  <Input
-                    style={!isEditing ? customDisabledStyle : {}}
-                    disabled={!isEditing}
-                  />
-                </Form.Item>
-                <Form.Item label="Nacionalidad" name="nationality">
-                  <Input
-                    style={!isEditing ? customDisabledStyle : {}}
-                    disabled={!isEditing}
-                  />
-                </Form.Item>
-                <Form.Item label="Horas semanales" name="hoursToWork">
-                  <Input
-                    type="number"
-                    style={!isEditing ? customDisabledStyle : {}}
-                    disabled={!isEditing}
-                  />
-                </Form.Item>
-              </Space>
-              <h1>Datos de contacto</h1>
-              <Space size="large">
-                <Form.Item label="Código postal" name="postalCode">
-                  <Input
-                    type="number"
-                    style={!isEditing ? customDisabledStyle : {}}
-                    disabled={!isEditing}
-                  />
-                </Form.Item>
-                <Form.Item label="Calle" name="street">
-                  <Input
-                    style={!isEditing ? customDisabledStyle : {}}
-                    disabled={!isEditing}
-                  />
-                </Form.Item>
-                <Form.Item label="Número" name="streetNumber">
-                  <Input
-                    type="number"
-                    style={!isEditing ? customDisabledStyle : {}}
-                    disabled={!isEditing}
-                  />
-                </Form.Item>
-              </Space>
-              <Space size="large">
-                <Form.Item label="Ciudad" name="city">
-                  <Input
-                    style={!isEditing ? customDisabledStyle : {}}
-                    disabled={!isEditing}
-                  />
-                </Form.Item>
-                <Form.Item label="Provincia" name="province">
-                  <Input
-                    style={!isEditing ? customDisabledStyle : {}}
-                    disabled={!isEditing}
-                  />
-                </Form.Item>
-              </Space>
-              <Form.Item style={{ visibility: isEditing ? 'visible' : 'hidden' }}>
-                <Button type="primary" htmlType="submit">
-                  Guardar
-                </Button>
-              </Form.Item>
-              <FloatButton
-                icon={<ClockCircleOutlined />}
-                tooltip="Cargar disponibilidad"
-                onClick={() => showDrawer(
-                  <>
-                    <h1>Cargue la disponibilidad</h1>
-                    <Row>
-                      <Col span={3}></Col>
-                      {days.map((day) => (
-                        <Col span={3} key={day}>
-                          <div className="header-cell">{day}</div>
-                        </Col>
-                      ))}
-                    </Row>
-                    {modules.map((module) => (
-                      <Row key={module}>
-                        <Col span={3}>
-                          <div className="header-cell">{module}</div>
-                        </Col>
-                        {days.map((day) => (
-                          <Col span={3} key={`${day}-${module}`}>
-                            <Button
-                              key={`${day}-${module}`}
-                              onClick={(event) => handleCellClick(event, day, module)}
-                              className={`grid-cell ${selectedCells.includes(`${day}-${module}`) ? 'selected' : ''}`}
-                            ></Button>
-                          </Col>
-                        ))}
-                      </Row>
-                    ))}
-                    <Button onClick={ActualizarAvaibility}>Actualizar</Button>
-                    <Alert
-                      message="Atención!"
-                      description="Esta información es de caracter legal, asegurese de que sea correcta, aunque podra ser modificada en el momento que lo desee"
-                      type="warning"
-                    />
-                  </>, "Disponibilidad")} 
-              />
-              <Drawer width={600} title={drawerTitle} onClose={onClose} open={open}>
-                <div style={{ width: '100%', height: '100%' }}>
-                  {drawerContent}
-                </div>
-              </Drawer>
-            </Space>
-          </Form>
-        </Card>
-      </Col>
-    </Row>
+                    </Form.Item>
+                    <Form.Item label="Apellido" name="last_name" layout='horizontal' style={{ width: '50%' }} className="formItemProfile">
+                      <Input
+                        size='large'
+                        autoSize
+                        style={!isEditing ? customDisabledStyle : {}}
+                        disabled={!isEditing}
+                      />
+                    </Form.Item>
+                  </Flex>
+                  <Flex gap={50}>
+                    <Form.Item label="Email" name="email" layout='horizontal' style={{ width: '50%' }} className="formItemProfile">
+                      <Input
+                        size='large'
+                        autoSize
+                        style={!isEditing ? customDisabledStyle : {}}
+                        disabled={!isEditing}
+                      />
+                    </Form.Item>
+                    <Form.Item label="Teléfono" name="phone" layout='horizontal' style={{ width: '50%' }} className="formItemProfile">
+                      <Input
+                        size='large'
+                        autoSize
+                        type='number'
+                        style={!isEditing ? customDisabledStyle : {}}
+                        disabled={!isEditing}
+                      />
+                    </Form.Item>
+                  </Flex>
+                  <Flex gap={50}>
+                    <Form.Item layout="horizontal" label="Tipo de documento" name="documentType" style={{ width: '50%' }} className="formItemProfile">
+                      {isEditing ? (
+                        <Select style={{ flexGrow: 1 }} options={tiposDoc} size='large' />
+                      ) : (
+                        <Input
+                          size='large'
+                          value={profileData.documentType}
+                          disabled
+                          style={customDisabledStyle}
+                        />
+                      )}
+                    </Form.Item>
+                    <Form.Item label='Documento' layout="horizontal" name="document" style={{ width: '50%' }} className="formItemProfile">
+                      <Input
+                        size='large'
+                        autoSize
+                        type="number"
+                        style={!isEditing ? customDisabledStyle : {}}
+                        disabled={!isEditing}
+                      />
+                    </Form.Item>
+
+                  </Flex>
+                  <Flex gap={25}>
+                    <Form.Item label="Género" name="gender" layout='horizontal' style={{ width: '30%' }} className="formItemProfile">
+                      <Input
+                        size='large'
+                        style={!isEditing ? customDisabledStyle : {}}
+                        disabled={!isEditing}
+                      />
+                    </Form.Item>
+                    <Form.Item label="Nacionalidad" name="nationality" layout='horizontal' style={{ width: '30%' }} className="formItemProfile">
+                      <Input
+                        size='large'
+                        style={!isEditing ? customDisabledStyle : {}}
+                        disabled={!isEditing}
+                      />
+                    </Form.Item>
+                    <Form.Item label="Horas semanales" name="hoursToWork" layout='horizontal' style={{ width: '40%' }} className="formItemProfile">
+                      <Input
+                        size='large'
+                        type="number"
+                        style={!isEditing ? customDisabledStyle : {}}
+                        disabled={!isEditing}
+                      />
+                    </Form.Item>
+                  </Flex>
+                  <Flex gap={50}>
+                    <Form.Item label="Provincia" name="province" layout='horizontal' className="formItemProfile">
+                      <Input
+                        size='large'
+                        style={!isEditing ? customDisabledStyle : {}}
+                        disabled={!isEditing}
+                      />
+                    </Form.Item>
+                    <Form.Item label="Ciudad" name="city" layout='horizontal' className="formItemProfile">
+                      <Input
+                        size='large'
+                        style={!isEditing ? customDisabledStyle : {}}
+                        disabled={!isEditing}
+                      />
+                    </Form.Item>
+
+                  </Flex>
+                  <Flex gap={25}>
+
+                    <Form.Item label="Calle" name="street" layout='horizontal' className="formItemProfile">
+                      <Input
+                        size='large'
+                        style={!isEditing ? customDisabledStyle : {}}
+                        disabled={!isEditing}
+                      />
+                    </Form.Item>
+                    <Form.Item label="Número" name="streetNumber" layout='horizontal' className="formItemProfile">
+                      <Input
+                        size='large'
+                        type="number"
+                        style={!isEditing ? customDisabledStyle : {}}
+                        disabled={!isEditing}
+                      />
+                    </Form.Item>
+                    <Form.Item label="Código postal" name="postalCode" layout='horizontal' className="formItemProfile">
+                      <Input
+                        size='large'
+                        type="number"
+                        style={!isEditing ? customDisabledStyle : {}}
+                        disabled={!isEditing}
+                      />
+                    </Form.Item>
+                  </Flex>
+                </Flex>
+              </Flex>
+            </Form>
+          </Card>
+        </Tabs.TabPane>
+        <Tabs.TabPane tab="Datos de contacto" key="2">
+        </Tabs.TabPane>
+      </Tabs >
+    </>
   );
 };

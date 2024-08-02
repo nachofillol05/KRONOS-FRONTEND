@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import { Select, DatePicker, AutoComplete, Drawer, Card, Button, FloatButton, message, Tooltip } from "antd";
-import { InfoCircleOutlined, EditOutlined, UserAddOutlined, CloseOutlined, DownOutlined, UpOutlined, FolderAddOutlined } from "@ant-design/icons";
+import { Select, DatePicker, AutoComplete, Drawer, Card, Button, FloatButton, message, Tooltip, Modal } from "antd";
+import { InfoCircleOutlined, EditOutlined, UserAddOutlined, CloseOutlined, DownOutlined, UpOutlined, FolderAddOutlined, ExclamationCircleFilled } from "@ant-design/icons";
 import FormEvent from "./formCreateEvent";
 import InfoEvent from "./infoEvent";
 import "./events.scss";
@@ -106,23 +106,44 @@ const data_events = [
 ];
 
 export default function EventsPage() {
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [events, setEvents] = useState([]);
   const [openDrawer, setOpenDrawer] = useState(false);
   const [open, setOpen] = useState(false);
   const [drawerContent, setDrawerContent] = useState(null);
   const [drawerTitle, setDrawerTitle] = useState(null);
   const today = new Date();
-
   const [messageApi, contextHolder] = message.useMessage();
   const [messageConfig, setMessageConfig] = useState({ type: '', content: '' });
+  const [eventName, setEventName] = useState('');
+
   useEffect(() => {
     if (messageConfig.type) {
-        // Mostrar el mensaje basado en la configuración
         showMessage(messageConfig.type, messageConfig.content);
-        // Resetear la configuración del mensaje después de mostrarlo
         setMessageConfig({ type: '', content: '' });
     }
-}, [messageConfig]);
+  }, [messageConfig]);
+
+  const showModal = (nombreEvento) => {
+    Modal.info({
+      title:'Confirmar adicion',
+      content: (
+        <p>¿Seguro que quieres aderirte al evento "<b>{nombreEvento}</b>"?</p>
+      ),
+      onOk: handleOk,
+      closable: true,
+      okText: 'Si, quiero aderirme',
+
+    });
+  };
+
+  const handleOk = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleCancel = () => {
+    setIsModalOpen(false);
+  };
 
   const handleVolver = () => {
     setDrawerContent(null);
@@ -134,13 +155,12 @@ export default function EventsPage() {
     form.validateFields()
         .then(values => {
             console.log('Formulario completado:', values);
-            onClose(); // Cerrar el drawer si todos los campos están completos
+            onClose();
         })
         .catch(errorInfo => {
-            // Mostrar mensaje de error si los campos no están completos
             showMessage('error', 'Por favor, complete todos los campos.');
         });
-};
+  };
 
   const showDrawer = (content, title) => {
     setDrawerTitle(title);
@@ -179,11 +199,11 @@ export default function EventsPage() {
             messageApi.info(content);
             break;
     }
-};
+  };
 
   return (
     <>
-    {contextHolder}
+      {contextHolder}
       <div className="filtros-container">
         <Select
           size="large"
@@ -239,15 +259,19 @@ export default function EventsPage() {
             hoverable
             actions={[
               <Tooltip title="Detelles del evento">
-                <InfoCircleOutlined key="details" 
-                onClick={() => showDrawer(<InfoEvent event={event}/>, "Detalles del evento")}
+                <InfoCircleOutlined 
+                  key="details" 
+                  onClick={() => showDrawer(<InfoEvent event={event} />, "Detalles del evento")} 
                 />
               </Tooltip>,
               <Tooltip title="Editar el evento">
-                <EditOutlined  key="setting" />
+                <EditOutlined key="setting" />
               </Tooltip>,
               <Tooltip title="Aderirse al evento">
-              <UserAddOutlined key="add" />
+                <UserAddOutlined 
+                  key="add" 
+                  onClick={() => showModal(event.title)} 
+                />
               </Tooltip>,
             ]}
           >
@@ -276,7 +300,7 @@ export default function EventsPage() {
           icon={<FolderAddOutlined />}
           type="primary"
           tooltip="Agregar una evento"
-          onClick={() => showDrawer(<FormEvent handleVolver={handleVolver} handleSubmit={handleSubmit}/>, "Agregar un nuevo evento")}
+          onClick={() => showDrawer(<FormEvent handleVolver={handleVolver} handleSubmit={handleSubmit} />, "Agregar un nuevo evento")}
         />
       </FloatButton.Group>
 
