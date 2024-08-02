@@ -130,7 +130,7 @@ export default function Materias() {
             method: "GET",
             headers: {
                 'Authorization': 'Token ' + localStorage.getItem('token'),
-                'School-ID': 2,
+                'School-ID': 1,
             },
         })
             .then(response => {
@@ -146,6 +146,7 @@ export default function Materias() {
             })
             .catch(error => console.error('Error fetching data:', error));
     }, [start_time, end_time, Subjectname, teacher]);
+
 
     const columns = [
         { title: 'Nombre', dataIndex: 'name', key: 'name' },
