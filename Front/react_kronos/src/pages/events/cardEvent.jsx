@@ -16,7 +16,6 @@ export default function CardEvent({ event }) {
   const { Title, Paragraph } = Typography;
   const today = new Date();
   const endDate = new Date(event.end_date);
-  const isPastEvent = endDate < today;
 
   const showDrawer = (title, content) => {
     setDrawerState({

@@ -263,33 +263,44 @@ export default function Personal() {
     };
 
     useEffect(() => {
-        const url = new URL('http://127.0.0.1:8000/api/teachers/');
-        if (searchName) {
-            url.searchParams.append('search_name', searchName);
-        }
-        if (subject) {
-            url.searchParams.append('subject_id', subject);
-        }
-        fetch(url.toString(), {
-            method: 'GET',
-            headers: {
-                'Authorization': 'Token ' + localStorage.getItem('token'),
-                'School-ID': 1,
-            },
-        })
-            .then((response) => {
+        const fetchTeachers = async () => {
+            setLoading(true);
+            try {
+                const url = new URL('http://127.0.0.1:8000/api/teachers/');
+                if (searchName) {
+                    url.searchParams.append('search_name', searchName);
+                }
+                if (subject) {
+                    url.searchParams.append('subject_id', subject);
+                }
+                const token = localStorage.getItem('token');
+                if (!token) {
+                    throw new Error('No authorization token found');
+                }
+                const response = await fetch(url.toString(), {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': 'Token ' + token,
+                        'School-ID': '1', // Ensure School-ID is correctly formatted as string
+                    },
+                });
                 if (!response.ok) {
-                    setTeachers([]);
                     throw new Error('Network response was not ok');
                 }
-                return response.json();
-            })
-            .then((data) => {
+                const data = await response.json();
                 setTeachers(data);
+            } catch (error) {
+                console.error('Error fetching data:', error);
+                setTeachers([]); // Set empty array on error
+            } finally {
                 setLoading(false);
-            })
-            .catch((error) => console.error('Error fetching data:', error));
+            }
+        };
+    
+        fetchTeachers();
     }, [searchName, subject]);
+
+    
 
     const columns = [
         { title: 'Nombre', dataIndex: 'first_name', key: 'Nombre' },
@@ -312,19 +323,22 @@ export default function Personal() {
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
-                return response.json();
-            })
-            .then((data) => {
-                const subjectsData = data.map((subject) => ({
+                const data = await response.json();
+                const subjectsData = data.map(subject => ({
                     value: subject.id,
                     label: subject.name,
                 }));
                 subjectsData.push({ value: '', label: 'Todas' });
                 setSubjects(subjectsData);
-                console.log(subjectsData);
-            })
-            .catch((error) => console.error('Error fetching data:', error));
+            } catch (error) {
+                console.error('Error fetching data:', error);
+                setSubjects([]); // Set empty array on error
+            }
+        };
+    
+        fetchSubjects();
     }, []);
+    
 
     const onSearch = (searchText) => {
         setSearchName(searchText);
@@ -350,32 +364,39 @@ export default function Personal() {
                     <Radio.Button value="c">Directivo</Radio.Button>
                 </Radio.Group>
                 <Select
-                    size='large'
-                    showSearch
-                    placeholder="Seleccione una materia"
-                    onChange={onChange}
-                    onSearch={onSearch}
-                    options={subjects}
-                />
-                <AutoComplete
-                    size='large'
-                    style={{
-                        width: 200,
-                    }}
-                    options={teachers}
-                    placeholder="Buscar personal"
-                    filterOption={(inputValue, option) =>
-                        option.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1
-                    }
-                />
-            </div>
+    size='large'
+    style={{ width: 200 }}
+    showSearch
+    placeholder="Seleccione una materia"
+    options={subjects}
+    onChange={onChange}
+    onSearch={onSearch}
+/>
 
-            <Table dataSource={teachers.map(teacher => ({ ...teacher, key: teacher.id }))} columns={columns}
-                loading={loading}
-                tableLayout={'fixed'}
-                filterDropdownOpen={true}
-                filtered={true}
-            />
+<AutoComplete
+    size='large'
+    style={{ width: 300 }}
+    options={teachers.map(teacher => ({
+        value: `${teacher.first_name} ${teacher.last_name}`
+    }))}
+    placeholder="Buscar personal"
+    filterOption={(inputValue, option) =>
+        option.value.toUpperCase().includes(inputValue.toUpperCase())
+    }
+/>
+
+
+            </div>
+            <Table
+    dataSource={teachers.map(teacher => ({ ...teacher, key: teacher.id }))}
+    columns={columns}
+    loading={loading}
+    tableLayout={'fixed'}
+    filterDropdownOpen={true}
+    filtered={true}
+/>
+
+
             <FloatButton.Group
                 visibilityHeight={1500}
                 trigger="click"
