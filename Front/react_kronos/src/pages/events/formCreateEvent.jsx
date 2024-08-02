@@ -1,35 +1,42 @@
 
 import { Form, Input, DatePicker, Flex, Button, Tooltip, Select } from 'antd';
+import React, { useEffect, useState } from 'react';
 import { RollbackOutlined, PlusOutlined } from '@ant-design/icons';
 
 const dateFormat = 'DD/MM/YYYY';
 const { RangePicker } = DatePicker;
-const { TextArea } = Input
+const { TextArea } = Input;
 
-var datos = [
-    {
-        value: 1,
-        label: "Opción 1",
-    },
-    {
-        value: 2,
-        label: "Opción 2",
-    },
-    {
-        value: 3,
-        label: "Opción 3",
-    },
-    {
-        value: 4,
-        label: "Opción 4",
-    },
-];
-
-export default function FormCreateWorker({ handleSubmit, handleVolver }) {
+export default function FormCreateEvent({ handleSubmit, handleVolver }) {
+    const [types, setTypes] = useState([]);
+    useEffect(() => {
+        fetch('http://127.0.0.1:8000/api/typeevent/', {
+            method: "GET",
+            headers: {
+                'Authorization': 'Token ' + localStorage.getItem('token'),
+                'School-ID': 1,
+            },
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json(); 
+        })
+        .then(data => {
+            console.log(data)
+            const typeEvents = data.map(event => ({
+                value: event.id,
+                label: event.name,
+            }));
+            setTypes(typeEvents);
+        })
+        .catch(error => console.error('Error fetching data:', error));
+    }, []);
     const [form] = Form.useForm();
     return (
         <Form form={form} layout="vertical">
-            <Flex gap={25} vertical>
+            <Flex vertical>
                 <Form.Item
                     style={{ flexGrow: 1 }}
                     name="nombre"
@@ -68,21 +75,21 @@ export default function FormCreateWorker({ handleSubmit, handleVolver }) {
                             },
                         ]}
                     >
-                        <Select size='large' type='email' autoSize placeholder="Ingrese el email" options={datos} />
+                        <Select size='large' type='email' autoSize placeholder="Ingrese el tipo de evento" options={types} />
                     </Form.Item>
                 </Flex>
                 <Form.Item
                     style={{ flexGrow: 1 }}
-                    name="nombre"
-                    label="Nombre"
+                    name="descripcion"
+                    label="Descripcion"
                     rules={[
                         {
                             required: true,
-                            message: 'Por favor ingrese el nombre del evento',
+                            message: 'Por favor ingrese la descripcion del evento',
                         },
                     ]}
                 >
-                    <TextArea size='large' autoSize={true} placeholder="Ingrese el nombre de la persona" />
+                <TextArea size='large' placeholder="Ingrese la descripción del evento" allowClear style={{ height: '100px' }} />
                 </Form.Item>
                 <Form.Item>
                     <Flex justify='flex-end' gap={10}>

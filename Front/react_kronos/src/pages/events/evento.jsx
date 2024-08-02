@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Select, DatePicker, AutoComplete, Drawer, Card, Button, FloatButton, message, Tooltip, Modal } from "antd";
 import { InfoCircleOutlined, EditOutlined, UserAddOutlined, CloseOutlined, DownOutlined, UpOutlined, FolderAddOutlined, ExclamationCircleFilled } from "@ant-design/icons";
-import FormEvent from "./formCreateEvent";
+import FormCreateEvent from "./formCreateEvent";
 import InfoEvent from "./infoEvent";
 import "./events.scss";
 const dateFormat = 'YYYY/MM/DD';
@@ -151,16 +151,45 @@ export default function EventsPage() {
     setOpen(false);
   };
 
+  const formatDate = (date) => {
+    const day = date.getDate().toString().padStart(2, '0');
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const year = date.getFullYear();
+    return `${day}/${month}/${year}`;
+  };
+
   const handleSubmit = (form) => {
+    //Mostrar un alert de que se creoooooooooooooooooooooooooooooooooooooooooooooooooooo
     form.validateFields()
         .then(values => {
-            console.log('Formulario completado:', values);
-            onClose();
+          const body = {
+            name: values.nombre,
+            description: values.descripcion,
+            startDate: formatDate(values.dates[0].toDate()),   
+            endDate: formatDate(values.dates[1].toDate()),   
+            eventType: values.tipoEvento,
+            school: 1,
+        };
+        console.log('Body:', body);
+        fetch('http://127.0.0.1:8000/api/events/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Token ' + localStorage.getItem('token'),
+                'School-ID': 1,
+            },
+            body: JSON.stringify(body),
         })
-        .catch(errorInfo => {
-            showMessage('error', 'Por favor, complete todos los campos.');
-        });
-  };
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => console.log('Success:', data))
+        .catch(error => console.error('Error:', error));
+        onClose();
+  })};
 
   const showDrawer = (content, title) => {
     setDrawerTitle(title);
@@ -300,7 +329,7 @@ export default function EventsPage() {
           icon={<FolderAddOutlined />}
           type="primary"
           tooltip="Agregar una evento"
-          onClick={() => showDrawer(<FormEvent handleVolver={handleVolver} handleSubmit={handleSubmit} />, "Agregar un nuevo evento")}
+          onClick={() => showDrawer(<FormCreateEvent handleVolver={handleVolver} handleSubmit={handleSubmit} />, "Agregar un nuevo evento")}
         />
       </FloatButton.Group>
 
