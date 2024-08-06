@@ -1,14 +1,19 @@
-import React from 'react';
-import { Button, Flex, List, Divider, Tooltip } from 'antd';
+import React, { useEffect } from 'react';
+import { Button, Flex, List, Divider, Tooltip, Menu, Dropdown } from 'antd';
 import { RollbackOutlined, PlusOutlined, MailOutlined } from '@ant-design/icons';
 
-export default function InfoWorker({ handleVolver, handleAgregar, handleContactar }) {
-    const data = [
-        'Matematica',
-        'Quimica',
-        'Fisica',
-        'Programacion',
-    ]
+export default function InfoWorker({ handleVolver, handleAgregar, handleContactar,user, showModal }) {
+    const data = user.subjects.map(subject => `${subject.subject_name} - ${subject.school_name}`);
+
+    const menu = (
+        <Menu onClick={(e) => {
+                handleAgregar(e);
+        }}>
+            <Menu.Item key="Profesor">Profesor</Menu.Item>
+            <Menu.Item key="Preceptor">Preceptor</Menu.Item>
+            <Menu.Item key="Directivo">Directivo</Menu.Item>
+        </Menu>
+    );
 
     return (
         <>
@@ -17,15 +22,15 @@ export default function InfoWorker({ handleVolver, handleAgregar, handleContacta
                 <Flex gap={10}>
 
                     <label  >Nombre:</label>
-                    <label>Nombre</label>
+                    <label>{user.first_name}</label>
                 </Flex>
                 <Flex gap={10}>
                     <label>Apellido:</label>
-                    <label>Apellido</label>
+                    <label>{user.last_name}</label>
                 </Flex>
                 <Flex gap={10}>
                     <label>Documento:</label>
-                    <label>DNI</label>
+                    <label>{user.document}</label>
                 </Flex>
                 <Flex gap={10}>
                     <label>Fecha de nacimiento:</label>
@@ -36,11 +41,11 @@ export default function InfoWorker({ handleVolver, handleAgregar, handleContacta
 
                 <Flex gap={10}>
                     <label>Telefono:</label>
-                    <label>Telefono</label>
+                    <label>{user.phone}</label>
                 </Flex>
                 <Flex gap={10}>
-                    <label>Email:</label>
                     <label>Email</label>
+                    <label>{user.email}</label>
                 </Flex>
                 <Divider />
                 <h3>Materias</h3>
@@ -55,14 +60,16 @@ export default function InfoWorker({ handleVolver, handleAgregar, handleContacta
                     <Tooltip title="Volver">
                         <Button size='large' iconPosition='end' icon={<RollbackOutlined />} style={{ width: "150px" }} onClick={handleVolver} />
                     </Tooltip>
-                    <Tooltip title="Agregar">
+                    <Tooltip title="Contactar">
+                        <Dropdown overlay={menu} trigger={['click']}>
+                            <Button type='primary' size='large' iconPosition='end' icon={<PlusOutlined />} style={{ width: "150px" }} />
+                        </Dropdown>
                     </Tooltip>
                     <Tooltip title="Contactar">
                         <Button type='primary' size='large' iconPosition='end' icon={<MailOutlined />} style={{ width: "150px" }} onClick={handleContactar} />
 
                     </Tooltip>
                 </Flex>
-
             </Flex>
         </>
     );
