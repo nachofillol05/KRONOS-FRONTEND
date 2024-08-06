@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { Button, Table, Tooltip, Flex } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 
+import FormCreateHour from './formCreateHour.jsx';
+
 const data = [
     {
         key: '1',
@@ -70,7 +72,7 @@ const data = [
 
 const weekDaysOrder = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
 
-export default function Historial() {
+export default function Horas({ showDrawer }) {
     const [filteredInfo, setFilteredInfo] = useState({});
     const [sortedInfo, setSortedInfo] = useState({});
 
@@ -143,7 +145,12 @@ export default function Historial() {
                     y: 450,
                 }} />
             <Tooltip title="Agregar hora catedra">
-                <Button type='primary' size='large' iconPosition='end' icon={<PlusOutlined />} style={{ width: "150px" }}/>
+                <Button type='primary' size='large' iconPosition='end' icon={<PlusOutlined />} style={{ width: "150px" }}
+                    onClick={() => showDrawer(
+                        <FormCreateHour showDrawer={showDrawer} />,
+                        'Agregar hora catedra'
+                    )}
+                />
             </Tooltip>
         </Flex>
     );

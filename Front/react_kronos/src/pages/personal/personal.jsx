@@ -296,6 +296,8 @@ export default function Personal() {
 
             </div>
             <Table
+            pagination={false}
+            y={500}
     dataSource={teachers.map(teacher => ({ ...teacher, key: teacher.id }))}
     columns={columns}
     loading={loading}

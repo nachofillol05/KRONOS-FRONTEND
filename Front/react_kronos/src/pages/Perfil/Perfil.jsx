@@ -143,16 +143,41 @@ export default function Profile() {
 
   return (
     <>
-      <Tabs defaultActiveKey="1" style={{ margin: '20px 100px' }}>
+      <Tabs onChange={() => {setIsEditing(false) }} defaultActiveKey="1" style={{ margin: '20px 100px' }}>
         <Tabs.TabPane tab="Datos personales" key="1">
           <Card
             title='Información Personal'
             extra={
-              <Button style={{ width: '100px' }} onClick={toggleEditMode}
-                danger={isEditing}>
-                {isEditing ? 'Cancelar' : 'Editar'}
-              </Button>
+              <>
+                {isEditing ? (
+                  <>
+                    <Button
+                      style={{ width: '100px', marginRight: '10px' }}
+                      onClick={toggleEditMode}
+                      danger
+                    >
+                      Cancelar
+                    </Button>
+                    <Button
+                      type="primary"
+                      style={{ width: '100px' }}
+                      onClick={toggleEditMode}
+                    >
+                      Guardar
+                    </Button>
+                  </>
+                ) : (
+                  <Button
+                    style={{ width: '100px' }}
+                    onClick={toggleEditMode}
+                  >
+                    Editar
+                  </Button>
+                )}
+              </>
             }
+
+
           >
             <Form
               form={form}
@@ -162,17 +187,17 @@ export default function Profile() {
             >
               <Flex gap={25} align='start'>
 
-                <Flex gap={25} vertical>  
+                <Flex gap={25} vertical>
                   <Image
                     width={250}
                     height={250}
                     style={{ minWidth: 250, minHeight: 250 }}
                     src="https://via.placeholder.com/150"
                   />
-                  {isEditing ? 
+                  {isEditing ?
                     <Upload maxCount={1} style={{ width: '100%' }}>
-                      <Button 
-                        style={{minWidth: 250}}
+                      <Button
+                        style={{ minWidth: 250 }}
                         icon={<UploadOutlined />}>Click to Upload</Button>
                     </Upload> : null}
 
@@ -180,8 +205,8 @@ export default function Profile() {
 
                 <Flex vertical>
 
-                  <Flex gap={50}>
-                    <Form.Item align='end' label="Nombre" name="first_name" layout='horizontal' style={{ width: '50%' }} className="formItemProfile">
+                  <Flex gap={50} >
+                    <Form.Item align='end' label="Nombre" name="first_name" layout='horizontal' style={{ width: '50%' }} className="formItemProfile" >
                       <Input
                         size='large'
                         autoSize
@@ -220,13 +245,13 @@ export default function Profile() {
                   <Flex gap={50}>
                     <Form.Item layout="horizontal" label="Tipo de documento" name="documentType" style={{ width: '50%' }} className="formItemProfile">
                       {isEditing ? (
-                        <Select style={{ flexGrow: 1 }} options={tiposDoc} size='large' />
+                        <Select style={{ flexGrow: 1, height: '38px' }} options={tiposDoc} size='large' />
                       ) : (
                         <Input
                           size='large'
                           value={profileData.documentType}
                           disabled
-                          style={customDisabledStyle}
+                          style={{ height: '38px', ...customDisabledStyle, }}
                         />
                       )}
                     </Form.Item>
@@ -313,7 +338,145 @@ export default function Profile() {
             </Form>
           </Card>
         </Tabs.TabPane>
-        <Tabs.TabPane tab="Datos de contacto" key="2">
+        <Tabs.TabPane tab="Datos del colegio" key="2">
+          <Card
+            title='Información del Colegio'
+            extra={
+              <>
+                {isEditing ? (
+                  <>
+                    <Button
+                      style={{ width: '100px', marginRight: '10px' }}
+                      onClick={toggleEditMode}
+                      danger
+                    >
+                      Cancelar
+                    </Button>
+                    <Button
+                      type="primary"
+                      style={{ width: '100px' }}
+                      onClick={toggleEditMode}
+                    >
+                      Guardar
+                    </Button>
+                  </>
+                ) : (
+                  <Button
+                    style={{ width: '100px' }}
+                    onClick={toggleEditMode}
+                  >
+                    Editar
+                  </Button>
+                )}
+              </>
+            }
+          >
+            <Form
+              form={form}
+              layout="vertical"
+              onFinish={handleFinish}
+              style={{ flexGrow: 1 }}
+            >
+              <Flex gap={25} align='start' >
+                <Flex gap={10} vertical>
+                    <Image
+                      width={180}
+                      height={180}
+                      style={{
+                        minWidth: 180,
+                        minHeight: 180,
+
+                      }}
+                      src="https://via.placeholder.com/150"
+                    />
+                  {isEditing ?
+                    <Upload maxCount={1} style={{ width: '150%' }}>
+                      <Button
+                        style={{ minWidth: 180 }}
+                        icon={<UploadOutlined />}>Click to Upload</Button>
+                    </Upload> : null}
+                </Flex>
+
+                <Flex vertical gap={10} style={{ width: '100%' }}>
+                  <Flex gap={50}>
+                    <Form.Item style={{ width: '65%' }} label="Nombre" name="name" layout='horizontal'  className="formItemProfile">
+                      <Input
+                        size='large'
+                        autoSize
+                        style={!isEditing ? customDisabledStyle : {}}
+                        disabled={!isEditing}
+                      />
+                    </Form.Item>
+                    <Form.Item style={{ width: '35%' }} label="Abreviación" name="abbreviation" layout='horizontal'  className="formItemProfile">
+                      <Input
+                        size='large'
+                        autoSize
+                        style={!isEditing ? customDisabledStyle : {}}
+                        disabled={!isEditing}
+                        
+                        count={isEditing ? { show: true, max: 7 } : null}
+
+                      />
+                    </Form.Item>
+                  </Flex>
+                  <Form.Item label="Email" name="email" layout='horizontal' style={{ width: '100%' }} className="formItemProfile">
+                    <Input
+                      size='large'
+                      autoSize
+                      style={!isEditing ? customDisabledStyle : {}}
+                      disabled={!isEditing}
+                    />
+                  </Form.Item>
+
+                  <Flex gap={50}>
+                    <Form.Item style={{ width: '50%' }} label="Provincia" name="province" layout='horizontal' className="formItemProfile">
+                      <Input
+                        size='large'
+                        style={!isEditing ? customDisabledStyle : {}}
+                        disabled={!isEditing}
+                      />
+                    </Form.Item>
+                    <Form.Item style={{ width: '50%' }} label="Ciudad" name="city" layout='horizontal' className="formItemProfile">
+                      <Input
+                        size='large'
+                        style={!isEditing ? customDisabledStyle : {}}
+                        disabled={!isEditing}
+                      />
+                    </Form.Item>
+
+                  </Flex>
+                  <Flex gap={25}>
+
+                    <Form.Item label="Calle" name="street" layout='horizontal' className="formItemProfile">
+                      <Input
+                        size='large'
+                        style={!isEditing ? customDisabledStyle : {}}
+                        disabled={!isEditing}
+                      />
+                    </Form.Item>
+                    <Form.Item label="Número" name="streetNumber" layout='horizontal' className="formItemProfile">
+                      <Input
+                        size='large'
+                        type="number"
+                        style={!isEditing ? customDisabledStyle : {}}
+                        disabled={!isEditing}
+                      />
+                    </Form.Item>
+                    <Form.Item label="Código postal" name="postalCode" layout='horizontal' className="formItemProfile">
+                      <Input
+                        size='large'
+                        type="number"
+                        style={!isEditing ? customDisabledStyle : {}}
+                        disabled={!isEditing}
+                      />
+                    </Form.Item>
+                  </Flex>
+              </Flex>
+              </Flex>
+            </Form>
+            
+          </Card>
+
         </Tabs.TabPane>
       </Tabs >
     </>
