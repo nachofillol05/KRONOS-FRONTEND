@@ -369,6 +369,20 @@ export default function Personal() {
                     }
                 />
             </div>
+<<<<<<< HEAD
+            <Table
+            pagination={false}
+            y={500}
+    dataSource={teachers.map(teacher => ({ ...teacher, key: teacher.id }))}
+    columns={columns}
+    loading={loading}
+    tableLayout={'fixed'}
+    filterDropdownOpen={true}
+    filtered={true}
+/>
+
+=======
+>>>>>>> aa1813c7520357a390b2c0f8f9b977fc8b9dff76
 
             <Table dataSource={teachers.map(teacher => ({ ...teacher, key: teacher.id }))} columns={columns}
                 loading={loading}

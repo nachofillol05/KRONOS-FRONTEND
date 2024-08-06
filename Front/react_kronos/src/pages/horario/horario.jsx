@@ -1,6 +1,6 @@
 import { React, useState } from 'react';
 import { FloatButton, Drawer, Button } from 'antd';
-import { DownOutlined, UpOutlined, DownloadOutlined, FileAddOutlined, CloseOutlined, AppstoreOutlined } from '@ant-design/icons';
+import { DownOutlined, UpOutlined, DownloadOutlined, FileAddOutlined, CloseOutlined, AppstoreOutlined, UserSwitchOutlined } from '@ant-design/icons';
 /*Drawers*/
 import Historial from './historial.jsx';
 import Horas from './horas.jsx';
@@ -39,13 +39,19 @@ export default function Horario({ handleOpenDrawer, handleCloseDrawer }) {
                 <FloatButton icon={<DownloadOutlined />} tooltip="Descargar tabla" />
                 <FloatButton icon={<FileAddOutlined />} type='primary' tooltip="Agregar una materia"
                     onClick={() => showDrawer(
+                        <UserSwitchOutlined />
+                        , 'Historial de cambios'
+                    )}
+                />
+                <FloatButton icon={<FileAddOutlined />} type='primary' tooltip="Agregar una materia"
+                    onClick={() => showDrawer(
                         <Historial />
                         , 'Historial de cambios'
                     )}
                 />
                 <FloatButton icon={<AppstoreOutlined />} type='primary' tooltip="Horas catedra"
                     onClick={() => showDrawer(
-                        <Horas />
+                        <Horas showDrawer={showDrawer}  />
                         , 'Horas catedra'
                     )}
                 />

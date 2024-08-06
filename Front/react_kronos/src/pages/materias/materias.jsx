@@ -1,12 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import './materias.scss';
 import RangeSlider from "../../components/timerangeslider/timerange.jsx";
-import { Table, Select, AutoComplete, FloatButton, Drawer, Input, Form, Button, message } from "antd";
+import { Table, Select, AutoComplete, FloatButton, Drawer, Form, Button, message } from "antd";
 import { FileAddOutlined, DownOutlined, UpOutlined, DownloadOutlined, CloseOutlined } from '@ant-design/icons';
-
 import FormCreateSubject from './formCreateSubject.jsx';
-
-
 
 export default function Materias() {
     const [materias, setMaterias] = useState([]);
@@ -16,7 +13,6 @@ export default function Materias() {
     const [start_time, setStart_time] = useState('');
     const [end_time, setEnd_time] = useState('');
     const [loading, setLoading] = useState(true);
-    const [materiasMap, setMateriasMap] = useState([]);
     const [open, setOpen] = useState(false);
     const [drawerContent, setDrawerContent] = useState(null);
     const [drawerTitle, setDrawerTitle] = useState(null);
@@ -30,9 +26,7 @@ export default function Materias() {
 
     useEffect(() => {
         if (messageConfig.type) {
-            // Mostrar el mensaje basado en la configuración
             showMessage(messageConfig.type, messageConfig.content);
-            // Resetear la configuración del mensaje después de mostrarlo
             setMessageConfig({ type: '', content: '' });
         }
     }, [messageConfig]);
@@ -49,7 +43,6 @@ export default function Materias() {
     };
 
     const onChange = (value) => {
-        console.log(`selected ${value}`);
         setTeacher(value);
     };
 
@@ -85,13 +78,11 @@ export default function Materias() {
                 onClose();
             })
             .catch(errorInfo => {
-                // Mostrar mensaje de error si los campos no están completos
                 showMessage('error', 'Por favor, complete todos los campos.');
 
                 setMessageConfig({ type: 'error', content: 'Por favor, complete todos los campos.' });
             });
     };
-
 
     const showMessage = (type, content) => {
         switch (type) {
@@ -125,7 +116,6 @@ export default function Materias() {
         if (Subjectname) {
             url.searchParams.append('name', Subjectname);
         }
-        console.log("aaaaaaaaaaaaaaaaaaaaaaa", url.toString());
         fetch(url.toString(), {
             method: "GET",
             headers: {
@@ -140,7 +130,6 @@ export default function Materias() {
                 return response.json();
             })
             .then(data => {
-                console.log("data: ", data);
                 setMaterias(data.map(materia => ({ ...materia, key: materia.id })));
                 setLoading(false);
             })
@@ -226,7 +215,6 @@ export default function Materias() {
                     value: teacher.id,
                     label: teacher.first_name + ' ' + teacher.last_name,
                 }));
-
                 setTeachers(teacherNames);
             })
             .catch(error => console.error('Error fetching data:', error));
@@ -235,25 +223,18 @@ export default function Materias() {
 
     const handleSelectTeacher = (value) => {
         setTeacher(value);
-        console.log(value);
     };
 
     const handleSearch = (searchText) => {
         setSubjectname(searchText);
-        console.log("entro");
     };
 
     const handleFinalRangeChange = (newValues) => {
-        console.log("hola")
         setStart_time(newValues[0]);
         setEnd_time(newValues[1]);
-        console.log('New range values:', newValues);
-    };
-
-    
+    };    
 
     return (
-
         <>
             {contextHolder}
             <div className="filtros-container">
@@ -263,9 +244,7 @@ export default function Materias() {
 
                 <Select
                     size='large'
-                    style={{
-                        width: 200,
-                    }}
+                    style={{ width: 200 }}
                     showSearch
                     placeholder="Seleccione un Profesor"
                     onChange={onChange}
@@ -275,9 +254,7 @@ export default function Materias() {
 
                 <Select
                     size='large'
-                    style={{
-                        width: 200,
-                    }}
+                    style={{ width: 200 }}
                     showSearch
                     placeholder="Seleccione un curso"
                     onChange={onChange}
@@ -287,25 +264,26 @@ export default function Materias() {
 
                 <AutoComplete
                     size='large'
-                    style={{
-                        width: 300,
-                    }}
+                    style={{ width: 300 }}
                     options={materias.map(materia => ({
                         value: materia.id,
                         label: materia.name,
                     }))}
                     placeholder="Buscar Materia"
                     filterOption={(inputValue, option) =>
-                        option.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1
+                        option.label.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1
                     }
                 />
             </div>
 
-            <Table dataSource={materias} columns={columns}
-                tableLayout={'fixed'}
-                filterDropdownOpen={true}
-                filtered={true}
-            />
+                <Table
+                    pagination={false}
+                    dataSource={materias}
+                    columns={columns}
+                    tableLayout="fixed"
+                    scroll={{  y: 550 }}
+                />
+
 
             <FloatButton.Group
                 visibilityHeight={1500}
