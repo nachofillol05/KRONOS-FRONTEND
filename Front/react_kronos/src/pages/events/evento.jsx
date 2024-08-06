@@ -256,7 +256,6 @@ export default function EventsPage() {
               display: "flex",
               flexFlow: "column",
             }}
-            hoverable
             actions={[
               <Tooltip title="Detelles del evento">
                 <InfoCircleOutlined 
@@ -279,12 +278,9 @@ export default function EventsPage() {
               <h2 style={{ color: "#1890ff" }}>{event.title}</h2>
               <h3>{event.type_event.name}</h3>
               <p>
-                {event.start_date} - {event.end_date}
+                {event.start_date} - {event.end_date}<p>{new Date(event.end_date) < today ? "Finalizado" : "En curso"}</p>
               </p>
-              {new Date(event.end_date) < today && (
-                <h4 style={{ color: "red" }}>Evento Terminado</h4>
-              )}
-              <p>{event.description}</p>
+
             </div>
           </Card>
         ))}
