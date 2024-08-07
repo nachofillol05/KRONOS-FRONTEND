@@ -1,109 +1,12 @@
 import { useState, useEffect } from "react";
 import { Select, DatePicker, AutoComplete, Drawer, Card, Button, FloatButton, message, Tooltip, Modal } from "antd";
-import { InfoCircleOutlined, EditOutlined, UserAddOutlined, CloseOutlined, DownOutlined, UpOutlined, FolderAddOutlined, ExclamationCircleFilled } from "@ant-design/icons";
+import { InfoCircleOutlined, EditOutlined, CheckCircleOutlined, UserAddOutlined, CloseOutlined, DownOutlined, UpOutlined, FolderAddOutlined, ExclamationCircleFilled } from "@ant-design/icons";
 import FormCreateEvent from "./formCreateEvent";
+import moment from 'moment';
 import InfoEvent from "./infoEvent";
 import "./events.scss";
 const dateFormat = 'YYYY/MM/DD';
 
-const data_events = [
-  {
-    id: 1,
-    title: "Paro de transporte",
-    description: "Paro de la empresa ERSA en la ciudad de Córdoba",
-    type_event: {
-      id: 1,
-      name: "Paro",
-      description: "Paro de la empresa ERSA en la ciudad de Córdoba",
-    },
-    start_date: "2024/08/01",
-    end_date: "2024/08/02",
-  },
-  {
-    id: 2,
-    title: "Concierto de Rock",
-    description: "Concierto de la banda Los Piojos en el estadio Mario Alberto Kempes",
-    type_event: {
-      id: 1,
-      name: "Paro",
-      description: "Paro de la empresa ERSA en la ciudad de Córdoba",
-    },
-    start_date: "2024/08/05",
-    end_date: "2024/08/05",
-  },
-  {
-    id: 3,
-    title: "Maratón de Córdoba",
-    description: "Maratón anual en el centro de la ciudad",
-    type_event: {
-      id: 3,
-      name: "Deporte",
-      description: "Maratón anual en el centro de la ciudad",
-    },
-    start_date: "2024/08/10",
-    end_date: "2024/08/10",
-  },
-  {
-    id: 4,
-    title: "Feria de Tecnología",
-    description: "Feria de tecnología y startups en el predio ferial",
-    type_event: {
-      id: 3,
-      name: "Deporte",
-      description: "Maratón anual en el centro de la ciudad",
-    },
-    start_date: "2024/08/15",
-    end_date: "2024/08/17",
-  },
-  {
-    id: 5,
-    title: "Taller de cocina",
-    description: "Taller de cocina saludable en el parque Sarmiento",
-    type_event: "Taller",
-    start_date: "2024/08/20",
-    end_date: "2024/08/20",
-  },
-  {
-    id: 6,
-    title: "Exposición de arte",
-    description: "Exposición de arte contemporáneo en el museo Caraffa",
-    type_event: "Exposición",
-    start_date: "2024/08/25",
-    end_date: "2024/08/30",
-  },
-  {
-    id: 7,
-    title: "Carrera de autos",
-    description: "Carrera de autos en el autódromo Oscar Cabalén",
-    type_event: "Carrera",
-    start_date: "2024/09/01",
-    end_date: "2024/09/01",
-  },
-  {
-    id: 8,
-    title: "Festival de Jazz",
-    description: "Festival de Jazz en la Plaza de la Música",
-    type_event: "Festival",
-    start_date: "2024/09/05",
-    end_date: "2024/09/07",
-  },
-  {
-    id: 9,
-    title: "Curso de fotografía",
-    description: "Curso intensivo de fotografía en el centro cultural",
-    type_event: "Curso",
-    start_date: "2024/09/10",
-    end_date: "2024/09/12",
-  },
-  {
-    id: 10,
-    title: "Competencia de robótica",
-    description: "Competencia de robótica en la facultad de ingeniería",
-    type_event: "Competencia",
-    start_date: "2024/09/15",
-    end_date: "2024/09/16",
-  },
-];
 
 export default function EventsPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -116,6 +19,93 @@ export default function EventsPage() {
   const [messageApi, contextHolder] = message.useMessage();
   const [messageConfig, setMessageConfig] = useState({ type: '', content: '' });
   const [eventName, setEventName] = useState('');
+  const [nombre, setNombre] = useState([]);
+  const [tipoEvento, setTipoEvento] = useState([]);
+  const [date, setDate] = useState('');
+  const [eventos, setEventos] = useState([]);
+  const [tipos, setTipos] = useState([]);
+  const [profileData, setProfileData] = useState({});
+  
+  useEffect(() => {
+    fetch('http://127.0.0.1:8000/api/profile/', {
+        method: "GET",
+        headers: {
+            'Authorization': 'Token ' + localStorage.getItem('token'),
+            'School-ID': 1,
+        },
+    })
+        .then((response) => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then((data) => {
+            console.log(data);
+            setProfileData(data);
+        })
+        .catch((error) => console.error('Error fetching data:', error));
+  }, []);
+
+ 
+  
+
+
+
+  useEffect(() => {
+    fetch('http://127.0.0.1:8000/api/typeevent/', {
+        method: "GET",
+        headers: {
+            'Authorization': 'Token ' + localStorage.getItem('token'),
+            'School-ID': 1,
+        },
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            const tipos = data.map(tipo => ({
+                value: tipo.id,
+                label: tipo.name,
+            }));
+            setTipos(tipos);
+        })
+        .catch(error => console.error('Error fetching data:', error));
+  }, []);
+
+  useEffect(() => {
+    const url = new URL('http://127.0.0.1:8000/api/events/');
+    if (date) {
+        url.searchParams.append('date', date);
+    }
+    if (tipoEvento) {
+        url.searchParams.append('TipoEvento', tipoEvento);
+    }
+    if (nombre) {
+        url.searchParams.append('nombre', nombre);
+    }
+    fetch(url.toString(), {
+        method: "GET",
+        headers: {
+            'Authorization': 'Token ' + localStorage.getItem('token'),
+            'School-ID': 1,
+        },
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            setEventos(data);
+            console.log('Data:', data);
+        })
+        .catch(error => console.error('Error fetching data:', error));
+  }, [date, nombre, tipoEvento]);
 
   useEffect(() => {
     if (messageConfig.type) {
@@ -124,22 +114,57 @@ export default function EventsPage() {
     }
   }, [messageConfig]);
 
-  const showModal = (nombreEvento) => {
+  const showModal = (evento) => {
     Modal.info({
-      title:'Confirmar adicion',
+      title: 'Confirmar adición',
       content: (
-        <p>¿Seguro que quieres aderirte al evento "<b>{nombreEvento}</b>"?</p>
+        <p>¿Seguro que quieres adherirte al evento "<b>{evento.name}</b>"?</p>
       ),
-      onOk: handleOk,
+      onOk: () => handleOk(evento),
       closable: true,
-      okText: 'Si, quiero aderirme',
-
+      okText: 'Si, quiero adherirme',
     });
   };
 
-  const handleOk = () => {
-    setIsModalOpen(false);
+  const handleOk = (evento) => {
+      const updatedAffiliatedTeachers = [...evento.affiliated_teachers, profileData.id];
+      const url = new URL('http://127.0.0.1:8000/api/events/' + evento.id + '/');
+      const formattedStartDate = moment(evento.startDate).format('DD/MM/YYYY');
+      const formattedEndDate = moment(evento.endDate).format('DD/MM/YYYY')
+
+      fetch(url, {
+          method: "PUT",
+          headers: {
+              'Content-Type': 'application/json',
+              'Authorization': 'Token ' + localStorage.getItem('token'),
+              'School-ID': 1,
+          },
+          body: JSON.stringify({
+              affiliated_teachers: updatedAffiliatedTeachers,
+              startDate: formattedStartDate,
+              endDate: formattedEndDate,
+              eventType: evento.eventType,
+              school: evento.school,
+              name: evento.name,
+              description: evento.description,
+          }),
+      })
+      .then(response => {
+          if (!response.ok) {
+              return response.json().then((error) => {
+                  throw new Error(`Server responded with ${response.status}: ${JSON.stringify(error)}`);
+              });
+          }
+          return response.json();
+      })
+      .then(data => {
+          console.log('Success:', data);
+      })
+      .catch(error => console.error('Error fetching data:', error));
+  
+      setIsModalOpen(false);
   };
+ 
 
   const handleCancel = () => {
     setIsModalOpen(false);
@@ -202,10 +227,6 @@ export default function EventsPage() {
     setDrawerContent(null);
   };
 
-  useEffect(() => {
-    setEvents(data_events);
-  }, []);
-
   const handleOpenDrawer = () => {
     setOpenDrawer(!openDrawer);
   };
@@ -229,7 +250,8 @@ export default function EventsPage() {
             break;
     }
   };
-
+  //cambiar event.type_event.name ponerlo entre llaves
+  console.log('Eventos:', eventos);
   return (
     <>
       {contextHolder}
@@ -239,8 +261,9 @@ export default function EventsPage() {
           style={{
             width: 200,
           }}
+          options={tipos}
           showSearch
-          placeholder="Seleccione un curso"
+          placeholder="tipo de evento"
         />
 
         <DatePicker
@@ -256,7 +279,7 @@ export default function EventsPage() {
           style={{
             width: 300,
           }}
-          placeholder="Buscar Materia"
+          placeholder="Buscar Evento"
           filterOption={(inputValue, option) =>
             option.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1
           }
@@ -276,43 +299,80 @@ export default function EventsPage() {
           paddingInline: 25,
         }}
       >
-        {events.map((event) => (
-          <Card
-            key={event.id}
-            style={{
-              width: "25%",
-              minWidth: 300,
-              display: "flex",
-              flexFlow: "column",
-            }}
-            actions={[
-              <Tooltip title="Detelles del evento">
-                <InfoCircleOutlined 
-                  key="details" 
-                  onClick={() => showDrawer(<InfoEvent event={event} />, "Detalles del evento")} 
-                />
-              </Tooltip>,
-              <Tooltip title="Editar el evento">
-                <EditOutlined key="setting" />
-              </Tooltip>,
-              <Tooltip title="Aderirse al evento">
-                <UserAddOutlined 
-                  key="add" 
-                  onClick={() => showModal(event.title)} 
-                />
-              </Tooltip>,
-            ]}
-          >
-            <div style={{ display: "flex", flexDirection: "column", gap: 15 }}>
-              <h2 style={{ color: "#1890ff" }}>{event.title}</h2>
-              <h3>{event.type_event.name}</h3>
-              <p>
-                {event.start_date} - {event.end_date}<p>{new Date(event.end_date) < today ? "Finalizado" : "En curso"}</p>
-              </p>
+        {eventos.map((event) => {
+  const eventStatus = (() => {
+    if (new Date(event.endDate) < today) {
+      return "Finalizado";
+    } else if (new Date(event.startDate) > today) {
+      return "Pendiente";
+    } else {
+      return "En curso";
+    }
+  })();
 
-            </div>
-          </Card>
-        ))}
+  const isUserAffiliated = event.affiliated_teachers.includes(profileData.id);
+  const mostrar = (() => {
+    if (eventStatus === "Pendiente" && !isUserAffiliated) {
+      console.log("Adherirse al evento")
+      return "Adherirse al evento";
+    } 
+    if (eventStatus === "Pendiente" && isUserAffiliated) {
+      console.log("Ya estás adherido")
+      return "Ya estás adherido";
+    } 
+    if ((eventStatus === "Finalizado" || eventStatus === "En curso") && !isUserAffiliated) {
+      console.log("")
+      return "";
+    }
+    if ((eventStatus === "Finalizado" || eventStatus === "En curso") && isUserAffiliated) {
+      console.log("Ya estás adherido")
+      return "Ya estás adherido";
+    }
+  })();
+  
+  return (
+    <Card
+      key={event.id}
+      style={{
+        width: "25%",
+        minWidth: 300,
+        display: "flex",
+        flexFlow: "column",
+      }}
+      actions={[
+        <Tooltip title="Detalles del evento">
+          <InfoCircleOutlined 
+            key="details" 
+            onClick={() => showDrawer(<InfoEvent event={event} />, "Detalles del evento")} 
+          />
+        </Tooltip>,
+
+        mostrar && (
+          <Tooltip 
+            title={mostrar} 
+            key="action"
+          >
+            {mostrar === "Adherirse al evento" ? (
+              <UserAddOutlined onClick={() => showModal(event)} />
+            ) : (
+              <CheckCircleOutlined style={{ color: "green" }} />
+            )}
+          </Tooltip>
+        ),
+      ]}
+    >
+      <div style={{ display: "flex", flexDirection: "column", gap: 15 }}>
+        <h2 style={{ color: "#1890ff" }}>{event.name}</h2>
+        <h3>{event.type_event}</h3>
+        <p>
+          {event.startDate} - {event.endDate}
+          <p>{eventStatus}</p>
+        </p>
+      </div>
+    </Card>
+  );
+})}
+
       </div>
       <FloatButton.Group
         visibilityHeight={1500}

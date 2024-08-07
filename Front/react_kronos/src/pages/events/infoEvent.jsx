@@ -21,18 +21,18 @@ export default function InfoWorker({ event }) {
         return differenceInDays;
     }
 
-    const duracion = calculateDuration(event.start_date, event.end_date);
+    const duracion = calculateDuration(event.startDate, event.endDate);
 
     return (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
             <h3>Claves del evento</h3>
             <div style={{ display: 'flex', gap: '10px' }}>
                 <label>Nombre:</label>
-                <label>{event.title}</label>
+                <label>{event.name}</label>
             </div>
             <div style={{ display: 'flex', gap: '10px' }}>
                 <label>Tipo:</label>
-                <label>{event.type_event.name}</label>
+                <label>event.type_event.name</label>
             </div>
             <div style={{ display: 'flex', gap: '10px' }}>
                 <label>Descripcion:</label>
@@ -42,11 +42,11 @@ export default function InfoWorker({ event }) {
             <h3>Fechas</h3>
             <div style={{ display: 'flex', gap: '10px' }}>
                 <label>Fecha de inicio:</label>
-                <label>{event.start_date}</label>
+                <label>{event.startDate}</label>
             </div>
             <div style={{ display: 'flex', gap: '10px' }}>
                 <label>Fecha de fin:</label>
-                <label>{event.end_date}</label>
+                <label>{event.endDate}</label>
             </div>
             <div style={{ display: 'flex', gap: '10px' }}>
                 <label>Duración:</label>
@@ -57,9 +57,11 @@ export default function InfoWorker({ event }) {
             <List
                 size="small"
                 bordered
-                dataSource={data}
+                dataSource={event.affiliated_teachers}
                 renderItem={(item) => <List.Item>{item}</List.Item>}
             />
+            
         </div>
+
     );
 }

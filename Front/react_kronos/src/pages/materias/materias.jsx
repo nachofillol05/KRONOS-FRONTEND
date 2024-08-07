@@ -278,6 +278,7 @@ export default function Materias() {
 
                 <Table
                     pagination={false}
+                    loading={loading}
                     dataSource={materias}
                     columns={columns}
                     tableLayout="fixed"
