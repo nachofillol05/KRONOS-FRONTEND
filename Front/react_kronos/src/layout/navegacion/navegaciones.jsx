@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
     ScheduleOutlined,
     TableOutlined,
@@ -6,8 +6,8 @@ import {
     ContactsOutlined,
     UserOutlined
 } from '@ant-design/icons';
-import { Breadcrumb, Layout, Menu, theme } from 'antd';
-import { useLocation, Link } from 'react-router-dom';
+import { Layout, Menu, Dropdown } from 'antd';
+import { Link, useLocation } from 'react-router-dom';
 import './navegaciones.scss'; // Asegúrate de importar el archivo CSS
 
 const { Header, Content, Footer, Sider } = Layout;
@@ -31,7 +31,26 @@ const items = [
 
 const App = ({ children }) => {
     const [collapsed, setCollapsed] = useState(false);
+    const [dropdownItems, setDropdownItems] = useState([]);
     const location = useLocation();
+
+    useEffect(() => {
+        // Recuperar datos del sessionStorage
+        const savedData = sessionStorage.getItem('schools');
+        if (savedData) {
+            const parsedData = JSON.parse(savedData);
+            setDropdownItems(parsedData.map(school => ({
+                key: school.pk.toString(),
+                label: school.name,
+            })));
+        }
+    }, []);
+
+    const handleMenuItemClick = ({ key }) => {
+        // Guardar la clave seleccionada en sessionStorage
+        sessionStorage.setItem('actual_school', key);
+        console.log(sessionStorage.getItem('actual_school'))
+    };
 
     const getSelectedKey = () => {
         switch (location.pathname) {
@@ -60,7 +79,26 @@ const App = ({ children }) => {
                 collapsedWidth={50}
             >
                 <div className={`logo ${collapsed ? 'collapsed' : ''}`}>
-                    <img src="https://via.placeholder.com/150" alt="logo" className="logo-img" />
+                <Dropdown
+                        overlay={
+                            <Menu
+                                onClick={handleMenuItemClick}
+                                items={dropdownItems.map(item => ({
+                                    key: item.key,
+                                    label: item.label,
+                                }))}
+                            />
+                        }
+                        trigger={['click']}
+                    >
+                        <a onClick={(e) => e.preventDefault()}>
+                            <img
+                                src="https://via.placeholder.com/150"
+                                alt="logo"
+                                className="logo-img"
+                            />
+                        </a>
+                    </Dropdown>
                 </div>
                 <Menu theme="dark" defaultSelectedKeys={[getSelectedKey()]} mode="inline" items={items} />
             </Sider>
