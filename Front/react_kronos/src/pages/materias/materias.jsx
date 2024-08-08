@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import './materias.scss';
 import RangeSlider from "../../components/timerangeslider/timerange.jsx";
-import { Table, Select, AutoComplete, FloatButton, Drawer, Input, Flex, ColorPicker, Space, Form, Button, message, Tooltip } from "antd";
-import { FileAddOutlined, DownOutlined, UpOutlined, DownloadOutlined, CloseOutlined, InfoCircleOutlined } from '@ant-design/icons';
-
-const { TextArea } = Input;
+import { Table, Select, AutoComplete, FloatButton, Drawer, Form, Button, message } from "antd";
+import { FileAddOutlined, DownOutlined, UpOutlined, DownloadOutlined, CloseOutlined } from '@ant-design/icons';
+import FormCreateSubject from './formCreateSubject.jsx';
 
 export default function Materias() {
     const [materias, setMaterias] = useState([]);
@@ -14,12 +13,12 @@ export default function Materias() {
     const [start_time, setStart_time] = useState('');
     const [end_time, setEnd_time] = useState('');
     const [loading, setLoading] = useState(true);
-    const [materiasMap, setMateriasMap] = useState([]);
     const [open, setOpen] = useState(false);
     const [drawerContent, setDrawerContent] = useState(null);
     const [drawerTitle, setDrawerTitle] = useState(null);
     const [value, setValue] = useState('');
     const [form] = Form.useForm();
+    const [cursos, setCursos] = useState([]);
 
 
     const [messageApi, contextHolder] = message.useMessage();
@@ -27,9 +26,7 @@ export default function Materias() {
 
     useEffect(() => {
         if (messageConfig.type) {
-            // Mostrar el mensaje basado en la configuración
             showMessage(messageConfig.type, messageConfig.content);
-            // Resetear la configuración del mensaje después de mostrarlo
             setMessageConfig({ type: '', content: '' });
         }
     }, [messageConfig]);
@@ -46,7 +43,6 @@ export default function Materias() {
     };
 
     const onChange = (value) => {
-        console.log(`selected ${value}`);
         setTeacher(value);
     };
 
@@ -54,14 +50,36 @@ export default function Materias() {
         console.log('search:', value);
     };
 
-    const handleSubmit = () => {
+    const handleSubmit = (form) => {
         form.validateFields()
             .then(values => {
                 console.log('Formulario completado:', values);
+                onClose(); // Cerrar el drawer si todos los campos están completos
+                const hexColor = values.color.toHexString();
+                const body = {
+                    name: values.materia,
+                    abbreviation: values.abreviacion,
+                    course: values.curso,
+                    weeklyHours: parseInt(values.horasCatedras, 10),
+                    color: hexColor,
+                    studyPlan: values.planEstudio,
+                    description: values.descripcion
+                };
+                fetch('http://127.0.0.1:8000/api/subjects/', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': 'Token ' + localStorage.getItem('token'),
+                        'School-ID': 1,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(body),
+                    
+                })
                 onClose();
             })
             .catch(errorInfo => {
-                // Configurar el mensaje de error
+                showMessage('error', 'Por favor, complete todos los campos.');
+
                 setMessageConfig({ type: 'error', content: 'Por favor, complete todos los campos.' });
             });
     };
@@ -98,7 +116,6 @@ export default function Materias() {
         if (Subjectname) {
             url.searchParams.append('name', Subjectname);
         }
-        console.log("aaaaaaaaaaaaaaaaaaaaaaa", url.toString());
         fetch(url.toString(), {
             method: "GET",
             headers: {
@@ -113,24 +130,24 @@ export default function Materias() {
                 return response.json();
             })
             .then(data => {
-                console.log("data: ", data);
                 setMaterias(data.map(materia => ({ ...materia, key: materia.id })));
                 setLoading(false);
             })
             .catch(error => console.error('Error fetching data:', error));
     }, [start_time, end_time, Subjectname, teacher]);
 
+
     const columns = [
         { title: 'Nombre', dataIndex: 'name', key: 'name' },
         { title: 'Abreviacion', dataIndex: 'abbreviation', key: 'abbreviation' },
         { title: 'Curso', dataIndex: 'course', key: 'course' },
         { title: 'Horas catedra semanales', dataIndex: 'weeklyHours', key: 'weeklyHours' },
-        { title: 'Color', dataIndex: 'color', key: 'color' },
+        { title: 'Color',dataIndex: 'color',key: 'color',render: (text) => (<div style={{ width: '24px', height: '24px', backgroundColor: text, borderRadius: '4px' }} />),},
         { title: 'Descripcion', dataIndex: 'description', key: 'description' }
     ];
 
     useEffect(() => {
-        fetch('http://127.0.0.1:8000/api/teachers/', {
+        fetch('http://127.0.0.1:8000/api/courses/', {
             method: "GET",
             headers: {
                 'Authorization': 'Token ' + localStorage.getItem('token'),
@@ -144,37 +161,80 @@ export default function Materias() {
                 return response.json();
             })
             .then(data => {
+                const courses = data.map(curs => ({
+                    value: curs.id,
+                    label: curs.year.name + ' ' + curs.name,
+                }));
+
+                setCursos(courses);
+            })
+            .catch(error => console.error('Error fetching data:', error));
+    }, []);
+
+    useEffect(() => {
+        fetch('http://127.0.0.1:8000/api/courses/', {
+            method: "GET",
+            headers: {
+                'Authorization': 'Token ' + localStorage.getItem('token'),
+                'School-ID': 2,
+            },
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                const courses = data.map(curs => ({
+                    value: curs.id,
+                    label: curs.year.name + ' ' + curs.name,
+                }));
+
+                setCursos(courses);
+            })
+            .catch(error => console.error('Error fetching data:', error));
+    }, []);
+
+    useEffect(() => {
+        fetch('http://127.0.0.1:8000/api/teachers/', {
+            method: "GET",
+            headers: {
+                'Authorization': 'Token ' + localStorage.getItem('token'),
+                'School-ID': 2,
+            },
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
                 const teacherNames = data.map(teacher => ({
                     value: teacher.id,
                     label: teacher.first_name + ' ' + teacher.last_name,
                 }));
-
                 setTeachers(teacherNames);
             })
             .catch(error => console.error('Error fetching data:', error));
     }, []);
 
+
     const handleSelectTeacher = (value) => {
         setTeacher(value);
-        console.log(value);
     };
 
     const handleSearch = (searchText) => {
         setSubjectname(searchText);
-        console.log("entro");
     };
 
     const handleFinalRangeChange = (newValues) => {
-        console.log("hola")
         setStart_time(newValues[0]);
         setEnd_time(newValues[1]);
-        console.log('New range values:', newValues);
-    };
-
-    const cursos = [{ value: 1, label: '1A' }, { value: 2, label: '1B' }, { value: 3, label: '2A' }, { value: 4, label: '2B' }, { value: 5, label: '3A' }, { value: 6, label: '3B' }, { value: 7, label: '4A' }, { value: 8, label: '4B' }, { value: 9, label: '5A' }, { value: 10, label: '5B' }];
+    };    
 
     return (
-
         <>
             {contextHolder}
             <div className="filtros-container">
@@ -184,6 +244,7 @@ export default function Materias() {
 
                 <Select
                     size='large'
+                    style={{ width: 200 }}
                     showSearch
                     placeholder="Seleccione un Profesor"
                     onChange={onChange}
@@ -193,6 +254,7 @@ export default function Materias() {
 
                 <Select
                     size='large'
+                    style={{ width: 200 }}
                     showSearch
                     placeholder="Seleccione un curso"
                     onChange={onChange}
@@ -202,25 +264,26 @@ export default function Materias() {
 
                 <AutoComplete
                     size='large'
-                    style={{
-                        width: 200,
-                    }}
+                    style={{ width: 300 }}
                     options={materias.map(materia => ({
                         value: materia.id,
                         label: materia.name,
                     }))}
                     placeholder="Buscar Materia"
                     filterOption={(inputValue, option) =>
-                        option.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1
+                        option.label.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1
                     }
                 />
             </div>
 
-            <Table dataSource={materias} columns={columns}
-                tableLayout={'fixed'}
-                filterDropdownOpen={true}
-                filtered={true}
-            />
+                <Table
+                    pagination={false}
+                    dataSource={materias}
+                    columns={columns}
+                    tableLayout="fixed"
+                    scroll={{  y: 550 }}
+                />
+
 
             <FloatButton.Group
                 visibilityHeight={1500}
@@ -232,146 +295,10 @@ export default function Materias() {
                 <FloatButton icon={<DownloadOutlined />} tooltip="Descargar tabla" />
                 <FloatButton icon={<FileAddOutlined />} type='primary' tooltip="Agregar una materia"
                     onClick={() => showDrawer(
-                        <Form form={form} layout="vertical" hideRequiredMark >
-                            <Space.Compact>
-                                <Form.Item
-                                    style={{ width: '70%' }}
-                                    name="materia"
-                                    label="Nombre de la materia"
-                                    rules={[
-                                        {
-                                            required: true,
-                                            message: 'Porfavor ingrese el nombre de la materia',
-                                        },
-                                    ]}
-                                >
-                                    <Input size='large' autoSize={true} placeholder="Ingrese el nombre de la materia" />
-                                </Form.Item>
-                                <Form.Item
-                                    style={{ width: '30%' }}
-                                    name="abreviacion"
-                                    label="Abreviacion"
-                                    rules={[
-                                        {
-                                            required: true,
-                                            message: '',
-                                        },
-                                    ]}
-                                >
-                                    <Input size='large' autoSize placeholder="Abreviacion" count={{ show: true, max: 5 }} />
-                                </Form.Item>
-                            </Space.Compact>
-                            <Flex gap={10}>
-                                <Form.Item
-                                    style={{ width: '70%' }}
-                                    name="profesor"
-                                    label="Profesor"
-                                    rules={[
-                                        {
-                                            required: true,
-                                            message: 'Porfavor ingrese el profesor',
-                                        },
-                                    ]}
-                                >
-                                    <Select
-                                        size='large'
-                                        showSearch
-                                        placeholder="Profesor"
-                                        options={teachers}
-                                    />
-                                </Form.Item>
-                                <Form.Item
-                                    style={{ width: '30%' }}
-                                    name="curso"
-                                    label="Curso"
-                                    rules={[
-                                        {
-                                            required: true,
-                                            message: 'Porfavor ingrese el curso ',
-                                        },
-                                    ]}
-                                >
-                                    <Select
-                                        size='large'
-                                        placeholder="Curso"
-                                        options={cursos}
-                                    />
-                                </Form.Item>
-                            </Flex>
-                            <Flex gap={10}>
-                                <Form.Item
-                                    style={{ width: '50%' }}
-                                    name="horasCatedras"
-                                    label="Horas Catedras"
-                                    rules={[
-                                        {
-                                            required: true,
-                                            message: 'Porfavor ingrese las horas catedra ',
-                                        },
-                                    ]}
-                                >
-
-                                    <Input
-                                        autoSize
-                                        size='large'
-                                        value={value}
-                                        onChange={setValue}
-                                        type='number'
-                                        placeholder="Ingrese las horas Catedras"
-                                        suffix={
-                                            <Tooltip arrow={false} color='gray' title="Unidad de tiempo en la que se lleva a cabo una clase ">
-                                                <InfoCircleOutlined style={{ color: 'gray' }} />
-                                            </Tooltip>
-                                        }
-                                    />
-                                </Form.Item>
-                                <Form.Item
-                                    initialValue={'#ff0000'}
-                                    style={{ width: '50%' }}
-                                    name="color"
-                                    label="Color de la materia"
-                                    rules={[
-                                        {
-                                            required: true,
-                                            message: 'Porfavor ingrese el color de la materia ',
-                                        },
-                                    ]}
-                                >
-                                    <ColorPicker defaultValue="#ff0000" size="large" showText style={{ width: '100%' }} />
-                                </Form.Item>
-                            </Flex>
-                            <Form.Item
-                                name="planEstudio"
-                                label="Plan de estudio"
-                                rules={[
-                                    {
-                                        required: true,
-                                        message: 'Porfavor ingrese el plan de estudio ',
-                                    },
-                                ]}
-                            >
-                                <TextArea size='large' placeholder="Ingrese el plan de estudio" allowClear style={{ height: '80px' }} />
-                            </Form.Item>
-                            <Form.Item
-                                name="descripcion"
-                                label="Descripcion"
-                                rules={[
-                                    {
-                                        required: true,
-                                        message: 'Porfavor ingrese la descripcion ',
-                                    },
-                                ]}
-                            >
-                                <TextArea size='large' placeholder="Ingrese la descripcion" allowClear style={{ height: '80px' }} />
-                            </Form.Item>
-                            <Form.Item >
-                                <Flex justify='flex-end'>
-                                    <Button size='large' type="primary" onClick={handleSubmit}>Submit</Button>
-                                </Flex>
-                            </Form.Item>
-
-                        </Form>
-                        , 'Agregar una materia')} />
+                        <FormCreateSubject handleSubmit={handleSubmit} onClose={onClose} cursos={cursos} value={value} setValue={setValue} />,
+                        'Agregar una materia'
+                    )}
+                />
             </FloatButton.Group>
 
             <Drawer

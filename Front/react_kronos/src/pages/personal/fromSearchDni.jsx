@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, Form, Select, Input, Space } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import { useRef } from 'react';
@@ -6,7 +6,23 @@ import { useRef } from 'react';
 export default function FormSearchDni({ handleSearch }) {
     const [form] = Form.useForm();
     const formRef = useRef(null);
+    const [tipoDocumentos, setTipoDocumentos] = useState([]);
 
+    useEffect(() => {  
+        fetch('http://127.0.0.1:8000/api/documentTypes/',{
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            }})
+            .then(response => response.json())
+            .then(data => {
+                const datos = data.map((tipo) => ({
+                    value: tipo.id,
+                    label: tipo.name,
+                }));
+                setTipoDocumentos(datos);
+                console.log(datos);
+            })}, []);
     return (
         <Form form={form} ref={formRef} layout="vertical" hideRequiredMark>
             <Space.Compact>
@@ -24,7 +40,7 @@ export default function FormSearchDni({ handleSearch }) {
                     <Select
                         size='large'
                         defaultValue={1}
-                        options={[{ 'label': 'DNI', 'value': 1 }, { 'label': 'Pasaporte', 'value': 2 }, { 'label': 'Carnet Extranjería', 'value': 3 }]}
+                        options={tipoDocumentos}
                     />
                 </Form.Item>
                 <Form.Item

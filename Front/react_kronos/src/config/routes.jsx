@@ -13,7 +13,7 @@ import Materias from "../pages/materias/materias";
 import Personal from "../pages/personal/personal";
 import Perfil from "../pages/Perfil/Perfil";
 import Horario from "../pages/horario/horario";
-import EventsPage from "../pages/events/eventsPage";
+import EventsPage from "../pages/events/evento";
 
 
 export const routes = [
@@ -23,9 +23,9 @@ export const routes = [
         private: true,
         layout: Navegacion,
         component: Home,
-        
+
     },
-    
+
     {
         path: "/prueba",
         exact: true,
@@ -81,10 +81,10 @@ export const routes = [
         component: Horario
     },
     {
-      path: "/eventos",
-      exact: true,
-      private: false,
-      layout: Navegacion,
-      component: EventsPage,
+        path: "/eventos",
+        exact: true,
+        private: false,
+        layout: Navegacion,
+        component: EventsPage,
     }
 ];
