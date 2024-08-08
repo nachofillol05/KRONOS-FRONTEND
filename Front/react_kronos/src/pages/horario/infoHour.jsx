@@ -135,6 +135,7 @@ export default function Horas({ showDrawer }) {
     return (
         <Flex vertical gap={25} align='end'>
             <Table
+                bordered
                 pagination={false}
                 showSorterTooltip={false}
                 filterMode={'menu'}
@@ -144,8 +145,8 @@ export default function Horas({ showDrawer }) {
                 scroll={{
                     y: 450,
                 }} />
-            <Tooltip title="Agregar hora catedra">
-                <Button type='primary' size='large' iconPosition='end' icon={<PlusOutlined />} style={{ width: "150px" }}
+            <Tooltip title="Agregar hora">
+                <Button type='primary' size='large' iconPosition='end' icon={<PlusOutlined />} style={{ width: "100px" }}
                     onClick={() => showDrawer(
                         <FormCreateHour showDrawer={showDrawer} />,
                         'Agregar hora catedra'
