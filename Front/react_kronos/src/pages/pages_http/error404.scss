@@ -1,0 +1,151 @@
+/* Estilos generales para la página de error 404 */
+.error-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  width: 100vw;
+  background-color: #0a192f;
+  color: #ffffff;
+  text-align: center;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  margin: 0;
+  padding: 20px; /* Añade un poco de espacio alrededor del contenido */
+  box-sizing: border-box;
+  overflow: hidden; /* Evita que el contenido se corte */
+}
+
+.error-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 1200px;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.error-info {
+  max-width: 600px;
+  margin-bottom: 10px;
+}
+
+.error-title {
+  font-size: 40px;
+  color: #007bff;
+  margin: 0 0 15px;
+}
+
+.error-message {
+  font-size: 20px;
+  margin: 0 0 15px;
+}
+
+.error-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+}
+
+.error-button {
+  padding: 10px;
+  font-size: 16px;
+  color: #ffffff;
+  text-decoration: none;
+  transition: background-color 0.3s;
+  border-radius: 5px;
+  text-align: center;
+  background-color: #007bff;
+}
+
+.error-button.login {
+  background-color: #6c757d;
+}
+
+.error-button:hover {
+  background-color: #0056b3;
+}
+
+.error-button.login:hover {
+  background-color: #5a6268;
+}
+
+.error-animation {
+  max-width: 300px;
+  width: 100%;
+  margin-top: 20px; /* Añade margen para dispositivos móviles */
+  position: relative;
+  top: 0; /* Elimina el desplazamiento hacia arriba */
+  left: 0; /* Ajusta la posición horizontal */
+}
+
+/* Media query para pantallas más grandes */
+@media (min-width: 768px) {
+  .error-content {
+    flex-direction: row;
+    justify-content: center;
+  }
+
+  .error-info {
+    text-align: left;
+    margin-bottom: 0;
+    padding-right: 40px;
+  }
+
+  .error-buttons {
+    flex-direction: row;
+    justify-content: flex-start;
+  }
+
+  .error-button {
+    width: auto;
+  }
+
+  .error-animation {
+    margin-top: 0;
+    align-self: flex-start;
+    left: 20px; /* Mantiene la animación hacia la derecha */
+    top: -40px; /* Ajusta la posición vertical para evitar el corte */
+  }
+}
+
+/* Media queries para pantallas más pequeñas */
+@media (max-width: 768px) {
+  .error-title {
+    font-size: 1.5rem; /* Ajusta el tamaño de fuente */
+  }
+
+  .error-message {
+    font-size: 1rem; /* Ajusta el tamaño de fuente */
+  }
+
+  .error-button {
+    padding: 8px 16px; /* Ajusta el tamaño del botón */
+    font-size: 0.875rem; /* Ajusta el tamaño de fuente del botón */
+  }
+
+  .error-animation {
+    max-width: 250px; /* Ajusta el tamaño máximo de la animación */
+  }
+}
+
+@media (max-width: 480px) {
+  .error-title {
+    font-size: 1.25rem; /* Ajusta el tamaño de fuente */
+  }
+
+  .error-message {
+    font-size: 0.875rem; /* Ajusta el tamaño de fuente */
+  }
+
+  .error-button {
+    padding: 6px 12px; /* Ajusta el tamaño del botón */
+    font-size: 0.75rem; /* Ajusta el tamaño de fuente del botón */
+  }
+
+  .error-animation {
+    max-width: 200px; /* Ajusta el tamaño máximo de la animación */
+  }
+}

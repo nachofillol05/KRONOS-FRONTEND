@@ -5,6 +5,7 @@ import Landig from "../layout/landing/landings";
 import Home from "../pages/home/Home";
 import Prueba from "../pages/prueba/prueba";
 //import Login from "../pages/login/logins"
+import Error404 from "../pages/pages_http/error404";
 import Page from "../pages/landingPage/landingPage";
 import Activation from "../pages/activation/activations";
 import ActivationSent from "../pages/activationSent/activationSents";
@@ -86,5 +87,12 @@ export const routes = [
         private: false,
         layout: Navegacion,
         component: EventsPage,
+    },
+    {
+        path: "/404",
+        exact: true,
+        private: false,
+        layout: Landig,
+        component: Error404,
     }
 ];
