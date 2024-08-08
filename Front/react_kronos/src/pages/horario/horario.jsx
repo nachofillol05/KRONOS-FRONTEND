@@ -1,9 +1,11 @@
 import { React, useState } from 'react';
 import { FloatButton, Drawer, Button } from 'antd';
-import { DownOutlined, UpOutlined, DownloadOutlined, FileAddOutlined, CloseOutlined, AppstoreOutlined, UserSwitchOutlined } from '@ant-design/icons';
+import { InsertRowAboveOutlined,DownOutlined, UpOutlined, DownloadOutlined, HistoryOutlined, CloseOutlined, AppstoreOutlined, UserSwitchOutlined } from '@ant-design/icons';
 /*Drawers*/
+import SelectTeacher from './selectTeacher.jsx';
 import Historial from './historial.jsx';
-import Horas from './horas.jsx';
+import Horas from './infoHour.jsx';
+import SelectCourse from './selectCourses.jsx';
 
 export default function Horario({ handleOpenDrawer, handleCloseDrawer }) {
     const [open, setOpen] = useState(false);
@@ -37,21 +39,27 @@ export default function Horario({ handleOpenDrawer, handleCloseDrawer }) {
                 icon={<UpOutlined />}
             >
                 <FloatButton icon={<DownloadOutlined />} tooltip="Descargar tabla" />
-                <FloatButton icon={<FileAddOutlined />} type='primary' tooltip="Agregar una materia"
+                <FloatButton icon={<UserSwitchOutlined />} type='primary' tooltip="Seleccionar profesores"
                     onClick={() => showDrawer(
-                        <UserSwitchOutlined />
-                        , 'Historial de cambios'
+                        <SelectTeacher />
+                        , 'Seleccione un profesor'
                     )}
                 />
-                <FloatButton icon={<FileAddOutlined />} type='primary' tooltip="Agregar una materia"
+                <FloatButton icon={<HistoryOutlined />} type='primary' tooltip="Historial de cambios"
                     onClick={() => showDrawer(
                         <Historial />
                         , 'Historial de cambios'
                     )}
                 />
-                <FloatButton icon={<AppstoreOutlined />} type='primary' tooltip="Horas catedra"
+                <FloatButton icon={< InsertRowAboveOutlined/>} type='primary' tooltip="Horas catedra"
                     onClick={() => showDrawer(
                         <Horas showDrawer={showDrawer}  />
+                        , 'Horas catedra'
+                    )}
+                />
+                                <FloatButton icon={<AppstoreOutlined />} type='primary' tooltip='Cursos'
+                    onClick={() => showDrawer(
+                        <SelectCourse showDrawer={showDrawer}  />
                         , 'Horas catedra'
                     )}
                 />
