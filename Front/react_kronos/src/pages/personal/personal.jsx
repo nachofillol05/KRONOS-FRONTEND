@@ -334,6 +334,10 @@ export default function Personal() {
     const handleSelectChange = (event) => {
         setSubject(event.target.value);
     };
+    const onChangePersonal = (event) => {   
+        const value = event.target.value;
+        setSearchName(value)
+    }
 
     const onChange = (value) => {
         console.log(`selected ${value}`);
@@ -357,36 +361,25 @@ export default function Personal() {
                     onSearch={onSearch}
                     options={subjects}
                 />
-                <AutoComplete
-                    size='large'
+                <Input
+                    size="large"
                     style={{
-                        width: 200,
+                        width: 300,
                     }}
-                    options={teachers}
-                    placeholder="Buscar personal"
-                    filterOption={(inputValue, option) =>
-                        option.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1
-                    }
-                />
+                    placeholder="Buscar Personal"
+                    onPressEnter={onChangePersonal}
+                />  
             </div>
             <Table
             pagination={false}
             y={500}
-    dataSource={teachers.map(teacher => ({ ...teacher, key: teacher.id }))}
-    columns={columns}
-    loading={loading}
-    tableLayout={'fixed'}
-    filterDropdownOpen={true}
-    filtered={true}
-/>
-
-
-            <Table dataSource={teachers.map(teacher => ({ ...teacher, key: teacher.id }))} columns={columns}
-                loading={loading}
-                tableLayout={'fixed'}
-                filterDropdownOpen={true}
-                filtered={true}
-            />
+            dataSource={teachers.map(teacher => ({ ...teacher, key: teacher.id }))}
+            columns={columns}
+            loading={loading}
+            tableLayout={'fixed'}
+            filterDropdownOpen={true}
+            filtered={true}
+        />
             <FloatButton.Group
                 visibilityHeight={1500}
                 trigger="click"

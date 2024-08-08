@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Select, DatePicker, AutoComplete, Drawer, Card, Button, FloatButton, message, Tooltip, Modal } from "antd";
+import { Select, DatePicker, AutoComplete, Drawer, Card, Button, FloatButton, message, Tooltip, Modal, Input } from "antd";
 import { InfoCircleOutlined, EditOutlined, CheckCircleOutlined, UserAddOutlined, CloseOutlined, DownOutlined, UpOutlined, FolderAddOutlined, ExclamationCircleFilled } from "@ant-design/icons";
 import FormCreateEvent from "./formCreateEvent";
 import moment from 'moment';
@@ -79,14 +79,15 @@ export default function EventsPage() {
   useEffect(() => {
     const url = new URL('http://127.0.0.1:8000/api/events/');
     if (date) {
-        url.searchParams.append('date', date);
+        url.searchParams.append('maxDate', date);
     }
     if (tipoEvento) {
-        url.searchParams.append('TipoEvento', tipoEvento);
+        url.searchParams.append('eventType', tipoEvento);
     }
     if (nombre) {
-        url.searchParams.append('nombre', nombre);
+        url.searchParams.append('name', nombre);
     }
+    console.log('URL:', url.toString());
     fetch(url.toString(), {
         method: "GET",
         headers: {
@@ -116,7 +117,7 @@ export default function EventsPage() {
 
   const showModal = (evento) => {
     Modal.info({
-      title: 'Confirmar adición',
+      title: 'Confirmar adicción al pene',
       content: (
         <p>¿Seguro que quieres adherirte al evento "<b>{evento.name}</b>"?</p>
       ),
@@ -124,6 +125,59 @@ export default function EventsPage() {
       closable: true,
       okText: 'Si, quiero adherirme',
     });
+  };
+  
+  const showModalDesadherir = (evento) => {
+    Modal.info({
+      title: 'cancelar adición',
+      content: (
+        <p>¿Seguro que quieres Salirte del evento "<b>{evento.name}</b>"?</p>
+      ),
+      onOk: () => handleOkDesadherir(evento),
+      closable: true,
+      okText: 'Si, quiero desadherirme',
+    });
+  };
+
+  const handleOkDesadherir = (evento) => {
+      const updatedAffiliatedTeachers = evento.affiliated_teachers.filter(
+        teacherId => teacherId !== profileData.id
+      );
+      const url = new URL('http://127.0.0.1:8000/api/events/' + evento.id + '/');
+      const formattedStartDate = moment(evento.startDate).format('DD/MM/YYYY');
+      const formattedEndDate = moment(evento.endDate).format('DD/MM/YYYY')
+
+      fetch(url, {
+          method: "PUT",
+          headers: {
+              'Content-Type': 'application/json',
+              'Authorization': 'Token ' + localStorage.getItem('token'),
+              'School-ID': 1,
+          },
+          body: JSON.stringify({
+              affiliated_teachers: updatedAffiliatedTeachers,
+              startDate: formattedStartDate,
+              endDate: formattedEndDate,
+              eventType: evento.eventType,
+              school: evento.school,
+              name: evento.name,
+              description: evento.description,
+          }),
+      })
+      .then(response => {
+          if (!response.ok) {
+              return response.json().then((error) => {
+                  throw new Error(`Server responded with ${response.status}: ${JSON.stringify(error)}`);
+              });
+          }
+          return response.json();
+      })
+      .then(data => {
+          console.log('Success:', data);
+      })
+      .catch(error => console.error('Error fetching data:', error));
+  
+      setIsModalOpen(false);
   };
 
   const handleOk = (evento) => {
@@ -250,6 +304,19 @@ export default function EventsPage() {
             break;
     }
   };
+  const onChange = (value) => {
+    setTipoEvento(value);
+  };
+  const onChangeNombre = (event) => {
+    console.log('Value:', event.target.value);
+    setNombre(event.target.value);
+  };
+
+  const onChangeDate = (date, dateString) => {
+    const formattedMaxDate = moment(dateString).format('DD/MM/YYYY');
+    setDate(encodeURIComponent(formattedMaxDate))
+  }
+
   //cambiar event.type_event.name ponerlo entre llaves
   console.log('Eventos:', eventos);
   return (
@@ -262,27 +329,28 @@ export default function EventsPage() {
             width: 200,
           }}
           options={tipos}
+          onChange={onChange}
           showSearch
           placeholder="tipo de evento"
         />
 
         <DatePicker
           size="large"
+          placeholder="Fecha"
           style={{
             width: 200,
           }}
+          onChange={onChangeDate}
           format={dateFormat}
         />
 
-        <AutoComplete
+        <Input
           size="large"
           style={{
             width: 300,
           }}
           placeholder="Buscar Evento"
-          filterOption={(inputValue, option) =>
-            option.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1
-          }
+          onPressEnter={onChangeNombre}
         />
       </div>
       <div
@@ -355,7 +423,7 @@ export default function EventsPage() {
             {mostrar === "Adherirse al evento" ? (
               <UserAddOutlined onClick={() => showModal(event)} />
             ) : (
-              <CheckCircleOutlined style={{ color: "green" }} />
+              <CheckCircleOutlined style={{ color: "green" }} onClick={() => showModalDesadherir(event)} />
             )}
           </Tooltip>
         ),

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './materias.scss';
 import RangeSlider from "../../components/timerangeslider/timerange.jsx";
-import { Table, Select, AutoComplete, FloatButton, Drawer, Form, Button, message } from "antd";
+import { Table, Select, AutoComplete, FloatButton, Drawer, Form, Button, message, Input } from "antd";
 import { FileAddOutlined, DownOutlined, UpOutlined, DownloadOutlined, CloseOutlined } from '@ant-design/icons';
 import FormCreateSubject from './formCreateSubject.jsx';
 
@@ -116,6 +116,7 @@ export default function Materias() {
         if (Subjectname) {
             url.searchParams.append('name', Subjectname);
         }
+        console.log(url.toString());
         fetch(url.toString(), {
             method: "GET",
             headers: {
@@ -201,7 +202,7 @@ export default function Materias() {
             method: "GET",
             headers: {
                 'Authorization': 'Token ' + localStorage.getItem('token'),
-                'School-ID': 2,
+                'School-ID': 1,
             },
         })
             .then(response => {
@@ -233,6 +234,10 @@ export default function Materias() {
         setStart_time(newValues[0]);
         setEnd_time(newValues[1]);
     };    
+    const onChangeMateria = (event) => {   
+        const value = event.target.value;
+        setSubjectname(value);
+    }
 
     return (
         <>
@@ -262,17 +267,13 @@ export default function Materias() {
                     options={cursos}
                 />
 
-                <AutoComplete
-                    size='large'
-                    style={{ width: 300 }}
-                    options={materias.map(materia => ({
-                        value: materia.id,
-                        label: materia.name,
-                    }))}
+                <Input
+                    size="large"
+                    style={{
+                        width: 300,
+                    }}
                     placeholder="Buscar Materia"
-                    filterOption={(inputValue, option) =>
-                        option.label.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1
-                    }
+                    onPressEnter={onChangeMateria}
                 />
             </div>
 
