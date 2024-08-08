@@ -60,8 +60,10 @@ export default function Login() {
             })
             .then(responseData => {
 
-                sessionStorage.setItem('schools',JSON.stringify( responseData)); 
+                sessionStorage.setItem('schools',JSON.stringify(responseData)); 
+                sessionStorage.setItem('actual_school',JSON.stringify(responseData[0].pk));
                 console.log('schools were obtained correctly');
+                console.log('escuela asignada: ',sessionStorage.getItem('actual_school'));
                 console.log(sessionStorage.getItem('schools'));
                 setShowError(false);
                 navigate('/');

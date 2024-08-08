@@ -33,6 +33,8 @@ const App = ({ children }) => {
     const [collapsed, setCollapsed] = useState(false);
     const [dropdownItems, setDropdownItems] = useState([]);
     const location = useLocation();
+    const [schools, setSchools] = useState([]);
+    const [selectedSchool, setSelectedSchool] = useState(null);
 
     useEffect(() => {
         // Recuperar datos del sessionStorage
@@ -68,7 +70,6 @@ const App = ({ children }) => {
                 return '1';
         }
     };
-
     return (
         <Layout style={{ minHeight: '100vh' }}>
             <Sider
@@ -93,7 +94,7 @@ const App = ({ children }) => {
                     >
                         <a onClick={(e) => e.preventDefault()}>
                             <img
-                                src="https://via.placeholder.com/150"
+                                src={''}
                                 alt="logo"
                                 className="logo-img"
                             />

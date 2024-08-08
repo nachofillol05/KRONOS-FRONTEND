@@ -69,7 +69,7 @@ export default function Materias() {
                     method: 'POST',
                     headers: {
                         'Authorization': 'Token ' + localStorage.getItem('token'),
-                        'School-ID': 1,
+                        'School-ID': sessionStorage.getItem('actual_school'),
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify(body),
@@ -117,6 +117,7 @@ export default function Materias() {
             url.searchParams.append('name', Subjectname);
         }
         console.log(url.toString());
+        console.log(localStorage.getItem('actual_school'));
         fetch(url.toString(), {
             method: "GET",
             headers: {
@@ -177,7 +178,7 @@ export default function Materias() {
             method: "GET",
             headers: {
                 'Authorization': 'Token ' + localStorage.getItem('token'),
-                'School-ID': 2,
+                'School-ID': sessionStorage.getItem('actual_school'),
             },
         })
             .then(response => {
@@ -202,7 +203,7 @@ export default function Materias() {
             method: "GET",
             headers: {
                 'Authorization': 'Token ' + localStorage.getItem('token'),
-                'School-ID': 1,
+                'School-ID': sessionStorage.getItem('actual_school'),
             },
         })
             .then(response => {

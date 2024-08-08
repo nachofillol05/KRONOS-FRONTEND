@@ -92,7 +92,7 @@ export default function EventsPage() {
         method: "GET",
         headers: {
             'Authorization': 'Token ' + localStorage.getItem('token'),
-            'School-ID': 1,
+            'School-ID': sessionStorage.getItem('actual_school'),
         },
     })
         .then(response => {
