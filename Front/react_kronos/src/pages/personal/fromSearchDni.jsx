@@ -58,7 +58,7 @@ export default function FormSearchDni({ handleSearch }) {
                 <Button
                     style={{ width: '10%' }}
                     size='large'
-                    onClick={() => handleSearch(formRef)}
+                    onClick={() => handleSearch(formRef, tipoDocumentos)}
                     type="primary"
                     icon={<SearchOutlined />}
                 />

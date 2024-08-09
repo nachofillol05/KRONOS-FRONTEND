@@ -75,6 +75,11 @@ export default function Personal() {
     const [tipoDocumento, setTipoDocumento] = useState(null);
     const [documento, setDocumento] = useState(null);
     const [isModalVisible, setIsModalVisible] = useState(false);
+    const [activeFilter, setActiveFilter] = useState('Profesores');
+
+    const handleFilterChange = (e) => {
+        setActiveFilter(e.target.value);
+    };
 
     const showModal = () => {
         setIsModalVisible(true);
@@ -96,6 +101,18 @@ export default function Personal() {
         showDrawer(
             <FormSearchDni handleSearch={handleSearch} />,
             'Buscar personal'
+        );
+    };
+    const handleVolverInfo = (user) => {
+        showDrawer(
+            <InfoWorker
+                user={user}
+                handleVolver={handleVolver}
+                handleAgregar={handleAgregar}
+                handleContactar={() => handleContactar(user)}
+                
+            />,
+            'Información del Trabajador'
         );
     };
     // agregar como directivo, como preceptor o como profesor
@@ -123,7 +140,7 @@ export default function Personal() {
     const handleContactar = (user) => {
 
         showDrawer(
-            <ContacWorker user={user} handleVolver={handleVolver} />,
+            <ContacWorker user={user} handleVolver={() => handleVolverInfo(user)} />,
             'Contactar personal'
         );
     }
@@ -135,7 +152,7 @@ export default function Personal() {
     };
     */
 
-    const handleSearch = (formRef) => {
+    const handleSearch = (formRef, options) => {
         formRef.current.validateFields()
             .then(values => {
                 fetch('http://localhost:8000/api/create_teacher/', {
@@ -162,9 +179,13 @@ export default function Personal() {
                             );
                         } else if (status === 200) {
                             console.log('dni no encontrado:', body);
+                            console.log('Tipo documentos: ',options);
+                            const selectedItem = options.find(option => option.value === values.tipoDni);
+                            console.log('Selected item:', selectedItem);
                             showDrawer(
                                 <FormCreateWorker
-                                    tipoDocumento={values.tipoDni}
+                                    tipoDocumento={selectedItem.label}
+                                    tipoDocumentoId={selectedItem.value}
                                     documento={values.documento}
                                     handleSubmit={handleSubmit}
                                     handleVolver={handleVolver}
@@ -234,7 +255,7 @@ export default function Personal() {
                     method: 'POST',
                     headers: {
                         'Authorization': 'Token ' + localStorage.getItem('token'),
-                        'School-ID': 1,
+                        'School-ID': sessionStorage.getItem('actual_school'),
                         'Content-Type': 'application/json'
                     },
                     body: body,
@@ -310,8 +331,43 @@ export default function Personal() {
             onClose();
         }
     };
-    /*
-        useEffect(() => {
+    //SOLO PARA DIRECTIVESSSSSSSSSSSSSSSSSSSSSSSSSS
+    useEffect(() => {
+        const schools = JSON.parse(sessionStorage.getItem('schools') || '[]');
+        const actualSchoolPk = parseInt(sessionStorage.getItem('actual_school'), 10);
+        if (schools && actualSchoolPk) {
+            const selectedSchool = schools.find(school => school.pk === actualSchoolPk);
+            console.log('seeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee: ',selectedSchool);
+            console.log('selectedSchool:', selectedSchool.directives);
+            //ANIDAR LOS TEACHERS ENTONCES PUEDO SACAR LOS DATOS DE ACA
+        }
+        }, [sessionStorage.getItem('actual_school')]);
+
+    //SOLO PARA PRECEPTORESSSSSSSSSSSSSSSSSSSSSSSSSSS
+    const onCLickPreceptors = () => {
+        const url = new URL(`http://127.0.0.1:8000/api/schools/${sessionStorage.getItem('actual_school')}/preceptors`);
+        console.log('URL:', url);
+        fetch(url.toString(), {
+            method: 'GET',
+            headers: {
+                'Authorization': 'Token ' + localStorage.getItem('token'),
+                'School-ID': sessionStorage.getItem('actual_school'),
+            },
+        })
+        .then((response) => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then((data) => {
+            console.log('Preceptores:', data);
+            setTeachers(data);
+        })
+    };
+
+    //SOLO PARA TEACHERSSSSSSSSSSSSSSSS
+        const onCLickTeachers = () => {
             const url = new URL('http://127.0.0.1:8000/api/teachers/');
             if (searchName) {
                 url.searchParams.append('search_name', searchName);
@@ -339,7 +395,49 @@ export default function Personal() {
                     setLoading(false);
                 })
                 .catch((error) => console.error('Error fetching data:', error));
-        }, [searchName, subject]);*/
+        };
+
+        useEffect(() => {
+            if (activeFilter === 'Profesores') {
+                // Fetch teachers data when 'Profesores' is selected
+                const url = new URL('http://127.0.0.1:8000/api/teachers/');
+                if (searchName) url.searchParams.append('search_name', searchName);
+                if (subject) url.searchParams.append('subject_id', subject);
+    
+                setLoading(true);
+                fetch(url.toString(), {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': 'Token ' + localStorage.getItem('token'),
+                        'School-ID': sessionStorage.getItem('actual_school'),
+                    },
+                })
+                .then((response) => response.json())
+                .then((data) => {
+                    setTeachers(data);
+                    setLoading(false);
+                })
+                .catch((error) => {
+                    console.error('Error fetching data:', error);
+                    setLoading(false);
+                });
+            } else if (activeFilter === 'Preceptores') {
+                // Fetch preceptors data when 'Preceptores' is selected
+                const url = new URL(`http://127.0.0.1:8000/api/schools/${sessionStorage.getItem('actual_school')}/preceptors`);
+                fetch(url.toString(), {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': 'Token ' + localStorage.getItem('token'),
+                        'School-ID': sessionStorage.getItem('actual_school'),
+                    },
+                })
+                .then((response) => response.json())
+                .then((data) => {
+                    setTeachers(data);
+                })
+                .catch((error) => console.error('Error fetching data:', error));
+            }
+        }, [activeFilter, searchName, subject]);
 
     const
         columns = [
@@ -400,10 +498,10 @@ export default function Personal() {
         <>
             {contextHolder}
             <div className="filtros-container">
-                <Radio.Group size='large' defaultValue="a" buttonStyle="solid">
-                    <Radio.Button value="a">Profesor</Radio.Button>
-                    <Radio.Button value="b">Preceptor</Radio.Button>
-                    <Radio.Button value="c">Directivo</Radio.Button>
+                <Radio.Group size='large' defaultValue="Profesores" buttonStyle="solid" onChange={handleFilterChange}>
+                    <Radio.Button value="Profesores" >Profesor</Radio.Button>
+                    <Radio.Button value="Preceptores" >Preceptor</Radio.Button>
+                    <Radio.Button value="Directivos">Directivo</Radio.Button>
                 </Radio.Group>
                 <Select
                     size='large'

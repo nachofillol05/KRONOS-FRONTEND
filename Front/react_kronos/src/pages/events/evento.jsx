@@ -5,7 +5,7 @@ import FormCreateEvent from "./formCreateEvent";
 import moment from 'moment';
 import InfoEvent from "./infoEvent";
 import "./events.scss";
-const dateFormat = 'YYYY/MM/DD';
+const dateFormat = 'DD/MM/YYYY';
 
 
 export default function EventsPage() {
@@ -433,7 +433,7 @@ export default function EventsPage() {
         <h2 style={{ color: "#1890ff" }}>{event.name}</h2>
         <h3>{event.type_event}</h3>
         <p>
-          {event.startDate} - {event.endDate}
+          {moment(event.startDate).format('DD/MM/YYYY')} - {moment(event.endDate).format('DD/MM/YYYY')}
           <p>{eventStatus}</p>
         </p>
       </div>
