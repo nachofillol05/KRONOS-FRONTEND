@@ -1,9 +1,10 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { SearchOutlined, ArrowRightOutlined } from '@ant-design/icons';
 import { Button, Input, Space, Table, Flex, Tooltip } from 'antd';
 
 
-const data = [
+
+/*const data = [
     { key: '1', first_name: 'John', last_name: 'Doe', document: '12345678', subject: 'Matemáticas' },
     { key: '2', first_name: 'Jane', last_name: 'Smith', document: '87654321', subject: 'Historia' },
     { key: '3', first_name: 'Alice', last_name: 'Johnson', document: '11223344', subject: 'Ciencias' },
@@ -55,12 +56,35 @@ const data = [
     { key: '49', first_name: 'Donald', last_name: 'Sanchez', document: '44004433', subject: 'Matemáticas' },
     { key: '50', first_name: 'Nancy', last_name: 'Morris', document: '33003322', subject: 'Historia' },
 ];
+*/
 
 export default function SelectTeacher() {
     const [searchText, setSearchText] = useState('');
     const [searchedColumn, setSearchedColumn] = useState('');
     const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+    const [teachers, setTeachers] = useState([]);
     const searchInput = useRef(null);
+    useEffect(() => {
+        fetch('http://127.0.0.1:8000/api/teachers/', {
+            method: "GET",
+            headers: {
+                'Authorization': 'Token ' + localStorage.getItem('token'),
+                'School-ID': sessionStorage.getItem('actual_school'),
+            },
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                setTeachers(data);
+                console.log(data);
+            })
+            .catch(error => console.error('Error fetching data:', error));
+    }, []);
+
 
     const handleSearch = (selectedKeys, confirm, dataIndex) => {
         confirm();
@@ -175,18 +199,7 @@ export default function SelectTeacher() {
             ...getColumnSearchProps('last_name')
         },
         { title: 'Documento', dataIndex: 'document', key: 'Documento' },
-        {
-            title: 'Materia',
-            dataIndex: 'subject',
-            key: 'Subject',
-            filters: [
-                { text: 'Matemáticas', value: 'Matemáticas' },
-                { text: 'Historia', value: 'Historia' },
-                { text: 'Ciencias', value: 'Ciencias' },
-                { text: 'Geografía', value: 'Geografía' },
-            ],
-            onFilter: (value, record) => record.subject.includes(value)
-        }
+        { title: 'Email', dataIndex: 'email', key: 'email' },
     ];
 
     return (
@@ -195,7 +208,7 @@ export default function SelectTeacher() {
                 bordered
                 rowSelection={rowSelection}
                 columns={columns}
-                dataSource={data}
+                dataSource={teachers}
                 pagination={false}
                 showSorterTooltip={false}
                 scroll={{ y: 450 }}
