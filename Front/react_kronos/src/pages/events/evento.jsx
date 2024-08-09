@@ -31,7 +31,7 @@ export default function EventsPage() {
         method: "GET",
         headers: {
             'Authorization': 'Token ' + localStorage.getItem('token'),
-            'School-ID': 1,
+            'School-ID': sessionStorage.getItem('actual_school'),
         },
     })
         .then((response) => {
@@ -57,7 +57,7 @@ export default function EventsPage() {
         method: "GET",
         headers: {
             'Authorization': 'Token ' + localStorage.getItem('token'),
-            'School-ID': 1,
+            'School-ID': sessionStorage.getItem('actual_school'),
         },
     })
         .then(response => {
@@ -152,7 +152,7 @@ export default function EventsPage() {
           headers: {
               'Content-Type': 'application/json',
               'Authorization': 'Token ' + localStorage.getItem('token'),
-              'School-ID': 1,
+              'School-ID': sessionStorage.getItem('actual_school'),
           },
           body: JSON.stringify({
               affiliated_teachers: updatedAffiliatedTeachers,
@@ -191,7 +191,7 @@ export default function EventsPage() {
           headers: {
               'Content-Type': 'application/json',
               'Authorization': 'Token ' + localStorage.getItem('token'),
-              'School-ID': 1,
+              'School-ID': sessionStorage.getItem('actual_school'),
           },
           body: JSON.stringify({
               affiliated_teachers: updatedAffiliatedTeachers,
@@ -255,7 +255,7 @@ export default function EventsPage() {
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': 'Token ' + localStorage.getItem('token'),
-                'School-ID': 1,
+                'School-ID':sessionStorage.getItem('actual_school'),
             },
             body: JSON.stringify(body),
         })

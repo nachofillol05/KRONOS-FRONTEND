@@ -7,10 +7,58 @@ import InfoWorker from './infoWorker';
 import FormCreateWorker from './formCreateWorker';
 import ContacWorker from './contactWorker';
 
+const initialTeachers = [
+    {
+        key: '1',
+        first_name: 'Juan',
+        last_name: 'Pérez',
+        document: '12345678',
+        gender: 'Masculino',
+        email: 'juan.perez@example.com',
+        availability: '20',
+    },
+    {
+        key: '2',
+        first_name: 'María',
+        last_name: 'Gómez',
+        document: '87654321',
+        gender: 'Femenino',
+        email: 'maria.gomez@example.com',
+        availability: '30',
+    },
+    {
+        key: '3',
+        first_name: 'Carlos',
+        last_name: 'López',
+        document: '23456789',
+        gender: 'Masculino',
+        email: 'carlos.lopez@example.com',
+        availability: '25',
+    },
+    {
+        key: '4',
+        first_name: 'Ana',
+        last_name: 'Martínez',
+        document: '98765432',
+        gender: 'Femenino',
+        email: 'ana.martinez@example.com',
+        availability: '35',
+    },
+    {
+        key: '5',
+        first_name: 'Pedro',
+        last_name: 'García',
+        document: '34567890',
+        gender: 'Masculino',
+        email: 'pedro.garcia@example.com',
+        availability: '40',
+    },
+];
+
 
 
 export default function Personal() {
-    const [teachers, setTeachers] = useState([]);
+    const [teachers, setTeachers] = useState(initialTeachers);
     const [subjects, setSubjects] = useState([]);
     const [activeButton, setActiveButton] = useState('Profesores');
     const [searchName, setSearchName] = useState('');
@@ -31,7 +79,7 @@ export default function Personal() {
     const showModal = () => {
         setIsModalVisible(true);
     };
-    
+
 
     const handleOk = () => {
         setIsModalVisible(false);
@@ -62,7 +110,7 @@ export default function Personal() {
                     // personal: values.documento,
                 }),
             });*/
-            
+
             console.log('Profesor');
         } else if (e.key === "Preceptor") {
             console.log('Preceptor');
@@ -71,11 +119,11 @@ export default function Personal() {
             showModal();
         }
     };
-    
+
     const handleContactar = (user) => {
 
         showDrawer(
-            <ContacWorker user={user} handleVolver={handleVolver} />, 
+            <ContacWorker user={user} handleVolver={handleVolver} />,
             'Contactar personal'
         );
     }
@@ -99,41 +147,41 @@ export default function Personal() {
                         document: values.documento,
                     }),
                 })
-                .then(response => response.json().then(data => ({ status: response.status, body: data })))
-                .then(({ status, body }) => {
-                    if (status === 400) { 
-                        console.log('Dni encontrado:', body);
-                        showDrawer(
-                            <InfoWorker 
-                                user={body.user}
-                                handleVolver={handleVolver} 
-                                handleAgregar={handleAgregar} 
-                                handleContactar={() => handleContactar(body.user)} 
-                            />,
-                            'Información del Trabajador'
-                        );
-                    } else if (status === 200) {
-                        console.log('dni no encontrado:', body);
-                        showDrawer(
-                            <FormCreateWorker 
-                                tipoDocumento={values.tipoDni} 
-                                documento={values.documento} 
-                                handleSubmit={handleSubmit} 
-                                handleVolver={handleVolver} 
-                            />,
-                            'Agregar Personal'
-                        );
-                    }
-                })
-                .catch(error => {
-                    console.error('Error al realizar la búsqueda:', error);
-                });
+                    .then(response => response.json().then(data => ({ status: response.status, body: data })))
+                    .then(({ status, body }) => {
+                        if (status === 400) {
+                            console.log('Dni encontrado:', body);
+                            showDrawer(
+                                <InfoWorker
+                                    user={body.user}
+                                    handleVolver={handleVolver}
+                                    handleAgregar={handleAgregar}
+                                    handleContactar={() => handleContactar(body.user)}
+                                />,
+                                'Información del Trabajador'
+                            );
+                        } else if (status === 200) {
+                            console.log('dni no encontrado:', body);
+                            showDrawer(
+                                <FormCreateWorker
+                                    tipoDocumento={values.tipoDni}
+                                    documento={values.documento}
+                                    handleSubmit={handleSubmit}
+                                    handleVolver={handleVolver}
+                                />,
+                                'Agregar Personal'
+                            );
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error al realizar la búsqueda:', error);
+                    });
             })
             .catch(info => {
                 console.log('Validate Failed:', info);
             });
     };
-    
+
 
 
     const Buscar = () => {
@@ -153,6 +201,7 @@ export default function Personal() {
     }, [messageConfig]);
 
     const showDrawer = (content, title) => {
+        console.log('Content:', content, ' Title:', title);
         setDrawerTitle(title);
         setDrawerContent(content);
         setOpen(true);
@@ -163,7 +212,7 @@ export default function Personal() {
         setDrawerContent(null);
         form.resetFields();
     };
-//AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAGREGAR QUE CREE UN TEACHER CON LA SCHOOL
+    //AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAGREGAR QUE CREE UN TEACHER CON LA SCHOOL
     const handleSubmit = (form) => {
         form.validateFields()
             .then(values => {
@@ -179,7 +228,7 @@ export default function Personal() {
                         phone: values.telefono,
                         username: values.documento,
                     });
-                    console.log('Body: ', body);
+                console.log('Body: ', body);
                 console.log('Formulario completado:', body);
                 fetch('http://localhost:8000/api/Register/', {
                     method: 'POST',
@@ -190,14 +239,14 @@ export default function Personal() {
                     },
                     body: body,
                 })
-                .then(response => {
-                    if (!response.ok) {
-                        console.log('Error:', response);
-                        throw new Error('Error al crear el personal');
-                    }
-                    console.log('Response:', response);
-                    return response.json();
-                })
+                    .then(response => {
+                        if (!response.ok) {
+                            console.log('Error:', response);
+                            throw new Error('Error al crear el personal');
+                        }
+                        console.log('Response:', response);
+                        return response.json();
+                    })
                 setMessageConfig({ type: 'success', content: 'Personal creado con exito' });
                 onClose();
             })
@@ -261,45 +310,46 @@ export default function Personal() {
             onClose();
         }
     };
-
-    useEffect(() => {
-        const url = new URL('http://127.0.0.1:8000/api/teachers/');
-        if (searchName) {
-            url.searchParams.append('search_name', searchName);
-        }
-        if (subject) {
-            url.searchParams.append('subject_id', subject);
-        }
-        fetch(url.toString(), {
-            method: 'GET',
-            headers: {
-                'Authorization': 'Token ' + localStorage.getItem('token'),
-                'School-ID': sessionStorage.getItem('actual_school'),
-            },
-        })
-            .then((response) => {
-                if (!response.ok) {
-                    setTeachers([]);
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
+    /*
+        useEffect(() => {
+            const url = new URL('http://127.0.0.1:8000/api/teachers/');
+            if (searchName) {
+                url.searchParams.append('search_name', searchName);
+            }
+            if (subject) {
+                url.searchParams.append('subject_id', subject);
+            }
+            fetch(url.toString(), {
+                method: 'GET',
+                headers: {
+                    'Authorization': 'Token ' + localStorage.getItem('token'),
+                    'School-ID': sessionStorage.getItem('actual_school'),
+                },
             })
-            .then((data) => {
-                setTeachers(data);
-                console.log(data)
-                setLoading(false);
-            })
-            .catch((error) => console.error('Error fetching data:', error));
-    }, [searchName, subject]);
+                .then((response) => {
+                    if (!response.ok) {
+                        setTeachers([]);
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then((data) => {
+                    setTeachers(data);
+                    console.log(data)
+                    setLoading(false);
+                })
+                .catch((error) => console.error('Error fetching data:', error));
+        }, [searchName, subject]);*/
 
-    const columns = [
-        { title: 'Nombre', dataIndex: 'first_name', key: 'Nombre' },
-        { title: 'Apellido', dataIndex: 'last_name', key: 'Apellido' },
-        { title: 'Documento', dataIndex: 'document', key: 'Documento' },
-        { title: 'Genero', dataIndex: 'gender', key: 'Genero' },
-        { title: 'Email', dataIndex: 'email', key: 'Email' },
-        { title: 'Horas por semana', dataIndex: 'availability', key: 'Horaspsemana' },
-    ];
+    const
+        columns = [
+            { title: 'Nombre', dataIndex: 'first_name', key: 'Nombre' },
+            { title: 'Apellido', dataIndex: 'last_name', key: 'Apellido' },
+            { title: 'Documento', dataIndex: 'document', key: 'Documento' },
+            { title: 'Genero', dataIndex: 'gender', key: 'Genero' },
+            { title: 'Email', dataIndex: 'email', key: 'Email' },
+            { title: 'Horas por semana', dataIndex: 'availability', key: 'Horaspsemana' },
+        ];
 
     useEffect(() => {
         fetch('http://127.0.0.1:8000/api/subjects/', {
@@ -308,7 +358,7 @@ export default function Personal() {
                 'Authorization': 'Token ' + localStorage.getItem('token'),
                 'School-ID': sessionStorage.getItem('actual_school'),
             },
-        })  
+        })
             .then((response) => {
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
@@ -336,7 +386,7 @@ export default function Personal() {
     const handleSelectChange = (event) => {
         setSubject(event.target.value);
     };
-    const onChangePersonal = (event) => {   
+    const onChangePersonal = (event) => {
         const value = event.target.value;
         setSearchName(value)
     }
@@ -370,18 +420,18 @@ export default function Personal() {
                     }}
                     placeholder="Buscar Personal"
                     onPressEnter={onChangePersonal}
-                />  
+                />
             </div>
             <Table
-            pagination={false}
-            y={500}
-            dataSource={teachers.map(teacher => ({ ...teacher, key: teacher.id }))}
-            columns={columns}
-            loading={loading}
-            tableLayout={'fixed'}
-            filterDropdownOpen={true}
-            filtered={true}
-        />
+                pagination={false}
+                y={500}
+                dataSource={teachers}
+                columns={columns}
+                loading={loading}
+                tableLayout={'fixed'}
+                filterDropdownOpen={true}
+                filtered={true}
+            />
             <FloatButton.Group
                 visibilityHeight={1500}
                 trigger="click"
@@ -399,7 +449,7 @@ export default function Personal() {
             </FloatButton.Group>
 
             <Drawer
-            
+
                 destroyOnClose={false}
                 width={600}
                 title={drawerTitle}
@@ -410,9 +460,7 @@ export default function Personal() {
                     <Button onClick={onClose} size='large' type='tertiary' icon={<CloseOutlined />} />
                 }
             >
-                <div style={{ width: '100%', height: '100%' }}>
-                    {drawerContent}
-                </div>
+                <div style={{ width: "100%", height: "100%" }}>{drawerContent}</div>
             </Drawer>
             <Modal visible={isModalVisible} onOk={handleOk} onCancel={handleCancel} okText="Sí" cancelText="No">
                 <h1>Advertencia</h1>
