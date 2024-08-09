@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import './materias.scss';
 import RangeSlider from "../../components/timerangeslider/timerange.jsx";
-import { Table, Select, AutoComplete, FloatButton, Drawer, Form, Button, message, Input } from "antd";
+import { Table, Select, AutoComplete, FloatButton, Drawer, Form, Button, message, Modal, Flex } from "antd";
 import { FileAddOutlined, DownOutlined, UpOutlined, DownloadOutlined, CloseOutlined } from '@ant-design/icons';
 import FormCreateSubject from './formCreateSubject.jsx';
 
 export default function Materias() {
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [record, setRecord] = useState([]);
     const [materias, setMaterias] = useState([]);
     const [teachers, setTeachers] = useState([]);
     const [teacher, setTeacher] = useState('');
@@ -19,10 +21,14 @@ export default function Materias() {
     const [value, setValue] = useState('');
     const [form] = Form.useForm();
     const [cursos, setCursos] = useState([]);
-
-
     const [messageApi, contextHolder] = message.useMessage();
     const [messageConfig, setMessageConfig] = useState({ type: '', content: '' });
+
+    const showModal = (record) => {
+        setRecord(record)
+        setIsModalOpen(true)
+
+    };
 
     useEffect(() => {
         if (messageConfig.type) {
@@ -73,7 +79,7 @@ export default function Materias() {
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify(body),
-                    
+
                 })
                 onClose();
             })
@@ -144,7 +150,7 @@ export default function Materias() {
         { title: 'Abreviacion', dataIndex: 'abbreviation', key: 'abbreviation' },
         { title: 'Curso', dataIndex: 'course', key: 'course' },
         { title: 'Horas catedra semanales', dataIndex: 'weeklyHours', key: 'weeklyHours' },
-        { title: 'Color',dataIndex: 'color',key: 'color',render: (text) => (<div style={{ width: '24px', height: '24px', backgroundColor: text, borderRadius: '4px' }} />),},
+        { title: 'Color', dataIndex: 'color', key: 'color', render: (text) => (<div style={{ width: '24px', height: '24px', backgroundColor: text, borderRadius: '4px' }} />), },
         { title: 'Descripcion', dataIndex: 'description', key: 'description' }
     ];
 
@@ -234,8 +240,8 @@ export default function Materias() {
     const handleFinalRangeChange = (newValues) => {
         setStart_time(newValues[0]);
         setEnd_time(newValues[1]);
-    };    
-    const onChangeMateria = (event) => {   
+    };
+    const onChangeMateria = (event) => {
         const value = event.target.value;
         setSubjectname(value);
     }
@@ -270,7 +276,7 @@ export default function Materias() {
                     allowClear
                 />
 
-                <Input
+                <AutoComplete
                     size="large"
                     style={{
                         width: 300,
@@ -281,14 +287,18 @@ export default function Materias() {
                 />
             </div>
 
-                <Table
-                    pagination={false}
-                    loading={loading}
-                    dataSource={materias}
-                    columns={columns}
-                    tableLayout="fixed"
-                    scroll={{  y: 550 }}
-                />
+            <Table
+                onRow={(record) => ({
+                    onClick: () => showModal(record),
+                })}
+
+                pagination={false}
+                loading={loading}
+                dataSource={materias}
+                columns={columns}
+                tableLayout="fixed"
+                scroll={{ y: 550 }}
+            />
 
 
             <FloatButton.Group
@@ -321,6 +331,29 @@ export default function Materias() {
                     {drawerContent}
                 </div>
             </Drawer>
+            <Modal 
+            width={400}
+            title="Asigna profesor a la materia" 
+            open={isModalOpen} 
+            onOk={() => setIsModalOpen(false)} 
+            onCancel={() => setIsModalOpen(false)}>
+                <Flex style={{ height: '120px' }} vertical gap={10} justify='space-evenly'>
+
+                    <p>La materia <b>{record.name} </b> - <b style={{ textTransform: 'uppercase' }}>{record.abbreviation}</b>  del curso   <b>{record.course}</b></p>
+
+                    <Flex gap={10} align='center'>
+                        <p>Profesor :</p>
+                        <Select
+                            size='large'
+                            style={{ flexGrow: 1 }}
+                            showSearch
+                            placeholder="Buscar profesor"
+                            options={teachers}
+                        />
+
+                    </Flex>
+                </Flex>
+            </Modal>
         </>
     );
 }
