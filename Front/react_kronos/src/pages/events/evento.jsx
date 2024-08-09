@@ -255,7 +255,7 @@ export default function EventsPage() {
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': 'Token ' + localStorage.getItem('token'),
-                'School-ID': sessionStorage.getItem('actual_school'),
+                'School-ID': 1,
             },
             body: JSON.stringify(body),
         })
