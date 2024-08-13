@@ -1,9 +1,13 @@
 import Navegacion from "../layout/navegacion/navegaciones";
 import Landig from "../layout/landing/landings";
+import LayoutDefault from "../layouts/LayoutDefault.js";
+import LayoutLogin from "../layouts/LayoutSignin";
 
 /*Pages*/
 import Home from "../pages/home/Home";
 import Prueba from "../pages/prueba/prueba";
+import HomeTemplate from "../pages/HomeTemplate/Home.js";
+import LoginTemplate from "../pages/LoginTemplate/Login.js";
 //import Login from "../pages/login/logins"
 import Page from "../pages/landingPage/landingPage";
 import Activation from "../pages/activation/activations";
@@ -62,21 +66,21 @@ export const routes = [
     {
         path: "/materias",
         exact: true,
-        private: true,
+        private: false,
         layout: Navegacion,
         component: Materias
     },
     {
         path: "/personal",
         exact: true,
-        private: true,
+        private: false,
         layout: Navegacion,
         component: Personal
     },
     {
         path: "/horarios",
         exact: true,
-        private: true,
+        private: false,
         layout: Navegacion,
         component: Horario
     },
@@ -86,5 +90,19 @@ export const routes = [
         private: false,
         layout: Navegacion,
         component: EventsPage,
+    },
+    {
+        path: "/hometemplate",
+        exact: true,
+        private: false,
+        layout: LayoutDefault,
+        component: HomeTemplate,
+    },
+    {
+        path: "/logintemplate",
+        exact: true,
+        private: false,
+        layout: LayoutLogin,
+        component: LoginTemplate,
     }
 ];

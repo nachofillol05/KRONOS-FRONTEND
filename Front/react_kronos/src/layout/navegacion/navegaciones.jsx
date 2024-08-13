@@ -58,14 +58,24 @@ const App = ({ children }) => {
                 onCollapse={(value) => setCollapsed(value)}
                 width={200}
                 collapsedWidth={50}
+                breakpoint="lg" // Ajuste del punto de ruptura
+                style={{
+                    overflow: 'auto',
+                    height: '100vh',
+                    position: 'fixed',
+                    left: 0,
+                    top: 0,
+                    bottom: 0,
+                    zIndex: 1,
+                }}
             >
                 <div className={`logo ${collapsed ? 'collapsed' : ''}`}>
                     <img src="https://via.placeholder.com/150" alt="logo" className="logo-img" />
                 </div>
                 <Menu theme="dark" defaultSelectedKeys={[getSelectedKey()]} mode="inline" items={items} />
             </Sider>
-            <Layout>
-                <Content>
+            <Layout style={{ marginLeft: collapsed ? 50 : 200 }}>
+            <Content style={{ padding: '0 24px', minHeight: 280 }}>
                     {children}
                 </Content>
             </Layout>
@@ -74,3 +84,4 @@ const App = ({ children }) => {
 };
 
 export default App;
+

@@ -1,12 +1,6 @@
 @import "../../scss/index.scss";
 
-section {
-    position: relative;
-    background-color: $color-principal;
-    width: calc(100% - 275px);
-    height: 100vh;
-    border-radius: 25px 0 0 25px;
-}
+
 
 .logo {
     text-align: center;
@@ -29,3 +23,20 @@ section {
     margin-bottom: 10px;
     transition: opacity 0.3s ease;
 }
+
+.ant-layout-sider {
+    .ant-layout-sider-trigger {
+        display: none; // Oculta el trigger en pantallas pequeñas por defecto
+    }
+}
+
+@media (min-width: 992px) { // Ajusta según el breakpoint deseado
+    .ant-layout-sider {
+        .ant-layout-sider-trigger {
+            display: block; // Muestra el trigger en pantallas grandes
+        }
+    }
+}
+
+
+
