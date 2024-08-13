@@ -41,7 +41,6 @@ export default function EventsPage() {
             return response.json();
         })
         .then((data) => {
-            console.log(data);
             setProfileData(data);
         })
         .catch((error) => console.error('Error fetching data:', error));
@@ -83,7 +82,6 @@ export default function EventsPage() {
     if (nombre) {
         url.searchParams.append('name', nombre);
     }
-    console.log('URL:', url.toString());
     fetch(url.toString(), {
         method: "GET",
         headers: {
@@ -99,7 +97,6 @@ export default function EventsPage() {
         })
         .then(data => {
             setEventos(data);
-            console.log('Data:', data);
         })
         .catch(error => console.error('Error fetching data:', error));
   }, [date, nombre, tipoEvento]);
@@ -169,7 +166,6 @@ export default function EventsPage() {
           return response.json();
       })
       .then(data => {
-          console.log('Success:', data);
       })
       .catch(error => console.error('Error fetching data:', error));
   
@@ -208,7 +204,6 @@ export default function EventsPage() {
           return response.json();
       })
       .then(data => {
-          console.log('Success:', data);
       })
       .catch(error => console.error('Error fetching data:', error));
   
@@ -244,7 +239,6 @@ export default function EventsPage() {
             eventType: values.tipoEvento,
             school: 1,
         };
-        console.log('Body:', body);
         fetch('http://127.0.0.1:8000/api/events/', {
             method: 'POST',
             headers: {
@@ -303,7 +297,6 @@ export default function EventsPage() {
     setTipoEvento(value);
   };
   const onChangeNombre = (event) => {
-    console.log('Value:', event.target.value);
     setNombre(event.target.value);
   };
 
@@ -313,7 +306,6 @@ export default function EventsPage() {
   }
 
   //cambiar event.type_event.name ponerlo entre llaves
-  console.log('Eventos:', eventos);
   return (
     <>
       {contextHolder}
@@ -379,19 +371,15 @@ export default function EventsPage() {
   const isUserAffiliated = event.affiliated_teachers.includes(profileData.id);
   const mostrar = (() => {
     if (eventStatus === "Pendiente" && !isUserAffiliated) {
-      console.log("Adherirse al evento")
       return "Adherirse al evento";
     } 
     if (eventStatus === "Pendiente" && isUserAffiliated) {
-      console.log("Ya estás adherido")
       return "Ya estás adherido";
     } 
     if ((eventStatus === "Finalizado" || eventStatus === "En curso") && !isUserAffiliated) {
-      console.log("")
       return "";
     }
     if ((eventStatus === "Finalizado" || eventStatus === "En curso") && isUserAffiliated) {
-      console.log("Ya estás adherido")
       return "Ya estás adherido";
     }
   })();
