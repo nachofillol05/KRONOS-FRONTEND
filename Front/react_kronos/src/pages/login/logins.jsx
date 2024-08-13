@@ -59,6 +59,7 @@ export default function Login() {
                 return response.json();
             })
             .then(responseData => {
+                console.log('schoolssssssssssssssssssssssssssss:',responseData);
 
                 sessionStorage.setItem('schools',JSON.stringify(responseData)); 
                 sessionStorage.setItem('actual_school',JSON.stringify(responseData[0].pk));

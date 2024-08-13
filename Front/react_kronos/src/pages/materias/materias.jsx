@@ -256,6 +256,7 @@ export default function Materias() {
                     onChange={onChange}
                     onSearch={onSearch}
                     options={teachers}
+                    allowClear
                 />
 
                 <Select
@@ -266,6 +267,7 @@ export default function Materias() {
                     onChange={onChange}
                     onSearch={onSearch}
                     options={cursos}
+                    allowClear
                 />
 
                 <Input
@@ -275,6 +277,7 @@ export default function Materias() {
                     }}
                     placeholder="Buscar Materia"
                     onPressEnter={onChangeMateria}
+                    allowClear
                 />
             </div>
 

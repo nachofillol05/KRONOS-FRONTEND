@@ -58,7 +58,7 @@ const initialTeachers = [
 
 
 export default function Personal() {
-    const [teachers, setTeachers] = useState(initialTeachers);
+    const [teachers, setTeachers] = useState([]);
     const [subjects, setSubjects] = useState([]);
     const [activeButton, setActiveButton] = useState('Profesores');
     const [searchName, setSearchName] = useState('');
@@ -367,39 +367,8 @@ export default function Personal() {
     };
 
     //SOLO PARA TEACHERSSSSSSSSSSSSSSSS
-        const onCLickTeachers = () => {
-            const url = new URL('http://127.0.0.1:8000/api/teachers/');
-            if (searchName) {
-                url.searchParams.append('search_name', searchName);
-            }
-            if (subject) {
-                url.searchParams.append('subject_id', subject);
-            }
-            fetch(url.toString(), {
-                method: 'GET',
-                headers: {
-                    'Authorization': 'Token ' + localStorage.getItem('token'),
-                    'School-ID': sessionStorage.getItem('actual_school'),
-                },
-            })
-                .then((response) => {
-                    if (!response.ok) {
-                        setTeachers([]);
-                        throw new Error('Network response was not ok');
-                    }
-                    return response.json();
-                })
-                .then((data) => {
-                    setTeachers(data);
-                    console.log(data)
-                    setLoading(false);
-                })
-                .catch((error) => console.error('Error fetching data:', error));
-        };
-
         useEffect(() => {
             if (activeFilter === 'Profesores') {
-                // Fetch teachers data when 'Profesores' is selected
                 const url = new URL('http://127.0.0.1:8000/api/teachers/');
                 if (searchName) url.searchParams.append('search_name', searchName);
                 if (subject) url.searchParams.append('subject_id', subject);
@@ -412,7 +381,13 @@ export default function Personal() {
                         'School-ID': sessionStorage.getItem('actual_school'),
                     },
                 })
-                .then((response) => response.json())
+                .then((response) => {
+                    if (!response.ok) {
+                        console.log('Network response was not ok');
+                        return null;
+                    }
+                    return response.json();
+                })
                 .then((data) => {
                     setTeachers(data);
                     setLoading(false);
@@ -510,6 +485,7 @@ export default function Personal() {
                     onChange={onChange}
                     onSearch={onSearch}
                     options={subjects}
+                    allowClear
                 />
                 <Input
                     size="large"
@@ -518,6 +494,7 @@ export default function Personal() {
                     }}
                     placeholder="Buscar Personal"
                     onPressEnter={onChangePersonal}
+                    allowClear
                 />
             </div>
             <Table

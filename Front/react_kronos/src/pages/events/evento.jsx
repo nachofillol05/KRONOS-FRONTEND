@@ -47,11 +47,6 @@ export default function EventsPage() {
         .catch((error) => console.error('Error fetching data:', error));
   }, []);
 
- 
-  
-
-
-
   useEffect(() => {
     fetch('http://127.0.0.1:8000/api/typeevent/', {
         method: "GET",
@@ -332,6 +327,7 @@ export default function EventsPage() {
           onChange={onChange}
           showSearch
           placeholder="tipo de evento"
+          allowClear
         />
 
         <DatePicker
@@ -342,6 +338,7 @@ export default function EventsPage() {
           }}
           onChange={onChangeDate}
           format={dateFormat}
+          allowClear
         />
 
         <Input
@@ -351,6 +348,7 @@ export default function EventsPage() {
           }}
           placeholder="Buscar Evento"
           onPressEnter={onChangeNombre}
+          allowClear
         />
       </div>
       <div

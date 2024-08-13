@@ -244,6 +244,7 @@ export default function Horario({ handleOpenDrawer, handleCloseDrawer }) {
                                                 onMouseLeave={handleMouseLeave}
                                             >
                                                 <input
+                                                    className='inputHorarios'
                                                     type="text"
                                                     value={value}
                                                     style={{ backgroundColor: color }}

@@ -56,6 +56,7 @@ const App = ({ children }) => {
     const handleMenuItemClick = ({ key }) => {
         sessionStorage.setItem('actual_school', key);
         console.log(sessionStorage.getItem('actual_school'))
+        window.location.reload();
     };
 
     const getSelectedKey = () => {
