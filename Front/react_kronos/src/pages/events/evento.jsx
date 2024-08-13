@@ -47,6 +47,7 @@ export default function EventsPage() {
         .catch((error) => console.error('Error fetching data:', error));
   }, []);
 
+
   useEffect(() => {
     fetch('http://127.0.0.1:8000/api/typeevent/', {
         method: "GET",
@@ -213,7 +214,6 @@ export default function EventsPage() {
   
       setIsModalOpen(false);
   };
- 
 
   const handleCancel = () => {
     setIsModalOpen(false);
