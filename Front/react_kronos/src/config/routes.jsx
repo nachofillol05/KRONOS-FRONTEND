@@ -7,7 +7,8 @@ import LayoutLogin from "../layouts/LayoutSignin";
 import Home from "../pages/home/Home";
 import Prueba from "../pages/prueba/prueba";
 import HomeTemplate from "../pages/HomeTemplate/Home.js";
-import LoginTemplate from "../pages/LoginTemplate/Login.js";
+import LoginTemplate from "../pages/LoginTemplate/Login.js"; 
+import MailVerificado from "../pages/mailverificado/mailverificado.jsx"
 //import Login from "../pages/login/logins"
 import Page from "../pages/landingPage/landingPage";
 import Activation from "../pages/activation/activations";
@@ -104,5 +105,12 @@ export const routes = [
         private: false,
         layout: LayoutLogin,
         component: LoginTemplate,
+    },
+    {
+        path: "/mailverificado",
+        exact: true,
+        private: false,
+        layout: Landig,
+        component: MailVerificado,
     }
 ];
