@@ -14,7 +14,7 @@ export default function FormCreateEvent({ handleSubmit, handleVolver }) {
             method: "GET",
             headers: {
                 'Authorization': 'Token ' + localStorage.getItem('token'),
-                'School-ID': 1,
+                'School-ID': sessionStorage.getItem('actual_school'),
             },
         })
         .then(response => {

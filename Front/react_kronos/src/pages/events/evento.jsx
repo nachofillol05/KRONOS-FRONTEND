@@ -173,6 +173,7 @@ export default function EventsPage() {
   };
 
   const handleOk = (evento) => {
+    //VISTAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA DE AÑADIRSE AAAAAAAAAAAAAAAAAAAAAL EEEEEEEEEEEEVEEEEEEEENTO
       const updatedAffiliatedTeachers = [...evento.affiliated_teachers, profileData.id];
       const url = new URL('http://127.0.0.1:8000/api/events/' + evento.id + '/');
       const formattedStartDate = moment(evento.startDate).format('DD/MM/YYYY');
@@ -190,6 +191,7 @@ export default function EventsPage() {
               startDate: formattedStartDate,
               endDate: formattedEndDate,
               eventType: evento.eventType,
+              roles: evento.roles,
               school: evento.school,
               name: evento.name,
               description: evento.description,
@@ -204,6 +206,7 @@ export default function EventsPage() {
           return response.json();
       })
       .then(data => {
+        console.log("exito?",data);
       })
       .catch(error => console.error('Error fetching data:', error));
   
@@ -229,6 +232,7 @@ export default function EventsPage() {
 
   const handleSubmit = (form) => {
     //Mostrar un alert de que se creoooooooooooooooooooooooooooooooooooooooooooooooooooo
+    //HAAAAAAAAAAAAAAAAAAAAAAAACER QUE PUEDA SELECCIONAR LOS ROLES A LOS QUE VA DIRIGIDO EL EVENTO
     form.validateFields()
         .then(values => {
           const body = {
@@ -237,14 +241,16 @@ export default function EventsPage() {
             startDate: formatDate(values.dates[0].toDate()),   
             endDate: formatDate(values.dates[1].toDate()),   
             eventType: values.tipoEvento,
-            school: 1,
+            school: sessionStorage.getItem('actual_school'),
+            roles: [0],
+            affiliated_teachers: [],
         };
         fetch('http://127.0.0.1:8000/api/events/', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': 'Token ' + localStorage.getItem('token'),
-                'School-ID': 1,
+                'School-ID': sessionStorage.getItem('actual_school'),
             },
             body: JSON.stringify(body),
         })

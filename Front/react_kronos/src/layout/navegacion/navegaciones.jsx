@@ -48,6 +48,7 @@ const App = ({ children }) => {
                 label: school.name,
             })));
             const selectedSchool = schools.find(school => school.pk === actualSchoolPk);
+            
             console.log(selectedSchool.logo);
             //setEscuelaCompleta(selectedSchool.logo);
         }

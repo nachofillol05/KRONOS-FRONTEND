@@ -258,7 +258,7 @@ export default function Horario({ handleOpenDrawer, handleCloseDrawer }) {
                         ))}
                     </tbody>
                 </table>
-                <div className="info-box">
+                <div className="info-box" style={{   fontSize: '20px' }} >
                     {hoveredInfo}
                 </div>
             </div>

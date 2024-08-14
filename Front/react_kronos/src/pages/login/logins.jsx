@@ -13,8 +13,25 @@ export default function Login() {
     useEffect(() => {
         const token = localStorage.getItem('token');
         if (token) {
-            console.log('Token encontrado, redireccionando...');
-            navigate('/');
+            fetch('http://127.0.0.1:8000/api/verifyToken/', {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    "token": token
+                })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    console.log('Token invalido, eliminando token almacenado');
+                    localStorage.removeItem('token');
+                }
+                console.log('Token valido, redireccionando...');
+                navigate('/');
+                return response.json();
+            })
+            
         } else {
             console.log('No hay token almacenado');
         }
@@ -31,7 +48,7 @@ export default function Login() {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                "username": usernameValue,
+                "document": usernameValue,
                 "password": passwordValue
             })
         })
@@ -43,7 +60,7 @@ export default function Login() {
         })
         .then(responseData => {
             localStorage.setItem('token', responseData.Token); 
-
+            console.log('Entrando a user_schools:');
 
             fetch('http://127.0.0.1:8000/api/user_schools/', {
                 method: "GET",

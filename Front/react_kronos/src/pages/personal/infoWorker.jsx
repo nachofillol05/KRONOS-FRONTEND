@@ -14,7 +14,7 @@ export default function InfoWorker({ handleVolver, handleAgregar, handleContacta
             <Menu.Item key="Directivo">Directivo</Menu.Item>
         </Menu>
     );
-
+    console.log(user);
     return (
         <>
             <Flex gap={10} vertical style={{ flexGrow: 1 }}>
@@ -32,17 +32,11 @@ export default function InfoWorker({ handleVolver, handleAgregar, handleContacta
                     <label>Documento:</label>
                     <label>{user.document}</label>
                 </Flex>
-                <Flex gap={10}>
-                    <label>Fecha de nacimiento:</label>
-                    <label>Fecha de nacimiento</label>
-                </Flex>
+            
                 <Divider />
                 <h3>Informacion de contacto</h3>
 
-                <Flex gap={10}>
-                    <label>Telefono:</label>
-                    <label>{user.phone}</label>
-                </Flex>
+                
                 <Flex gap={10}>
                     <label>Email</label>
                     <label>{user.email}</label>

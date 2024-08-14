@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './materias.scss';
 import RangeSlider from "../../components/timerangeslider/timerange.jsx";
-import { Table, Select, AutoComplete, FloatButton, Drawer, Form, Button, message, Modal, Flex } from "antd";
+import { Table, Select, Input, FloatButton, Drawer, Form, Button, message, Modal, Flex } from "antd";
 import { FileAddOutlined, DownOutlined, UpOutlined, DownloadOutlined, CloseOutlined } from '@ant-design/icons';
 import FormCreateSubject from './formCreateSubject.jsx';
 
@@ -138,8 +138,9 @@ export default function Materias() {
                 return response.json();
             })
             .then(data => {
-                setMaterias(data.map(materia => ({ ...materia, key: materia.id })));
+                setMaterias(data.map(materia => ({ ...materia, key: materia.id, course: materia.course.name })));
                 setLoading(false);
+                console.log(data);
             })
             .catch(error => console.error('Error fetching data:', error));
     }, [start_time, end_time, Subjectname, teacher]);
@@ -245,7 +246,17 @@ export default function Materias() {
         const value = event.target.value;
         setSubjectname(value);
     }
-
+/* Al parecer en el back no hay filtro por curso
+<Select
+                    size='large'
+                    style={{ width: 200 }}
+                    showSearch
+                    placeholder="Seleccione un curso"
+                    onChange={onChange}
+                    onSearch={onSearch}
+                    options={cursos}
+                    allowClear
+                /> */
     return (
         <>
             {contextHolder}
@@ -265,18 +276,9 @@ export default function Materias() {
                     allowClear
                 />
 
-                <Select
-                    size='large'
-                    style={{ width: 200 }}
-                    showSearch
-                    placeholder="Seleccione un curso"
-                    onChange={onChange}
-                    onSearch={onSearch}
-                    options={cursos}
-                    allowClear
-                />
+               
 
-                <AutoComplete
+                <Input
                     size="large"
                     style={{
                         width: 300,

@@ -26,7 +26,7 @@ export default function Profile() {
       },
     });
   };
-  /* CAMBIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAR PARA QUE CARGUE LOS DATOS DE LA ESCUELA SOLO ESTA MOSTRANDO EL NAME Y LOGO
+
   useEffect(() => {
     const schools = JSON.parse(sessionStorage.getItem('schools') || '[]');
     const actualSchoolPk = parseInt(sessionStorage.getItem('actual_school'), 10);
@@ -43,7 +43,7 @@ export default function Profile() {
         });
         setEscuelaCompleta(selectedSchool.logo);
     }
-}, []);*/
+}, []);
 
   const handleCellClick = (event, day, module) => {
     const key = `${day}-${module}`;
@@ -85,6 +85,11 @@ export default function Profile() {
         setProfileData(data);
         form.setFieldsValue({
           ...data,
+          documentType: data.documentType.name,
+          phone: data.phone,
+          hoursToWork: 12,//IMPPPPPPPPP ESTO DEBERA SER CAMBIADO POR UN CALCULO DE LAS HORAS OCUPADAS IMPPPPPPPPPPPPPPPPPPPPPPPPPPPP
+          profile_picture: data.profile_picture,
+          nationality: data.nationality.name,
           city: data.contactInfo.city,
           postalCode: data.contactInfo.postalCode,
           province: data.contactInfo.province,

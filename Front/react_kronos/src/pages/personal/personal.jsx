@@ -7,56 +7,6 @@ import InfoWorker from './infoWorker';
 import FormCreateWorker from './formCreateWorker';
 import ContacWorker from './contactWorker';
 
-const initialTeachers = [
-    {
-        key: '1',
-        first_name: 'Juan',
-        last_name: 'Pérez',
-        document: '12345678',
-        gender: 'Masculino',
-        email: 'juan.perez@example.com',
-        availability: '20',
-    },
-    {
-        key: '2',
-        first_name: 'María',
-        last_name: 'Gómez',
-        document: '87654321',
-        gender: 'Femenino',
-        email: 'maria.gomez@example.com',
-        availability: '30',
-    },
-    {
-        key: '3',
-        first_name: 'Carlos',
-        last_name: 'López',
-        document: '23456789',
-        gender: 'Masculino',
-        email: 'carlos.lopez@example.com',
-        availability: '25',
-    },
-    {
-        key: '4',
-        first_name: 'Ana',
-        last_name: 'Martínez',
-        document: '98765432',
-        gender: 'Femenino',
-        email: 'ana.martinez@example.com',
-        availability: '35',
-    },
-    {
-        key: '5',
-        first_name: 'Pedro',
-        last_name: 'García',
-        document: '34567890',
-        gender: 'Masculino',
-        email: 'pedro.garcia@example.com',
-        availability: '40',
-    },
-];
-
-
-
 export default function Personal() {
     const [teachers, setTeachers] = useState([]);
     const [subjects, setSubjects] = useState([]);
@@ -158,7 +108,8 @@ export default function Personal() {
                 fetch('http://localhost:8000/api/create_teacher/', {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'application/json'
+                        'Content-Type': 'application/json',
+                        'School-ID': sessionStorage.getItem('actual_school'),
                     },
                     body: JSON.stringify({
                         document: values.documento,
@@ -167,6 +118,7 @@ export default function Personal() {
                     .then(response => response.json().then(data => ({ status: response.status, body: data })))
                     .then(({ status, body }) => {
                         if (status === 400) {
+                            console.log('dni entra a 400');
                             console.log('Dni encontrado:', body);
                             showDrawer(
                                 <InfoWorker
@@ -178,6 +130,7 @@ export default function Personal() {
                                 'Información del Trabajador'
                             );
                         } else if (status === 200) {
+                            console.log('dni entra a 200');
                             console.log('dni no encontrado:', body);
                             console.log('Tipo documentos: ',options);
                             const selectedItem = options.find(option => option.value === values.tipoDni);
@@ -343,28 +296,6 @@ export default function Personal() {
         }
         }, [sessionStorage.getItem('actual_school')]);
 
-    //SOLO PARA PRECEPTORESSSSSSSSSSSSSSSSSSSSSSSSSSS
-    const onCLickPreceptors = () => {
-        const url = new URL(`http://127.0.0.1:8000/api/schools/${sessionStorage.getItem('actual_school')}/preceptors`);
-        console.log('URL:', url);
-        fetch(url.toString(), {
-            method: 'GET',
-            headers: {
-                'Authorization': 'Token ' + localStorage.getItem('token'),
-                'School-ID': sessionStorage.getItem('actual_school'),
-            },
-        })
-        .then((response) => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-        })
-        .then((data) => {
-            console.log('Preceptores:', data);
-            setTeachers(data);
-        })
-    };
 
     //SOLO PARA TEACHERSSSSSSSSSSSSSSSS
         useEffect(() => {
@@ -398,7 +329,7 @@ export default function Personal() {
                 });
             } else if (activeFilter === 'Preceptores') {
                 // Fetch preceptors data when 'Preceptores' is selected
-                const url = new URL(`http://127.0.0.1:8000/api/schools/${sessionStorage.getItem('actual_school')}/preceptors`);
+                const url = new URL(`http://127.0.0.1:8000/api/preceptors`);
                 fetch(url.toString(), {
                     method: 'GET',
                     headers: {
@@ -416,12 +347,11 @@ export default function Personal() {
 
     const
         columns = [
-            { title: 'Nombre', dataIndex: 'first_name', key: 'Nombre' },
             { title: 'Apellido', dataIndex: 'last_name', key: 'Apellido' },
+            { title: 'Nombre', dataIndex: 'first_name', key: 'Nombre' },
             { title: 'Documento', dataIndex: 'document', key: 'Documento' },
             { title: 'Genero', dataIndex: 'gender', key: 'Genero' },
-            { title: 'Email', dataIndex: 'email', key: 'Email' },
-            { title: 'Horas por semana', dataIndex: 'availability', key: 'Horaspsemana' },
+            { title: 'Email', dataIndex: 'email', key: 'Email' }
         ];
 
     useEffect(() => {
@@ -439,14 +369,13 @@ export default function Personal() {
                 return response.json();
             })
             .then((data) => {
-                const subjectsData = data.map((subject) => ({
+                const subjects = data.map(subject => ({
                     value: subject.id,
                     label: subject.name,
                 }));
-                subjectsData.push({ value: '', label: 'Todas' });
-                setSubjects(subjectsData);
-                console.log(subjectsData);
+                setSubjects(subjects);
 
+                console.log(data);
             })
             .catch((error) => console.error('Error fetching data:', error));
     }, []);
