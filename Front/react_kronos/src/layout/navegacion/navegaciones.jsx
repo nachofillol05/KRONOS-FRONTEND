@@ -6,12 +6,13 @@ import {
     ContactsOutlined,
     UserOutlined
 } from '@ant-design/icons';
-import { Layout, Menu, Dropdown } from 'antd';
+import { Layout, Menu, Dropdown, Select } from 'antd';
 import { Link, useLocation } from 'react-router-dom';
+
 import './navegaciones.scss'; // Asegúrate de importar el archivo CSS
 
 const { Header, Content, Footer, Sider } = Layout;
-
+const { Option } = Select;
 function getItem(label, key, icon, children) {
     return {
         key,
@@ -20,7 +21,20 @@ function getItem(label, key, icon, children) {
         label,
     };
 }
-
+const roles = [
+    {
+        key: '1',
+        label: 'Directivo',
+    },
+    {
+        key: '2',
+        label: 'Preceptor',
+    },
+    {
+        key: '3',
+        label: 'Profesor',
+    },
+];
 const items = [
     getItem(<Link to="/perfil">Perfil</Link>, '1', <UserOutlined />),
     getItem(<Link to="/horarios">Horarios</Link>, '2', <TableOutlined />),
@@ -36,11 +50,20 @@ const App = ({ children }) => {
     const [schools, setSchools] = useState([]);
     const [selectedSchool, setSelectedSchool] = useState(null);
     const [escuelaCompleta, setEscuelaCompleta] = useState(null);
+    //const [rol, setRol] = useState(sessionStorage.getItem('roles'));
+    if (sessionStorage.getItem('actual_school') == null) {
+        const school = JSON.parse(localStorage.getItem('schools'));
+        console.log(school[0]);
+        sessionStorage.setItem('actual_school',JSON.stringify(school[0].pk));
+    }
+    
 
     useEffect(() => {
-        const savedData = sessionStorage.getItem('schools');
-        const schools = JSON.parse(sessionStorage.getItem('schools') || '[]');
+        const savedData = localStorage.getItem('schools');
+        const schools = JSON.parse(localStorage.getItem('schools') || '[]');
         const actualSchoolPk = parseInt(sessionStorage.getItem('actual_school'), 10);
+        console.log(savedData);
+        console.log(actualSchoolPk);
         if (savedData) {
             const parsedData = JSON.parse(savedData);
             setDropdownItems(parsedData.map(school => ({
@@ -76,6 +99,12 @@ const App = ({ children }) => {
                 return '1';
         }
     };
+
+    const changeRol = (value) => {
+        sessionStorage.setItem('rol', value);
+        window.location.reload();
+    }
+    //cambiar el default value del select por sessionStorage.getItem('rol')
     return (
         <Layout style={{ minHeight: '100vh' }}>
             <Sider
@@ -106,7 +135,20 @@ const App = ({ children }) => {
                             />
                         </a>
                     </Dropdown>
+                    <Select
+                        placeholder="Rol"
+                        className="logo-img"
+                        onChange={(value) => changeRol(value)}
+                        defaultValue="1" 
+                    >
+                    {roles.map((role) => (
+                        <Option key={role.key} value={role.key}>
+                        {role.label}
+                        </Option>
+                    ))}
+                </Select>
                 </div>
+                
                 <Menu theme="dark" defaultSelectedKeys={[getSelectedKey()]} mode="inline" items={items} />
             </Sider>
             <Layout>

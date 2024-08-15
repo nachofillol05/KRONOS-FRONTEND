@@ -213,7 +213,10 @@ export default function Horario({ handleOpenDrawer, handleCloseDrawer }) {
             <div className="Calendario">
                 <table className='table_horario'>
                     <thead>
-                        <tr>
+                       
+                    </thead>
+                    <tbody>
+                     <tr>
                             <th className='th_horario'>Cursos</th>
                             {days.map((day, index) => (
                                 <th className='th_horario' key={index} colSpan={hours.length}>{day}</th>
@@ -227,8 +230,6 @@ export default function Horario({ handleOpenDrawer, handleCloseDrawer }) {
                                 ))
                             ))}
                         </tr>
-                    </thead>
-                    <tbody>
                         {courses.map((course, courseIndex) => (
                             <tr key={courseIndex}>
                                 <td className='td_horario'>{course}</td>

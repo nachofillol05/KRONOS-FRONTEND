@@ -28,6 +28,7 @@ export default function Login() {
                     localStorage.removeItem('token');
                 }
                 console.log('Token valido, redireccionando...');
+                sessionStorage.setItem('actual_school',JSON.stringify(localStorage.getItem('schools')[0].pk));
                 navigate('/');
                 return response.json();
             })
@@ -60,7 +61,6 @@ export default function Login() {
         })
         .then(responseData => {
             localStorage.setItem('token', responseData.Token); 
-            console.log('Entrando a user_schools:');
 
             fetch('http://127.0.0.1:8000/api/user_schools/', {
                 method: "GET",
@@ -78,24 +78,22 @@ export default function Login() {
             .then(responseData => {
                 console.log('schoolssssssssssssssssssssssssssss:',responseData);
 
-                sessionStorage.setItem('schools',JSON.stringify(responseData)); 
+                localStorage.setItem('schools',JSON.stringify(responseData)); 
                 sessionStorage.setItem('actual_school',JSON.stringify(responseData[0].pk));
                 console.log('schools were obtained correctly');
                 console.log('escuela asignada: ',sessionStorage.getItem('actual_school'));
-                console.log(sessionStorage.getItem('schools'));
+                console.log(localStorage.getItem('schools'));
                 setShowError(false);
+                console.log('Login success');
                 navigate('/');
             })
             .catch(error => {
                 console.error('Login failed:', error);
                 setShowError(true);
             });         
-            
-            
-            console.log('Login success');
-            setShowError(false);
-            navigate('/');
-
+            // ACA OBTENDRIA LOS ROLES DEL USUARIO
+            /*sessionStorage.setItem('roles',JSON.stringify(responseData));
+            sessionStorage.setItem('roles',JSON.stringify(responseData[0].pk));*/
         })
         .catch(error => {
             console.error('Login failed:', error);

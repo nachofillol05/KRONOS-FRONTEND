@@ -26,6 +26,7 @@ export default function Personal() {
     const [documento, setDocumento] = useState(null);
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [activeFilter, setActiveFilter] = useState('Profesores');
+    const [courses, setCourse] = useState('');
 
     const handleFilterChange = (e) => {
         setActiveFilter(e.target.value);
@@ -249,6 +250,29 @@ export default function Personal() {
                 break;
         }
     };
+    useEffect(() => {
+        fetch('http://127.0.0.1:8000/api/years/', {
+            method: "GET",
+            headers: {
+                'Authorization': 'Token ' + localStorage.getItem('token'),
+                'School-ID': sessionStorage.getItem('actual_school'),
+            },
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                const courses = data.map(curs => ({
+                    value: curs.id,
+                    label: curs.name,
+                }));
+                setCourse(courses);
+            })
+            .catch(error => console.error('Error fetching data:', error));
+    }, []);
 
     const handleEnviar = (event) => {
         event.preventDefault();
@@ -284,19 +308,6 @@ export default function Personal() {
             onClose();
         }
     };
-    //SOLO PARA DIRECTIVESSSSSSSSSSSSSSSSSSSSSSSSSS
-    useEffect(() => {
-        const schools = JSON.parse(sessionStorage.getItem('schools') || '[]');
-        const actualSchoolPk = parseInt(sessionStorage.getItem('actual_school'), 10);
-        if (schools && actualSchoolPk) {
-            const selectedSchool = schools.find(school => school.pk === actualSchoolPk);
-            console.log('seeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee: ',selectedSchool);
-            console.log('selectedSchool:', selectedSchool.directives);
-            //ANIDAR LOS TEACHERS ENTONCES PUEDO SACAR LOS DATOS DE ACA
-        }
-        }, [sessionStorage.getItem('actual_school')]);
-
-
     //SOLO PARA TEACHERSSSSSSSSSSSSSSSS
         useEffect(() => {
             if (activeFilter === 'Profesores') {
@@ -328,8 +339,9 @@ export default function Personal() {
                     setLoading(false);
                 });
             } else if (activeFilter === 'Preceptores') {
-                // Fetch preceptors data when 'Preceptores' is selected
                 const url = new URL(`http://127.0.0.1:8000/api/preceptors`);
+                if (searchName) url.searchParams.append('search_name', searchName);
+                if (courses) url.searchParams.append('year', courses);
                 fetch(url.toString(), {
                     method: 'GET',
                     headers: {
@@ -343,7 +355,17 @@ export default function Personal() {
                 })
                 .catch((error) => console.error('Error fetching data:', error));
             }
-        }, [activeFilter, searchName, subject]);
+            else if (activeFilter === 'Directivos') {
+                // cambiar por el endpoint de directivos
+                const schools = JSON.parse(localStorage.getItem('schools') || '[]');
+                const actualSchoolPk = parseInt(sessionStorage.getItem('actual_school'), 10);
+                if (schools && actualSchoolPk) {
+                    const selectedSchool = schools.find(school => school.pk === actualSchoolPk);
+                    console.log('selectedSchool:', selectedSchool);
+                    setTeachers(selectedSchool.directives);
+        }
+            }
+        }, [activeFilter, searchName, subject, courses]);
 
     const
         columns = [
@@ -397,6 +419,10 @@ export default function Personal() {
         console.log(`selected ${value}`);
         setSubject(value);
     };
+    const onChangeCourse = (value) => {
+        console.log(`selected ${value}`);
+        setCourse(value);
+    };
     console.log('teacher', teachers)
     return (
         <>
@@ -407,15 +433,25 @@ export default function Personal() {
                     <Radio.Button value="Preceptores" >Preceptor</Radio.Button>
                     <Radio.Button value="Directivos">Directivo</Radio.Button>
                 </Radio.Group>
+                {activeFilter === 'Profesores' && (
+                    
                 <Select
                     size='large'
                     showSearch
                     placeholder="Seleccione una materia"
                     onChange={onChange}
-                    onSearch={onSearch}
                     options={subjects}
                     allowClear
-                />
+                />)|| activeFilter === 'Preceptores' && (
+                    <Select
+                        size='large'
+                        showSearch
+                        placeholder="Seleccione un curso"
+                        onChange={onChangeCourse}
+                        options={courses}
+                        allowClear
+                    />
+                )}
                 <Input
                     size="large"
                     style={{
