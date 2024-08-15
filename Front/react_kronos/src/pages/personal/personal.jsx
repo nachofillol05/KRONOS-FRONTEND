@@ -6,6 +6,7 @@ import FormSearchDni from './fromSearchDni';
 import InfoWorker from './infoWorker';
 import FormCreateWorker from './formCreateWorker';
 import ContacWorker from './contactWorker';
+import EspecificWorker from './especificWorker';
 
 export default function Personal() {
     const [teachers, setTeachers] = useState([]);
@@ -60,7 +61,7 @@ export default function Personal() {
                 handleVolver={handleVolver}
                 handleAgregar={handleAgregar}
                 handleContactar={() => handleContactar(user)}
-                
+
             />,
             'Información del Trabajador'
         );
@@ -88,19 +89,19 @@ export default function Personal() {
     };
 
     const handleContactar = (user) => {
-
         showDrawer(
             <ContacWorker user={user} handleVolver={() => handleVolverInfo(user)} />,
             'Contactar personal'
         );
     }
 
-    /*const showInfoWorker = (documento) => {
-        
-
-        
+    const showEspecificWorker = (user) => {
+        showDrawer(
+            <EspecificWorker handleVolver={handleVolverInfo} user={user} />,
+            'Informacion del Trabajador'
+        );
     };
-    */
+
 
     const handleSearch = (formRef, options) => {
         formRef.current.validateFields()
@@ -132,7 +133,7 @@ export default function Personal() {
                         } else if (status === 200) {
                             console.log('dni entra a 200');
                             console.log('dni no encontrado:', body);
-                            console.log('Tipo documentos: ',options);
+                            console.log('Tipo documentos: ', options);
                             const selectedItem = options.find(option => option.value === values.tipoDni);
                             console.log('Selected item:', selectedItem);
                             showDrawer(
@@ -290,28 +291,28 @@ export default function Personal() {
         const actualSchoolPk = parseInt(sessionStorage.getItem('actual_school'), 10);
         if (schools && actualSchoolPk) {
             const selectedSchool = schools.find(school => school.pk === actualSchoolPk);
-            console.log('seeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee: ',selectedSchool);
+            console.log('seeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee: ', selectedSchool);
             console.log('selectedSchool:', selectedSchool.directives);
             //ANIDAR LOS TEACHERS ENTONCES PUEDO SACAR LOS DATOS DE ACA
         }
-        }, [sessionStorage.getItem('actual_school')]);
+    }, [sessionStorage.getItem('actual_school')]);
 
 
     //SOLO PARA TEACHERSSSSSSSSSSSSSSSS
-        useEffect(() => {
-            if (activeFilter === 'Profesores') {
-                const url = new URL('http://127.0.0.1:8000/api/teachers/');
-                if (searchName) url.searchParams.append('search_name', searchName);
-                if (subject) url.searchParams.append('subject_id', subject);
-    
-                setLoading(true);
-                fetch(url.toString(), {
-                    method: 'GET',
-                    headers: {
-                        'Authorization': 'Token ' + localStorage.getItem('token'),
-                        'School-ID': sessionStorage.getItem('actual_school'),
-                    },
-                })
+    useEffect(() => {
+        if (activeFilter === 'Profesores') {
+            const url = new URL('http://127.0.0.1:8000/api/teachers/');
+            if (searchName) url.searchParams.append('search_name', searchName);
+            if (subject) url.searchParams.append('subject_id', subject);
+
+            setLoading(true);
+            fetch(url.toString(), {
+                method: 'GET',
+                headers: {
+                    'Authorization': 'Token ' + localStorage.getItem('token'),
+                    'School-ID': sessionStorage.getItem('actual_school'),
+                },
+            })
                 .then((response) => {
                     if (!response.ok) {
                         console.log('Network response was not ok');
@@ -327,30 +328,29 @@ export default function Personal() {
                     console.error('Error fetching data:', error);
                     setLoading(false);
                 });
-            } else if (activeFilter === 'Preceptores') {
-                // Fetch preceptors data when 'Preceptores' is selected
-                const url = new URL(`http://127.0.0.1:8000/api/preceptors`);
-                fetch(url.toString(), {
-                    method: 'GET',
-                    headers: {
-                        'Authorization': 'Token ' + localStorage.getItem('token'),
-                        'School-ID': sessionStorage.getItem('actual_school'),
-                    },
-                })
+        } else if (activeFilter === 'Preceptores') {
+            // Fetch preceptors data when 'Preceptores' is selected
+            const url = new URL(`http://127.0.0.1:8000/api/preceptors`);
+            fetch(url.toString(), {
+                method: 'GET',
+                headers: {
+                    'Authorization': 'Token ' + localStorage.getItem('token'),
+                    'School-ID': sessionStorage.getItem('actual_school'),
+                },
+            })
                 .then((response) => response.json())
                 .then((data) => {
                     setTeachers(data);
                 })
                 .catch((error) => console.error('Error fetching data:', error));
-            }
-        }, [activeFilter, searchName, subject]);
+        }
+    }, [activeFilter, searchName, subject]);
 
-    const
-        columns = [
+    const columns = [
             { title: 'Apellido', dataIndex: 'last_name', key: 'Apellido' },
             { title: 'Nombre', dataIndex: 'first_name', key: 'Nombre' },
             { title: 'Documento', dataIndex: 'document', key: 'Documento' },
-            { title: 'Genero', dataIndex: 'gender', key: 'Genero' },
+            { title: 'Telefono', dataIndex: 'phone', key: 'Phone' },
             { title: 'Email', dataIndex: 'email', key: 'Email' }
         ];
 
@@ -427,6 +427,9 @@ export default function Personal() {
                 />
             </div>
             <Table
+                onRow={(user) => ({
+                    onClick: () => showEspecificWorker(user),
+                })}
                 pagination={false}
                 y={500}
                 dataSource={teachers}

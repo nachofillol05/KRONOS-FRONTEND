@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Button, Card, Form, Select, Input, Image, Flex, Space, FloatButton, Drawer, Upload, Tabs, Row, Col, Alert } from 'antd';
 import { ClockCircleOutlined, UploadOutlined } from '@ant-design/icons';
 import './Perfil.scss';
+import FormDisponibilidad from './FormDisponibilidad';
 
 export default function Profile() {
   const [isEditing, setIsEditing] = useState(false);
@@ -11,28 +12,16 @@ export default function Profile() {
   const [open, setOpen] = useState(false);
   const [drawerContent, setDrawerContent] = useState(null);
   const [drawerTitle, setDrawerTitle] = useState(null);
-  const [selectedCells, setSelectedCells] = useState([]);
   const [escuelaCompleta, setEscuelaCompleta] = useState(null);
 
 
-  const ActualizarAvaibility = () => {
-    console.log(selectedCells);
-    const jsonData = JSON.stringify({ module: selectedCells });
-    fetch('http://localhost:8000/api/contacting-staff/', {
-      method: 'PUT',
-      body: jsonData,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-  };
+
 
   useEffect(() => {
     const schools = JSON.parse(sessionStorage.getItem('schools') || '[]');
     const actualSchoolPk = parseInt(sessionStorage.getItem('actual_school'), 10);
     if (schools && actualSchoolPk) {
         const selectedSchool = schools.find(school => school.pk === actualSchoolPk);
-        console.log('seeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee: ',selectedSchool);
         formSchool.setFieldsValue({
           ...selectedSchool,
           city: selectedSchool.contactInfo.city,
@@ -45,26 +34,7 @@ export default function Profile() {
     }
 }, []);
 
-  const handleCellClick = (event, day, module) => {
-    const key = `${day}-${module}`;
-    const button = event.target;
 
-    if (button.classList.contains('selected')) {
-      button.classList.remove('selected');
-      button.classList.add('NotSelected');
-    } else {
-      button.classList.remove('NotSelected');
-      button.classList.add('selected');
-    }
-
-    setSelectedCells((prevSelectedCells) => {
-      if (prevSelectedCells.includes(key)) {
-        return prevSelectedCells.filter((cell) => cell !== key);
-      } else {
-        return [...prevSelectedCells, key];
-      }
-    });
-  };
 
   useEffect(() => {
     fetch('http://127.0.0.1:8000/api/profile/', {
@@ -207,10 +177,6 @@ export default function Profile() {
     setOpen(false);
     setDrawerContent(null);
   };
-
-  const days = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes'];
-  const modules = ['Módulo 1', 'Módulo 2', 'Módulo 3', 'Módulo 4', 'Módulo 5'];
-  console.log(selectedCells);
 
   return (
     <>
@@ -511,40 +477,8 @@ export default function Profile() {
       icon={<ClockCircleOutlined />}
       tooltip="Cargar disponibilidad"
       onClick={() => showDrawer(
-          <>
-              <h1>Cargue la disponibilidad</h1>
-              <Row>
-                  <Col span={3}></Col>
-                  {days.map((day) => (
-                      <Col span={3} key={day}>
-                          <div className="header-cell">{day}</div>
-                      </Col>
-                  ))}
-              </Row>
-              {modules.map((module) => (
-                  <Row key={module}>
-                      <Col span={3}>
-                          <div className="header-cell">{module}</div>
-                      </Col>
-                      {days.map((day) => (
-                          <Col span={3} key={`${day}-${module}`}>
-                          <Button
-                            key={`${day}-${module}`}
-                            className={ selectedCells.includes(`${day}-${module}`) ? 'selected' : 'NotSelected' }
-                            onClick={(event) => handleCellClick(event, day, module)}
-                          ></Button>
-                        </Col>
-                        
-                      ))}
-                  </Row>
-              ))}
-              <Button onClick={ActualizarAvaibility}>Actualizar</Button>
-              <Alert
-                  message="Atención!"
-                  description="Esta información es de carácter legal, asegúrese de que sea correcta, aunque podrá ser modificada en el momento que lo desee"
-                  type="warning"
-              />
-          </>, "Disponibilidad")}
+          <FormDisponibilidad onClose={onClose}/>
+          ,"Disponibilidad")}
   />
   <Drawer width={600} title={drawerTitle} onClose={onClose} open={open}>
       <div style={{ width: '100%', height: '100%' }}>

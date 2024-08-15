@@ -276,7 +276,6 @@ export default function Materias() {
                     allowClear
                 />
 
-               
 
                 <Input
                     size="large"

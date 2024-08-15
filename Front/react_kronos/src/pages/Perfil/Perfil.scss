@@ -5,10 +5,12 @@
   }
 
 .selected{
-    background-color: green;
-    color: #000;
+    background-color: #1776ff;
+    border: #1161d2 1px solid;
+    border-radius: 0;
 }
 .NotSelected{
-    background-color: red;
-    color: #000;
+  background-color: #f9f9f9;
+  border: #d4d4d4 1px solid;
+  border-radius: 0;
 }
