@@ -21,27 +21,7 @@ function getItem(label, key, icon, children) {
         label,
     };
 }
-const roles = [
-    {
-        key: '1',
-        label: 'Directivo',
-    },
-    {
-        key: '2',
-        label: 'Preceptor',
-    },
-    {
-        key: '3',
-        label: 'Profesor',
-    },
-];
-const items = [
-    getItem(<Link to="/perfil">Perfil</Link>, '1', <UserOutlined />),
-    getItem(<Link to="/horarios">Horarios</Link>, '2', <TableOutlined />),
-    getItem(<Link to="/personal">Personal</Link>, '3', <TeamOutlined />),
-    getItem(<Link to="/materias">Materias</Link>, '4', <ScheduleOutlined />),
-    getItem(<Link to="/eventos">Eventos</Link>, '5', <ContactsOutlined />),
-];
+
 
 const App = ({ children }) => {
     const [collapsed, setCollapsed] = useState(false);
@@ -50,14 +30,35 @@ const App = ({ children }) => {
     const [schools, setSchools] = useState([]);
     const [selectedSchool, setSelectedSchool] = useState(null);
     const [escuelaCompleta, setEscuelaCompleta] = useState(null);
-    //const [rol, setRol] = useState(sessionStorage.getItem('roles'));
+    const [rol, setRol] = useState(sessionStorage.getItem('rol'));
+    const [roles, setRoles] = useState(JSON.parse(localStorage.getItem('roles')));
+
+    //AGREGAR UNA COMPROBACION PARA VER SI EL USUARIO TIENE ESE ROL ENSERIO PORQUE SINO SE PODRIA CAMBIAR DESDE EL SESSION STORAGE
+    // Y VER COSAS QUE NO DEBERIA . AUNQUE SEA EN LO IMPORTANTE COMO MOSTRARLE ESO O SOLO AL ENTRAR A LAS PAGINAS EN LA DIRECTIVEROUTE
+
+
+    const items = [
+        getItem(<Link to="/perfil">Perfil</Link>, '1', <UserOutlined />),
+        getItem(<Link to="/horarios">Horarios</Link>, '2', <TableOutlined />),
+        ...(rol=='Directivo' ? [
+          getItem(<Link to="/personal">Personal</Link>, '3', <TeamOutlined />),
+          getItem(<Link to="/materias">Materias</Link>, '4', <ScheduleOutlined />)
+        ] : []),
+        getItem(<Link to="/eventos">Eventos</Link>, '5', <ContactsOutlined />),
+      ];
+
     if (sessionStorage.getItem('actual_school') == null) {
         const school = JSON.parse(localStorage.getItem('schools'));
         console.log(school[0]);
-        sessionStorage.setItem('actual_school',JSON.stringify(school[0].pk));
+        sessionStorage.setItem('actual_school',school[0].pk);
+    }
+    if (sessionStorage.getItem('rol') == null) {
+        const roles = JSON.parse(localStorage.getItem('roles'));
+        console.log(roles[0]);
+        sessionStorage.setItem('rol',roles[0]);
     }
     
-
+        //Esto es para el logo(?)
     useEffect(() => {
         const savedData = localStorage.getItem('schools');
         const schools = JSON.parse(localStorage.getItem('schools') || '[]');
@@ -139,11 +140,11 @@ const App = ({ children }) => {
                         placeholder="Rol"
                         className="logo-img"
                         onChange={(value) => changeRol(value)}
-                        defaultValue="1" 
+                        defaultValue={rol} 
                     >
                     {roles.map((role) => (
-                        <Option key={role.key} value={role.key}>
-                        {role.label}
+                        <Option key={role} value={role}>
+                        {role}
                         </Option>
                     ))}
                 </Select>

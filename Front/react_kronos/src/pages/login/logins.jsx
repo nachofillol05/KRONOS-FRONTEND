@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, act } from 'react';
 import './logins.scss';
 import Input from '../../components/input/inputs.jsx';
 import Button from '../../components/button/buttons.jsx';
@@ -13,26 +13,20 @@ export default function Login() {
     useEffect(() => {
         const token = localStorage.getItem('token');
         if (token) {
-            fetch('http://127.0.0.1:8000/api/verifyToken/', {
-                method: "POST",
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    "token": token
-                })
-            })
-            .then(response => {
-                if (!response.ok) {
-                    console.log('Token invalido, eliminando token almacenado');
-                    localStorage.removeItem('token');
-                }
-                console.log('Token valido, redireccionando...');
-                sessionStorage.setItem('actual_school',JSON.stringify(localStorage.getItem('schools')[0].pk));
-                navigate('/');
-                return response.json();
-            })
-            
+                const actualSchool =JSON.parse(localStorage.getItem('schools'))[0].pk;
+                sessionStorage.setItem('actual_school',actualSchool);
+                    fetch('http://127.0.0.1:8000/api/school/myroles/', {
+                        method: "GET",
+                        headers: {
+                          'Authorization': 'Token ' + token,
+                          'School-ID': actualSchool,
+                        },
+                      }).then(response => response.json())
+                        .then(data => {
+                            localStorage.setItem('roles', JSON.stringify(data.roles));
+                            sessionStorage.setItem('rol',data.roles[0]);
+                            navigate('/horarios');
+                            });
         } else {
             console.log('No hay token almacenado');
         }
@@ -76,16 +70,24 @@ export default function Login() {
                 return response.json();
             })
             .then(responseData => {
-                console.log('schoolssssssssssssssssssssssssssss:',responseData);
 
                 localStorage.setItem('schools',JSON.stringify(responseData)); 
                 sessionStorage.setItem('actual_school',JSON.stringify(responseData[0].pk));
-                console.log('schools were obtained correctly');
-                console.log('escuela asignada: ',sessionStorage.getItem('actual_school'));
-                console.log(localStorage.getItem('schools'));
                 setShowError(false);
-                console.log('Login success');
-                navigate('/');
+                fetch('http://127.0.0.1:8000/api/school/myroles/', {
+                    method: "GET",
+                    headers: {
+                      'Authorization': 'Token ' + localStorage.getItem('token'),
+                      'School-ID': sessionStorage.getItem('actual_school'),
+                    },
+                  }).then(response => response.json())
+                    .then(data => {
+                            localStorage.setItem('roles', JSON.stringify(data.roles));
+                            sessionStorage.setItem('rol',data.roles[0]);
+                        console.log('Login success');
+                        navigate('/horarios');
+                        });
+                
             })
             .catch(error => {
                 console.error('Login failed:', error);
