@@ -62,14 +62,14 @@ export const routes = [
     {
         path: "/materias",
         exact: true,
-        private: true,
+        directive: true,
         layout: Navegacion,
         component: Materias
     },
     {
         path: "/personal",
         exact: true,
-        private: true,
+        directive: true,
         layout: Navegacion,
         component: Personal
     },

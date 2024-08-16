@@ -6,12 +6,13 @@ import {
     ContactsOutlined,
     UserOutlined
 } from '@ant-design/icons';
-import { Layout, Menu, Dropdown } from 'antd';
+import { Layout, Menu, Dropdown, Select } from 'antd';
 import { Link, useLocation } from 'react-router-dom';
+
 import './navegaciones.scss'; // Asegúrate de importar el archivo CSS
 
 const { Header, Content, Footer, Sider } = Layout;
-
+const { Option } = Select;
 function getItem(label, key, icon, children) {
     return {
         key,
@@ -21,13 +22,6 @@ function getItem(label, key, icon, children) {
     };
 }
 
-const items = [
-    getItem(<Link to="/perfil">Perfil</Link>, '1', <UserOutlined />),
-    getItem(<Link to="/horarios">Horarios</Link>, '2', <TableOutlined />),
-    getItem(<Link to="/personal">Personal</Link>, '3', <TeamOutlined />),
-    getItem(<Link to="/materias">Materias</Link>, '4', <ScheduleOutlined />),
-    getItem(<Link to="/eventos">Eventos</Link>, '5', <ContactsOutlined />),
-];
 
 const App = ({ children }) => {
     const [collapsed, setCollapsed] = useState(false);
@@ -36,11 +30,41 @@ const App = ({ children }) => {
     const [schools, setSchools] = useState([]);
     const [selectedSchool, setSelectedSchool] = useState(null);
     const [escuelaCompleta, setEscuelaCompleta] = useState(null);
+    const [rol, setRol] = useState(sessionStorage.getItem('rol'));
+    const [roles, setRoles] = useState(JSON.parse(localStorage.getItem('roles')));
 
+    //AGREGAR UNA COMPROBACION PARA VER SI EL USUARIO TIENE ESE ROL ENSERIO PORQUE SINO SE PODRIA CAMBIAR DESDE EL SESSION STORAGE
+    // Y VER COSAS QUE NO DEBERIA . AUNQUE SEA EN LO IMPORTANTE COMO MOSTRARLE ESO O SOLO AL ENTRAR A LAS PAGINAS EN LA DIRECTIVEROUTE
+
+
+    const items = [
+        getItem(<Link to="/perfil">Perfil</Link>, '1', <UserOutlined />),
+        getItem(<Link to="/horarios">Horarios</Link>, '2', <TableOutlined />),
+        ...(rol=='Directivo' ? [
+          getItem(<Link to="/personal">Personal</Link>, '3', <TeamOutlined />),
+          getItem(<Link to="/materias">Materias</Link>, '4', <ScheduleOutlined />)
+        ] : []),
+        getItem(<Link to="/eventos">Eventos</Link>, '5', <ContactsOutlined />),
+      ];
+
+    if (sessionStorage.getItem('actual_school') == null) {
+        const school = JSON.parse(localStorage.getItem('schools'));
+        console.log(school[0]);
+        sessionStorage.setItem('actual_school',school[0].pk);
+    }
+    if (sessionStorage.getItem('rol') == null) {
+        const roles = JSON.parse(localStorage.getItem('roles'));
+        console.log(roles[0]);
+        sessionStorage.setItem('rol',roles[0]);
+    }
+    
+        //Esto es para el logo(?)
     useEffect(() => {
-        const savedData = sessionStorage.getItem('schools');
-        const schools = JSON.parse(sessionStorage.getItem('schools') || '[]');
+        const savedData = localStorage.getItem('schools');
+        const schools = JSON.parse(localStorage.getItem('schools') || '[]');
         const actualSchoolPk = parseInt(sessionStorage.getItem('actual_school'), 10);
+        console.log(savedData);
+        console.log(actualSchoolPk);
         if (savedData) {
             const parsedData = JSON.parse(savedData);
             setDropdownItems(parsedData.map(school => ({
@@ -76,6 +100,12 @@ const App = ({ children }) => {
                 return '1';
         }
     };
+
+    const changeRol = (value) => {
+        sessionStorage.setItem('rol', value);
+        window.location.reload();
+    }
+    //cambiar el default value del select por sessionStorage.getItem('rol')
     return (
         <Layout style={{ minHeight: '100vh' }}>
             <Sider
@@ -106,7 +136,20 @@ const App = ({ children }) => {
                             />
                         </a>
                     </Dropdown>
+                    <Select
+                        placeholder="Rol"
+                        className="logo-img"
+                        onChange={(value) => changeRol(value)}
+                        defaultValue={rol} 
+                    >
+                    {roles.map((role) => (
+                        <Option key={role} value={role}>
+                        {role}
+                        </Option>
+                    ))}
+                </Select>
                 </div>
+                
                 <Menu theme="dark" defaultSelectedKeys={[getSelectedKey()]} mode="inline" items={items} />
             </Sider>
             <Layout>

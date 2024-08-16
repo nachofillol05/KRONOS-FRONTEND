@@ -18,7 +18,7 @@ export default function Profile() {
 
 
   useEffect(() => {
-    const schools = JSON.parse(sessionStorage.getItem('schools') || '[]');
+    const schools = JSON.parse(localStorage.getItem('schools') || '[]');
     const actualSchoolPk = parseInt(sessionStorage.getItem('actual_school'), 10);
     if (schools && actualSchoolPk) {
         const selectedSchool = schools.find(school => school.pk === actualSchoolPk);

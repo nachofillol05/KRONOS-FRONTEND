@@ -1,7 +1,8 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { routes } from './config/routes'; // Asegúrate de ajustar la ruta al archivo de rutas
-import PrivateRoute from './components/privateRoute/privateRoute.jsx'; // Asegúrate de ajustar la ruta
+import { routes } from './config/routes'; 
+import PrivateRoute from './components/privateRoute/privateRoute.jsx'; 
+import DirectiveRoute from './components/privateRoute/directiveRoute.jsx';
 
 export default function App() {
   return (
@@ -18,6 +19,12 @@ export default function App() {
                     <route.component />
                   </route.layout>
                 </PrivateRoute>
+              ) : route.directive ?(
+                <DirectiveRoute> 
+                  <route.layout>
+                    <route.component />
+                  </route.layout>
+                </DirectiveRoute>
               ) : (
                 <route.layout>
                   <route.component />
