@@ -44,8 +44,14 @@ class FeaturesTabs extends React.Component {
       bottomDivider && 'has-bottom-divider'
     );
 
-    const sectionHeader = {
-      title: 'Texto de ejemplo',
+    // Agrega un segundo conjunto de datos de encabezado
+    const sectionHeader1 = {
+      title: '¿Que es Kronos?',
+      paragraph: 'Texto de ejemplo'
+    };
+
+    const sectionHeader2 = {
+      title: 'Nuestros Colegios',
       paragraph: 'Texto de ejemplo'
     };
 
@@ -56,7 +62,10 @@ class FeaturesTabs extends React.Component {
       >
         <div className="container">
           <div className={innerClasses}>
-            <SectionHeader data={sectionHeader} className="center-content" />
+            {/* Renderiza el primer encabezado */}
+            <SectionHeader data={sectionHeader1} className="center-content" />
+            {/* Renderiza el segundo encabezado */}
+            <SectionHeader data={sectionHeader2} className="center-content" />
             <Tabs active="tab-a">
               <TabList>
                 <Tab tabId="tab-a">
