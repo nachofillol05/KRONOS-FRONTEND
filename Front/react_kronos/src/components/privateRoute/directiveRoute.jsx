@@ -4,9 +4,12 @@ import { useNavigate } from 'react-router-dom';
 const DirectiveRoute = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(null);
   const navigate = useNavigate();
-  if (localStorage.getItem('token') === "" || localStorage.getItem('token') === null){
+  const [token, setToken] = useState(localStorage.getItem('token'));
+  const [school, setSchool] = useState(sessionStorage.getItem('actual_school'));
+  if (token === "" || token === null){
     navigate('/login');
   }
+
 useEffect(() => {
     const verifyToken = async () => {
         try {
@@ -21,14 +24,27 @@ useEffect(() => {
             });
 
             if (response.ok) {
-                if (sessionStorage.getItem('rol') === "Directivo") {
-                    setIsAuthenticated(true);
-                    response.json().then(data => {
-                        localStorage.setItem('user', JSON.stringify(data));
-                    });
-                } else {
-                    setIsAuthenticated(false);
-                }
+                fetch('http://127.0.0.1:8000/api/school/myroles/', {
+                    method: "GET",
+                    headers: {
+                        'Authorization': 'Token ' + token,
+                        'School-ID': school,
+                    },
+                }).then(response => response.json())
+                .then(data => {
+                    if (sessionStorage.getItem('rol') === "Directivo" && JSON.stringify(data).includes("Directivo") === true) {
+                        setIsAuthenticated(true);
+                        response.json().then(data => {
+                            localStorage.setItem('user', JSON.stringify(data));
+                        });
+                    } else {
+                        setIsAuthenticated(false);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+                
             } else {
                 setIsAuthenticated(false);
             }

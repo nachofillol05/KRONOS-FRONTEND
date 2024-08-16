@@ -4,12 +4,13 @@ import {
     TableOutlined,
     TeamOutlined,
     ContactsOutlined,
-    UserOutlined
+    UserOutlined,
+    LogoutOutlined
 } from '@ant-design/icons';
 import { Layout, Menu, Dropdown, Select } from 'antd';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation,useNavigate } from 'react-router-dom';
 
-import './navegaciones.scss'; // Asegúrate de importar el archivo CSS
+import './navegaciones.scss'; 
 
 const { Header, Content, Footer, Sider } = Layout;
 const { Option } = Select;
@@ -32,20 +33,40 @@ const App = ({ children }) => {
     const [escuelaCompleta, setEscuelaCompleta] = useState(null);
     const [rol, setRol] = useState(sessionStorage.getItem('rol'));
     const [roles, setRoles] = useState(JSON.parse(localStorage.getItem('roles')));
+    const [token, setToken] = useState(localStorage.getItem('token'));
+    const [school, setSchool] = useState(sessionStorage.getItem('actual_school'));
+    const [data, setData] = useState(null);
+    const navigate = useNavigate();
 
     //AGREGAR UNA COMPROBACION PARA VER SI EL USUARIO TIENE ESE ROL ENSERIO PORQUE SINO SE PODRIA CAMBIAR DESDE EL SESSION STORAGE
     // Y VER COSAS QUE NO DEBERIA . AUNQUE SEA EN LO IMPORTANTE COMO MOSTRARLE ESO O SOLO AL ENTRAR A LAS PAGINAS EN LA DIRECTIVEROUTE
-
-
+    useEffect(() => {
+        fetch('http://127.0.0.1:8000/api/school/myroles/', {
+            method: "GET",
+            headers: {
+                'Authorization': 'Token ' + token,
+                'School-ID': school,
+            },
+        }).then(response => response.json())
+        .then(data => {
+            setData(data);
+            
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    }, [rol]);
     const items = [
         getItem(<Link to="/perfil">Perfil</Link>, '1', <UserOutlined />),
         getItem(<Link to="/horarios">Horarios</Link>, '2', <TableOutlined />),
-        ...(rol=='Directivo' ? [
-          getItem(<Link to="/personal">Personal</Link>, '3', <TeamOutlined />),
-          getItem(<Link to="/materias">Materias</Link>, '4', <ScheduleOutlined />)
+        ...(rol==='Directivo'&& JSON.stringify(data).includes("Directivo") === true ? [
+            getItem(<Link to="/personal">Personal</Link>, '3', <TeamOutlined />),
+            getItem(<Link to="/materias">Materias</Link>, '4', <ScheduleOutlined />)
         ] : []),
         getItem(<Link to="/eventos">Eventos</Link>, '5', <ContactsOutlined />),
-      ];
+        getItem(<a onClick={cerrarSesion}>Cerrar sesion</a>, '6',<LogoutOutlined/>),
+    ];
+    
 
     if (sessionStorage.getItem('actual_school') == null) {
         const school = JSON.parse(localStorage.getItem('schools'));
@@ -105,6 +126,10 @@ const App = ({ children }) => {
         sessionStorage.setItem('rol', value);
         window.location.reload();
     }
+    function cerrarSesion() {
+        localStorage.setItem('token', '');
+        navigate('/login');
+    }
     //cambiar el default value del select por sessionStorage.getItem('rol')
     return (
         <Layout style={{ minHeight: '100vh' }}>
@@ -148,15 +173,17 @@ const App = ({ children }) => {
                         </Option>
                     ))}
                 </Select>
-                </div>
                 
+                </div>
                 <Menu theme="dark" defaultSelectedKeys={[getSelectedKey()]} mode="inline" items={items} />
+                
             </Sider>
             <Layout>
                 <Content>
                     {children}
                 </Content>
             </Layout>
+            
         </Layout>
     );
 };

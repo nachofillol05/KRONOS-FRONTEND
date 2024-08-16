@@ -1,8 +1,7 @@
-import React, { useState } from 'react';
-import { List, Divider, Flex, Form, Input, Button, Select, DatePicker } from 'antd';
+import React, { useState, useEffect } from 'react';
+import { List, Divider, Flex, Form, Input, Button, Select,Avatar } from 'antd';
 import moment, { duration } from 'moment';
 import './events.scss';
-import { calc } from 'antd/es/theme/internal';
 
 const dateFormat = 'DD/MM/YYYY';
 
@@ -10,17 +9,19 @@ export default function InfoWorker({ event }) {
     const [form] = Form.useForm();
     const [isEditing, setIsEditing] = useState(false);
     const [dur, setDur] = useState(calculateDuration(event.startDate, event.endDate));
-    console.log(event);
+    const [loading, setLoading] = useState(false);
+    const [data, setData] = useState(event.affiliated_teachers || []);
+
+
+
 
     function calculateDuration(startDate, endDate) {
         const start = new Date(startDate);
         const end = new Date(endDate);
-        console.log('Start:', start, 'End:', end);
     
         
         const differenceInTime = end.getTime() - start.getTime();
         const differenceInDays = Math.ceil(differenceInTime / (1000 * 3600 * 24))+1;
-        console.log('Difference in days:', differenceInDays);
         
         return differenceInDays;
     }
@@ -78,7 +79,7 @@ export default function InfoWorker({ event }) {
             form={form}
             layout="vertical"
         >
-            <Flex vertical style={{ width: '70%' }}>
+            <Flex vertical style={{ width: '100%' }}>
                 <h3>Claves del evento</h3>
                 <Form.Item className="formInfoEventItem" label="Nombre" name="name" layout='horizontal'>
                     <Input
@@ -141,8 +142,30 @@ export default function InfoWorker({ event }) {
                         style={customDisabledStyle}
                         disabled={true}
                     />
-                </Form.Item>            
-                
+                </Form.Item>
+                <h3>Profesores adheridos</h3>
+                <div
+            id="scrollableDiv"
+            style={{
+                height: 250,
+                overflow: 'auto',
+                padding: '0 16px',
+                border: '1px solid rgba(140, 140, 140, 0.35)',
+            }}
+        >
+            <List
+                dataSource={data}
+                renderItem={(item) => (
+                    <List.Item key={item.email}>
+                        <List.Item.Meta
+                            avatar={<Avatar src={item.profile_picure || 'default-avatar.png'} />}
+                            title={<h>{item.first_name} {item.last_name}</h>}
+                            description={item.email}
+                        />
+                    </List.Item>
+                )}
+            />
+        </div>         
             </Flex>
             <Flex gap={'10px'} justify='end'>
                 {isEditing ? (
