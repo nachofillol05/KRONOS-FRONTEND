@@ -81,9 +81,6 @@ class News extends React.Component {
                         Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex.
                       </p>
                     </div>
-                    <div className="news-item-more text-xs mb-8">
-                      <a href="https://cruip.com">Read more</a>
-                    </div>
                   </div>
                 </div>
               </div>
@@ -106,9 +103,6 @@ class News extends React.Component {
                         Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex.
                       </p>
                     </div>
-                    <div className="news-item-more text-xs mb-8">
-                      <a href="https://cruip.com">Read more</a>
-                    </div>
                   </div>
                 </div>
               </div>
@@ -130,9 +124,6 @@ class News extends React.Component {
                       <p className="mb-16 text-sm">
                         Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex.
                       </p>
-                    </div>
-                    <div className="news-item-more text-xs mb-8">
-                      <a href="https://cruip.com">Read more</a>
                     </div>
                   </div>
                 </div>
