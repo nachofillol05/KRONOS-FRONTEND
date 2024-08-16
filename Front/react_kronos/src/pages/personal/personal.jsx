@@ -187,7 +187,7 @@ export default function Personal() {
         setDrawerContent(null);
         form.resetFields();
     };
-    //AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAGREGAR QUE CREE UN TEACHER CON LA SCHOOL
+
     const handleSubmit = (form) => {
         form.validateFields()
             .then(values => {
@@ -367,14 +367,14 @@ export default function Personal() {
             }
         }, [activeFilter, searchName, subject, courses]);
 
-    const
-        columns = [
-            { title: 'Apellido', dataIndex: 'last_name', key: 'Apellido' },
-            { title: 'Nombre', dataIndex: 'first_name', key: 'Nombre' },
-            { title: 'Documento', dataIndex: 'document', key: 'Documento' },
-            { title: 'Genero', dataIndex: 'gender', key: 'Genero' },
-            { title: 'Email', dataIndex: 'email', key: 'Email' }
-        ];
+    const columns = [
+        { title: 'Nombre', dataIndex: 'first_name', key: 'Nombre', width: 150 },
+        { title: 'Apellido', dataIndex: 'last_name', key: 'Apellido', width: 150 },
+        { title: 'Documento', dataIndex: 'document', key: 'Documento', width: 150 },
+        { title: 'Genero', dataIndex: 'gender', key: 'Genero', width: 100 },
+        { title: 'Email', dataIndex: 'email', key: 'Email', width: 200 },
+        { title: 'Horas por semana', dataIndex: 'availability', key: 'Horaspsemana', width: 150 },
+    ];
 
     useEffect(() => {
         fetch('http://127.0.0.1:8000/api/subjects/', {
@@ -455,7 +455,7 @@ export default function Personal() {
                 <Input
                     size="large"
                     style={{
-                        width: 300,
+                        width: 200,
                     }}
                     placeholder="Buscar Personal"
                     onPressEnter={onChangePersonal}
@@ -471,7 +471,10 @@ export default function Personal() {
                 tableLayout={'fixed'}
                 filterDropdownOpen={true}
                 filtered={true}
-            />
+                />
+            
+
+            
             <FloatButton.Group
                 visibilityHeight={1500}
                 trigger="click"
@@ -489,6 +492,7 @@ export default function Personal() {
             </FloatButton.Group>
 
             <Drawer
+
 
                 destroyOnClose={false}
                 width={600}

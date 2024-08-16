@@ -1,9 +1,14 @@
 import Navegacion from "../layout/navegacion/navegaciones";
 import Landig from "../layout/landing/landings";
+import LayoutDefault from "../layouts/LayoutDefault.js";
+import LayoutLogin from "../layouts/LayoutSignin";
 
 /*Pages*/
 import Home from "../pages/home/Home";
 import Prueba from "../pages/prueba/prueba";
+import HomeTemplate from "../pages/HomeTemplate/Home.js";
+import LoginTemplate from "../pages/LoginTemplate/Login.js"; 
+import MailVerificado from "../pages/mailverificado/mailverificado.jsx"
 //import Login from "../pages/login/logins"
 import Page from "../pages/landingPage/landingPage";
 import Activation from "../pages/activation/activations";
@@ -42,7 +47,7 @@ export const routes = [
     },
 
     {
-        path: "/login",
+        path: "/loginAnterior",
         exact: true,
         layout: Landig,
         component: Page
@@ -76,7 +81,7 @@ export const routes = [
     {
         path: "/horarios",
         exact: true,
-        private: true,
+        private: false,
         layout: Navegacion,
         component: Horario
     },
@@ -86,5 +91,26 @@ export const routes = [
         private: false,
         layout: Navegacion,
         component: EventsPage,
+    },
+    {
+        path: "/landing",
+        exact: true,
+        private: false,
+        layout: LayoutDefault,
+        component: HomeTemplate,
+    },
+    {
+        path: "/login",
+        exact: true,
+        private: false,
+        layout: LayoutLogin,
+        component: LoginTemplate,
+    },
+    {
+        path: "/mailverificado",
+        exact: true,
+        private: false,
+        layout: Landig,
+        component: MailVerificado,
     }
 ];

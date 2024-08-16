@@ -147,12 +147,12 @@ export default function Materias() {
 
 
     const columns = [
-        { title: 'Nombre', dataIndex: 'name', key: 'name' },
-        { title: 'Abreviacion', dataIndex: 'abbreviation', key: 'abbreviation' },
-        { title: 'Curso', dataIndex: 'course', key: 'course' },
-        { title: 'Horas catedra semanales', dataIndex: 'weeklyHours', key: 'weeklyHours' },
-        { title: 'Color', dataIndex: 'color', key: 'color', render: (text) => (<div style={{ width: '24px', height: '24px', backgroundColor: text, borderRadius: '4px' }} />), },
-        { title: 'Descripcion', dataIndex: 'description', key: 'description' }
+        { title: 'Nombre', dataIndex: 'name', key: 'name', width: 150 },
+        { title: 'Abreviacion', dataIndex: 'abbreviation', key: 'abbreviation', width: 150 },
+        { title: 'Curso', dataIndex: 'course', key: 'course', width: 100 },
+        { title: 'Horas catedra semanales', dataIndex: 'weeklyHours', key: 'weeklyHours', width: 200 },
+        { title: 'Color', dataIndex: 'color', key: 'color', width: 100, render: (text) => (<div style={{ width: '24px', height: '24px', backgroundColor: text, borderRadius: '4px' }} />), },
+        { title: 'Descripcion', dataIndex: 'description', key: 'description', width: 300 }
     ];
 
     useEffect(() => {
@@ -289,7 +289,8 @@ export default function Materias() {
                 />
             </div>
 
-            <Table
+            <div className="table-container">
+                <Table
                 onRow={(record) => ({
                     onClick: () => showModal(record),
                 })}
@@ -300,9 +301,12 @@ export default function Materias() {
                 columns={columns}
                 tableLayout="fixed"
                 scroll={{ y: 550 }}
-            />
+                />
+
+            </div>
 
 
+            
             <FloatButton.Group
                 visibilityHeight={1500}
                 trigger="click"
