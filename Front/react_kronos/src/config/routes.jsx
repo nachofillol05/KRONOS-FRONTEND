@@ -41,7 +41,7 @@ export const routes = [
     {
         path: "/perfil",
         exact: true,
-        private: false,
+        private: true,
         layout: Navegacion,
         component: Perfil
     },
@@ -81,14 +81,14 @@ export const routes = [
     {
         path: "/horarios",
         exact: true,
-        private: false,
+        private: true,
         layout: Navegacion,
         component: Horario
     },
     {
         path: "/eventos",
         exact: true,
-        private: false,
+        private: true,
         layout: Navegacion,
         component: EventsPage,
     },

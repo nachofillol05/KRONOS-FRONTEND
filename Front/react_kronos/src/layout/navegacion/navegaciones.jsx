@@ -47,13 +47,19 @@ const App = ({ children }) => {
                 'Authorization': 'Token ' + token,
                 'School-ID': school,
             },
-        }).then(response => response.json())
+        }).then(response => {
+            if (response.ok) {
+                return response.json();
+            } else {
+                return navigate('/loginAnterior');
+            }
+        })
         .then(data => {
             setData(data);
-            
         })
         .catch(error => {
             console.error('Error:', error);
+            navigate('/landing');
         });
     }, [rol]);
     const items = [
@@ -70,12 +76,10 @@ const App = ({ children }) => {
 
     if (sessionStorage.getItem('actual_school') == null) {
         const school = JSON.parse(localStorage.getItem('schools'));
-        console.log(school[0]);
         sessionStorage.setItem('actual_school',school[0].pk);
     }
     if (sessionStorage.getItem('rol') == null) {
         const roles = JSON.parse(localStorage.getItem('roles'));
-        console.log(roles[0]);
         sessionStorage.setItem('rol',roles[0]);
     }
     
@@ -84,8 +88,6 @@ const App = ({ children }) => {
         const savedData = localStorage.getItem('schools');
         const schools = JSON.parse(localStorage.getItem('schools') || '[]');
         const actualSchoolPk = parseInt(sessionStorage.getItem('actual_school'), 10);
-        console.log(savedData);
-        console.log(actualSchoolPk);
         if (savedData) {
             const parsedData = JSON.parse(savedData);
             setDropdownItems(parsedData.map(school => ({
@@ -101,7 +103,6 @@ const App = ({ children }) => {
 
     const handleMenuItemClick = ({ key }) => {
         sessionStorage.setItem('actual_school', key);
-        console.log(sessionStorage.getItem('actual_school'))
         window.location.reload();
     };
 
@@ -127,8 +128,9 @@ const App = ({ children }) => {
         window.location.reload();
     }
     function cerrarSesion() {
-        localStorage.setItem('token', '');
-        navigate('/login');
+        localStorage.clear();
+        sessionStorage.clear();
+        navigate('/landing');
     }
     //cambiar el default value del select por sessionStorage.getItem('rol')
     return (

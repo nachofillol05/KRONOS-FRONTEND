@@ -65,7 +65,7 @@ export default function Materias() {
                 const body = {
                     name: values.materia,
                     abbreviation: values.abreviacion,
-                    course: values.curso,
+                    courses: values.curso,
                     weeklyHours: parseInt(values.horasCatedras, 10),
                     color: hexColor,
                     studyPlan: values.planEstudio,
@@ -123,7 +123,7 @@ export default function Materias() {
             url.searchParams.append('name', Subjectname);
         }
         console.log(url.toString());
-        console.log(localStorage.getItem('actual_school'));
+        console.log(sessionStorage.getItem('actual_school'));
         fetch(url.toString(), {
             method: "GET",
             headers: {
@@ -138,7 +138,8 @@ export default function Materias() {
                 return response.json();
             })
             .then(data => {
-                setMaterias(data.map(materia => ({ ...materia, key: materia.id, course: materia.course.name })));
+                console.log(data)
+                setMaterias(data.map(materia => ({ ...materia, key: materia.id, course: materia.courses.name })));
                 setLoading(false);
                 console.log(data);
             })

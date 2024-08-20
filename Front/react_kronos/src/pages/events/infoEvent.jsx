@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { List, Divider, Flex, Form, Input, Button, Select,Avatar } from 'antd';
+import { List, Divider, Flex, Form, Input, Button, Select,Avatar, DatePicker } from 'antd';
 import moment, { duration } from 'moment';
 import './events.scss';
 
@@ -16,22 +16,22 @@ export default function InfoWorker({ event }) {
 
 
     function calculateDuration(startDate, endDate) {
-        const start = new Date(startDate);
-        const end = new Date(endDate);
-    
+        if(!isEditing){
+            const start = new Date(startDate);
+            const end = new Date(endDate);
         
-        const differenceInTime = end.getTime() - start.getTime();
-        const differenceInDays = Math.ceil(differenceInTime / (1000 * 3600 * 24))+1;
-        
-        return differenceInDays;
+            
+            const differenceInTime = end.getTime() - start.getTime();
+            const differenceInDays = Math.ceil(differenceInTime / (1000 * 3600 * 24))+1;
+            
+            return differenceInDays;
+        }
     }
     
     form.setFieldsValue({
         name: event.name,
         eventType: event.eventType.name,
         description: event.description,
-        startDate:  moment(event.startDate).format(dateFormat),
-        endDate:  moment(event.endDate).format(dateFormat),
         duration: dur,
     });
 
@@ -47,6 +47,11 @@ export default function InfoWorker({ event }) {
             });
         }
     };
+
+    const onChangeDate = (date, dateString) => {
+        const formattedMaxDate = moment(dateString).format('DD/MM/YYYY');
+        console.log('Agregarlo despues en el form',encodeURIComponent(formattedMaxDate))
+      }
 
     const handleSave = () => {
         form.validateFields().then(values => {
@@ -71,9 +76,7 @@ export default function InfoWorker({ event }) {
         height: '38px',
         width: '100%',
     };
-    
-
-
+    console.log(event.endDate);
     return (
         <Form
             form={form}
@@ -97,7 +100,6 @@ export default function InfoWorker({ event }) {
                                 { label: 'Conference', value: 'conference' },
                                 { label: 'Workshop', value: 'workshop' },
                                 { label: 'Webinar', value: 'webinar' },
-                                // Add more event types as needed
                             ]}
                         />
                     ) : (
@@ -119,20 +121,42 @@ export default function InfoWorker({ event }) {
                 <Divider />
                 <h3>Fechas</h3>
                 <Form.Item className="formInfoEventItem" label="Fecha de inicio" name="startDate" layout='horizontal'>
-                    <Input
+                    {isEditing ? (
+                        <DatePicker
                             size='large'
-                            value={event.startDate}
                             disabled={!isEditing}
                             style={!isEditing ? customDisabledStyle : { height: '38px' }}
+                            value={moment(event.startDate, dateFormat)}
+                            onChange={onChangeDate}
+                            format={dateFormat}
                         />
+                    ) : (
+                        <Input
+                            size='large'
+                            value={event.startDate}
+                            disabled
+                            style={!isEditing ? customDisabledStyle : { height: '38px' }}
+                        />
+                    )}
                 </Form.Item>
                 <Form.Item className="formInfoEventItem" label="Fecha de fin" name="endDate" layout='horizontal'>
+                {isEditing ? (
+                        <DatePicker
+                            size='large'
+                            disabled={!isEditing}
+                            style={!isEditing ? customDisabledStyle : { height: '38px' }}
+                            value={moment(event.endDate, dateFormat)}
+                            onChange={onChangeDate}
+                            format={dateFormat}
+                        />
+                    ) : (
                         <Input
                             size='large'
                             value={event.endDate}
-                            disabled={!isEditing}
+                            disabled
                             style={!isEditing ? customDisabledStyle : { height: '38px' }}
                         />
+                    )}
                    
 
                 </Form.Item>

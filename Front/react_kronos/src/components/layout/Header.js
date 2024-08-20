@@ -126,7 +126,7 @@ class Header extends React.Component {
                         className="list-reset header-nav-right"
                       >
                         <li>
-                          <Link to="/logintemplate/" className="button button-primary button-wide-mobile button-sm" onClick={this.closeMenu}>Login</Link>
+                          <Link to="/login/" className="button button-primary button-wide-mobile button-sm" onClick={this.closeMenu}>Login</Link>
                         </li>
                       </ul>}
                   </div>
