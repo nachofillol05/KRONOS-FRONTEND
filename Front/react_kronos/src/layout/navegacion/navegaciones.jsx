@@ -4,12 +4,13 @@ import {
     TableOutlined,
     TeamOutlined,
     ContactsOutlined,
-    UserOutlined
+    UserOutlined,
+    LogoutOutlined
 } from '@ant-design/icons';
 import { Layout, Menu, Dropdown, Select } from 'antd';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation,useNavigate } from 'react-router-dom';
 
-import './navegaciones.scss'; // Asegúrate de importar el archivo CSS
+import './navegaciones.scss'; 
 
 const {  Content, Sider } = Layout;
 const { Option } = Select;
@@ -30,30 +31,57 @@ const App = ({ children }) => {
     const [escuelaCompleta, setEscuelaCompleta] = useState(null);
     const [rol, setRol] = useState(sessionStorage.getItem('rol'));
     const [roles, setRoles] = useState(JSON.parse(localStorage.getItem('roles')));
+    const [token, setToken] = useState(localStorage.getItem('token'));
+    const [school, setSchool] = useState(sessionStorage.getItem('actual_school'));
+    const [data, setData] = useState(null);
+    const navigate = useNavigate();
 
     //AGREGAR UNA COMPROBACION PARA VER SI EL USUARIO TIENE ESE ROL ENSERIO PORQUE SINO SE PODRIA CAMBIAR DESDE EL SESSION STORAGE
     // Y VER COSAS QUE NO DEBERIA . AUNQUE SEA EN LO IMPORTANTE COMO MOSTRARLE ESO O SOLO AL ENTRAR A LAS PAGINAS EN LA DIRECTIVEROUTE
-
-
+    useEffect(() => {
+        fetch('http://127.0.0.1:8000/api/school/myroles/', {
+            method: "GET",
+            headers: {
+                'Authorization': 'Token ' + token,
+                'School-ID': school,
+            },
+        }).then(response => {
+            if (response.ok) {
+                return response.json();
+            } else {
+                return navigate('/loginAnterior');
+            }
+        })
+        .then(data => {
+            setData(data);
+            setRoles(data.roles);
+            localStorage.setItem('roles', JSON.stringify(data.roles));
+            sessionStorage.setItem('rol',data.roles[0]);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            navigate('/landing');
+        });
+    }, [rol, sessionStorage.getItem('actual_school')]);
     const items = [
         getItem(<Link to="/perfil">Perfil</Link>, '1', <UserOutlined />),
         getItem(<Link to="/horarios">Horarios</Link>, '2', <TableOutlined />),
-        ...(rol == 'Directivo' ? [
+        ...(rol==='Directivo'&& JSON.stringify(data).includes("Directivo") === true ? [
             getItem(<Link to="/personal">Personal</Link>, '3', <TeamOutlined />),
             getItem(<Link to="/materias">Materias</Link>, '4', <ScheduleOutlined />)
         ] : []),
         getItem(<Link to="/eventos">Eventos</Link>, '5', <ContactsOutlined />),
+        getItem(<a onClick={cerrarSesion}>Cerrar sesion</a>, '6',<LogoutOutlined/>),
     ];
+    
 
     if (sessionStorage.getItem('actual_school') == null) {
         const school = JSON.parse(localStorage.getItem('schools'));
-        console.log(school[0]);
-        sessionStorage.setItem('actual_school', school[0].pk);
+        sessionStorage.setItem('actual_school',school[0].pk);
     }
     if (sessionStorage.getItem('rol') == null) {
         const roles = JSON.parse(localStorage.getItem('roles'));
-        console.log(roles[0]);
-        sessionStorage.setItem('rol', roles[0]);
+        sessionStorage.setItem('rol',roles[0]);
     }
 
     //Esto es para el logo(?)
@@ -61,8 +89,6 @@ const App = ({ children }) => {
         const savedData = localStorage.getItem('schools');
         const schools = JSON.parse(localStorage.getItem('schools') || '[]');
         const actualSchoolPk = parseInt(sessionStorage.getItem('actual_school'), 10);
-        console.log(savedData);
-        console.log(actualSchoolPk);
         if (savedData) {
             const parsedData = JSON.parse(savedData);
             setDropdownItems(parsedData.map(school => ({
@@ -78,7 +104,6 @@ const App = ({ children }) => {
 
     const handleMenuItemClick = ({ key }) => {
         sessionStorage.setItem('actual_school', key);
-        console.log(sessionStorage.getItem('actual_school'))
         window.location.reload();
     };
 
@@ -103,6 +128,11 @@ const App = ({ children }) => {
         sessionStorage.setItem('rol', value);
         window.location.reload();
     }
+    function cerrarSesion() {
+        localStorage.clear();
+        sessionStorage.clear();
+        navigate('/landing');
+    }
     //cambiar el default value del select por sessionStorage.getItem('rol')
     return (
         <Layout style={{ minHeight: '100vh' }}>
@@ -112,6 +142,16 @@ const App = ({ children }) => {
                 onCollapse={(value) => setCollapsed(value)}
                 width={200}
                 collapsedWidth={50}
+                breakpoint="lg" // Ajuste del punto de ruptura
+                style={{
+                    overflow: 'auto',
+                    height: '100vh',
+                    position: 'fixed',
+                    left: 0,
+                    top: 0,
+                    bottom: 0,
+                    zIndex: 1,
+                }}
             >
                 <div className={`logo ${collapsed ? 'collapsed' : ''}`}>
                     <Dropdown
@@ -140,23 +180,26 @@ const App = ({ children }) => {
                         onChange={(value) => changeRol(value)}
                         defaultValue={rol}
                     >
-                        {roles.map((role) => (
-                            <Option key={role} value={role}>
-                                {role}
-                            </Option>
-                        ))}
-                    </Select>
+                    {roles.map((role) => (
+                        <Option key={role} value={role}>
+                        {role}
+                        </Option>
+                    ))}
+                </Select>
+                
                 </div>
-
                 <Menu theme="dark" defaultSelectedKeys={[getSelectedKey()]} mode="inline" items={items} />
+                
             </Sider>
-            <Layout>
-                <Content>
+            <Layout style={{ marginLeft: collapsed ? 50 : 200 }}>
+            <Content style={{ padding: '0 24px', minHeight: 280 }}>
                     {children}
                 </Content>
             </Layout>
+            
         </Layout>
     );
 };
 
 export default App;
+

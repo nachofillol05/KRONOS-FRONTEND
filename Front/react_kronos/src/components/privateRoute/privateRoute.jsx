@@ -4,9 +4,15 @@ import { useNavigate } from 'react-router-dom';
 const PrivateRoute = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(null);
   const navigate = useNavigate();
-  if (localStorage.getItem('token') === "" || localStorage.getItem('token') === null){
-    navigate('/login');
-  }
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    
+    if (!token) {
+      console.log("Token is null or empty");
+      navigate('/landing');
+    }
+  }, [navigate]);
+  
   useEffect(() => {
     const verifyToken = async () => {
       try {
@@ -24,15 +30,15 @@ const PrivateRoute = ({ children }) => {
           setIsAuthenticated(true);
           response.json().then(data => {
             localStorage.setItem('user', JSON.stringify(data));
-        });
+          });
         } else {
           setIsAuthenticated(false);
-          navigate('/login');
+          return navigate('/loginAnterior');
         }
       } catch (error) {
         console.error('Error verifying token:', error);
         setIsAuthenticated(false);
-        navigate('/login');
+        return navigate('/loginAnterior');
       }
     };
 

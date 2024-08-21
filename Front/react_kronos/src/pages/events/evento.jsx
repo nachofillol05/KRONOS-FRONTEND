@@ -434,20 +434,12 @@ export default function EventsPage() {
 })}
 
       </div>
-      <FloatButton.Group
-        visibilityHeight={1500}
-        trigger="click"
-        type="primary"
-        closeIcon={<DownOutlined />}
-        icon={<UpOutlined />}
-      >
         <FloatButton
           icon={<FolderAddOutlined />}
           type="primary"
           tooltip="Agregar una evento"
           onClick={() => showDrawer(<FormCreateEvent handleVolver={handleVolver} handleSubmit={handleSubmit} />, "Agregar un nuevo evento")}
         />
-      </FloatButton.Group>
 
       <Drawer
         width={600}

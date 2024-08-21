@@ -65,7 +65,7 @@ export default function Materias() {
                 const body = {
                     name: values.materia,
                     abbreviation: values.abreviacion,
-                    course: values.curso,
+                    courses: values.curso,
                     weeklyHours: parseInt(values.horasCatedras, 10),
                     color: hexColor,
                     studyPlan: values.planEstudio,
@@ -123,7 +123,7 @@ export default function Materias() {
             url.searchParams.append('name', Subjectname);
         }
         console.log(url.toString());
-        console.log(localStorage.getItem('actual_school'));
+        console.log(sessionStorage.getItem('actual_school'));
         fetch(url.toString(), {
             method: "GET",
             headers: {
@@ -138,7 +138,8 @@ export default function Materias() {
                 return response.json();
             })
             .then(data => {
-                setMaterias(data.map(materia => ({ ...materia, key: materia.id, course: materia.course.name })));
+                console.log(data)
+                setMaterias(data.map(materia => ({ ...materia, key: materia.id, course: materia.courses.name })));
                 setLoading(false);
                 console.log(data);
             })
@@ -147,12 +148,12 @@ export default function Materias() {
 
 
     const columns = [
-        { title: 'Nombre', dataIndex: 'name', key: 'name' },
-        { title: 'Abreviacion', dataIndex: 'abbreviation', key: 'abbreviation' },
-        { title: 'Curso', dataIndex: 'course', key: 'course' },
-        { title: 'Horas catedra semanales', dataIndex: 'weeklyHours', key: 'weeklyHours' },
-        { title: 'Color', dataIndex: 'color', key: 'color', render: (text) => (<div style={{ width: '24px', height: '24px', backgroundColor: text, borderRadius: '4px' }} />), },
-        { title: 'Descripcion', dataIndex: 'description', key: 'description' }
+        { title: 'Nombre', dataIndex: 'name', key: 'name', width: 150 },
+        { title: 'Abreviacion', dataIndex: 'abbreviation', key: 'abbreviation', width: 150 },
+        { title: 'Curso', dataIndex: 'course', key: 'course', width: 100 },
+        { title: 'Horas catedra semanales', dataIndex: 'weeklyHours', key: 'weeklyHours', width: 200 },
+        { title: 'Color', dataIndex: 'color', key: 'color', width: 100, render: (text) => (<div style={{ width: '24px', height: '24px', backgroundColor: text, borderRadius: '4px' }} />), },
+        { title: 'Descripcion', dataIndex: 'description', key: 'description', width: 300 }
     ];
 
     useEffect(() => {
@@ -288,7 +289,8 @@ export default function Materias() {
                 />
             </div>
 
-            <Table
+            <div className="table-container">
+                <Table
                 onRow={(record) => ({
                     onClick: () => showModal(record),
                 })}
@@ -299,9 +301,12 @@ export default function Materias() {
                 columns={columns}
                 tableLayout="fixed"
                 scroll={{ y: 550 }}
-            />
+                />
+
+            </div>
 
 
+            
             <FloatButton.Group
                 visibilityHeight={1500}
                 trigger="click"
