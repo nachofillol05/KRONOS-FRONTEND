@@ -473,18 +473,23 @@ export default function Profile() {
 </Tabs.TabPane>
 
       </Tabs >
-      <FloatButton
-      icon={<ClockCircleOutlined />}
-      tooltip="Cargar disponibilidad"
-      onClick={() => showDrawer(
-          <FormDisponibilidad onClose={onClose}/>
-          ,"Disponibilidad")}
-  />
-  <Drawer width={600} title={drawerTitle} onClose={onClose} open={open}>
-      <div style={{ width: '100%', height: '100%' }}>
-          {drawerContent}
-      </div>
-  </Drawer>
+      {sessionStorage.getItem('rol') === 'Profesor' ? (
+        <>
+        <FloatButton
+        icon={<ClockCircleOutlined />}
+        tooltip="Cargar disponibilidad"
+        onClick={() => showDrawer(
+            <FormDisponibilidad onClose={onClose}/>
+            ,"Disponibilidad")}
+        />
+        <Drawer width={600} title={drawerTitle} onClose={onClose} open={open}>
+            <div style={{ width: '100%', height: '100%' }}>
+                {drawerContent}
+            </div>
+        </Drawer>
+        </>
+      ) : null}
+      
     </>
   );
 };
