@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button } from 'antd';
 import { CheckCircleOutlined } from '@ant-design/icons';
-import './mailverificado.scss'; // Asegúrate de crear este archivo CSS con los estilos que se describen más abajo.
+import './mailverificado.scss'; 
 
 const MailVerificado = () => {
   return (
@@ -9,10 +9,10 @@ const MailVerificado = () => {
       <div className="verification-content">
         <CheckCircleOutlined className="verification-icon" />
         <h1 className="verification-title">¡Verificación exitosa!</h1>
-        <p className="verification-text">
+        <p className="mt-0 mb-32">
           Tu correo electrónico ha sido verificado con éxito. Ahora puedes continuar usando nuestra plataforma.
         </p>
-        <Button type="primary" className="verification-button">
+        <Button type="primary" className="button button-primary button-wide-mobile button-sm">
           Continuar
         </Button>
       </div>

@@ -49,8 +49,8 @@ class News extends React.Component {
     );
 
     const sectionHeader = {
-      title: 'Product news and updates',
-      paragraph: 'Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum consequat.'
+      title: 'Caracteristicas',
+      paragraph: 'Texto de Ejemplo'
     };
 
     return (
@@ -75,10 +75,10 @@ class News extends React.Component {
                   <div className="news-item-content">
                     <div className="news-item-body">
                       <h3 className="news-item-title h4 mt-0 mb-8">
-                        <a href="https://cruip.com">How to build anything</a>
+                        <a href="https://cruip.com">Texto de Ejemplo</a>
                       </h3>
                       <p className="mb-16 text-sm">
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex.
+                        Texto de Ejemplo
                       </p>
                     </div>
                   </div>
@@ -97,10 +97,10 @@ class News extends React.Component {
                   <div className="news-item-content">
                     <div className="news-item-body">
                       <h3 className="news-item-title h4 mt-0 mb-8">
-                        <a href="https://cruip.com">How to build anything</a>
+                        <a href="https://cruip.com">Texto de Ejemplo</a>
                       </h3>
                       <p className="mb-16 text-sm">
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex.
+                        Texto de Ejemplo
                       </p>
                     </div>
                   </div>
@@ -119,10 +119,10 @@ class News extends React.Component {
                   <div className="news-item-content">
                     <div className="news-item-body">
                       <h3 className="news-item-title h4 mt-0 mb-8">
-                        <a href="https://cruip.com">How to build anything</a>
+                        <a href="https://cruip.com">Texto de Ejemplo</a>
                       </h3>
                       <p className="mb-16 text-sm">
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex.
+                        Texto de Ejemplo
                       </p>
                     </div>
                   </div>

@@ -9,6 +9,7 @@ import Prueba from "../pages/prueba/prueba";
 import HomeTemplate from "../pages/HomeTemplate/Home.js";
 import LoginTemplate from "../pages/LoginTemplate/Login.js"; 
 import MailVerificado from "../pages/mailverificado/mailverificado.jsx"
+import MailEnviado from "../pages/mailenviado/mailenviado.jsx"
 //import Login from "../pages/login/logins"
 import Page from "../pages/landingPage/landingPage";
 import Activation from "../pages/activation/activations";
@@ -112,5 +113,12 @@ export const routes = [
         private: false,
         layout: Landig,
         component: MailVerificado,
+    },
+    {
+        path: "/mailenviado",
+        exact: true,
+        private: false,
+        layout: Landig,
+        component: MailEnviado,
     }
 ];

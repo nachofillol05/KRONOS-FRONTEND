@@ -71,13 +71,13 @@ class FeaturesTabs extends React.Component {
                 <Tab tabId="tab-a">
                   <div className="features-tabs-tab-image mb-12">
                     <Image
-                      src={require('../../assets/images/colelogo.png')}
+                      src={require('../../assets/images/villadalogo.png')}
                       alt="Tab icon 01"
                       width={100}
                       height={100} />
                   </div>
                   <div className="text-color-high fw-600 text-sm">
-                    Internal Feedback
+                    ITS Villada
                   </div>                  
                 </Tab>
                 <Tab tabId="tab-d">
@@ -89,7 +89,7 @@ class FeaturesTabs extends React.Component {
                       height={100} />
                   </div>
                   <div className="text-color-high fw-600 text-sm">
-                    Internal Feedback
+                    Jesus Maria
                   </div>
                 </Tab>                
               </TabList>
@@ -104,7 +104,7 @@ class FeaturesTabs extends React.Component {
               <TabPanel id="tab-b">
                 <Image
                   className="has-shadow"
-                  src={require('../../assets/images/villadafrente.jpeg')}
+                  src={require('../../assets/images/jesusmariaimg.png')}
                   alt="Features tabs image 02"
                   width={896}
                   height={504} />
@@ -120,7 +120,7 @@ class FeaturesTabs extends React.Component {
               <TabPanel id="tab-d">
                 <Image
                   className="has-shadow"
-                  src={require('../../assets/images/villadafrente.jpeg')}
+                  src={require('../../assets/images/jesusmariaimg.png')}
                   alt="Features tabs image 04"
                   width={896}
                   height={504} />
