@@ -7,6 +7,12 @@ const dateFormat = 'DD/MM/YYYY';
 const { RangePicker } = DatePicker;
 const { TextArea } = Input;
 
+const roles = [
+    { value: '1', label: 'Profesor' },
+    { value: '2', label: 'Directivo' },
+    { value: '3', label: 'Preceptor' },
+]
+
 export default function FormCreateEvent({ handleSubmit, handleVolver }) {
     const [types, setTypes] = useState([]);
     useEffect(() => {
@@ -50,6 +56,19 @@ export default function FormCreateEvent({ handleSubmit, handleVolver }) {
                 >
                     <Input size='large' autoSize={true} placeholder="Ingrese el nombre de la persona" />
                 </Form.Item>
+                <Form.Item
+                        style={{ width: '50%' }}
+                        name="Rolesdirigido"
+                        label="Roles dirigido"
+                        rules={[
+                            {
+                                required: true,
+                                message: 'Por favor ingrese el rol al que va dirigido',
+                            },
+                        ]}
+                    >
+                        <Select size='large' type='email' autoSize placeholder="Ingrese el rol al que va dirigido" options={roles} />
+                    </Form.Item>
                 <Flex gap={15}>
                     <Form.Item
                         style={{ width: '50%' }}
