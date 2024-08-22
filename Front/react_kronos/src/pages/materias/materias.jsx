@@ -118,7 +118,7 @@ export default function Materias() {
                 const body = {
                     name: values.materia,
                     abbreviation: values.abreviacion,
-                    course: values.curso,
+                    courses: values.curso,
                     weeklyHours: parseInt(values.horasCatedras, 10),
                     color: hexColor,
                     studyPlan: values.planEstudio,
@@ -176,7 +176,7 @@ export default function Materias() {
             url.searchParams.append('name', Subjectname);
         }
         console.log(url.toString());
-        console.log(localStorage.getItem('actual_school'));
+        console.log(sessionStorage.getItem('actual_school'));
         fetch(url.toString(), {
             method: "GET",
             headers: {
@@ -191,7 +191,8 @@ export default function Materias() {
                 return response.json();
             })
             .then(data => {
-                setMaterias(data.map(materia => ({ ...materia, key: materia.id, course: materia.course.name })));
+                console.log(data)
+                setMaterias(data.map(materia => ({ ...materia, key: materia.id, course: materia.courses.name })));
                 setLoading(false);
                 console.log(data);
             })
@@ -347,21 +348,25 @@ export default function Materias() {
                     allowClear
                 />
             </div>
+            <div className="table-container">
+                <Table
+                onRow={(record) => ({
+                    onClick: () => showModal(record),
+                })}
 
-            <Table
-            bordered
-            onRow={(record) => ({
-                onClick: () => showModal(record),
-            })}
-            pagination={false}
-            loading={loading}
-            dataSource={materias}
-            columns={columns}
-            tableLayout="fixed"
-            scroll={{ y: 550 }}
-        />
+                loading={loading}
+                dataSource={materias}
+                columns={columns}
+                tableLayout="fixed"
+                pagination={false}
+                y={500}
+                footer={false}
+                />
 
+            </div>
 
+            {sessionStorage.getItem('rol') === 'Directivo' ? (
+            <>
             <FloatButton.Group
                 visibilityHeight={1500}
                 trigger="click"
@@ -392,6 +397,7 @@ export default function Materias() {
                     {drawerContent}
                 </div>
             </Drawer>
+            </>) : (<FloatButton icon={<DownloadOutlined />} tooltip="Descargar tabla" />)}
             <Modal 
             width={400}
             title="Asigna profesor a la materia" 
@@ -416,5 +422,5 @@ export default function Materias() {
                 </Flex>
             </Modal>
         </>
-    );
+    )
 }

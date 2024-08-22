@@ -4,6 +4,7 @@ import { routes } from './config/routes';
 import PrivateRoute from './components/privateRoute/privateRoute.jsx'; 
 import DirectiveRoute from './components/privateRoute/directiveRoute.jsx';
 
+
 export default function App() {
   return (
     <Router>
@@ -37,3 +38,5 @@ export default function App() {
     </Router>
   );
 }
+
+

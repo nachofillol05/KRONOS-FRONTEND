@@ -2,13 +2,23 @@
 import { Form, Input, DatePicker, Flex, Button, Tooltip, Select } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { RollbackOutlined, PlusOutlined } from '@ant-design/icons';
+import dayjs from 'dayjs';
 
 const dateFormat = 'DD/MM/YYYY';
 const { RangePicker } = DatePicker;
 const { TextArea } = Input;
 
+const roles = [
+    { value: '1', label: 'Profesor' },
+    { value: '2', label: 'Directivo' },
+    { value: '3', label: 'Preceptor' },
+]
+
 export default function FormCreateEvent({ handleSubmit, handleVolver }) {
     const [types, setTypes] = useState([]);
+    const disabledDate = (current) => {
+        return current && current < dayjs().endOf('day');
+      };
     useEffect(() => {
         fetch('http://127.0.0.1:8000/api/typeevent/', {
             method: "GET",
@@ -48,8 +58,21 @@ export default function FormCreateEvent({ handleSubmit, handleVolver }) {
                         },
                     ]}
                 >
-                    <Input size='large' autoSize={true} placeholder="Ingrese el nombre de la persona" />
+                    <Input size='large' autoSize={true} placeholder="Ingrese el nombre de la persona" maxLength={255} />
                 </Form.Item>
+                <Form.Item
+                        style={{ width: '50%' }}
+                        name="Rolesdirigido"
+                        label="Roles dirigido"
+                        rules={[
+                            {
+                                required: true,
+                                message: 'Por favor ingrese el rol al que va dirigido',
+                            },
+                        ]}
+                    >
+                        <Select size='large' type='email' autoSize placeholder="Ingrese el rol al que va dirigido" options={roles} />
+                    </Form.Item>
                 <Flex gap={15}>
                     <Form.Item
                         style={{ width: '50%' }}
@@ -62,7 +85,7 @@ export default function FormCreateEvent({ handleSubmit, handleVolver }) {
                             },
                         ]}
                     >
-                        <RangePicker size='large' type='number' autoSize={true} placeholder="Ingrese las fechas" format={dateFormat} />
+                        <RangePicker size='large' type='number' autoSize={true} placeholder="Ingrese las fechas" disabledDate={disabledDate} format={dateFormat} />
                     </Form.Item>
                     <Form.Item
                         style={{ width: '50%' }}
@@ -89,7 +112,7 @@ export default function FormCreateEvent({ handleSubmit, handleVolver }) {
                         },
                     ]}
                 >
-                <TextArea size='large' placeholder="Ingrese la descripción del evento" allowClear style={{ height: '100px' }} />
+                <TextArea size='large' placeholder="Ingrese la descripción del evento" allowClear maxLength={255} style={{ height: '100px' }} />
                 </Form.Item>
                 <Form.Item>
                     <Flex justify='flex-end' gap={10}>

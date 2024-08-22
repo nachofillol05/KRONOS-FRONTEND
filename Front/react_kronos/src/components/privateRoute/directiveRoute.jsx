@@ -1,12 +1,15 @@
-import  { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const DirectiveRoute = ({ children }) => {
     const [isAuthenticated, setIsAuthenticated] = useState(null);
     const navigate = useNavigate();
-    if (localStorage.getItem('token') === "" || localStorage.getItem('token') === null) {
-        navigate('/login');
+    const [token, setToken] = useState(localStorage.getItem('token'));
+    const [school, setSchool] = useState(sessionStorage.getItem('actual_school'));
+    if (token === "" || token === null) {
+        navigate('/landing');
     }
+
     useEffect(() => {
         const verifyToken = async () => {
             try {
@@ -21,20 +24,35 @@ const DirectiveRoute = ({ children }) => {
                 });
 
                 if (response.ok) {
-                    if (sessionStorage.getItem('rol') === "Directivo") {
-                        setIsAuthenticated(true);
-                        response.json().then(data => {
-                            localStorage.setItem('user', JSON.stringify(data));
+                    fetch('http://127.0.0.1:8000/api/school/myroles/', {
+                        method: "GET",
+                        headers: {
+                            'Authorization': 'Token ' + token,
+                            'School-ID': school,
+                        },
+                    }).then(response => response.json())
+                        .then(data => {
+                            if ((sessionStorage.getItem('rol') === "Directivo" && JSON.stringify(data).includes("Directivo") === true) || (sessionStorage.getItem('rol') === "Preceptor" && JSON.stringify(data).includes("Preceptor") === true)) {
+                                setIsAuthenticated(true);
+                                response.json().then(data => {
+                                    localStorage.setItem('user', JSON.stringify(data));
+                                });
+                            } else {
+                                setIsAuthenticated(false);
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
                         });
-                    } else {
-                        setIsAuthenticated(false);
-                    }
+
                 } else {
                     setIsAuthenticated(false);
+                    return navigate('/landing')
                 }
             } catch (error) {
                 console.error('Error verifying token:', error);
                 setIsAuthenticated(false);
+                return navigate('/landing')
             }
         };
 

@@ -1,19 +1,13 @@
 @import './variables.scss';
 
-/*scss de componentes externos*/
+
 @import './floatButton.scss';
 
 *{
     padding: 0;
     margin: 0;
 }
-#root{
-    width: 100%;
-    height: 100vh;
-    display: flex;
-    justify-content: space-between;
-    background-color: $color-secundario;
-}
+
 
 
 input[type="number"]::-webkit-outer-spin-button,

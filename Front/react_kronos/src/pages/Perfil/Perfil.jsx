@@ -118,47 +118,6 @@ export default function Profile() {
         console.error('Error updating profile:', error);
       });
   };
-  /*const handleFinishSchool = (values) => {
-    const updatedSchoolProfile = {
-      ...profileData,
-      ...values,
-      schoolInfo: {
-        ...profileData.schoolInfo,
-        name: values.name,
-        abbreviation: values.abbreviation,
-        email: values.email,
-        province: values.province,
-        city: values.city,
-        street: values.street,
-        streetNumber: values.streetNumber,
-        postalCode: values.postalCode,
-      },
-    };
-
-    fetch('http://127.0.0.1:8000/api/school/', {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Token ' + localStorage.getItem('token'),
-        'School-ID': sessionStorage.getItem('actual_school'),
-      },
-      body: JSON.stringify(updatedSchoolProfile),
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        return response.json();
-      })
-      .then((data) => {
-        console.log('Profile updated successfully:', data);
-        setProfileData(data);
-        setIsEditing(false);
-      })
-      .catch((error) => {
-        console.error('Error updating profile:', error);
-      });
-  };*/
 
   const customDisabledStyle = {
     backgroundColor: 'transparent',
@@ -473,18 +432,23 @@ export default function Profile() {
 </Tabs.TabPane>
 
       </Tabs >
-      <FloatButton
-      icon={<ClockCircleOutlined />}
-      tooltip="Cargar disponibilidad"
-      onClick={() => showDrawer(
-          <FormDisponibilidad onClose={onClose}/>
-          ,"Disponibilidad")}
-  />
-  <Drawer width={600} title={drawerTitle} onClose={onClose} open={open}>
-      <div style={{ width: '100%', height: '100%' }}>
-          {drawerContent}
-      </div>
-  </Drawer>
+      {sessionStorage.getItem('rol') === 'Profesor' ? (
+        <>
+        <FloatButton
+        icon={<ClockCircleOutlined />}
+        tooltip="Cargar disponibilidad"
+        onClick={() => showDrawer(
+            <FormDisponibilidad onClose={onClose}/>
+            ,"Disponibilidad")}
+        />
+        <Drawer width={600} title={drawerTitle} onClose={onClose} open={open}>
+            <div style={{ width: '100%', height: '100%' }}>
+                {drawerContent}
+            </div>
+        </Drawer>
+        </>
+      ) : null}
+      
     </>
   );
 };
