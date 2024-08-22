@@ -1,0 +1,94 @@
+/* src/Calendario.css */
+.Calendario {
+    overflow: scroll;
+    height: 620px;
+}
+
+.dropdown {
+    z-index: 1000;
+    background-color: transparent;
+
+}
+
+.dropdown input {
+    margin-bottom: 8px;
+    padding: 4px;
+    width: 100%;
+    box-sizing: border-box;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+}
+
+.dropdown-item {
+    padding: 8px;
+    margin: 4px 0;
+    cursor: pointer;
+    text-align: center;
+    border-radius: 4px;
+    color: white;
+}
+
+.dropdown-item:hover {
+    opacity: 0.9;
+}
+
+.casilla {
+    min-height: 50px;
+    width: 100px;
+    background-color: #fbfbfa;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: inset 0 0 0 1px #dddcdc;
+    font-weight: bolder;
+}
+
+.encabezado {
+    position: sticky;
+    top: 0;
+    z-index: 9;
+}
+
+.columna {
+    position: sticky;
+    left: 0;
+    z-index: 10;
+}
+
+.esquina {
+    position: sticky;
+    top: 0;
+    left: 0;
+    z-index: 11;
+}
+
+
+
+.hora {
+    min-height: 50px;
+    width: 100px;
+    background-color: #fbfbfa;
+    flex-direction: column;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: inset 0 0 0 .5px #dddcdc;
+
+}
+
+
+.espacio {
+    cursor: pointer;
+    min-height: 50px;
+    width: 100px;
+    background-color: #feffff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: inset 0 0 0 .5px #dddcdc;
+    font-weight: bolder;
+}
+
+.espacio:hover {
+    filter: brightness(95%);
+}

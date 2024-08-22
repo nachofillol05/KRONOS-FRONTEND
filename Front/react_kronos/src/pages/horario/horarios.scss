@@ -1,3 +1,13 @@
+.filtros-container-horario{
+  display: flex;
+  justify-content: space-between;
+  align-items: center; 
+  margin-block: 25px;
+  width:auto;
+  padding-inline:50px;
+  gap:25px;
+}
+
 .table_horario {
     width: 100%;
     border-collapse: collapse;

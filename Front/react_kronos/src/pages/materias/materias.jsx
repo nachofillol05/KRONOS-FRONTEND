@@ -5,16 +5,67 @@ import { Table, Select, Input, FloatButton, Drawer, Form, Button, message, Modal
 import { FileAddOutlined, DownOutlined, UpOutlined, DownloadOutlined, CloseOutlined } from '@ant-design/icons';
 import FormCreateSubject from './formCreateSubject.jsx';
 
+const materias = [
+    {
+        key: '1',
+        name: 'Matemáticas',
+        abbreviation: 'MATH',
+        children: [
+            {
+                key: '1-1',
+                course: 'Curso 1',
+                weeklyHours: '5',
+                color: '#FF5733',
+                description: 'Matemáticas básicas'
+            },
+            {
+                key: '1-2',
+
+                course: 'Curso 2',
+                weeklyHours: '6',
+                color: '#33FF57',
+                description: 'Álgebra avanzada'
+            }
+        ]
+    },
+    {
+        key: '2',
+        name: 'Historia',
+        abbreviation: 'HIST',
+        children: [
+            {
+                key: '2-1',
+                name: 'Historia 1A',
+                abbreviation: 'HIST 1A',
+                course: 'Curso 1',
+                weeklyHours: '4',
+                color: '#3375FF',
+                description: 'Historia antigua'
+            },
+            {
+                key: '2-2',
+                name: 'Historia 1A',
+                abbreviation: 'HIST 1A',
+                course: 'Curso 2',
+                weeklyHours: '3',
+                color: '#FF33C1',
+                description: 'Historia moderna'
+            }
+        ]
+    }
+    // Agrega más materias aquí
+];
+
 export default function Materias() {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [record, setRecord] = useState([]);
-    const [materias, setMaterias] = useState([]);
+    /*const [materias, setMaterias] = useState([]);*/
     const [teachers, setTeachers] = useState([]);
     const [teacher, setTeacher] = useState('');
     const [Subjectname, setSubjectname] = useState('');
     const [start_time, setStart_time] = useState('');
     const [end_time, setEnd_time] = useState('');
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
     const [open, setOpen] = useState(false);
     const [drawerContent, setDrawerContent] = useState(null);
     const [drawerTitle, setDrawerTitle] = useState(null);
@@ -25,9 +76,11 @@ export default function Materias() {
     const [messageConfig, setMessageConfig] = useState({ type: '', content: '' });
 
     const showModal = (record) => {
-        setRecord(record)
-        setIsModalOpen(true)
+        if (record?.key?.length > 2) return;
 
+        setRecord(record);
+        setIsModalOpen(true);
+        
     };
 
     useEffect(() => {
@@ -109,7 +162,7 @@ export default function Materias() {
                 break;
         }
     };
-
+/*
     useEffect(() => {
         const url = new URL('http://127.0.0.1:8000/api/subjects/');
         if (end_time && start_time) {
@@ -144,14 +197,21 @@ export default function Materias() {
             })
             .catch(error => console.error('Error fetching data:', error));
     }, [start_time, end_time, Subjectname, teacher]);
-
+*/
 
     const columns = [
-        { title: 'Nombre', dataIndex: 'name', key: 'name' },
-        { title: 'Abreviacion', dataIndex: 'abbreviation', key: 'abbreviation' },
+        { title: 'Nombre', dataIndex: 'name', key: 'name',width: '30%', },
+        { title: 'Abreviacion', dataIndex: 'abbreviation', key: 'abbreviation', width: '20%', },
         { title: 'Curso', dataIndex: 'course', key: 'course' },
         { title: 'Horas catedra semanales', dataIndex: 'weeklyHours', key: 'weeklyHours' },
-        { title: 'Color', dataIndex: 'color', key: 'color', render: (text) => (<div style={{ width: '24px', height: '24px', backgroundColor: text, borderRadius: '4px' }} />), },
+        { 
+            title: 'Color', 
+            dataIndex: 'color', 
+            key: 'color',
+            render: (text) => (
+                <div style={{ width: '24px', height: '24px', backgroundColor: text, borderRadius: '4px' }} />
+            )
+        },
         { title: 'Descripcion', dataIndex: 'description', key: 'description' }
     ];
 
@@ -289,17 +349,17 @@ export default function Materias() {
             </div>
 
             <Table
-                onRow={(record) => ({
-                    onClick: () => showModal(record),
-                })}
-
-                pagination={false}
-                loading={loading}
-                dataSource={materias}
-                columns={columns}
-                tableLayout="fixed"
-                scroll={{ y: 550 }}
-            />
+            bordered
+            onRow={(record) => ({
+                onClick: () => showModal(record),
+            })}
+            pagination={false}
+            loading={loading}
+            dataSource={materias}
+            columns={columns}
+            tableLayout="fixed"
+            scroll={{ y: 550 }}
+        />
 
 
             <FloatButton.Group

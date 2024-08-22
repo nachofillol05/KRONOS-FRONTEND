@@ -465,6 +465,7 @@ export default function Personal() {
                 />
             </div>
             <Table
+                bordered
                 onRow={(user) => ({
                     onClick: () => {
                         showEspecificWorker(user.document);
