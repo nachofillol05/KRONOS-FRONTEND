@@ -47,12 +47,12 @@ useEffect(() => {
                 
             } else {
                 setIsAuthenticated(false);
-                return navigate('/loginAnterior')
+                return navigate('/landing')
             }
         } catch (error) {
             console.error('Error verifying token:', error);
             setIsAuthenticated(false);
-            return navigate('/loginAnterior')
+            return navigate('/landing')
         }
     };
 

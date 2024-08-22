@@ -19,7 +19,7 @@ const propTypes = {
   placeholder: PropTypes.string,
   rows: PropTypes.number,
   hint: PropTypes.string
-}
+};
 
 const defaultProps = {
   children: null,
@@ -36,9 +36,9 @@ const defaultProps = {
   placeholder: '',
   rows: 3,
   hint: null
-}
+};
 
-const Input = ({
+const Input = React.forwardRef(({
   className,
   children,
   label,
@@ -55,7 +55,7 @@ const Input = ({
   rows,
   hint,
   ...props
-}) => {
+}, ref) => {  // Forward the ref as a second argument
 
   const wrapperClasses = classNames(
     (formGroup && formGroup !== '') && (formGroup === 'desktop' ? 'form-group-desktop' : 'form-group'),
@@ -78,6 +78,7 @@ const Input = ({
       >
         <Component
           {...props}
+          ref={ref}  // Attach the ref here
           type={type !== 'textarea' ? type : null}
           className={classes}
           name={name}
@@ -91,7 +92,7 @@ const Input = ({
       {hint && <FormHint status={status}>{hint}</FormHint>}
     </React.Fragment>
   );
-}
+});
 
 Input.propTypes = propTypes;
 Input.defaultProps = defaultProps;

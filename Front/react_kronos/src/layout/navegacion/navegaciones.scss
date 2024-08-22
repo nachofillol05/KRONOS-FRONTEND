@@ -6,6 +6,7 @@
     text-align: center;
     padding: 16px;
     transition: all 0.3s ease;
+    transition: opacity 0.3s ease;
 }
 
 .logo.collapsed .logo-img, .logo.collapsed .title {
@@ -19,21 +20,28 @@
 }
 
 .logo-img {
-    width: 75%;
+    align-items: center;
     margin-bottom: 10px;
-    transition: opacity 0.3s ease;
+    display: flex;
+    justify-content: center;
+}
+.logo-select{
+    align-items: center;
+    margin-bottom: 10px;
+    width: 75%;
+    justify-content: center;
 }
 
 .ant-layout-sider {
     .ant-layout-sider-trigger {
-        display: none; // Oculta el trigger en pantallas pequeñas por defecto
+        display: none;
     }
 }
 
-@media (min-width: 992px) { // Ajusta según el breakpoint deseado
+@media (min-width: 992px) {
     .ant-layout-sider {
         .ant-layout-sider-trigger {
-            display: block; // Muestra el trigger en pantallas grandes
+            display: block; 
         }
     }
 }

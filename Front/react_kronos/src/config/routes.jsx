@@ -47,12 +47,12 @@ export const routes = [
         component: Perfil
     },
 
-    {
+    /*{
         path: "/loginAnterior",
         exact: true,
         layout: Landig,
         component: Page
-    },
+    },*/
     {
         path: "/activation",
         exact: true,
@@ -110,14 +110,14 @@ export const routes = [
     {
         path: "/mailverificado",
         exact: true,
-        private: false,
+        private: true,
         layout: Landig,
         component: MailVerificado,
     },
     {
         path: "/mailenviado",
         exact: true,
-        private: false,
+        private: true,
         layout: Landig,
         component: MailEnviado,
     }
