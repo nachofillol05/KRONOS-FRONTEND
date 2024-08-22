@@ -485,6 +485,8 @@ export default function Personal() {
                 filterDropdownOpen={true}
                 filtered={true}
             />
+            {sessionStorage.getItem('rol') === 'Directivo' ? (
+              <>
             <FloatButton.Group
                 visibilityHeight={1500}
                 trigger="click"
@@ -532,6 +534,8 @@ export default function Personal() {
           y modificarla
         </p>
       </Modal>
+      </>
+    ) : (<FloatButton icon={<DownloadOutlined />} tooltip="Descargar tabla" />)}
     </>
   );
 }

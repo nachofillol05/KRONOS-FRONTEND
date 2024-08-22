@@ -32,7 +32,7 @@ useEffect(() => {
                     },
                 }).then(response => response.json())
                 .then(data => {
-                    if (sessionStorage.getItem('rol') === "Directivo" && JSON.stringify(data).includes("Directivo") === true) {
+                    if ((sessionStorage.getItem('rol') === "Directivo" && JSON.stringify(data).includes("Directivo") === true) || (sessionStorage.getItem('rol') === "Preceptor" && JSON.stringify(data).includes("Preceptor") === true)) {
                         setIsAuthenticated(true);
                         response.json().then(data => {
                             localStorage.setItem('user', JSON.stringify(data));

@@ -305,8 +305,8 @@ export default function Materias() {
 
             </div>
 
-
-            
+            {sessionStorage.getItem('rol') === 'Directivo' ? (
+            <>
             <FloatButton.Group
                 visibilityHeight={1500}
                 trigger="click"
@@ -337,6 +337,7 @@ export default function Materias() {
                     {drawerContent}
                 </div>
             </Drawer>
+            </>) : (<FloatButton icon={<DownloadOutlined />} tooltip="Descargar tabla" />)};
             <Modal 
             width={400}
             title="Asigna profesor a la materia" 

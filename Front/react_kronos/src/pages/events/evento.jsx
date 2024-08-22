@@ -443,6 +443,8 @@ export default function EventsPage() {
         })}
 
       </div>
+      {sessionStorage.getItem('rol') === 'Directivo' ? (
+        <>
         <FloatButton
           icon={<FolderAddOutlined />}
           type="primary"
@@ -450,23 +452,24 @@ export default function EventsPage() {
           onClick={() => showDrawer(<FormCreateEvent handleVolver={handleVolver} handleSubmit={handleSubmit} />, "Agregar un nuevo evento")}
         />
 
-      <Drawer
-        width={600}
-        title={drawerTitle}
-        onClose={onClose}
-        open={open}
-        closeIcon={false}
-        extra={
-          <Button
-            onClick={onClose}
-            size="large"
-            type="tertiary"
-            icon={<CloseOutlined />}
-          />
-        }
-      >
-        <div style={{ width: "100%", height: "100%" }}>{drawerContent}</div>
-      </Drawer>
+        <Drawer
+          width={600}
+          title={drawerTitle}
+          onClose={onClose}
+          open={open}
+          closeIcon={false}
+          extra={
+            <Button
+              onClick={onClose}
+              size="large"
+              type="tertiary"
+              icon={<CloseOutlined />}
+            />
+          }
+        >
+          <div style={{ width: "100%", height: "100%" }}>{drawerContent}</div>
+        </Drawer>
+        </>) : null}
     </>
   );
 }
