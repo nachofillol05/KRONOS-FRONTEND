@@ -38,7 +38,7 @@ const App = ({ children }) => {
 
     //AGREGAR UNA COMPROBACION PARA VER SI EL USUARIO TIENE ESE ROL ENSERIO PORQUE SINO SE PODRIA CAMBIAR DESDE EL SESSION STORAGE
     // Y VER COSAS QUE NO DEBERIA . AUNQUE SEA EN LO IMPORTANTE COMO MOSTRARLE ESO O SOLO AL ENTRAR A LAS PAGINAS EN LA DIRECTIVEROUTE
-    useEffect(() => {
+    const getMyRoles = () => {
         fetch('http://127.0.0.1:8000/api/school/myroles/', {
             method: "GET",
             headers: {
@@ -54,20 +54,25 @@ const App = ({ children }) => {
         })
         .then(data => {
             setData(data);
-            setRoles(data.roles);
             localStorage.setItem('roles', JSON.stringify(data.roles));
-            if (!sessionStorage.getItem('rol')) {
+            if (!rol) {
                 sessionStorage.setItem('rol', data.roles[0]);
                 setRol(data.roles[0]);
-                window.location.reload();
+                console.log('se cambio al rol', data.roles[0]);
             }
-            
+            console.log('se actualizaron los roles', data.roles);
+            setRoles(data.roles);
+            localStorage.setItem('roles', JSON.stringify(data.roles));  
         })
         .catch(error => {
             console.error('Error:', error);
             navigate('/landing');
-        });
+        });}
+
+    useEffect(() => {
+        getMyRoles();
     }, [rol, sessionStorage.getItem('actual_school')]);
+
     const items = [
         getItem(<Link to="/perfil">Perfil</Link>, '1', <UserOutlined />),
         getItem(<Link to="/horarios">Horarios</Link>, '2', <TableOutlined />),
@@ -99,9 +104,10 @@ const App = ({ children }) => {
 
     const handleMenuItemClick = ({ key }) => {
         sessionStorage.setItem('actual_school', key);
-        sessionStorage.removeItem('rol');
+        setSchool(key);
+        sessionStorage.setItem('rol', null);
         setRol(null);
-        
+        getMyRoles();
     };
 
     const getSelectedKey = () => {
@@ -124,7 +130,6 @@ const App = ({ children }) => {
     const changeRol = (value) => {
         sessionStorage.setItem('rol', value);
         setRol(value);
-        window.location.reload();
     }
     function cerrarSesion() {
         localStorage.clear();
@@ -182,7 +187,7 @@ const App = ({ children }) => {
                         placeholder="Rol"
                         className="logo-select"
                         onChange={(value) => changeRol(value)}
-                        defaultValue={defaultRol}
+                        value={defaultRol}
                         style={{ width: '75%' }}
                     >
                         {roles
