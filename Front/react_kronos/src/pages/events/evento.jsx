@@ -4,6 +4,7 @@ import { InfoCircleOutlined, EditOutlined, CheckCircleOutlined, UserAddOutlined,
 import FormCreateEvent from "./formCreateEvent";
 import moment from 'moment';
 import InfoEvent from "./infoEvent";
+import dayjs from 'dayjs';
 import "./events.scss";
 const dateFormat = 'DD/MM/YYYY';
 
@@ -25,6 +26,10 @@ export default function EventsPage() {
   const [eventos, setEventos] = useState([]);
   const [tipos, setTipos] = useState([]);
   const [profileData, setProfileData] = useState({});
+
+  const disabledDate = (current) => {
+    return current && current > dayjs().endOf('day');
+  };
   
   useEffect(() => {
     fetch('http://127.0.0.1:8000/api/profile/', {
@@ -337,6 +342,7 @@ export default function EventsPage() {
           onChange={onChangeDate}
           format={dateFormat}
           allowClear
+          disabledDate={disabledDate}
         />
 
         <Input
@@ -364,74 +370,77 @@ export default function EventsPage() {
         }}
       >
         {eventos.map((event) => {
-  const eventStatus = (() => {
-    if (new Date(event.endDate) < today) {
-      return "Finalizado";
-    } else if (new Date(event.startDate) > today) {
-      return "Pendiente";
-    } else {
-      return "En curso";
-    }
-  })();
+          const eventStatus = (() => {
+            if (new Date(event.endDate) < today) {
+              
+              return "Finalizado";
+            } else if (new Date(event.startDate) > today) {
 
-  const isUserAffiliated = event.affiliated_teachers.includes(profileData.id);
-  const mostrar = (() => {
-    if (eventStatus === "Pendiente" && !isUserAffiliated) {
-      return "Adherirse al evento";
-    } 
-    if (eventStatus === "Pendiente" && isUserAffiliated) {
-      return "Ya estás adherido";
-    } 
-    if ((eventStatus === "Finalizado" || eventStatus === "En curso") && !isUserAffiliated) {
-      return "";
-    }
-    if ((eventStatus === "Finalizado" || eventStatus === "En curso") && isUserAffiliated) {
-      return "Ya estás adherido";
-    }
-  })();
-  
-  return (
-    <Card
-      key={event.id}
-      style={{
-        width: "25%",
-        minWidth: 300,
-        display: "flex",
-        flexFlow: "column",
-      }}
-      actions={[
-        <Tooltip title="Detalles del evento">
-          <InfoCircleOutlined 
-            key="details" 
-            onClick={() => showDrawer(<InfoEvent event={event} />, "Detalles del evento")} 
-          />
-        </Tooltip>,
+              return "Pendiente";
+            } else {
 
-        mostrar && (
-          <Tooltip 
-            title={mostrar} 
-            key="action"
-          >
-            {mostrar === "Adherirse al evento" ? (
-              <UserAddOutlined onClick={() => showModal(event)} />
-            ) : (
-              <CheckCircleOutlined style={{ color: "green" }} onClick={() => showModalDesadherir(event)} />
-            )}
-          </Tooltip>
-        ),
-      ]}
-    >
-      <div style={{ display: "flex", flexDirection: "column", gap: 15 }}>
-        <h2 style={{ color: "#1890ff" }}>{event.name}</h2>
-        <h3>{event.type_event}</h3>
-        <p>
-          {moment(event.startDate).format('DD/MM/YYYY')} - {moment(event.endDate).format('DD/MM/YYYY')}
-          <p>{eventStatus}</p>
-        </p>
-      </div>
-    </Card>
-  );
-})}
+              return "En curso";
+            }
+          })();
+
+          const isUserAffiliated = event.affiliated_teachers.includes(profileData.id);
+          const mostrar = (() => {
+            if (eventStatus === "Pendiente" && !isUserAffiliated) {
+              return "Adherirse al evento";
+            } 
+            if (eventStatus === "Pendiente" && isUserAffiliated) {
+              return "Ya estás adherido";
+            } 
+            if ((eventStatus === "Finalizado" || eventStatus === "En curso") && !isUserAffiliated) {
+              return "";
+            }
+            if ((eventStatus === "Finalizado" || eventStatus === "En curso") && isUserAffiliated) {
+              return "Ya estás adherido";
+            }
+          })();
+          
+          return (
+            <Card
+              key={event.id}
+              style={{
+                width: "25%",
+                minWidth: 300,
+                display: "flex",
+                flexFlow: "column",
+              }}
+              actions={[
+                <Tooltip title="Detalles del evento">
+                  <InfoCircleOutlined 
+                    key="details" 
+                    onClick={() => showDrawer(<InfoEvent estado={eventStatus} event={event} />, "Detalles del evento")} 
+                  />
+                </Tooltip>,
+
+                mostrar && (
+                  <Tooltip 
+                    title={mostrar} 
+                    key="action"
+                  >
+                    {mostrar === "Adherirse al evento" ? (
+                      <UserAddOutlined onClick={() => showModal(event)} />
+                    ) : (
+                      <CheckCircleOutlined style={{ color: "green" }} onClick={() => showModalDesadherir(event)} />
+                    )}
+                  </Tooltip>
+                ),
+              ]}
+            >
+              <div style={{ display: "flex", flexDirection: "column", gap: 15 }}>
+                <h2 style={{ color: "#1890ff" }}>{event.name}</h2>
+                <h3>{event.type_event}</h3>
+                <p>
+                  {moment(event.startDate).format('DD/MM/YYYY')} - {moment(event.endDate).format('DD/MM/YYYY')}
+                  <p>{eventStatus}</p>
+                </p>
+              </div>
+            </Card>
+          );
+        })}
 
       </div>
         <FloatButton

@@ -5,7 +5,7 @@ import './events.scss';
 
 const dateFormat = 'DD/MM/YYYY';
 
-export default function InfoWorker({ event }) {
+export default function InfoWorker({ event, estado }) {
     const [form] = Form.useForm();
     const [isEditing, setIsEditing] = useState(false);
     const [dur, setDur] = useState(calculateDuration(event.startDate, event.endDate));
@@ -210,12 +210,14 @@ export default function InfoWorker({ event }) {
                         </Button>
                     </>
                 ) : (
-                    <Button
-                        style={{ width: '100px' }}
-                        onClick={toggleEditMode}
-                    >
-                        Editar
-                    </Button>
+                    estado !="Finalizado" && (
+                        <Button
+                            style={{ width: '100px' }}
+                            onClick={toggleEditMode}
+                        >
+                            Editar
+                        </Button>
+                    )
                 )}
                 </Flex>
         </Form>
