@@ -1,15 +1,8 @@
 @import '../../scss/index.scss';
 
-.filtros-container{
-    display: flex;
-    justify-content: space-evenly;
-    flex-wrap: wrap;
-    align-items: center; 
-    margin-block: 15px;
-    width:100%;
-    box-sizing: border-box;
-    padding-inline:30px;
-    gap:10px;
+.contenedor-filtros-materias{
+  justify-content: space-between;
+  padding-inline: 3vw;
 }
 
 .filtros-container > * {

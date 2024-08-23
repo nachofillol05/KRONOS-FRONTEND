@@ -1,7 +1,13 @@
 /* src/Calendario.css */
 .Calendario {
-    overflow: scroll;
-    height: 620px;
+    max-height: 86.5vh;
+    height: fit-content;
+    max-width: 100%;
+    width: fit-content;
+    overflow-y: auto; /* Permitir scroll horizontal */
+    overflow-x: auto; /* Permitir scroll horizontal */
+
+    position: relative; /* Mantiene el contexto para el sticky */
 }
 
 .dropdown {
@@ -46,20 +52,20 @@
 .encabezado {
     position: sticky;
     top: 0;
-    z-index: 9;
+    z-index: 1;
 }
 
 .columna {
     position: sticky;
     left: 0;
-    z-index: 10;
+    z-index: 2;
 }
 
 .esquina {
     position: sticky;
     top: 0;
     left: 0;
-    z-index: 11;
+    z-index: 3;
 }
 
 

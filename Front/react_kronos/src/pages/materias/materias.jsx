@@ -80,7 +80,7 @@ export default function Materias() {
 
         setRecord(record);
         setIsModalOpen(true);
-        
+
     };
 
     useEffect(() => {
@@ -162,52 +162,52 @@ export default function Materias() {
                 break;
         }
     };
-/*
-    useEffect(() => {
-        const url = new URL('http://127.0.0.1:8000/api/subjects/');
-        if (end_time && start_time) {
-            url.searchParams.append('start_time', start_time);
-            url.searchParams.append('end_time', end_time);
-        }
-        if (teacher) {
-            url.searchParams.append('teacher', teacher);
-        }
-        if (Subjectname) {
-            url.searchParams.append('name', Subjectname);
-        }
-        console.log(url.toString());
-        console.log(sessionStorage.getItem('actual_school'));
-        fetch(url.toString(), {
-            method: "GET",
-            headers: {
-                'Authorization': 'Token ' + localStorage.getItem('token'),
-                'School-ID': sessionStorage.getItem('actual_school'),
-            },
-        })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
+    /*
+        useEffect(() => {
+            const url = new URL('http://127.0.0.1:8000/api/subjects/');
+            if (end_time && start_time) {
+                url.searchParams.append('start_time', start_time);
+                url.searchParams.append('end_time', end_time);
+            }
+            if (teacher) {
+                url.searchParams.append('teacher', teacher);
+            }
+            if (Subjectname) {
+                url.searchParams.append('name', Subjectname);
+            }
+            console.log(url.toString());
+            console.log(sessionStorage.getItem('actual_school'));
+            fetch(url.toString(), {
+                method: "GET",
+                headers: {
+                    'Authorization': 'Token ' + localStorage.getItem('token'),
+                    'School-ID': sessionStorage.getItem('actual_school'),
+                },
             })
-            .then(data => {
-                console.log(data)
-                setMaterias(data.map(materia => ({ ...materia, key: materia.id, course: materia.courses.name })));
-                setLoading(false);
-                console.log(data);
-            })
-            .catch(error => console.error('Error fetching data:', error));
-    }, [start_time, end_time, Subjectname, teacher]);
-*/
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log(data)
+                    setMaterias(data.map(materia => ({ ...materia, key: materia.id, course: materia.courses.name })));
+                    setLoading(false);
+                    console.log(data);
+                })
+                .catch(error => console.error('Error fetching data:', error));
+        }, [start_time, end_time, Subjectname, teacher]);
+    */
 
     const columns = [
-        { title: 'Nombre', dataIndex: 'name', key: 'name',width: '30%', },
+        { title: 'Nombre', dataIndex: 'name', key: 'name', width: '30%', },
         { title: 'Abreviacion', dataIndex: 'abbreviation', key: 'abbreviation', width: '20%', },
         { title: 'Curso', dataIndex: 'course', key: 'course' },
         { title: 'Horas catedra semanales', dataIndex: 'weeklyHours', key: 'weeklyHours' },
-        { 
-            title: 'Color', 
-            dataIndex: 'color', 
+        {
+            title: 'Color',
+            dataIndex: 'color',
             key: 'color',
             render: (text) => (
                 <div style={{ width: '24px', height: '24px', backgroundColor: text, borderRadius: '4px' }} />
@@ -307,24 +307,22 @@ export default function Materias() {
         const value = event.target.value;
         setSubjectname(value);
     }
-/* Al parecer en el back no hay filtro por curso
-<Select
-                    size='large'
-                    style={{ width: 200 }}
-                    showSearch
-                    placeholder="Seleccione un curso"
-                    onChange={onChange}
-                    onSearch={onSearch}
-                    options={cursos}
-                    allowClear
-                /> */
+    /* Al parecer en el back no hay filtro por curso
+    <Select
+                        size='large'
+                        style={{ width: 200 }}
+                        showSearch
+                        placeholder="Seleccione un curso"
+                        onChange={onChange}
+                        onSearch={onSearch}
+                        options={cursos}
+                        allowClear
+                    /> */
     return (
         <>
             {contextHolder}
-            <div className="filtros-container">
-                <div style={{ width: '200px' }}>
-                    <RangeSlider range onFinalChange={handleFinalRangeChange} defaultValue={[20, 50]} />
-                </div>
+            <div className="contenedor-filtros contenedor-filtros-materias">
+                <RangeSlider range onFinalChange={handleFinalRangeChange} defaultValue={[20, 50]} />
 
                 <Select
                     size='large'
@@ -350,60 +348,60 @@ export default function Materias() {
             </div>
             <div className="table-container">
                 <Table
-                onRow={(record) => ({
-                    onClick: () => showModal(record),
-                })}
+                    onRow={(record) => ({
+                        onClick: () => showModal(record),
+                    })}
 
-                loading={loading}
-                dataSource={materias}
-                columns={columns}
-                tableLayout="fixed"
-                pagination={false}
-                y={500}
-                footer={false}
+                    loading={loading}
+                    dataSource={materias}
+                    columns={columns}
+                    tableLayout="fixed"
+                    pagination={false}
+                    y={500}
+                    footer={false}
                 />
 
             </div>
 
             {sessionStorage.getItem('rol') === 'Directivo' ? (
-            <>
-            <FloatButton.Group
-                visibilityHeight={1500}
-                trigger="click"
-                type="primary"
-                closeIcon={<DownOutlined />}
-                icon={<UpOutlined />}
-            >
-                <FloatButton icon={<DownloadOutlined />} tooltip="Descargar tabla" />
-                <FloatButton icon={<FileAddOutlined />} type='primary' tooltip="Agregar una materia"
-                    onClick={() => showDrawer(
-                        <FormCreateSubject handleSubmit={handleSubmit} onClose={onClose} cursos={cursos} value={value} setValue={setValue} />,
-                        'Agregar una materia'
-                    )}
-                />
-            </FloatButton.Group>
+                <>
+                    <FloatButton.Group
+                        visibilityHeight={1500}
+                        trigger="click"
+                        type="primary"
+                        closeIcon={<DownOutlined />}
+                        icon={<UpOutlined />}
+                    >
+                        <FloatButton icon={<DownloadOutlined />} tooltip="Descargar tabla" />
+                        <FloatButton icon={<FileAddOutlined />} type='primary' tooltip="Agregar una materia"
+                            onClick={() => showDrawer(
+                                <FormCreateSubject handleSubmit={handleSubmit} onClose={onClose} cursos={cursos} value={value} setValue={setValue} />,
+                                'Agregar una materia'
+                            )}
+                        />
+                    </FloatButton.Group>
 
-            <Drawer
-                width={600}
-                title={drawerTitle}
-                onClose={onClose}
-                open={open}
-                closeIcon={false}
-                extra={
-                    <Button onClick={onClose} size='large' type='tertiary' icon={<CloseOutlined />} />
-                }
-            >
-                <div style={{ width: '100%', height: '100%' }}>
-                    {drawerContent}
-                </div>
-            </Drawer>
-            </>) : (<FloatButton icon={<DownloadOutlined />} tooltip="Descargar tabla" />)}
-            <Modal 
-            width={400}
-            title="Asigna profesor a la materia" 
-            open={isModalOpen} 
-            onOk={() => setIsModalOpen(false)} 
-            onCancel={() => setIsModalOpen(false)}>
+                    <Drawer
+                        width={600}
+                        title={drawerTitle}
+                        onClose={onClose}
+                        open={open}
+                        closeIcon={false}
+                        extra={
+                            <Button onClick={onClose} size='large' type='tertiary' icon={<CloseOutlined />} />
+                        }
+                    >
+                        <div style={{ width: '100%', height: '100%' }}>
+                            {drawerContent}
+                        </div>
+                    </Drawer>
+                </>) : (<FloatButton icon={<DownloadOutlined />} tooltip="Descargar tabla" />)}
+            <Modal
+                width={400}
+                title="Asigna profesor a la materia"
+                open={isModalOpen}
+                onOk={() => setIsModalOpen(false)}
+                onCancel={() => setIsModalOpen(false)}>
                 <Flex style={{ height: '120px' }} vertical gap={10} justify='space-evenly'>
 
                     <p>La materia <b>{record.name} </b> - <b style={{ textTransform: 'uppercase' }}>{record.abbreviation}</b>  del curso   <b>{record.course}</b></p>

@@ -435,7 +435,7 @@ export default function Personal() {
     return (
         <>
             {contextHolder}
-            <div className="filtros-container">
+            <div className="contenedor-filtros contenedor-filtros-personal">
                 <Radio.Group size='large' defaultValue="Profesores" buttonStyle="solid" onChange={handleFilterChange}>
                     <Radio.Button value="Profesores" >Profesor</Radio.Button>
                     <Radio.Button value="Preceptores" >Preceptor</Radio.Button>

@@ -1,6 +1,9 @@
 import { React, useState } from 'react';
-import { FloatButton, Drawer, Button, Segmented, Input, DatePicker } from 'antd';
-import { InsertRowAboveOutlined, DownOutlined, UpOutlined, DownloadOutlined, HistoryOutlined, CloseOutlined, AppstoreOutlined, UserSwitchOutlined } from '@ant-design/icons';
+import { FloatButton, Drawer, Button, Tooltip, Segmented, DatePicker } from 'antd';
+import {
+    InsertRowAboveOutlined, DownOutlined, UpOutlined, DownloadOutlined, HistoryOutlined, CloseOutlined, AppstoreOutlined, UserSwitchOutlined
+    , EyeOutlined, EditOutlined, FilterOutlined
+} from '@ant-design/icons';
 import SelectTeacher from './selectTeacher.jsx';
 import Historial from './historial.jsx';
 import Horas from './infoHour.jsx';
@@ -214,16 +217,29 @@ export default function Horario({ handleOpenDrawer, handleCloseDrawer }) {
 
     return (
         <>
-            <div className="filtros-container-horario">
-                <Segmented size='large' defaultValue="General"
-                    options={['Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'General']}
-                    onChange={(value) => {
-                        console.log(value); // string
-                    }}
+            <div className="contenedor-filtros contenedor-filtros-horario">
+                <Segmented
+                size='large'
+                    options={[
+                        {
+
+                            value: 'List',
+                            icon: <> <EditOutlined /> Editar</>,
+                        },
+                        {
+                            value: 'Kanban',
+                            icon: <><EyeOutlined /> Visualizar</>
+                        },
+                    ]}
                 />
-                <FilterDropdownTable placeholder={'Profesores seleccionados: '} />
-                <FilterDropdownTable placeholder={'Cursos seleccionadas: '} />
-                <DatePicker size='large' format={format}/>
+
+                <FilterDropdownTable placeholder={'Dias: '} />
+                <FilterDropdownTable placeholder={'Profesores: '} />
+                <FilterDropdownTable placeholder={'Cursos: '} />
+                <DatePicker size='large' format={format} />
+                <Button icon={<FilterOutlined />} size='large' type='primary'>
+                    Filtrar
+                </Button>
             </div>
             <Calendario />
 

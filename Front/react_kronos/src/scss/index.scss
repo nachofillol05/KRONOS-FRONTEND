@@ -24,3 +24,11 @@ input[type="number"] {
 :where(.css-dev-only-do-not-override-m4timi).ant-color-picker-trigger {
     justify-content: start !important;
 }
+
+
+.contenedor-filtros{
+    height: 12vh;
+    width: 100%;
+    display: flex;
+    align-items: center;
+}
