@@ -102,6 +102,7 @@ export default function EventsPage() {
         })
         .then(data => {
             setEventos(data);
+          
         })
         .catch(error => console.error('Error fetching data:', error));
   }, [date, nombre, tipoEvento]);
@@ -320,7 +321,7 @@ export default function EventsPage() {
   return (
     <>
       {contextHolder}
-      <div className="filtros-container">
+      <div className="contenedor-filtros contenedor-filtros-eventos">
         <Select
           size="large"
           style={{
@@ -356,93 +357,91 @@ export default function EventsPage() {
         />
       </div>
       <div
+  style={{
+    display: "grid",
+    gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
+    gap: 15,
+    padding: 15,
+    height: "86.5vh",
+    overflowY: "scroll",
+    backgroundColor: "#f1f2f4",
+    boxShadow: "0 0 0 3px #dddcdc",
+  }}
+>
+  {eventos.map((event) => {
+    const eventStatus = (() => {
+      if (new Date(event.endDate) < today) {
+        return "Finalizado";
+      } else if (new Date(event.startDate) > today) {
+        return "Pendiente";
+      } else {
+        return "En curso";
+      }
+    })();
+
+    const isUserAffiliated = event.affiliated_teachers.includes(profileData.id);
+    const mostrar = (() => {
+      if (eventStatus === "Pendiente" && !isUserAffiliated) {
+        return "Adherirse al evento";
+      } 
+      if (eventStatus === "Pendiente" && isUserAffiliated) {
+        return "Ya estás adherido";
+      } 
+      if ((eventStatus === "Finalizado" || eventStatus === "En curso") && !isUserAffiliated) {
+        return "";
+      }
+      if ((eventStatus === "Finalizado" || eventStatus === "En curso") && isUserAffiliated) {
+        return "Ya estás adherido";
+      }
+    })();
+    
+    return (
+      <Card
+        key={event.id}
         style={{
-          maxHeight: "85%",
-          overflowY: "scroll",
-          width: "100%",
           display: "flex",
-          flexDirection: "row",
-          flexWrap: "wrap",
-          justifyContent: "space-evenly",
-          alignItems: "start",
-          gap: 25,
-          paddingInline: 25,
+          flexFlow: "column",
+          justifyContent: "space-between",
+          height: "fit-content",
+          height: "250px",
         }}
-      >
-        {eventos.map((event) => {
-          const eventStatus = (() => {
-            if (new Date(event.endDate) < today) {
-              
-              return "Finalizado";
-            } else if (new Date(event.startDate) > today) {
+        bordered
+        hoverable
+        actions={[
+          <Tooltip title="Detalles del evento">
+            <InfoCircleOutlined 
+              key="details" 
+              onClick={() => showDrawer(<InfoEvent estado={eventStatus} event={event} />, "Detalles del evento")} 
+            />
+          </Tooltip>,
 
-              return "Pendiente";
-            } else {
-
-              return "En curso";
-            }
-          })();
-
-          const isUserAffiliated = event.affiliated_teachers.includes(profileData.id);
-          const mostrar = (() => {
-            if (eventStatus === "Pendiente" && !isUserAffiliated) {
-              return "Adherirse al evento";
-            } 
-            if (eventStatus === "Pendiente" && isUserAffiliated) {
-              return "Ya estás adherido";
-            } 
-            if ((eventStatus === "Finalizado" || eventStatus === "En curso") && !isUserAffiliated) {
-              return "";
-            }
-            if ((eventStatus === "Finalizado" || eventStatus === "En curso") && isUserAffiliated) {
-              return "Ya estás adherido";
-            }
-          })();
-          
-          return (
-            <Card
-              key={event.id}
-              style={{
-                width: "25%",
-                minWidth: 300,
-                display: "flex",
-                flexFlow: "column",
-              }}
-              actions={[
-                <Tooltip title="Detalles del evento">
-                  <InfoCircleOutlined 
-                    key="details" 
-                    onClick={() => showDrawer(<InfoEvent estado={eventStatus} event={event} />, "Detalles del evento")} 
-                  />
-                </Tooltip>,
-
-                mostrar && (
-                  <Tooltip 
-                    title={mostrar} 
-                    key="action"
-                  >
-                    {mostrar === "Adherirse al evento" ? (
-                      <UserAddOutlined onClick={() => showModal(event)} />
-                    ) : (
-                      <CheckCircleOutlined style={{ color: "green" }} onClick={() => showModalDesadherir(event)} />
-                    )}
-                  </Tooltip>
-                ),
-              ]}
+          mostrar && (
+            <Tooltip 
+              title={mostrar} 
+              key="action"
             >
-              <div style={{ display: "flex", flexDirection: "column", gap: 15 }}>
-                <h2 style={{ color: "#1890ff" }}>{event.name}</h2>
-                <h3>{event.type_event}</h3>
-                <p>
-                  {moment(event.startDate).format('DD/MM/YYYY')} - {moment(event.endDate).format('DD/MM/YYYY')}
-                  <p>{eventStatus}</p>
-                </p>
-              </div>
-            </Card>
-          );
-        })}
+              {mostrar === "Adherirse al evento" ? (
+                <UserAddOutlined onClick={() => showModal(event)} />
+              ) : (
+                <CheckCircleOutlined style={{ color: "green" }} onClick={() => showModalDesadherir(event)} />
+              )}
+            </Tooltip>
+          ),
+        ]}
+      >
+        <div style={{ display: "flex", flexDirection: "column", gap: 15 }}>
+          <h6 style={{ color: "#1890ff", margin: 0 }}>{event.name}</h6>
+          <h3 style={{ margin: 0 }}>{event.type_event}</h3>
+          <p style={{margin: 0}}>
+            {moment(event.startDate).format('DD/MM/YYYY')} - {moment(event.endDate).format('DD/MM/YYYY')}
+            <p style={{margin: 0}}>{eventStatus}</p>
+          </p>
+        </div>
+      </Card>
+    );
+  })}
+</div>
 
-      </div>
       {sessionStorage.getItem('rol') === 'Directivo' ? (
         <>
         <FloatButton

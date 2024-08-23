@@ -272,7 +272,7 @@ export default function Horario({ handleOpenDrawer, handleCloseDrawer }) {
                 <FloatButton icon={<AppstoreOutlined />} type='primary' tooltip='Cursos'
                     onClick={() => showDrawer(
                         <SelectCourse showDrawer={showDrawer} />
-                        , 'Horas catedra'
+                        , 'Cursos'
                     )}
                 />
             </FloatButton.Group>

@@ -59,6 +59,7 @@ const materias = [
 export default function Materias() {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [record, setRecord] = useState([]);
+    const [parentRecord, setParentRecord] = useState([]);
     /*const [materias, setMaterias] = useState([]);*/
     const [teachers, setTeachers] = useState([]);
     const [teacher, setTeacher] = useState('');
@@ -74,110 +75,152 @@ export default function Materias() {
     const [cursos, setCursos] = useState([]);
     const [messageApi, contextHolder] = message.useMessage();
     const [messageConfig, setMessageConfig] = useState({ type: '', content: '' });
+    const [expandedRowKeys, setExpandedRowKeys] = useState([]);
 
     const showModal = (record) => {
-        if (record?.key?.length > 2) return;
-
-        setRecord(record);
-        setIsModalOpen(true);
-
-    };
-
-    useEffect(() => {
-        if (messageConfig.type) {
-            showMessage(messageConfig.type, messageConfig.content);
-            setMessageConfig({ type: '', content: '' });
+        if (!('children' in record)) {
+            setRecord(record);
+            setIsModalOpen(true);
+            const parent = materias.find(materia => materia.children && materia.children.some(child => child.key === record.key));
+            setParentRecord(parent);
         }
-    }, [messageConfig]);
+    }
 
-    const showDrawer = (content, title) => {
-        setDrawerTitle(title);
-        setDrawerContent(content);
-        setOpen(true);
-    };
+        useEffect(() => {
+            if (messageConfig.type) {
+                showMessage(messageConfig.type, messageConfig.content);
+                setMessageConfig({ type: '', content: '' });
+            }
+        }, [messageConfig]);
 
-    const onClose = () => {
-        setOpen(false);
-        setDrawerContent(null);
-    };
+        const showDrawer = (content, title) => {
+            setDrawerTitle(title);
+            setDrawerContent(content);
+            setOpen(true);
+        };
 
-    const onChange = (value) => {
-        setTeacher(value);
-    };
+        const onClose = () => {
+            setOpen(false);
+            setDrawerContent(null);
+        };
 
-    const onSearch = (value) => {
-        console.log('search:', value);
-    };
+        const onChange = (value) => {
+            setTeacher(value);
+        };
 
-    const handleSubmit = (form) => {
-        form.validateFields()
-            .then(values => {
-                console.log('Formulario completado:', values);
-                onClose(); // Cerrar el drawer si todos los campos están completos
-                const hexColor = values.color.toHexString();
-                const body = {
-                    name: values.materia,
-                    abbreviation: values.abreviacion,
-                    courses: values.curso,
-                    weeklyHours: parseInt(values.horasCatedras, 10),
-                    color: hexColor,
-                    studyPlan: values.planEstudio,
-                    description: values.descripcion
-                };
-                fetch('http://127.0.0.1:8000/api/subjects/', {
-                    method: 'POST',
+        const onSearch = (value) => {
+            console.log('search:', value);
+        };
+
+        const handleSubmit = (form) => {
+            form.validateFields()
+                .then(values => {
+                    console.log('Formulario completado:', values);
+                    onClose(); // Cerrar el drawer si todos los campos están completos
+                    const hexColor = values.color.toHexString();
+                    const body = {
+                        name: values.materia,
+                        abbreviation: values.abreviacion,
+                        courses: values.curso,
+                        weeklyHours: parseInt(values.horasCatedras, 10),
+                        color: hexColor,
+                        studyPlan: values.planEstudio,
+                        description: values.descripcion
+                    };
+                    fetch('http://127.0.0.1:8000/api/subjects/', {
+                        method: 'POST',
+                        headers: {
+                            'Authorization': 'Token ' + localStorage.getItem('token'),
+                            'School-ID': sessionStorage.getItem('actual_school'),
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(body),
+
+                    })
+                    onClose();
+                })
+                .catch(errorInfo => {
+                    showMessage('error', 'Por favor, complete todos los campos.');
+
+                    setMessageConfig({ type: 'error', content: 'Por favor, complete todos los campos.' });
+                });
+        };
+
+        const showMessage = (type, content) => {
+            switch (type) {
+                case 'success':
+                    messageApi.success(content);
+                    break;
+                case 'error':
+                    messageApi.error(content);
+                    break;
+                case 'warning':
+                    messageApi.warning(content);
+                    break;
+                case 'info':
+                    messageApi.info(content);
+                    break;
+                default:
+                    messageApi.info(content);
+                    break;
+            }
+        };
+        /*
+            useEffect(() => {
+                const url = new URL('http://127.0.0.1:8000/api/subjects/');
+                if (end_time && start_time) {
+                    url.searchParams.append('start_time', start_time);
+                    url.searchParams.append('end_time', end_time);
+                }
+                if (teacher) {
+                    url.searchParams.append('teacher', teacher);
+                }
+                if (Subjectname) {
+                    url.searchParams.append('name', Subjectname);
+                }
+                console.log(url.toString());
+                console.log(sessionStorage.getItem('actual_school'));
+                fetch(url.toString(), {
+                    method: "GET",
                     headers: {
                         'Authorization': 'Token ' + localStorage.getItem('token'),
                         'School-ID': sessionStorage.getItem('actual_school'),
-                        'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify(body),
-
                 })
-                onClose();
-            })
-            .catch(errorInfo => {
-                showMessage('error', 'Por favor, complete todos los campos.');
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        console.log(data)
+                        setMaterias(data.map(materia => ({ ...materia, key: materia.id, course: materia.courses.name })));
+                        setLoading(false);
+                        console.log(data);
+                    })
+                    .catch(error => console.error('Error fetching data:', error));
+            }, [start_time, end_time, Subjectname, teacher]);
+        */
 
-                setMessageConfig({ type: 'error', content: 'Por favor, complete todos los campos.' });
-            });
-    };
+        const columns = [
+            { title: 'Nombre', dataIndex: 'name', key: 'name', width: '30%', },
+            { title: 'Abreviacion', dataIndex: 'abbreviation', key: 'abbreviation', width: '20%', },
+            { title: 'Curso', dataIndex: 'course', key: 'course' },
+            { title: 'Horas catedra semanales', dataIndex: 'weeklyHours', key: 'weeklyHours' },
+            {
+                title: 'Color',
+                dataIndex: 'color',
+                key: 'color',
+                render: (text) => (
+                    <div style={{ width: '24px', height: '24px', backgroundColor: text, borderRadius: '4px' }} />
+                )
+            },
+            { title: 'Descripcion', dataIndex: 'description', key: 'description' }
+        ];
 
-    const showMessage = (type, content) => {
-        switch (type) {
-            case 'success':
-                messageApi.success(content);
-                break;
-            case 'error':
-                messageApi.error(content);
-                break;
-            case 'warning':
-                messageApi.warning(content);
-                break;
-            case 'info':
-                messageApi.info(content);
-                break;
-            default:
-                messageApi.info(content);
-                break;
-        }
-    };
-    /*
         useEffect(() => {
-            const url = new URL('http://127.0.0.1:8000/api/subjects/');
-            if (end_time && start_time) {
-                url.searchParams.append('start_time', start_time);
-                url.searchParams.append('end_time', end_time);
-            }
-            if (teacher) {
-                url.searchParams.append('teacher', teacher);
-            }
-            if (Subjectname) {
-                url.searchParams.append('name', Subjectname);
-            }
-            console.log(url.toString());
-            console.log(sessionStorage.getItem('actual_school'));
-            fetch(url.toString(), {
+            fetch('http://127.0.0.1:8000/api/courses/', {
                 method: "GET",
                 headers: {
                     'Authorization': 'Token ' + localStorage.getItem('token'),
@@ -191,234 +234,194 @@ export default function Materias() {
                     return response.json();
                 })
                 .then(data => {
-                    console.log(data)
-                    setMaterias(data.map(materia => ({ ...materia, key: materia.id, course: materia.courses.name })));
-                    setLoading(false);
-                    console.log(data);
+                    const courses = data.map(curs => ({
+                        value: curs.id,
+                        label: curs.year.name + ' ' + curs.name,
+                    }));
+
+                    setCursos(courses);
                 })
                 .catch(error => console.error('Error fetching data:', error));
-        }, [start_time, end_time, Subjectname, teacher]);
-    */
+        }, []);
 
-    const columns = [
-        { title: 'Nombre', dataIndex: 'name', key: 'name', width: '30%', },
-        { title: 'Abreviacion', dataIndex: 'abbreviation', key: 'abbreviation', width: '20%', },
-        { title: 'Curso', dataIndex: 'course', key: 'course' },
-        { title: 'Horas catedra semanales', dataIndex: 'weeklyHours', key: 'weeklyHours' },
-        {
-            title: 'Color',
-            dataIndex: 'color',
-            key: 'color',
-            render: (text) => (
-                <div style={{ width: '24px', height: '24px', backgroundColor: text, borderRadius: '4px' }} />
-            )
-        },
-        { title: 'Descripcion', dataIndex: 'description', key: 'description' }
-    ];
-
-    useEffect(() => {
-        fetch('http://127.0.0.1:8000/api/courses/', {
-            method: "GET",
-            headers: {
-                'Authorization': 'Token ' + localStorage.getItem('token'),
-                'School-ID': sessionStorage.getItem('actual_school'),
-            },
-        })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
+        useEffect(() => {
+            fetch('http://127.0.0.1:8000/api/courses/', {
+                method: "GET",
+                headers: {
+                    'Authorization': 'Token ' + localStorage.getItem('token'),
+                    'School-ID': sessionStorage.getItem('actual_school'),
+                },
             })
-            .then(data => {
-                const courses = data.map(curs => ({
-                    value: curs.id,
-                    label: curs.year.name + ' ' + curs.name,
-                }));
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    const courses = data.map(curs => ({
+                        value: curs.id,
+                        label: curs.year.name + ' ' + curs.name,
+                    }));
 
-                setCursos(courses);
+                    setCursos(courses);
+                })
+                .catch(error => console.error('Error fetching data:', error));
+        }, []);
+
+        useEffect(() => {
+            fetch('http://127.0.0.1:8000/api/teachers/', {
+                method: "GET",
+                headers: {
+                    'Authorization': 'Token ' + localStorage.getItem('token'),
+                    'School-ID': sessionStorage.getItem('actual_school'),
+                },
             })
-            .catch(error => console.error('Error fetching data:', error));
-    }, []);
-
-    useEffect(() => {
-        fetch('http://127.0.0.1:8000/api/courses/', {
-            method: "GET",
-            headers: {
-                'Authorization': 'Token ' + localStorage.getItem('token'),
-                'School-ID': sessionStorage.getItem('actual_school'),
-            },
-        })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
-            .then(data => {
-                const courses = data.map(curs => ({
-                    value: curs.id,
-                    label: curs.year.name + ' ' + curs.name,
-                }));
-
-                setCursos(courses);
-            })
-            .catch(error => console.error('Error fetching data:', error));
-    }, []);
-
-    useEffect(() => {
-        fetch('http://127.0.0.1:8000/api/teachers/', {
-            method: "GET",
-            headers: {
-                'Authorization': 'Token ' + localStorage.getItem('token'),
-                'School-ID': sessionStorage.getItem('actual_school'),
-            },
-        })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
-            .then(data => {
-                const teacherNames = data.map(teacher => ({
-                    value: teacher.id,
-                    label: teacher.first_name + ' ' + teacher.last_name,
-                }));
-                setTeachers(teacherNames);
-            })
-            .catch(error => console.error('Error fetching data:', error));
-    }, []);
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    const teacherNames = data.map(teacher => ({
+                        value: teacher.id,
+                        label: teacher.first_name + ' ' + teacher.last_name,
+                    }));
+                    setTeachers(teacherNames);
+                })
+                .catch(error => console.error('Error fetching data:', error));
+        }, []);
 
 
-    const handleSelectTeacher = (value) => {
-        setTeacher(value);
-    };
+        const handleSelectTeacher = (value) => {
+            setTeacher(value);
+        };
 
-    const handleSearch = (searchText) => {
-        setSubjectname(searchText);
-    };
+        const handleSearch = (searchText) => {
+            setSubjectname(searchText);
+        };
 
-    const handleFinalRangeChange = (newValues) => {
-        setStart_time(newValues[0]);
-        setEnd_time(newValues[1]);
-    };
-    const onChangeMateria = (event) => {
-        const value = event.target.value;
-        setSubjectname(value);
-    }
-    /* Al parecer en el back no hay filtro por curso
-    <Select
+        const handleFinalRangeChange = (newValues) => {
+            setStart_time(newValues[0]);
+            setEnd_time(newValues[1]);
+        };
+        const onChangeMateria = (event) => {
+            const value = event.target.value;
+            setSubjectname(value);
+        }
+        /* Al parecer en el back no hay filtro por curso
+        <Select
+                            size='large'
+                            style={{ width: 200 }}
+                            showSearch
+                            placeholder="Seleccione un curso"
+                            onChange={onChange}
+                            onSearch={onSearch}
+                            options={cursos}
+                            allowClear
+                        /> */
+        return (
+            <>
+                {contextHolder}
+                <div className="contenedor-filtros contenedor-filtros-materias">
+                    <RangeSlider range onFinalChange={handleFinalRangeChange} defaultValue={[20, 50]} />
+
+                    <Select
                         size='large'
                         style={{ width: 200 }}
                         showSearch
-                        placeholder="Seleccione un curso"
+                        placeholder="Seleccione un Profesor"
                         onChange={onChange}
                         onSearch={onSearch}
-                        options={cursos}
+                        options={teachers}
                         allowClear
-                    /> */
-    return (
-        <>
-            {contextHolder}
-            <div className="contenedor-filtros contenedor-filtros-materias">
-                <RangeSlider range onFinalChange={handleFinalRangeChange} defaultValue={[20, 50]} />
-
-                <Select
-                    size='large'
-                    style={{ width: 200 }}
-                    showSearch
-                    placeholder="Seleccione un Profesor"
-                    onChange={onChange}
-                    onSearch={onSearch}
-                    options={teachers}
-                    allowClear
-                />
+                    />
 
 
-                <Input
-                    size="large"
-                    style={{
-                        width: 300,
-                    }}
-                    placeholder="Buscar Materia"
-                    onPressEnter={onChangeMateria}
-                    allowClear
-                />
-            </div>
-            <div className="table-container">
-                <Table
-                    onRow={(record) => ({
-                        onClick: () => showModal(record),
-                    })}
+                    <Input
+                        size="large"
+                        style={{
+                            width: 300,
+                        }}
+                        placeholder="Buscar Materia"
+                        onPressEnter={onChangeMateria}
+                        allowClear
+                    />
+                </div>
+                <div className="table-container">
+                    <Table
+                        onRow={(record) => ({
+                            onClick: () => showModal(record),
+                        })}
+                        loading={loading}
+                        dataSource={materias}
+                        columns={columns}
+                        tableLayout="fixed"
+                        pagination={false}
+                        y={500}
+                        expandRowByClick
+                        footer={false}
+                    />
 
-                    loading={loading}
-                    dataSource={materias}
-                    columns={columns}
-                    tableLayout="fixed"
-                    pagination={false}
-                    y={500}
-                    footer={false}
-                />
+                </div>
 
-            </div>
+                {sessionStorage.getItem('rol') === 'Directivo' ? (
+                    <>
+                        <FloatButton.Group
+                            visibilityHeight={1500}
+                            trigger="click"
+                            type="primary"
+                            closeIcon={<DownOutlined />}
+                            icon={<UpOutlined />}
+                        >
+                            <FloatButton icon={<DownloadOutlined />} tooltip="Descargar tabla" />
+                            <FloatButton icon={<FileAddOutlined />} type='primary' tooltip="Agregar una materia"
+                                onClick={() => showDrawer(
+                                    <FormCreateSubject handleSubmit={handleSubmit} onClose={onClose} cursos={cursos} value={value} setValue={setValue} />,
+                                    'Agregar una materia'
+                                )}
+                            />
+                        </FloatButton.Group>
 
-            {sessionStorage.getItem('rol') === 'Directivo' ? (
-                <>
-                    <FloatButton.Group
-                        visibilityHeight={1500}
-                        trigger="click"
-                        type="primary"
-                        closeIcon={<DownOutlined />}
-                        icon={<UpOutlined />}
-                    >
-                        <FloatButton icon={<DownloadOutlined />} tooltip="Descargar tabla" />
-                        <FloatButton icon={<FileAddOutlined />} type='primary' tooltip="Agregar una materia"
-                            onClick={() => showDrawer(
-                                <FormCreateSubject handleSubmit={handleSubmit} onClose={onClose} cursos={cursos} value={value} setValue={setValue} />,
-                                'Agregar una materia'
-                            )}
-                        />
-                    </FloatButton.Group>
+                        <Drawer
+                            width={600}
+                            title={drawerTitle}
+                            onClose={onClose}
+                            open={open}
+                            closeIcon={false}
+                            extra={
+                                <Button onClick={onClose} size='large' type='tertiary' icon={<CloseOutlined />} />
+                            }
+                        >
+                            <div style={{ width: '100%', height: '100%' }}>
+                                {drawerContent}
+                            </div>
+                        </Drawer>
+                    </>) : (<FloatButton icon={<DownloadOutlined />} tooltip="Descargar tabla" />)}
+                <Modal
+                    width={400}
+                    title="Asigna profesor a la materia"
+                    open={isModalOpen}
+                    onOk={() => setIsModalOpen(false)}
+                    onCancel={() => setIsModalOpen(false)}>
+                    <Flex style={{ height: '120px' }} vertical gap={10} justify='space-evenly'>
 
-                    <Drawer
-                        width={600}
-                        title={drawerTitle}
-                        onClose={onClose}
-                        open={open}
-                        closeIcon={false}
-                        extra={
-                            <Button onClick={onClose} size='large' type='tertiary' icon={<CloseOutlined />} />
-                        }
-                    >
-                        <div style={{ width: '100%', height: '100%' }}>
-                            {drawerContent}
-                        </div>
-                    </Drawer>
-                </>) : (<FloatButton icon={<DownloadOutlined />} tooltip="Descargar tabla" />)}
-            <Modal
-                width={400}
-                title="Asigna profesor a la materia"
-                open={isModalOpen}
-                onOk={() => setIsModalOpen(false)}
-                onCancel={() => setIsModalOpen(false)}>
-                <Flex style={{ height: '120px' }} vertical gap={10} justify='space-evenly'>
+                        <p style={{margin: 0}}> La materia <b>{parentRecord.name} </b> - <b style={{ textTransform: 'uppercase' }}>{parentRecord.abbreviation}</b>  del curso   <b>{record.course}</b></p>
 
-                    <p>La materia <b>{record.name} </b> - <b style={{ textTransform: 'uppercase' }}>{record.abbreviation}</b>  del curso   <b>{record.course}</b></p>
+                        <Flex gap={10} align='center'>
+                            <h6 style={{ margin: 0 }}>Profesor :</h6>
+                            <Select
+                                size='large'
+                                style={{ flexGrow: 1 }}
+                                showSearch
+                                placeholder="Buscar profesor"
+                                options={teachers}
+                            />
 
-                    <Flex gap={10} align='center'>
-                        <p>Profesor :</p>
-                        <Select
-                            size='large'
-                            style={{ flexGrow: 1 }}
-                            showSearch
-                            placeholder="Buscar profesor"
-                            options={teachers}
-                        />
-
+                        </Flex>
                     </Flex>
-                </Flex>
-            </Modal>
-        </>
-    )
-}
+                </Modal>
+            </>
+        )
+    }
