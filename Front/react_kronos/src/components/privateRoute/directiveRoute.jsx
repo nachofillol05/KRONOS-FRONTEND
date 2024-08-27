@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Spin } from 'antd';
+import './PrivateRoute.scss'; 
 
 const DirectiveRoute = ({ children }) => {
     const [isAuthenticated, setIsAuthenticated] = useState(null);
@@ -58,6 +60,14 @@ const DirectiveRoute = ({ children }) => {
 
         verifyToken();
     }, [navigate]);
+
+    if (isAuthenticated === null) {
+        return (
+          <div className="spinner-container">
+            <Spin size="large" />
+          </div>
+        );
+      }
 
     return isAuthenticated ? children : navigate('/Perfil');
 };

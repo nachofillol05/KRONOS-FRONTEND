@@ -346,8 +346,8 @@ export default function Profile() {
       <Flex gap={25} align='start' >
         <Flex gap={10} vertical>
           <Image
-            width={180}
-            height={180}
+            width={250}
+            height={250}
             style={{
               minWidth: 180,
               minHeight: 180,

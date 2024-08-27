@@ -28,6 +28,38 @@ export default function Personal() {
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [activeFilter, setActiveFilter] = useState('Profesores');
     const [courses, setCourse] = useState('');
+    
+    const DescargarExcel = () => {
+      console.log('Descargando...');
+    
+      fetch("http://127.0.0.1:8000/api/staff/?export=excel", {
+        method: "GET",
+        headers: {
+          Authorization: "Token " + localStorage.getItem("token"),
+          "School-ID": sessionStorage.getItem("actual_school"),
+        },
+      })
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error("Network response was not ok");
+          }
+          return response.blob(); 
+        })
+        .then((blob) => {
+          const url = window.URL.createObjectURL(blob);
+          const link = document.createElement('a');
+          link.href = url;
+          link.setAttribute('download', 'Personal.xlsx');
+          document.body.appendChild(link);
+          link.click();
+          link.remove();
+          window.URL.revokeObjectURL(url);
+        })
+        .catch((error) => {
+          console.error("Error al descargar el archivo:", error);
+        });
+    };
+    
 
     const showEspecificWorker = (dni) => {
         showDrawer(
@@ -495,7 +527,7 @@ export default function Personal() {
                 closeIcon={<DownOutlined />}
                 icon={<UpOutlined />}
             >
-                <FloatButton icon={<DownloadOutlined />} tooltip="Descargar tabla" />
+                <FloatButton icon={<DownloadOutlined />} onClick={DescargarExcel} tooltip="Descargar tabla" />
                 <FloatButton icon={<UsergroupAddOutlined />} type='primary' tooltip="Agregar personal"
                     onClick={() => showDrawer(
                         <FormSearchDni handleSearch={handleSearch} />,
