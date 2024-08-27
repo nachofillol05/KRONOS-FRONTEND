@@ -7,7 +7,6 @@ import {
     UserOutlined,
     LogoutOutlined
 } from '@ant-design/icons';
-import { Layout, Menu, Dropdown, Select } from 'antd';
 import { Layout, Menu, Dropdown, Select, Spin } from 'antd';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 
