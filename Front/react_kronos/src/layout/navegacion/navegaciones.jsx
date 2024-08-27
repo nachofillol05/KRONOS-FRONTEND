@@ -77,17 +77,16 @@ const App = ({ children }) => {
         const schools = JSON.parse(savedData || '[]');
         const actualSchoolPk = parseInt(sessionStorage.getItem('actual_school'), 10);
         const selectedSchool = schools.find(school => school.pk === actualSchoolPk);
-        if (savedData && selectedSchool) {
-            const parsedData = JSON.parse(savedData);
-            setDropdownItems(parsedData.map(school => ({
-                key: school.pk.toString(),
-                label: school.name,
-            })));
-            setEscuelaCompleta(selectedSchool);
-        }else{
-            sessionStorage.setItem('actual_school', schools[0].pk);
-            //AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACA VER QUE SE MANEJR BIEN PORQIE SI EN EL SESSION PONES UNA SCHOOL DISTINTA DE LAS QUE TIENE DA ERROR.
-        }
+        console.log('selectedSchool', selectedSchool);
+        console.log('selectedSchool', selectedSchool);
+        console.log('Entro')
+        const parsedData = JSON.parse(savedData);
+        setDropdownItems(parsedData.map(school => ({
+            key: school.pk.toString(),
+            label: school.name,
+        })));
+        setEscuelaCompleta(selectedSchool);
+        
     }, []);
 
     const handleMenuItemClick = ({ key }) => {
@@ -138,7 +137,12 @@ const App = ({ children }) => {
 
     const defaultRol = rol || (roles.length > 0 ? roles[0] : undefined);
 
-    const currentSchool = JSON.parse(localStorage.getItem('schools')).find(school => school.pk === Number(sessionStorage.getItem('actual_school')));
+    let currentSchool = JSON.parse(localStorage.getItem('schools')).find(school => school.pk === Number(sessionStorage.getItem('actual_school')));
+    if(!currentSchool){
+        console.log(JSON.parse(localStorage.getItem('schools'))[0].pk);
+        sessionStorage.setItem('actual_school', JSON.parse(localStorage.getItem('schools'))[0].pk);
+        currentSchool = JSON.parse(localStorage.getItem('schools')).find(school => school.pk === Number(sessionStorage.getItem('actual_school')));;
+    }
 
     const items = [
         getItem(<Link to="/perfil">Perfil</Link>, '1', <UserOutlined />),
