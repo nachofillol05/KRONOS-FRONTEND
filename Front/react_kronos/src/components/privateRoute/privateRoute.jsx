@@ -1,18 +1,20 @@
+import { Spin } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import './PrivateRoute.scss'; 
 
 const PrivateRoute = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(null);
   const navigate = useNavigate();
+
   useEffect(() => {
     const token = localStorage.getItem('token');
-    
     if (!token) {
       console.log("Token is null or empty");
       navigate('/landing');
     }
   }, [navigate]);
-  
+
   useEffect(() => {
     const verifyToken = async () => {
       try {
@@ -46,7 +48,11 @@ const PrivateRoute = ({ children }) => {
   }, [navigate]);
 
   if (isAuthenticated === null) {
-    return <div>Loading...</div>; // Puedes renderizar un spinner u otro indicador de carga aquí
+    return (
+      <div className="spinner-container">
+        <Spin size="large" />
+      </div>
+    );
   }
 
   return isAuthenticated ? children : navigate('/login');
