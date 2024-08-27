@@ -8,11 +8,11 @@ import {
     LogoutOutlined
 } from '@ant-design/icons';
 import { Layout, Menu, Dropdown, Select } from 'antd';
-import { Link, useLocation,useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 
-import './navegaciones.scss'; 
+import './navegaciones.scss';
 
-const {  Content, Sider } = Layout;
+const { Content, Sider } = Layout;
 const { Option } = Select;
 function getItem(label, key, icon, children) {
     return {
@@ -52,22 +52,23 @@ const App = ({ children }) => {
                 return navigate('/landing');
             }
         })
-        .then(data => {
-            setData(data);
-            localStorage.setItem('roles', JSON.stringify(data.roles));
-            if (!rol) {
-                sessionStorage.setItem('rol', data.roles[0]);
-                setRol(data.roles[0]);
-                console.log('se cambio al rol', data.roles[0]);
-            }
-            console.log('se actualizaron los roles', data.roles);
-            setRoles(data.roles);
-            localStorage.setItem('roles', JSON.stringify(data.roles));  
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            navigate('/landing');
-        });}
+            .then(data => {
+                setData(data);
+                localStorage.setItem('roles', JSON.stringify(data.roles));
+                if (!rol) {
+                    sessionStorage.setItem('rol', data.roles[0]);
+                    setRol(data.roles[0]);
+                    console.log('se cambio al rol', data.roles[0]);
+                }
+                console.log('se actualizaron los roles', data.roles);
+                setRoles(data.roles);
+                localStorage.setItem('roles', JSON.stringify(data.roles));
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                navigate('/landing');
+            });
+    }
 
     useEffect(() => {
         getMyRoles();
@@ -76,12 +77,12 @@ const App = ({ children }) => {
     const items = [
         getItem(<Link to="/perfil">Perfil</Link>, '1', <UserOutlined />),
         getItem(<Link to="/horarios">Horarios</Link>, '2', <TableOutlined />),
-        ...(rol==='Directivo'&& JSON.stringify(data).includes("Directivo") === true || rol==='Preceptor'&& JSON.stringify(data).includes("Preceptor") === true? [
+        ...(rol === 'Directivo' && JSON.stringify(data).includes("Directivo") === true || rol === 'Preceptor' && JSON.stringify(data).includes("Preceptor") === true ? [
             getItem(<Link to="/personal">Personal</Link>, '3', <TeamOutlined />),
             getItem(<Link to="/materias">Materias</Link>, '4', <ScheduleOutlined />)
         ] : []),
         getItem(<Link to="/eventos">Eventos</Link>, '5', <ContactsOutlined />),
-        getItem(<a onClick={cerrarSesion}>Cerrar sesion</a>, '6',<LogoutOutlined/>),
+        getItem(<a onClick={cerrarSesion}>Cerrar sesion</a>, '6', <LogoutOutlined />),
     ];
 
     //Esto es para el logo(?)
@@ -199,17 +200,17 @@ const App = ({ children }) => {
                             ))
                         }
                     </Select>
-                
+
                 </div>
                 <Menu theme="dark" defaultSelectedKeys={[getSelectedKey()]} mode="inline" items={items} />
-                
+
             </Sider>
             <Layout style={{ marginLeft: collapsed ? 50 : 200 }}>
-            <Content style={{ padding: '0 24px', minHeight: 280 }}>
+                <Content style={{ padding: '0 24px', minHeight: 280 }}>
                     {children}
                 </Content>
             </Layout>
-            
+
         </Layout>
     );
 };
