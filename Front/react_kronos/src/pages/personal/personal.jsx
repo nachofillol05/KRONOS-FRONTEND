@@ -89,7 +89,7 @@ export default function Personal() {
   const handleVolver = () => {
     showDrawer(
       <FormSearchDni handleSearch={handleSearch} />,
-      "Buscar personal"
+      "Buscar/agregar personal."
     );
   };
   const handleVolverInfo = (user) => {
@@ -531,7 +531,7 @@ export default function Personal() {
                 <FloatButton icon={<UsergroupAddOutlined />} type='primary' tooltip="Agregar personal"
                     onClick={() => showDrawer(
                         <FormSearchDni handleSearch={handleSearch} />,
-                        'Buscar personal'
+                        'Buscar/agregar personal.'
                     )}
                 />
             </FloatButton.Group>

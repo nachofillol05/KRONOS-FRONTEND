@@ -30,15 +30,10 @@ export default function FormSearchDni({ handleSearch }) {
     return (
         <Form form={form} ref={formRef} layout="vertical" hideRequiredMark>
             <Space.Compact>
-                <Form.Item
+
+                <Form.Item //Dropdown seleccionar tipo DNI
                     style={{ width: '30%' }}
                     name="tipoDni"
-                    rules={[
-                        {
-                            required: true,
-                            message: 'Por favor ingrese el tipo de documento',
-                        },
-                    ]}
                 >
                     <Select
                         size="large"
@@ -46,25 +41,30 @@ export default function FormSearchDni({ handleSearch }) {
                         options={tipoDocumentos}
                     />
                 </Form.Item>
-                <Form.Item
+
+                <Form.Item //Input field documento
                     style={{ width: '60%' }}
                     name="documento"
                     rules={[
-                        {
-                            required: true,
-                            message: 'Por favor ingrese el documento',
-                        },
+                        {required: true, message: 'Ingrese un documento válido.'}
                     ]}
                 >
-                    <Input size='large' type="number" autoSize={true} placeholder="Documento" />
+                    <Input 
+                        size='large' 
+                        type="number" 
+                        autoSize={true} 
+                        placeholder="Documento"
+                    />
                 </Form.Item>
-                <Button
+
+                <Button //Submit button
                     style={{ width: '10%' }}
                     size='large'
                     onClick={() => handleSearch(formRef, tipoDocumentos)}
                     type="primary"
                     icon={<SearchOutlined />}
                 />
+                
             </Space.Compact>
         </Form>
     );
