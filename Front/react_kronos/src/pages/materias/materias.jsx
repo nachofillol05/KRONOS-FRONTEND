@@ -61,7 +61,7 @@ export default function Materias() {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [record, setRecord] = useState([]);
     const [parentRecord, setParentRecord] = useState([]);
-    /*const [materias, setMaterias] = useState([]);*/
+    const [materias, setMaterias] = useState([]);
     const [teachers, setTeachers] = useState([]);
     const [teacher, setTeacher] = useState('');
     const [Subjectname, setSubjectname] = useState('');
@@ -79,7 +79,7 @@ export default function Materias() {
     const [expandedRowKeys, setExpandedRowKeys] = useState([]);
 
     const showModal = (record) => {
-        if (!('children' in record)) {
+        if (!('children' in record)) {  
             setRecord(record);
             setIsModalOpen(true);
             const parent = materias.find(materia => materia.children && materia.children.some(child => child.key === record.key));
@@ -147,6 +147,62 @@ export default function Materias() {
             });
     };
 
+        const showMessage = (type, content) => {
+            switch (type) {
+                case 'success':
+                    messageApi.success(content);
+                    break;
+                case 'error':
+                    messageApi.error(content);
+                    break;
+                case 'warning':
+                    messageApi.warning(content);
+                    break;
+                case 'info':
+                    messageApi.info(content);
+                    break;
+                default:
+                    messageApi.info(content);
+                    break;
+            }
+        };
+        
+            useEffect(() => {
+                const url = new URL('http://127.0.0.1:8000/api/subjects/');
+                if (end_time && start_time) {
+                    url.searchParams.append('start_time', start_time);
+                    url.searchParams.append('end_time', end_time);
+                }
+                if (teacher) {
+                    url.searchParams.append('teacher', teacher);
+                }
+                if (Subjectname) {
+                    url.searchParams.append('name', Subjectname);
+                }
+                console.log(url.toString());
+                console.log(sessionStorage.getItem('actual_school'));
+                fetch(url.toString(), {
+                    method: "GET",
+                    headers: {
+                        'Authorization': 'Token ' + localStorage.getItem('token'),
+                        'School-ID': sessionStorage.getItem('actual_school'),
+                    },
+                })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        console.log(data)
+                        setMaterias(data.map(materia => ({ ...materia, key: materia.id, course: materia.courses.name })));
+                        setLoading(false);
+                        console.log(data);
+                    })
+                    .catch(error => console.error('Error fetching data:', error));
+            }, [start_time, end_time, Subjectname, teacher]);
+        
     const showMessage = (type, content) => {
         switch (type) {
             case 'success':
