@@ -60,7 +60,7 @@ export default function Materias() {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [record, setRecord] = useState([]);
     const [parentRecord, setParentRecord] = useState([]);
-    /*const [materias, setMaterias] = useState([]);*/
+    const [materias, setMaterias] = useState([]);
     const [teachers, setTeachers] = useState([]);
     const [teacher, setTeacher] = useState('');
     const [Subjectname, setSubjectname] = useState('');
@@ -78,7 +78,7 @@ export default function Materias() {
     const [expandedRowKeys, setExpandedRowKeys] = useState([]);
 
     const showModal = (record) => {
-        if (!('children' in record)) {
+        if (!('children' in record)) {  
             setRecord(record);
             setIsModalOpen(true);
             const parent = materias.find(materia => materia.children && materia.children.some(child => child.key === record.key));
@@ -165,7 +165,7 @@ export default function Materias() {
                     break;
             }
         };
-        /*
+        
             useEffect(() => {
                 const url = new URL('http://127.0.0.1:8000/api/subjects/');
                 if (end_time && start_time) {
@@ -201,12 +201,11 @@ export default function Materias() {
                     })
                     .catch(error => console.error('Error fetching data:', error));
             }, [start_time, end_time, Subjectname, teacher]);
-        */
+        
 
         const columns = [
             { title: 'Nombre', dataIndex: 'name', key: 'name', width: '30%', },
             { title: 'Abreviacion', dataIndex: 'abbreviation', key: 'abbreviation', width: '20%', },
-            { title: 'Curso', dataIndex: 'course', key: 'course' },
             { title: 'Horas catedra semanales', dataIndex: 'weeklyHours', key: 'weeklyHours' },
             {
                 title: 'Color',
@@ -309,18 +308,7 @@ export default function Materias() {
         const onChangeMateria = (event) => {
             const value = event.target.value;
             setSubjectname(value);
-        }
-        /* Al parecer en el back no hay filtro por curso
-        <Select
-                            size='large'
-                            style={{ width: 200 }}
-                            showSearch
-                            placeholder="Seleccione un curso"
-                            onChange={onChange}
-                            onSearch={onSearch}
-                            options={cursos}
-                            allowClear
-                        /> */
+        };
         return (
             <>
                 {contextHolder}
@@ -362,6 +350,7 @@ export default function Materias() {
                         y={500}
                         expandRowByClick
                         footer={false}
+                        childrenColumnName={'courses'}
                     />
 
                 </div>

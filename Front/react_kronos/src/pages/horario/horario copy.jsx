@@ -1,15 +1,16 @@
-import React, { Suspense, lazy, useState, useEffect } from 'react';
+import { React, useState,useEffect } from 'react';
 import { FloatButton, Drawer, Button, Tooltip, Segmented, DatePicker } from 'antd';
 import {
     InsertRowAboveOutlined, DownOutlined, UpOutlined, DownloadOutlined, HistoryOutlined, CloseOutlined, AppstoreOutlined, UserSwitchOutlined
     , EyeOutlined, EditOutlined, FilterOutlined
 } from '@ant-design/icons';
+import SelectTeacher from './selectTeacher.jsx';
+import Historial from './historial.jsx';
+import Horas from './infoHour.jsx';
+import SelectCourse from './selectCourses.jsx';
+import './horarios.scss';
+import FilterDropdownTable from '../../components/filterDropTable/FilterDropTable.jsx';
 import Calendario from '../../components/calendario/CalendarioPrueba.jsx';
-
-const SelectTeacher = lazy(() => import('./selectTeacher.jsx'));
-const Historial = lazy(() => import('./historial.jsx'));
-const Horas = lazy(() => import('./infoHour.jsx'));
-const SelectCourse = lazy(() => import('./selectCourses.jsx'));
 
 const format = 'DD/MM/YYYY';
 
@@ -18,7 +19,6 @@ export default function Horario({ handleOpenDrawer, handleCloseDrawer }) {
     const [drawerContent, setDrawerContent] = useState(null);
     const [drawerTitle, setDrawerTitle] = useState(null);
     const [subjects, setSubjects] = useState([]); 
-    const [editar, setEditar] = useState(true);
 
     useEffect(() => {
         fetch("http://127.0.0.1:8000/api/viewschedule/", {
@@ -35,6 +35,7 @@ export default function Horario({ handleOpenDrawer, handleCloseDrawer }) {
             return response.json();
           })
           .then((data) => {
+            console.log("aaaaaaaaaaaaaaaaaaaaa",data);
             setSubjects(data);
           })
           .catch((error) => console.error("Error fetching data:", error));
@@ -50,6 +51,28 @@ export default function Horario({ handleOpenDrawer, handleCloseDrawer }) {
         setOpen(false);
         setDrawerContent(null);
     };
+    const options = [
+        "Juan Pérez",
+        "María Gómez",
+        "Carlos Rodríguez",
+        "Ana Fernández",
+        "Pedro Martínez",
+        "Laura Sánchez",
+        "Jorge Ramírez",
+        "Elena Morales",
+        "Luis Torres",
+        "Carmen Díaz",
+        "Andrés Gutiérrez",
+        "Sofía Herrera",
+        "Miguel Vargas",
+        "Lucía Rivas",
+        "Ricardo Castillo",
+        "Paula Navarro",
+        "Roberto Ortega",
+        "Valeria Flores",
+        "Fernando Mendoza",
+        "Gabriela Romero"
+    ];
 
     return (
         <>
@@ -59,23 +82,25 @@ export default function Horario({ handleOpenDrawer, handleCloseDrawer }) {
                     options={[
                         {
 
-                            value: 'Editar',
+                            value: 'List',
                             icon: <> <EditOutlined /> Editar</>,
                         },
                         {
-                            value: 'Visualizar',
+                            value: 'Kanban',
                             icon: <><EyeOutlined /> Visualizar</>
                         },
                     ]}
-                    onChange={(value) => {setEditar(value === 'Editar' ? true : false)}}
                 />
+
+                <FilterDropdownTable options={options} placeholder={'Dias: '} />
+                <FilterDropdownTable options={options} placeholder={'Profesores: '} />
+                <FilterDropdownTable options={options} placeholder={'Cursos: '} />
                 <DatePicker size='large' format={format} />
                 <Button icon={<FilterOutlined />} size='large' type='primary'>
                     Filtrar
                 </Button>
             </div>
-            {editar ? (<Calendario editar={editar}subjects={subjects} />):(null)}
-            
+            <Calendario subjects={subjects} />
 
             <FloatButton.Group
                 visibilityHeight={1500}
@@ -87,33 +112,25 @@ export default function Horario({ handleOpenDrawer, handleCloseDrawer }) {
                 <FloatButton icon={<DownloadOutlined />} tooltip="Descargar tabla" />
                 <FloatButton icon={<UserSwitchOutlined />} type='primary' tooltip="Seleccionar profesores"
                     onClick={() => showDrawer(
-                        <Suspense fallback={<div>Loading...</div>}>
-                            <SelectTeacher />
-                        </Suspense>
+                        <SelectTeacher />
                         , 'Seleccione un profesor'
                     )}
                 />
                 <FloatButton icon={<HistoryOutlined />} type='primary' tooltip="Historial de cambios"
                     onClick={() => showDrawer(
-                        <Suspense fallback={<div>Loading...</div>}>
-                            <Historial />
-                        </Suspense>
+                        <Historial />
                         , 'Historial de cambios'
                     )}
                 />
                 <FloatButton icon={<InsertRowAboveOutlined />} type='primary' tooltip="Horas catedra"
                     onClick={() => showDrawer(
-                        <Suspense fallback={<div>Loading...</div>}>
-                            <Horas showDrawer={showDrawer} />
-                        </Suspense>
+                        <Horas showDrawer={showDrawer} />
                         , 'Horas catedra'
                     )}
                 />
                 <FloatButton icon={<AppstoreOutlined />} type='primary' tooltip='Cursos'
                     onClick={() => showDrawer(
-                        <Suspense fallback={<div>Loading...</div>}>
-                            <SelectCourse showDrawer={showDrawer} />
-                        </Suspense>
+                        <SelectCourse showDrawer={showDrawer} />
                         , 'Cursos'
                     )}
                 />
