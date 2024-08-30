@@ -330,7 +330,7 @@ export default function Materias() {
 
                 <Select
                     size='large'
-                    style={{ width: 200 }}
+                    style={{ width: 250 }}
                     showSearch
                     placeholder="Seleccione un Profesor"
                     onChange={onChange}

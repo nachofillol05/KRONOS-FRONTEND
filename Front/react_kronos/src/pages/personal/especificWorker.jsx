@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Flex, Divider, Col, Row, Tooltip, Image } from 'antd';
 import { RollbackOutlined, PlusOutlined, MailOutlined } from '@ant-design/icons';
+import './personal.scss';
 
 export default function EspecificWorker({ handleVolverInfo, dni, onClose }) {
     const [selectedCells, setSelectedCells] = useState([]);
@@ -40,33 +41,38 @@ export default function EspecificWorker({ handleVolverInfo, dni, onClose }) {
 
     return (
         <>
-            <Flex horizontal gap={30}>
-                <Image
-                    width={200}
-                    height={200}
-                    style={{ minWidth: 200, minHeight: 200 }}
-                    src="https://via.placeholder.com/150"
-                />
-                <Flex style={{ width: '100%' }} vertical justify='space-around'>
-                    <Flex gap={30} justify='space-between'>
-                        <p style={{ width: '50%' }}>Nombre: {worker.first_name}</p><p style={{ width: '50%' }}>Apellido: {worker.last_name} </p>
-                    </Flex>
-                    <p style={{ width: '100%' }}>Documento: {worker?.documentType?.name},  {worker.document}</p>
-                    <p style={{ width: '100%' }}>Telefono:  </p>
-                    <p style={{ width: '100%' }}>Email: {worker.email}</p>
-                    <Flex gap={30} justify='space-between'>
-                        <p style={{ width: '40%' }}>Genero: {worker.gender}</p><p style={{ width: '60%' }}>Nacionalidad: {worker?.nationality?.name}</p>
-                    </Flex>
+            <Flex vertical gap={10}>
+                <Flex align='center' gap={30} style={{ width: '70%', height: '50px' }}>
+                    <label >Foto de perfil:</label>
+                    <img
+                        width={50}
+                        height={50}
+                        src="https://via.placeholder.com/150"
+                        style={{ borderRadius: '50%' }}
+                    />
                 </Flex>
-            </Flex>
-            <br />
-            <Flex vertical style={{ width: '100%' }} gap={30}>
-                <Flex gap={30} justify='space-between'>
-                    <p style={{ width: '50%' }}>Provincia: {worker?.contactInfo?.province}</p><p style={{ width: '50%' }}>Ciudad: {worker?.contactInfo?.city}</p>
+                <Flex gap={30}>
+                <label>Nombre: {worker.first_name} {worker.last_name}</label>
+                <label>Documento: {worker?.documentType?.name},  {worker.document}</label>
                 </Flex>
-                <Flex gap={30} justify='space-between'>
-                    <p style={{ width: '50%' }}>Calle: {worker?.contactInfo?.street}</p><p style={{ width: '50%' }}>Numero: {worker?.contactInfo?.streetNumber}</p><p style={{ width: '50%' }}>Codigo postal: {worker?.contactInfo?.postalCode}</p>
+                <Flex gap={30}>
+                <label>Telefono:  {worker.email}</label>
+                <label>Email: {worker.email}</label>
                 </Flex>
+                <Flex gap={30}>
+                        <label >Genero: {worker.gender}</label><label >Nacionalidad: {worker?.nationality?.name}</label>
+                </Flex>
+                <Flex gap={30}>
+                    <label >Provincia: {worker?.contactInfo?.province}</label><label >Ciudad: {worker?.contactInfo?.city}</label>
+                </Flex>
+                <Flex gap={30} >
+                    <label >Calle: {worker?.contactInfo?.street}</label><label >Numero: {worker?.contactInfo?.streetNumber}</label><label >Codigo postal: {worker?.contactInfo?.postalCode}</label>
+                </Flex>
+
+
+
+
+
             </Flex>
             <Divider orientation='left' >Disponiblidad horaria</Divider>
             <Row style={{ height: '30px' }} align={"middle"}>
@@ -87,7 +93,7 @@ export default function EspecificWorker({ handleVolverInfo, dni, onClose }) {
                             <Button
                                 disabled
                                 type="tertiary"
-                                style={{ width: '100%' }}
+                                
                                 key={`${day}-${module}`}
                                 className={selectedCells.includes(`${day}-${module}`) ? 'selected desabilitados' : 'NotSelected desabilitados'}
                             ></Button>
@@ -98,7 +104,7 @@ export default function EspecificWorker({ handleVolverInfo, dni, onClose }) {
             ))}
             <br />
             <Flex justify='flex-end' gap={10}>
-                <Tooltip title="Volver">
+                <Tooltip label='volver'>
                     <Button size='large' iconPosition='end' icon={<RollbackOutlined />} style={{ width: "100px", marginInline: "20px" }} onClick={onClose} />
                 </Tooltip>
             </Flex>
