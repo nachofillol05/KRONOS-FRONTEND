@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Flex, Divider, Col, Row, Menu, Image } from 'antd';
+import { Button, Flex, Divider, Col, Row, Tooltip, Image } from 'antd';
 import { RollbackOutlined, PlusOutlined, MailOutlined } from '@ant-design/icons';
 
-export default function EspecificWorker({ handleVolverInfo, dni  }) {
+export default function EspecificWorker({ handleVolverInfo, dni, onClose }) {
     const [selectedCells, setSelectedCells] = useState([]);
     const [worker, setWorker] = useState({});
 
@@ -26,7 +26,7 @@ export default function EspecificWorker({ handleVolverInfo, dni  }) {
                 const filteredWorker = data.find(worker => worker.document === dni);
                 if (filteredWorker) {
                     setWorker(filteredWorker);
-                    console.log( filteredWorker);
+                    console.log(filteredWorker);
                 } else {
                     console.log('Worker not found');
                     setWorker(null); // O maneja el caso donde no se encuentra el trabajador
@@ -34,9 +34,9 @@ export default function EspecificWorker({ handleVolverInfo, dni  }) {
             })
             .catch(error => console.error('Error fetching data:', error));
     }, [dni]);
-    
-    
-    
+
+
+
 
     return (
         <>
@@ -68,7 +68,7 @@ export default function EspecificWorker({ handleVolverInfo, dni  }) {
                     <p style={{ width: '50%' }}>Calle: {worker?.contactInfo?.street}</p><p style={{ width: '50%' }}>Numero: {worker?.contactInfo?.streetNumber}</p><p style={{ width: '50%' }}>Codigo postal: {worker?.contactInfo?.postalCode}</p>
                 </Flex>
             </Flex>
-            <Divider />
+            <Divider orientation='left' >Disponiblidad horaria</Divider>
             <Row style={{ height: '30px' }} align={"middle"}>
                 <Col span={3}></Col>
                 {days.map((day) => (
@@ -96,6 +96,13 @@ export default function EspecificWorker({ handleVolverInfo, dni  }) {
                     ))}
                 </Row>
             ))}
+            <br />
+            <Flex justify='flex-end' gap={10}>
+                <Tooltip title="Volver">
+                    <Button size='large' iconPosition='end' icon={<RollbackOutlined />} style={{ width: "100px", marginInline: "20px" }} onClick={onClose} />
+                </Tooltip>
+            </Flex>
+            <br />
         </>
     );
 }

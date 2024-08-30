@@ -1,16 +1,27 @@
 .formItemProfile {
-    .css-dev-only-do-not-override-m4timi {
-      align-items: center;
-    }
+  .css-dev-only-do-not-override-m4timi {
+    align-items: center;
   }
-
-.selected{
-    background-color: #1776ff;
-    border: #1161d2 1px solid;
-    border-radius: 0;
 }
-.NotSelected{
+
+.selected {
+  background-color: #1776ff;
+  border: #1161d2 1px solid;
+  border-radius: 0;
+}
+
+.NotSelected {
   background-color: #f9f9f9;
   border: #d4d4d4 1px solid;
   border-radius: 0;
+}
+
+.CardProfile:where(.css-dev-only-do-not-override-m4timi).ant-card .ant-card-body {
+  padding: 0 !important;
+}
+
+.formItemProfile{
+  label{
+    height: 40px;
+  }
 }
