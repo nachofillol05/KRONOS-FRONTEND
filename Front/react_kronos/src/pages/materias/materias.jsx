@@ -116,18 +116,18 @@ export default function Materias() {
     const handleSubmit = (form) => {
         form.validateFields()
             .then(values => {
-                console.log('Formulario completado:', values);
-                onClose(); // Cerrar el drawer si todos los campos están completos
+                
+                onClose(); 
                 const hexColor = values.color.toHexString();
+
                 const body = {
                     name: values.materia,
                     abbreviation: values.abreviacion,
-                    courses: values.curso,
-                    weeklyHours: parseInt(values.horasCatedras, 10),
                     color: hexColor,
-                    studyPlan: values.planEstudio,
-                    description: values.descripcion
+                    description: values.descripcion,
+                    courses: []
                 };
+                console.log('Formulario completado:', body);
                 fetch('http://127.0.0.1:8000/api/subjects/', {
                     method: 'POST',
                     headers: {
@@ -196,69 +196,12 @@ export default function Materias() {
                     })
                     .then(data => {
                         console.log(data)
-                        setMaterias(data.map(materia => ({ ...materia, key: materia.id, course: materia.courses.name })));
+                        setMaterias(data.map(materia => ({ ...materia, key: materia.id, children: materia.courses })));
                         setLoading(false);
                         console.log(data);
                     })
                     .catch(error => console.error('Error fetching data:', error));
             }, [start_time, end_time, Subjectname, teacher]);
-        
-    const showMessage = (type, content) => {
-        switch (type) {
-            case 'success':
-                messageApi.success(content);
-                break;
-            case 'error':
-                messageApi.error(content);
-                break;
-            case 'warning':
-                messageApi.warning(content);
-                break;
-            case 'info':
-                messageApi.info(content);
-                break;
-            default:
-                messageApi.info(content);
-                break;
-        }
-    };
-    /*
-        useEffect(() => {
-            const url = new URL('http://127.0.0.1:8000/api/subjects/');
-            if (end_time && start_time) {
-                url.searchParams.append('start_time', start_time);
-                url.searchParams.append('end_time', end_time);
-            }
-            if (teacher) {
-                url.searchParams.append('teacher', teacher);
-            }
-            if (Subjectname) {
-                url.searchParams.append('name', Subjectname);
-            }
-            console.log(url.toString());
-            console.log(sessionStorage.getItem('actual_school'));
-            fetch(url.toString(), {
-                method: "GET",
-                headers: {
-                    'Authorization': 'Token ' + localStorage.getItem('token'),
-                    'School-ID': sessionStorage.getItem('actual_school'),
-                },
-            })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    console.log(data)
-                    setMaterias(data.map(materia => ({ ...materia, key: materia.id, course: materia.courses.name })));
-                    setLoading(false);
-                    console.log(data);
-                })
-                .catch(error => console.error('Error fetching data:', error));
-        }, [start_time, end_time, Subjectname, teacher]);
-    */
 
     const columns = [
         { title: 'Nombre', dataIndex: 'name', key: 'name', width: '30%', },
@@ -367,17 +310,6 @@ export default function Materias() {
         const value = event.target.value;
         setSubjectname(value);
     }
-    /* Al parecer en el back no hay filtro por curso
-    <Select
-                        size='large'
-                        style={{ width: 200 }}
-                        showSearch
-                        placeholder="Seleccione un curso"
-                        onChange={onChange}
-                        onSearch={onSearch}
-                        options={cursos}
-                        allowClear
-                    /> */
     return (
         <>
             {contextHolder}

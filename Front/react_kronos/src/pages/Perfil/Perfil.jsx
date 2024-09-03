@@ -24,6 +24,7 @@ export default function Profile() {
       const selectedSchool = schools.find(school => school.pk === actualSchoolPk);
       formSchool.setFieldsValue({
         ...selectedSchool,
+        abreviacion: selectedSchool.abbreviation,
         city: selectedSchool.contactInfo.city,
         postalCode: selectedSchool.contactInfo.postalCode,
         province: selectedSchool.contactInfo.province,
@@ -56,6 +57,7 @@ export default function Profile() {
         form.setFieldsValue({
           ...data,
           documentType: data.documentType.name,
+          document: data.document,
           phone: data.phone,
           hoursToWork: 12,//IMPPPPPPPPP ESTO DEBERA SER CAMBIADO POR UN CALCULO DE LAS HORAS OCUPADAS IMPPPPPPPPPPPPPPPPPPPPPPPPPPPP
           profile_picture: data.profile_picture,
@@ -217,7 +219,7 @@ export default function Profile() {
               <Form.Item style={{height: '40px'}} label="Documento" layout='horizontal' className='formItemProfile' >
                 <Space.Compact style={{ width: '100%'}}>
                   <Form.Item
-                    name={['document', 'documentType']}
+                    name='documentType'
                     style={{ width: '125px' }}
                   >
                     {isEditing ? (
@@ -231,7 +233,7 @@ export default function Profile() {
                     )}
                   </Form.Item>
                   <Form.Item
-                    name={['document', 'dni']}
+                    name='document'
                     className='formItemProfile'
                     style={{flexGrow: 1}}
                   >
@@ -265,7 +267,7 @@ export default function Profile() {
                   <Input
                     size='large'
                     type="number"
-                    style={!isEditing ? customDisabledStyle : { height: '40px', backgroundColor: 'transparent', cursor: 'default' }}
+                    style={customDisabledStyle}
                     disabled
                   />
                 </Form.Item>
@@ -273,7 +275,7 @@ export default function Profile() {
                   <Input
                     size='large'
                     type="number"
-                    style={!isEditing ? customDisabledStyle : { height: '40px', backgroundColor: 'transparent', cursor: 'default' }}
+                    style={customDisabledStyle}
                     disabled
                   />
                 </Form.Item>
@@ -294,35 +296,6 @@ export default function Profile() {
                   />
                 </Form.Item>
               </Flex>
-              <Form.Item style={{height: '40px'}} label="Residencia" layout='horizontal' className='formItemProfile' >
-                <Space.Compact style={{ width: '100%'}}>
-                  <Form.Item
-                    name={['residencia', 'provincia']}
-                    style={{ width: '125px' }}
-                  >
-                    {isEditing ? (
-                      <Select style={{ height: '40px' }} options={tiposDoc} size='large' />
-                    ) : (
-                      <Input
-                        size='large'
-                        style={!isEditing ? customDisabledStyle : { height: '40px' }}
-                        disabled={!isEditing}
-                      />
-                    )}
-                  </Form.Item>
-                  <Form.Item
-                    name={['residencia', 'ciudad']}
-                    className='formItemProfile'
-                    style={{flexGrow: 1}}
-                  >
-                    <Input
-                      size='large'
-                      style={!isEditing ? customDisabledStyle : { height: '40px' }}
-                      disabled={!isEditing}
-                    />
-                  </Form.Item>
-                </Space.Compact>
-              </Form.Item>
               <Flex gap={25}>
                 <Space.Compact style={{ width: '100%' }}>
                   <Form.Item style={{ flexGrow: 1 }} label="Calle" name="street" layout='horizontal' className="formItemProfile">
@@ -388,7 +361,7 @@ export default function Profile() {
                   disabled={!isEditing}
                 />
               </Form.Item>
-              <Form.Item label="Abrevacion" style={{ width: '100%' }} name="abreviacion" layout='horizontal' className="formItemProfile">
+              <Form.Item label="Abreviacion" style={{ width: '100%' }} name="abreviacion" layout='horizontal' className="formItemProfile">
                 <Input
                   size='large'
                   autoSize
@@ -404,35 +377,7 @@ export default function Profile() {
                   disabled={!isEditing}
                 />
               </Form.Item>
-              <Form.Item style={{height: '40px'}} label="Residencia" layout='horizontal' className='formItemProfile' >
-                <Space.Compact style={{ width: '100%'}}>
-                  <Form.Item
-                    name={['residencia', 'provincia']}
-                    style={{ width: '125px' }}
-                  >
-                    {isEditing ? (
-                      <Select style={{ height: '40px' }} options={tiposDoc} size='large' />
-                    ) : (
-                      <Input
-                        size='large'
-                        style={!isEditing ? customDisabledStyle : { height: '40px' }}
-                        disabled={!isEditing}
-                      />
-                    )}
-                  </Form.Item>
-                  <Form.Item
-                    name={['residencia', 'ciudad']}
-                    className='formItemProfile'
-                    style={{flexGrow: 1}}
-                  >
-                    <Input
-                      size='large'
-                      style={!isEditing ? customDisabledStyle : { height: '40px' }}
-                      disabled={!isEditing}
-                    />
-                  </Form.Item>
-                </Space.Compact>
-              </Form.Item>
+        
               <Flex gap={25}>
                 <Space.Compact style={{ width: '100%' }}>
                   <Form.Item style={{ flexGrow: 1 }} label="Calle" name="street" layout='horizontal' className="formItemProfile">

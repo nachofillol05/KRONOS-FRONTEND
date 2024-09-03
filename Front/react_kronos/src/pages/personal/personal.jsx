@@ -244,7 +244,6 @@ export default function Personal() {
           password: values.documento,
         });
         console.log("Body: ", body);
-        console.log("Formulario completado:", body);
         fetch("http://localhost:8000/api/Register/", {
           method: "POST",
           headers: {
@@ -369,21 +368,22 @@ export default function Personal() {
                 })
                 .then((response) => {
                     if (!response.ok) {
-                        return null;
+                        setTeachers([]);
+                        return;
                     }
                     return response.json();
                 })
                 .then((data) => {
-                    setTeachers(data);
-                    setLoading(false);
+                  setTeachers(data);
+                  setLoading(false);
                 })
                 .catch((error) => {
                     setLoading(false);
                 });
             } else if (activeFilter === 'Preceptores') {
                 const url = new URL(`http://127.0.0.1:8000/api/preceptors`);
-                if (searchName) url.searchParams.append('search_name', searchName);
-                if (courses) url.searchParams.append('year', courses);
+                if (searchName) url.searchParams.append('search', searchName);
+                //if (year) url.searchParams.append('year_id', year);
                 fetch(url.toString(), {
                     method: 'GET',
                     headers: {
@@ -391,19 +391,30 @@ export default function Personal() {
                         'School-ID': sessionStorage.getItem('actual_school'),
                     },
                 })
-                .then((response) => response.json())
-                .then((data) => {
-                    setTeachers(data);
+                .then((response) => {
+                  if (!response.ok) {
+                      setTeachers([]);
+                      return;
+                  }
+                  return response.json();
+              })
+              .then((data) => {
+                  console.log(data);
+                  setTeachers(data);
                 })
                 .catch((error) => console.error('Error fetching data:', error));
             }
             else if (activeFilter === 'Directivos') {
-                // cambiar por el endpoint de directivos
                 const schools = JSON.parse(localStorage.getItem('schools') || '[]');
                 const actualSchoolPk = parseInt(sessionStorage.getItem('actual_school'), 10);
                 if (schools && actualSchoolPk) {
                     const selectedSchool = schools.find(school => school.pk === actualSchoolPk);
+                    if (selectedSchool.directives.length === 0) {
+                      setTeachers([]);
+                      return;
+                    }
                     setTeachers(selectedSchool.directives);
+                    
         }
             }
         }, [activeFilter, searchName, subject, courses]);
