@@ -48,8 +48,11 @@
 }
 .desabilitados{
     cursor: default !important;
+    width: 100%;
+    height: 100%;
 }
 .contenedor-filtros-personal{
     justify-content: space-between;
     padding-inline: 5vw;
 }
+
