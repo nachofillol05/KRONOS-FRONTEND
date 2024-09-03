@@ -39,38 +39,37 @@ export default function Profile() {
 
   useEffect(() => {
     fetch('http://127.0.0.1:8000/api/profile/', {
-      method: "GET",
-      headers: {
-        'Authorization': 'Token ' + localStorage.getItem('token'),
-        'School-ID': sessionStorage.getItem('actual_school'),
-      },
+        method: "GET",
+        headers: {
+            'Authorization': 'Token ' + localStorage.getItem('token'),
+            'School-ID': sessionStorage.getItem('actual_school'),
+        },
     })
-      .then((response) => {
+    .then((response) => {
         if (!response.ok) {
-          throw new Error('Network response was not ok');
+            throw new Error('Network response was not ok');
         }
         return response.json();
-      })
-      .then((data) => {
+    })
+    .then((data) => {
         console.log(data);
         setProfileData(data);
         form.setFieldsValue({
-          ...data,
-          documentType: data.documentType.name,
-          document: data.document,
-          phone: data.phone,
-          hoursToWork: 12,//IMPPPPPPPPP ESTO DEBERA SER CAMBIADO POR UN CALCULO DE LAS HORAS OCUPADAS IMPPPPPPPPPPPPPPPPPPPPPPPPPPPP
-          profile_picture: data.profile_picture,
-          nationality: data.nationality.name,
-          city: data.contactInfo.city,
-          postalCode: data.contactInfo.postalCode,
-          province: data.contactInfo.province,
-          street: data.contactInfo.street,
-          streetNumber: data.contactInfo.streetNumber,
+            documentType: data.documentType?.name || '',
+            document: data.document || '',
+            phone: data.phone || '',
+            hoursToWork: 12, // ESTO DEBERÁ SER CAMBIADO POR UN CÁLCULO DE LAS HORAS OCUPADAS
+            profile_picture: data.profile_picture || '',
+            nationality: data.nationality?.name || '',
+            city: data.contactInfo?.city || '',
+            postalCode: data.contactInfo?.postalCode || '',
+            province: data.contactInfo?.province || '',
+            street: data.contactInfo?.street || '',
+            streetNumber: data.contactInfo?.streetNumber || '',
         });
-      })
-      .catch((error) => console.error('Error fetching data:', error));
-  }, []);
+    })
+    .catch((error) => console.error('Error fetching data:', error));
+}, []);
 
   const tiposDoc = [
     { value: 'DNI', label: 'DNI' },

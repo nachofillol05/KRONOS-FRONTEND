@@ -106,8 +106,6 @@ export default function Personal() {
           )
           .then(({ status, body }) => {
             if (status === 400) {
-              console.log("dni entra a 400");
-              console.log("Dni encontrado:", body);
               showDrawer(
                 <InfoWorker
                   user={body.user}
@@ -189,6 +187,7 @@ export default function Personal() {
           password: values.documento,
         });
         console.log("Body: ", body);
+        setLoading(true);
         fetch("http://localhost:8000/api/Register/", {
           method: "POST",
           headers: {
@@ -198,18 +197,17 @@ export default function Personal() {
           },
           body: body,
         }).then((response) => {
-          if (!response.ok) {
-            console.log("Error:", response);
-            throw new Error("Error al crear el personal");
+          if (response.status === 201) {
+            setLoading(false);
+            onClose();
+            showMessage("success", "Usuario creado con éxito");
+            
+            return response.json();  
+          } else if (response.status === 400) {
+            showMessage("error", "Mail ya registrado");
           }
-          console.log("Response:", response);
-          return response.json();
-        });
-        setMessageConfig({
-          type: "success",
-          content: "Personal creado con exito",
-        });
-        onClose();
+      })
+       
       })
       .catch((errorInfo) => {
         setMessageConfig({
