@@ -1,7 +1,7 @@
-import React, { useState, useCallback, useEffect } from 'react';
-import { Row, Col, Dropdown, Input, Menu, Avatar } from 'antd';
-import { UserOutlined } from '@ant-design/icons';
-import './Calendario.css';
+import React, { useState, useCallback } from 'react';
+import { Row, Col, Dropdown, Menu, Avatar, Tooltip, Switch, Flex, Button } from 'antd';
+import { UserOutlined, FilterOutlined } from '@ant-design/icons';
+import './Calendario.scss';
 
 const days = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes'];
 const hours = ['1°', '2°', '3°', '4°', '5°', '6°', '7°', '8°', '9°', '10°', '11°'];
@@ -15,38 +15,21 @@ const courses = [
     '7°A', '7°B', '7°C'
 ];
 const subjects = [
-    { value: 'MAT', label: 'Matemática', color: '#FFF', avatar: <Avatar size={'small'} icon={<UserOutlined />} /> },
+    { value: 'MAT', label: 'Matemática', color: '#FF0000', avatar: <Avatar size={'small'} icon={<UserOutlined />} /> },
     { value: 'LEN', label: 'Lengua', color: '#0000FF', avatar: <Avatar size={'small'} icon={<UserOutlined />} /> },
     { value: 'BIO', label: 'Biología', color: '#FFFF00', avatar: <Avatar size={'small'} icon={<UserOutlined />} /> },
-    { value: 'QIM', label: 'Química', color: '#000000', avatar: <Avatar size={'small'} icon={<UserOutlined />} /> },
-    { value: 'MUS', label: 'Música', color: '#AA22CC', avatar: <Avatar size={'small'} icon={<UserOutlined />} /> },
+    { value: 'QIM', label: 'Química', color: '#00FF00', avatar: <Avatar size={'small'} icon={<UserOutlined />} /> },
+    { value: 'MUS', label: 'Música', color: '#FF00FF', avatar: <Avatar size={'small'} icon={<UserOutlined />} /> },
     { value: 'FIS', label: 'Fisica', color: '#808080', avatar: <Avatar size={'small'} icon={<UserOutlined />} /> }
 ];
 
 function Calendario() {
     const [selectedItems, setSelectedItems] = useState({});
+    const [mibooleano, setMibooleano] = useState(true);
 
     const obtenerMaterias = (course, modulo) => {
-        //console.log('obtenerMaterias', course, modulo);
-        /*
-        fetch('http://127.0.0.1:8000/api/subjectpermodule/', {
-            method: "GET",
-            headers: {
-                'Authorization': 'Token ' + localStorage.getItem('token'),
-                'School-ID': sessionStorage.getItem('actual_school'),
-            },body: JSON.stringify({ course_id: course, module_id: modulo })
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json(); 
-        })
-        .then(data => {
-            console.log(data)
-            return data;
-        })
-        .catch(error => console.error('Error fetching data:', error));*/
+        // Simulación de llamada a API
+        return [];
     };
 
     const handleMenuClick = useCallback((e, key) => {
@@ -86,69 +69,99 @@ function Calendario() {
     }, []);
 
     return (
-        <div className="Calendario">
-            <Row wrap={false}>
-                <Col className='columna'>
-                    <Row className='esquina' style={{ width: '200px' }}>
-                        <Row className='casilla esquina'>Día</Row>
-                        <Row className='casilla esquina'>Hora</Row>
-                    </Row>
-                    {days.map((day, dayIndex) => (
-                        <Row key={dayIndex}>
-                            <Col className='casilla columna'>{day}</Col>
-                            <Col className='hora'>
-                                {hours.map((module, moduleIndex) => (
-                                    <Row className='casilla columna' key={moduleIndex}>
-                                        {module}
-                                    </Row>
+        <>
+            <Switch checked={mibooleano} onChange={setMibooleano} />
+            <div className="Calendario">
+                <Row wrap={false}>
+                    <Col className='columna'>
+                        <Row className='esquina' style={{ width: '200px' }}>
+                            <Row className='casilla esquina'>Día</Row>
+                            <Row className='casilla esquina'>Hora</Row>
+                        </Row>
+                        {days.map((day, dayIndex) => (
+                            <Row key={dayIndex}>
+                                <Col className='casilla columna'>{day}</Col>
+                                <Col className='hora'>
+                                    {hours.map((module, moduleIndex) => (
+                                        <Row className='casilla columna' key={moduleIndex}>
+                                            {module}
+                                        </Row>
+                                    ))}
+                                </Col>
+                            </Row>
+                        ))}
+                    </Col>
+                    <Row wrap={false}>
+                        {courses.map((course, courseIndex) => (
+                            <Col key={courseIndex}>
+                                <Row className='casilla encabezado'>{course}</Row>
+                                {days.map((day, dayIndex) => (
+                                    <React.Fragment key={dayIndex}>
+                                        {hours.map((hour, hourIndex) => {
+                                            const key = `${dayIndex}-${hourIndex}-${courseIndex}`;
+                                            const materias = obtenerMaterias(courseIndex, hourIndex);
+                                            const selectedSubject = selectedItems[key];
+                                            const subject = subjects.find(sub => sub.value === selectedSubject);
+
+                                            const menu = (
+                                                <Menu onClick={(e) => handleMenuClick(e, key)}>
+                                                    {subjects.map((subject) => (
+                                                        <Menu.Item key={subject.value}>
+                                                            {subject.label}
+                                                        </Menu.Item>
+                                                    ))}
+                                                </Menu>
+                                            );
+
+                                            return (
+                                                <Col key={key}>
+                                                    {mibooleano ? (
+                                                        <Dropdown overlay={menu} trigger={['click']}>
+                                                            <a className='espacio' style={{
+                                                                color: subject ? subject.color : 'black',
+                                                                backgroundColor: subject ? makeColorTransparent(subject.color, 0.1) : null,
+                                                            }}>
+                                                                <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
+                                                                    {subject ? subject.avatar : null}
+                                                                    {selectedSubject}
+                                                                </div>
+                                                            </a>
+                                                        </Dropdown>
+                                                    ) : (
+                                                        <Tooltip 
+                                                        arrow={false} 
+                                                        trigger={'click'} 
+                                                        title={subject ? <Flex vertical gap={5} style={{color: '#8e96a3'}}>
+                                                            <b style={{ color: '#444' }}>{subject.label}</b><
+                                                                p>Insertar profesor</p>
+                                                                <p>{day + ' ' + hour + 'modulo, ' + course}</p>
+                                                                <a style={{ color: '#227cae', textDecoration: 'none' }}><FilterOutlined /> Filtrar por este profesor</a>
+                                                                </Flex> : ""}
+                                                        color='#ffffff'
+                                                        overlayClassName='calendar-tooltip'                                                       
+                                                        >
+                                                            <a className='espacio' style={{
+                                                                color: subject ? subject.color : 'black',
+                                                                backgroundColor: subject ? makeColorTransparent(subject.color, 0.1) : null,
+                                                            }}>
+                                                                <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
+                                                                    {subject ? subject.avatar : null}
+                                                                    {selectedSubject}
+                                                                </div>
+                                                            </a>
+                                                        </Tooltip>
+                                                    )}
+                                                </Col>
+                                            );
+                                        })}
+                                    </React.Fragment>
                                 ))}
                             </Col>
-                        </Row>
-                    ))}
-                </Col>
-                <Row wrap={false}>
-                    {courses.map((course, courseIndex) => (
-                        <Col key={courseIndex}>
-                            <Row className='casilla encabezado'>{course}</Row>
-                            {days.map((day, dayIndex) => (
-                                <React.Fragment key={dayIndex}>
-                                    {hours.map((hour, hourIndex) => {
-                                        const key = `${dayIndex}-${hourIndex}-${courseIndex}`;
-                                        const materias = obtenerMaterias(courseIndex, hourIndex);
-                                        const selectedSubject = selectedItems[key];
-                                        const subject = subjects.find(sub => sub.value === selectedSubject);
-                                        
-                                        const menu = (
-                                            <Menu onClick={(e) => handleMenuClick(e, key)}>
-                                                {subjects.map((subject) => (
-                                                    <Menu.Item key={subject.value}>
-                                                        {subject.label}
-                                                    </Menu.Item>
-                                                ))}
-                                            </Menu>
-                                        );
-
-                                        return (
-                                            <Dropdown overlay={menu} trigger={['click']} key={key}>
-                                                <a className='espacio' style={{
-                                                    color: subject ? subject.color : 'black',
-                                                    backgroundColor: subject ? makeColorTransparent(subject.color, 0.1) : null,
-                                                }}>
-                                                    <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
-                                                        {subject ? subject.avatar : null}
-                                                        {selectedSubject}
-                                                    </div>
-                                                </a>
-                                            </Dropdown>
-                                        );
-                                    })}
-                                </React.Fragment>
-                            ))}
-                        </Col>
-                    ))}
+                        ))}
+                    </Row>
                 </Row>
-            </Row>
-        </div>
+            </div>
+        </>
     );
 }
 

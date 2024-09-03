@@ -1,11 +1,11 @@
-import React, { Suspense, lazy, useState, useEffect } from 'react';
-import { FloatButton, Drawer, Button, Tooltip, Segmented, DatePicker } from 'antd';
+import React, { Suspense, lazy, useState, useEffect, useCallback, useMemo } from 'react';
+import { FloatButton, Drawer, Button, Segmented, DatePicker } from 'antd';
 import {
     InsertRowAboveOutlined, DownOutlined, UpOutlined, DownloadOutlined, HistoryOutlined, CloseOutlined, AppstoreOutlined, UserSwitchOutlined
     , EyeOutlined, EditOutlined, FilterOutlined
 } from '@ant-design/icons';
 import Calendario from '../../components/calendario/CalendarioPrueba.jsx';
-
+import './horarios.scss';
 const SelectTeacher = lazy(() => import('./selectTeacher.jsx'));
 const Historial = lazy(() => import('./historial.jsx'));
 const Horas = lazy(() => import('./infoHour.jsx'));
@@ -17,65 +17,69 @@ export default function Horario({ handleOpenDrawer, handleCloseDrawer }) {
     const [open, setOpen] = useState(false);
     const [drawerContent, setDrawerContent] = useState(null);
     const [drawerTitle, setDrawerTitle] = useState(null);
-    const [subjects, setSubjects] = useState([]); 
+    const [subjects, setSubjects] = useState([]);
     const [editar, setEditar] = useState(true);
 
     useEffect(() => {
         fetch("http://127.0.0.1:8000/api/viewschedule/", {
-          method: "GET",
-          headers: {
-            Authorization: "Token " + localStorage.getItem("token"),
-            "School-ID": sessionStorage.getItem("actual_school"),
-          },
+            method: "GET",
+            headers: {
+                Authorization: "Token " + localStorage.getItem("token"),
+                "School-ID": sessionStorage.getItem("actual_school"),
+            },
         })
-          .then((response) => {
-            if (!response.ok) {
-              throw new Error("Network response was not ok");
-            }
-            return response.json();
-          })
-          .then((data) => {
-            setSubjects(data);
-          })
-          .catch((error) => console.error("Error fetching data:", error));
-      }, []);
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error("Network response was not ok");
+                }
+                return response.json();
+            })
+            .then((data) => {
+                setSubjects(data);
+            })
+            .catch((error) => console.error("Error fetching data:", error));
+    }, []);
 
-    const showDrawer = (content, title) => {
+    const showDrawer = useCallback((content, title) => {
         setDrawerTitle(title);
         setDrawerContent(content);
         setOpen(true);
-    };
+    }, []);
 
-    const onClose = () => {
+    const onClose = useCallback(() => {
         setOpen(false);
         setDrawerContent(null);
-    };
+    }, []);
+
+    const memoizedCalendario = useMemo(() => (
+        <Calendario subjects={subjects} />
+    ), [subjects]);
+
+    const memoizedSegmentedOptions = useMemo(() => [
+        {
+            value: 'Editar',
+            icon: <> <EditOutlined /> Editar</>,
+        },
+        {
+            value: 'Visualizar',
+            icon: <><EyeOutlined /> Visualizar</>,
+        },
+    ], []);
 
     return (
         <>
             <div className="contenedor-filtros contenedor-filtros-horario">
                 <Segmented
-                size='large'
-                    options={[
-                        {
-
-                            value: 'Editar',
-                            icon: <> <EditOutlined /> Editar</>,
-                        },
-                        {
-                            value: 'Visualizar',
-                            icon: <><EyeOutlined /> Visualizar</>
-                        },
-                    ]}
-                    onChange={(value) => {setEditar(value === 'Editar' ? true : false)}}
+                    size='large'
+                    options={memoizedSegmentedOptions}
+                    onChange={(value) => { setEditar(value === 'Editar') }}
                 />
                 <DatePicker size='large' format={format} />
                 <Button icon={<FilterOutlined />} size='large' type='primary'>
                     Filtrar
                 </Button>
             </div>
-            {editar ? (<Calendario editar={editar}subjects={subjects} />):(null)}
-            
+            {memoizedCalendario}
 
             <FloatButton.Group
                 visibilityHeight={1500}

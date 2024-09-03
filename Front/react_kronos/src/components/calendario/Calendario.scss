@@ -98,3 +98,15 @@
 .espacio:hover {
     filter: brightness(95%);
 }
+
+
+.calendar-tooltip{
+    .ant-tooltip-inner{
+        padding: 10px 20px;
+        min-width: 250px;
+    }
+    a{
+        text-decoration: none;
+        color: lightblue;
+    }
+}
