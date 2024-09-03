@@ -36,16 +36,24 @@ const FilterDropdownTable = ({ options, placeholder, value = [], onChange }) => 
     const menuHeight = filteredOptions.length > 6 ? 240 : filteredOptions.length * 40; // Adjust height dynamically
 
     const menu = (
-        <div style={{ width: 300, backgroundColor: '#ffffff', borderRadius: 8, padding: 16 }} >
+        <div 
+        className='close-shadow'
+        style={{
+            width: 300, backgroundColor: '#fff  ', borderRadius: 8, padding: 20,
+            
+        }} >
             <Input
+                className='close-shadow'
                 size='large'
                 placeholder="Buscar..."
                 value={searchTerm}
                 onChange={handleSearchChange}
-                style={{ marginBottom: 8 }}
+                style={{
+                    marginBottom: 16,
+                    boxShadow: '0px, 1px 2px -2px rgba(0, 0, 0, 0.16'}}
             />
 
-            <Menu size="large" style={{ height: menuHeight, overflowY: filteredOptions.length > 6 ? 'scroll' : 'auto' }}>
+            <Menu size="large" className='close-shadow' style={{ height: menuHeight, overflowY: filteredOptions.length > 6 ? 'scroll' : 'auto', boxShadow: '0px, 1px 2px -2px rgba(0, 0, 0, 0.16' }}>
                 {filteredOptions.map((option) => (
                     <Menu.Item size="large" key={option.value} onClick={() => handleMenuClick(option)}>
                         <Checkbox size='large' checked={tempSelectedKeys.includes(option.value)} style={{ fontSize: 16 }}>

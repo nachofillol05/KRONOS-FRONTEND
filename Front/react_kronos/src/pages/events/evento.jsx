@@ -418,7 +418,8 @@ export default function EventsPage() {
           backgroundColor: eventStatus === "Finalizado" ? "#f1f2f4" : "white",        
         }}
         bordered
-        hoverable
+        hoverable={eventStatus !== "Finalizado"}
+        
         actions={[
           <Tooltip title="Detalles del evento" style={{opacity: eventStatus === "Finalizado" ? 0.9 : 1, 
             backgroundColor: eventStatus === "Finalizado" ? "#f1f2f4" : "white"}}  >

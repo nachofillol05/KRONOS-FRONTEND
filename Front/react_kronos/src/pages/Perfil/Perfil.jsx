@@ -185,10 +185,10 @@ export default function Profile() {
               style={{ height: '60vh', overflowY: 'auto', padding: '25px' }}
             >
               <Form.Item>
-                <Flex align='center' justify='space-between' style={{ width: '70%', height: '50px' }}>
+                <Flex align='center' justify='space-between'style={{ width: isEditing ? '100%' : '70%', height: '50px' }}>
                   <label >Foto de perfil:</label>
                   {isEditing ?
-                    <Upload maxCount={1}>
+                    <Upload className='upload-profile' accept=".jpg,.jpeg,.png,.webp" maxCount={1}>
                       <Button
                         icon={<UploadOutlined />}>Click to Upload</Button>
                     </Upload> : null}
@@ -338,10 +338,10 @@ export default function Profile() {
 
             >
               <Form.Item>
-                <Flex align='center' justify='space-between' style={{ width: '70%', height: '50px' }}>
+                <Flex align='center' justify='space-between' style={{ width: '100%', height: '50px' }}>
                   <label >Logo del colegio:</label>
                   {isEditing ?
-                    <Upload maxCount={1}>
+                    <Upload className='upload-profile' accept=".jpg,.jpeg,.png,.webp" maxCount={1}>
                       <Button
                         icon={<UploadOutlined />}>Click to Upload</Button>
                     </Upload> : null}
