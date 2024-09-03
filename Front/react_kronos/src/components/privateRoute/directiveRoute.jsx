@@ -5,9 +5,11 @@ import './PrivateRoute.scss';
 
 const DirectiveRoute = ({ children }) => {
     const [isAuthenticated, setIsAuthenticated] = useState(null);
+    const [mailVerified, setMailVerified] = useState(null);
     const navigate = useNavigate();
     const [token, setToken] = useState(localStorage.getItem('token'));
     const [school, setSchool] = useState(sessionStorage.getItem('actual_school'));
+
     if (token === "" || token === null) {
         navigate('/landing');
     }
@@ -15,7 +17,7 @@ const DirectiveRoute = ({ children }) => {
     useEffect(() => {
         const verifyToken = async () => {
             try {
-                const response = await fetch('http://localhost:8000/api/verifyToken/', {
+                const tokenResponse = await fetch('http://localhost:8000/api/verifyToken/', {
                     method: "POST",
                     headers: {
                         'Content-Type': 'application/json'
@@ -25,51 +27,66 @@ const DirectiveRoute = ({ children }) => {
                     })
                 });
 
-                if (response.ok) {
-                    fetch('http://127.0.0.1:8000/api/school/myroles/', {
+                if (tokenResponse.ok) {
+                    const userResponse = await fetch('http://127.0.0.1:8000/api/isVerified/', {
                         method: "GET",
                         headers: {
                             'Authorization': 'Token ' + token,
                             'School-ID': school,
                         },
-                    }).then(response => response.json())
-                        .then(data => {
-                            if ((sessionStorage.getItem('rol') === "Directivo" && JSON.stringify(data).includes("Directivo") === true) || (sessionStorage.getItem('rol') === "Preceptor" && JSON.stringify(data).includes("Preceptor") === true)) {
-                                setIsAuthenticated(true);
-                                response.json().then(data => {
-                                    localStorage.setItem('user', JSON.stringify(data));
-                                });
-                            } else {
-                                setIsAuthenticated(false);
-                            }
-                        })
-                        .catch(error => {
-                            console.error('Error:', error);
-                        });
+                    });
+                    const userData = await userResponse.json();
+                    setMailVerified(userData.user_is_verified);
 
+                    if (userData.user_is_verified) {
+                        const rolesResponse = await fetch('http://127.0.0.1:8000/api/school/myroles/', {
+                            method: "GET",
+                            headers: {
+                                'Authorization': 'Token ' + token,
+                                'School-ID': school,
+                            },
+                        });
+                        const rolesData = await rolesResponse.json();
+
+                        if ((sessionStorage.getItem('rol') === "Directivo" && JSON.stringify(rolesData).includes("Directivo")) ||
+                            (sessionStorage.getItem('rol') === "Preceptor" && JSON.stringify(rolesData).includes("Preceptor"))) {
+                            setIsAuthenticated(true);
+                            localStorage.setItem('user', JSON.stringify(userData));
+                        } else {
+                            setIsAuthenticated(false);
+                        }
+                    } else {
+                        setMailVerified(false);
+                    }
                 } else {
                     setIsAuthenticated(false);
-                    return navigate('/landing')
+                    navigate('/landing');
                 }
             } catch (error) {
                 console.error('Error verifying token:', error);
                 setIsAuthenticated(false);
-                return navigate('/landing')
+                navigate('/landing');
             }
         };
 
         verifyToken();
-    }, [navigate]);
+    }, [navigate, token, school]);
 
-    if (isAuthenticated === null) {
+    if (isAuthenticated === null || mailVerified === null) {
         return (
-          <div className="spinner-container">
-            <Spin size="large" />
-          </div>
+            <div className="spinner-container">
+                <Spin size="large" />
+            </div>
         );
-      }
+    }
 
-    return isAuthenticated ? children : navigate('/Perfil');
+    if (isAuthenticated && mailVerified) {
+        return children;
+    } else if (!isAuthenticated) {
+        navigate('/perfil');
+    } else {
+        navigate('/mailenviado');
+    }
 };
 
 export default DirectiveRoute;

@@ -4,7 +4,6 @@ import { RollbackOutlined, PlusOutlined } from '@ant-design/icons';
 
 export default function FormCreateWorker({ handleSubmit, handleVolver, tipoDocumento,tipoDocumentoId, documento }) {
     const [form] = Form.useForm();
-
     useEffect(() => {
         form.setFieldsValue({
             tipoDocumento: tipoDocumentoId,

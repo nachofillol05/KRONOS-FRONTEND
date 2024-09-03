@@ -12,8 +12,6 @@ import MailVerificado from "../pages/mailverificado/mailverificado.jsx"
 import MailEnviado from "../pages/mailenviado/mailenviado.jsx"
 //import Login from "../pages/login/logins"
 import Page from "../pages/landingPage/landingPage";
-import Activation from "../pages/activation/activations";
-import ActivationSent from "../pages/activationSent/activationSents";
 
 import Materias from "../pages/materias/materias";
 import Personal from "../pages/personal/personal";
@@ -53,18 +51,6 @@ export const routes = [
         layout: Landig,
         component: Page
     },*/
-    {
-        path: "/activation",
-        exact: true,
-        layout: Landig,
-        component: Activation
-    },
-    {
-        path: "/activation-sent",
-        exact: true,
-        layout: Landig,
-        component: ActivationSent
-    },
     {
         path: "/materias",
         exact: true,
@@ -108,16 +94,16 @@ export const routes = [
         component: LoginTemplate,
     },
     {
-        path: "/mailverificado",
+        path: "/mailverificado/:token",
         exact: true,
-        private: true,
+        private: false,
         layout: Landig,
         component: MailVerificado,
     },
     {
         path: "/mailenviado",
         exact: true,
-        private: true,
+        private: false,
         layout: Landig,
         component: MailEnviado,
     }
