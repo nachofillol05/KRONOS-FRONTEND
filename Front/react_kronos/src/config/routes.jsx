@@ -11,7 +11,6 @@ import LoginTemplate from "../pages/LoginTemplate/Login.js";
 import MailVerificado from "../pages/mailverificado/mailverificado.jsx"
 import MailEnviado from "../pages/mailenviado/mailenviado.jsx"
 //import Login from "../pages/login/logins"
-import Error404 from "../pages/pages_http/error404";
 import Page from "../pages/landingPage/landingPage";
 
 import Materias from "../pages/materias/materias";
