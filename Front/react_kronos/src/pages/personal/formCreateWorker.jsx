@@ -1,13 +1,12 @@
 import React, {useEffect} from 'react';
-import { Form, Input, Button, Flex, Tooltip } from 'antd';
+import { Form, Input, Button, Flex, Tooltip, Select } from 'antd';
 import { RollbackOutlined, PlusOutlined } from '@ant-design/icons';
 
-export default function FormCreateWorker({ handleSubmit, handleVolver, tipoDocumento, documento }) {
+export default function FormCreateWorker({ handleSubmit, handleVolver, tipoDocumento,tipoDocumentoId, documento }) {
     const [form] = Form.useForm();
-
     useEffect(() => {
         form.setFieldsValue({
-            tipoDocumento: tipoDocumento,
+            tipoDocumento: tipoDocumentoId,
             documento: documento,
         });
     }, [tipoDocumento, documento, form]);
@@ -80,7 +79,11 @@ export default function FormCreateWorker({ handleSubmit, handleVolver, tipoDocum
                         name="tipoDocumento"
                         label="Tipo de Documento"
                     >
-                        <Input size='large' autoSize={true} disabled placeholder="Tipo de Documento" />
+                    <Select size='large' autoSize={true} disabled placeholder="Tipo de Documento" value={tipoDocumentoId}>
+                        <Select.Option key={tipoDocumentoId} value={tipoDocumentoId}>
+                            {tipoDocumento}
+                        </Select.Option>
+                    </Select>
                     </Form.Item>
                     <Form.Item
                         style={{ flex: '1 1 auto' }}

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Slider } from 'antd';
+import { Flex, Slider } from 'antd';
 
 const RangeSlider = ({ onFinalChange }) => {
   const [values, setValues] = useState([6.5, 23.5]);
@@ -24,21 +24,24 @@ const RangeSlider = ({ onFinalChange }) => {
   };
 
   return (
-    <div className='parent'>
-      <h2 style={{ fontSize: '15px' }}>Horas</h2>
-      <Slider
-        range
-        step={STEP}
-        min={MIN}
-        max={MAX}
-        value={values}
-        onChange={handleChange}
-        onAfterChange={handleAfterChange}
-        tooltip={{
-          formatter: (value) => formatHours(value),
-        }}
-      />
-    </div>
+    <Flex   gap={"1vw"} align='center'>
+      <h6 style={{ margin: 0, }}>Horas catedra</h6>
+      <div style={{ width: '15vw' }}>
+        <Slider
+          range
+          step={STEP}
+          min={MIN}
+          max={MAX}
+          value={values}
+          onChange={handleChange}
+          onAfterChange={handleAfterChange}
+          tooltip={{
+            formatter: (value) => formatHours(value),
+          }}
+        />
+      </div>
+
+    </Flex>
   );
 };
 

@@ -1,0 +1,139 @@
+import React from 'react';
+import classNames from 'classnames';
+import { SectionProps } from '../../utils/SectionProps';
+import SectionHeader from './partials/SectionHeader';
+import Tabs, { TabList, Tab, TabPanel } from './../elements/Tabs';
+import Image from '../elements/Image';
+
+const propTypes = {
+  ...SectionProps.types
+}
+
+const defaultProps = {
+  ...SectionProps.defaults
+}
+
+class FeaturesTabs extends React.Component {
+
+  render() {
+
+    const {
+      className,
+      topOuterDivider,
+      bottomOuterDivider,      
+      topDivider,
+      bottomDivider,
+      hasBgColor,
+      invertColor,
+      pushLeft,
+      ...props
+    } = this.props;
+
+    const outerClasses = classNames(
+      'features-tabs section center-content',
+      topOuterDivider && 'has-top-divider',
+      bottomOuterDivider && 'has-bottom-divider',
+      hasBgColor && 'has-bg-color',
+      invertColor && 'invert-color',
+      className
+    );
+
+    const innerClasses = classNames(
+      'features-tabs-inner section-inner',
+      topDivider && 'has-top-divider',
+      bottomDivider && 'has-bottom-divider'
+    );
+
+    // Agrega un segundo conjunto de datos de encabezado
+    const sectionHeader1 = {
+      title: '¿Que es Kronos?',
+      paragraph: 'Texto de ejemplo'
+    };
+
+    const sectionHeader2 = {
+      title: 'Nuestros Colegios',
+      paragraph: 'Texto de ejemplo'
+    };
+
+    return (
+      <section
+        {...props}
+        className={outerClasses}
+      >
+        <div className="container">
+          <div className={innerClasses}>
+            {/* Renderiza el primer encabezado */}
+            <SectionHeader data={sectionHeader1} className="center-content" />
+            {/* Renderiza el segundo encabezado */}
+            <SectionHeader data={sectionHeader2} className="center-content" />
+            <Tabs active="tab-a">
+              <TabList>
+                <Tab tabId="tab-a">
+                  <div className="features-tabs-tab-image mb-12">
+                    <Image
+                      src={require('../../assets/images/villadalogo.png')}
+                      alt="Tab icon 01"
+                      width={100}
+                      height={100} />
+                  </div>
+                  <div className="text-color-high fw-600 text-sm">
+                    ITS Villada
+                  </div>                  
+                </Tab>
+                <Tab tabId="tab-d">
+                  <div className="features-tabs-tab-image mb-12">
+                    <Image
+                      src={require('../../assets/images/colelogo.png')}
+                      alt="colelogo"
+                      width={100}
+                      height={100} />
+                  </div>
+                  <div className="text-color-high fw-600 text-sm">
+                    Jesus Maria
+                  </div>
+                </Tab>                
+              </TabList>
+              <TabPanel id="tab-a">
+                <Image
+                  className="has-shadow"
+                  src={require('../../assets/images/villadafrente.jpeg')}
+                  alt="Features tabs image 01"
+                  width={896}
+                  height={504} />
+              </TabPanel>
+              <TabPanel id="tab-b">
+                <Image
+                  className="has-shadow"
+                  src={require('../../assets/images/jesusmariaimg.png')}
+                  alt="Features tabs image 02"
+                  width={896}
+                  height={504} />
+              </TabPanel>
+              <TabPanel id="tab-c">
+                <Image
+                  className="has-shadow"
+                  src={require('../../assets/images/villadafrente.jpeg')}
+                  alt="Features tabs image 03"
+                  width={896}
+                  height={504} />
+              </TabPanel>
+              <TabPanel id="tab-d">
+                <Image
+                  className="has-shadow"
+                  src={require('../../assets/images/jesusmariaimg.png')}
+                  alt="Features tabs image 04"
+                  width={896}
+                  height={504} />
+              </TabPanel>              
+            </Tabs>
+          </div>
+        </div>
+      </section>
+    );
+  }
+}
+
+FeaturesTabs.propTypes = propTypes;
+FeaturesTabs.defaultProps = defaultProps;
+
+export default FeaturesTabs;

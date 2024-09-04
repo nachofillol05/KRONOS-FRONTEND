@@ -4,8 +4,9 @@ import { InfoCircleOutlined, EditOutlined, CheckCircleOutlined, UserAddOutlined,
 import FormCreateEvent from "./formCreateEvent";
 import moment from 'moment';
 import InfoEvent from "./infoEvent";
+import dayjs from 'dayjs';
 import "./events.scss";
-const dateFormat = 'YYYY/MM/DD';
+const dateFormat = 'DD/MM/YYYY';
 
 
 export default function EventsPage() {
@@ -15,7 +16,8 @@ export default function EventsPage() {
   const [open, setOpen] = useState(false);
   const [drawerContent, setDrawerContent] = useState(null);
   const [drawerTitle, setDrawerTitle] = useState(null);
-  const today = new Date();
+  const today = moment.utc().startOf('day').format('YYYY-MM-DDTHH:mm:ss[Z]');
+  const [recargar, setRecargar] = useState(false);
   const [messageApi, contextHolder] = message.useMessage();
   const [messageConfig, setMessageConfig] = useState({ type: '', content: '' });
   const [eventName, setEventName] = useState('');
@@ -25,13 +27,14 @@ export default function EventsPage() {
   const [eventos, setEventos] = useState([]);
   const [tipos, setTipos] = useState([]);
   const [profileData, setProfileData] = useState({});
+
   
   useEffect(() => {
     fetch('http://127.0.0.1:8000/api/profile/', {
         method: "GET",
         headers: {
             'Authorization': 'Token ' + localStorage.getItem('token'),
-            'School-ID': 1,
+            'School-ID': sessionStorage.getItem('actual_school'),
         },
     })
         .then((response) => {
@@ -41,15 +44,10 @@ export default function EventsPage() {
             return response.json();
         })
         .then((data) => {
-            console.log(data);
             setProfileData(data);
         })
         .catch((error) => console.error('Error fetching data:', error));
   }, []);
-
- 
-  
-
 
 
   useEffect(() => {
@@ -57,7 +55,7 @@ export default function EventsPage() {
         method: "GET",
         headers: {
             'Authorization': 'Token ' + localStorage.getItem('token'),
-            'School-ID': 1,
+            'School-ID': sessionStorage.getItem('actual_school'),
         },
     })
         .then(response => {
@@ -87,7 +85,6 @@ export default function EventsPage() {
     if (nombre) {
         url.searchParams.append('name', nombre);
     }
-    console.log('URL:', url.toString());
     fetch(url.toString(), {
         method: "GET",
         headers: {
@@ -97,16 +94,17 @@ export default function EventsPage() {
     })
         .then(response => {
             if (!response.ok) {
+                setEventos([])
+                showMessage('error', 'No hay eventos que cumplan los requerimientos')
                 throw new Error('Network response was not ok');
             }
             return response.json();
         })
         .then(data => {
             setEventos(data);
-            console.log('Data:', data);
         })
         .catch(error => console.error('Error fetching data:', error));
-  }, [date, nombre, tipoEvento]);
+  }, [date, nombre, tipoEvento, isModalOpen, open, recargar]);
 
   useEffect(() => {
     if (messageConfig.type) {
@@ -117,7 +115,7 @@ export default function EventsPage() {
 
   const showModal = (evento) => {
     Modal.info({
-      title: 'Confirmar adicción al pene',
+      title: 'Confirmar adición al evento',
       content: (
         <p>¿Seguro que quieres adherirte al evento "<b>{evento.name}</b>"?</p>
       ),
@@ -127,98 +125,89 @@ export default function EventsPage() {
     });
   };
   
-  const showModalDesadherir = (evento) => {
-    Modal.info({
-      title: 'cancelar adición',
-      content: (
-        <p>¿Seguro que quieres Salirte del evento "<b>{evento.name}</b>"?</p>
-      ),
-      onOk: () => handleOkDesadherir(evento),
-      closable: true,
-      okText: 'Si, quiero desadherirme',
-    });
+  const showModalDesadherir = (evento, botonAdherido) => {
+    if(!botonAdherido){
+      Modal.info({
+        title: 'cancelar adición',
+        content: (
+          <p>¿Seguro que quieres Salirte del evento "<b>{evento.name}</b>"?</p>
+        ),
+        onOk: () => handleOkDesadherir(evento),
+        closable: true,
+        okText: 'Si, quiero desadherirme',
+      });
+    }
   };
 
-  const handleOkDesadherir = (evento) => {
-      const updatedAffiliatedTeachers = evento.affiliated_teachers.filter(
-        teacherId => teacherId !== profileData.id
-      );
-      const url = new URL('http://127.0.0.1:8000/api/events/' + evento.id + '/');
-      const formattedStartDate = moment(evento.startDate).format('DD/MM/YYYY');
-      const formattedEndDate = moment(evento.endDate).format('DD/MM/YYYY')
+  //CAMBIAAAAAAAAAAAAAAAAAAAAAAAAAAR A LA VISTAAAAAAAAAAAAAAAAA NUEVA QUEEEEEEEEEEEEEEE HIZOOOOOOOOOO OREEEEEEEEEEEEEEEE
 
-      fetch(url, {
-          method: "PUT",
-          headers: {
-              'Content-Type': 'application/json',
-              'Authorization': 'Token ' + localStorage.getItem('token'),
-              'School-ID': 1,
-          },
-          body: JSON.stringify({
-              affiliated_teachers: updatedAffiliatedTeachers,
-              startDate: formattedStartDate,
-              endDate: formattedEndDate,
-              eventType: evento.eventType,
-              school: evento.school,
-              name: evento.name,
-              description: evento.description,
-          }),
-      })
-      .then(response => {
-          if (!response.ok) {
-              return response.json().then((error) => {
-                  throw new Error(`Server responded with ${response.status}: ${JSON.stringify(error)}`);
-              });
-          }
-          return response.json();
-      })
-      .then(data => {
-          console.log('Success:', data);
-      })
-      .catch(error => console.error('Error fetching data:', error));
-  
+  const handleOkDesadherir = (evento) => {
+    fetch('http://127.0.0.1:8000/api/events/affiliated/', {
+      method: "DELETE",
+      headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Token ' + localStorage.getItem('token'),
+          'School-ID': sessionStorage.getItem('actual_school'),
+      },
+      body: JSON.stringify({
+        'event_id': evento.id,
+      }),
+    })
+    .then(response => {
+        if (!response.ok) {
+            showMessage("error", "Error al deshaderirse al evento");
+            return null;
+        }
+        return response.text();
+    })
+    .then(text => {
+        if (text) {
+            return JSON.parse(text); 
+        }
+        return {}; 
+    })
+    .then(data => {
+        showMessage("success", "Desadherido al evento correctamente");
+        setRecargar(!recargar);
+    })
+    .catch(error => console.error('Error fetching data:', error));
       setIsModalOpen(false);
   };
 
   const handleOk = (evento) => {
-      const updatedAffiliatedTeachers = [...evento.affiliated_teachers, profileData.id];
-      const url = new URL('http://127.0.0.1:8000/api/events/' + evento.id + '/');
-      const formattedStartDate = moment(evento.startDate).format('DD/MM/YYYY');
-      const formattedEndDate = moment(evento.endDate).format('DD/MM/YYYY')
-
-      fetch(url, {
-          method: "PUT",
-          headers: {
-              'Content-Type': 'application/json',
-              'Authorization': 'Token ' + localStorage.getItem('token'),
-              'School-ID': 1,
-          },
-          body: JSON.stringify({
-              affiliated_teachers: updatedAffiliatedTeachers,
-              startDate: formattedStartDate,
-              endDate: formattedEndDate,
-              eventType: evento.eventType,
-              school: evento.school,
-              name: evento.name,
-              description: evento.description,
-          }),
-      })
-      .then(response => {
-          if (!response.ok) {
-              return response.json().then((error) => {
-                  throw new Error(`Server responded with ${response.status}: ${JSON.stringify(error)}`);
-              });
-          }
-          return response.json();
-      })
-      .then(data => {
-          console.log('Success:', data);
-      })
-      .catch(error => console.error('Error fetching data:', error));
+      fetch('http://127.0.0.1:8000/api/events/affiliated/', {
+        method: "POST",
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Token ' + localStorage.getItem('token'),
+            'School-ID': sessionStorage.getItem('actual_school'),
+        },
+        body: JSON.stringify({
+          'event_id': evento.id,
+        }),
+    })
+    .then(response => {
+        if (!response.ok) {
+            showMessage("error", "Error al adherirse al evento");
+            return null;
+        }
+        return response.text();
+    })
+    .then(text => {
+        if (text) {
+            return JSON.parse(text); 
+        }
+        return {}; 
+    })
+    .then(data => {
+        showMessage("success", "Adherido al evento correctamente");
+        setRecargar(!recargar);
+    })
+    .catch(error => console.error('Error fetching data:', error));
+    
   
       setIsModalOpen(false);
   };
- 
 
   const handleCancel = () => {
     setIsModalOpen(false);
@@ -237,38 +226,41 @@ export default function EventsPage() {
     return `${day}/${month}/${year}`;
   };
 
-  const handleSubmit = (form) => {
-    //Mostrar un alert de que se creoooooooooooooooooooooooooooooooooooooooooooooooooooo
-    form.validateFields()
-        .then(values => {
-          const body = {
-            name: values.nombre,
-            description: values.descripcion,
-            startDate: formatDate(values.dates[0].toDate()),   
-            endDate: formatDate(values.dates[1].toDate()),   
-            eventType: values.tipoEvento,
-            school: 1,
-        };
-        console.log('Body:', body);
-        fetch('http://127.0.0.1:8000/api/events/', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Token ' + localStorage.getItem('token'),
-                'School-ID': 1,
-            },
-            body: JSON.stringify(body),
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-        })
-        .then(data => console.log('Success:', data))
-        .catch(error => console.error('Error:', error));
-        onClose();
-  })};
+  const closeDrawerCreate = () => {
+    setOpen(false);
+    showMessage("success", "Evento creado correctamente");
+    setDrawerContent(null);
+  }
+
+  const handleSubmit = (values) => {
+    const body = {
+        name: values.nombre,
+        description: values.descripcion,
+        startDate: formatDate(values.dates[0].toDate()),   
+        endDate: formatDate(values.dates[1].toDate()),   
+        eventType: values.tipoEvento,
+        roles: values.Rolesdirigido,
+        affiliated_teachers: [],
+    };
+    fetch('http://127.0.0.1:8000/api/events/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Token ' + localStorage.getItem('token'),
+            'School-ID': sessionStorage.getItem('actual_school'),
+        },
+        body: JSON.stringify(body),
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        closeDrawerCreate();
+        return response.json();
+    })
+    .then(data => console.log('Success:', data))
+    .catch(error => console.error('Error:', error));
+  };
 
   const showDrawer = (content, title) => {
     setDrawerTitle(title);
@@ -308,21 +300,18 @@ export default function EventsPage() {
     setTipoEvento(value);
   };
   const onChangeNombre = (event) => {
-    console.log('Value:', event.target.value);
     setNombre(event.target.value);
   };
 
   const onChangeDate = (date, dateString) => {
-    const formattedMaxDate = moment(dateString).format('DD/MM/YYYY');
-    setDate(encodeURIComponent(formattedMaxDate))
+    setDate(encodeURIComponent(dateString))
   }
 
   //cambiar event.type_event.name ponerlo entre llaves
-  console.log('Eventos:', eventos);
   return (
     <>
       {contextHolder}
-      <div className="filtros-container">
+      <div className="contenedor-filtros contenedor-filtros-eventos">
         <Select
           size="large"
           style={{
@@ -332,6 +321,7 @@ export default function EventsPage() {
           onChange={onChange}
           showSearch
           placeholder="tipo de evento"
+          allowClear
         />
 
         <DatePicker
@@ -342,6 +332,7 @@ export default function EventsPage() {
           }}
           onChange={onChangeDate}
           format={dateFormat}
+          allowClear
         />
 
         <Input
@@ -351,129 +342,150 @@ export default function EventsPage() {
           }}
           placeholder="Buscar Evento"
           onPressEnter={onChangeNombre}
+          allowClear
         />
       </div>
       <div
-        style={{
-          maxHeight: "85%",
-          overflowY: "scroll",
-          width: "100%",
-          display: "flex",
-          flexDirection: "row",
-          flexWrap: "wrap",
-          justifyContent: "space-evenly",
-          alignItems: "start",
-          gap: 25,
-          paddingInline: 25,
-        }}
-      >
-        {eventos.map((event) => {
+  style={{
+    display: "grid",
+    gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
+    gap: 15,
+    padding: 15,
+    height: "86.5vh",
+    overflowY: "scroll",
+    backgroundColor: "#f1f2f4",
+    boxShadow: "0 0 0 3px #dddcdc",
+  }}
+>
+{eventos.map((event) => {
   const eventStatus = (() => {
-    if (new Date(event.endDate) < today) {
+    const eventStartDate = moment(event.startDate).utc().format('YYYY-MM-DD');
+    const eventEndDate = moment(event.endDate).utc().format('YYYY-MM-DD');
+    const todayDate = moment(today).utc().format('YYYY-MM-DD');
+    
+
+    if (eventEndDate < todayDate) {
       return "Finalizado";
-    } else if (new Date(event.startDate) > today) {
+    } else if (eventStartDate > todayDate) {
       return "Pendiente";
     } else {
       return "En curso";
     }
   })();
-
-  const isUserAffiliated = event.affiliated_teachers.includes(profileData.id);
-  const mostrar = (() => {
-    if (eventStatus === "Pendiente" && !isUserAffiliated) {
-      console.log("Adherirse al evento")
-      return "Adherirse al evento";
-    } 
-    if (eventStatus === "Pendiente" && isUserAffiliated) {
-      console.log("Ya estás adherido")
-      return "Ya estás adherido";
-    } 
-    if ((eventStatus === "Finalizado" || eventStatus === "En curso") && !isUserAffiliated) {
-      console.log("")
-      return "";
-    }
-    if ((eventStatus === "Finalizado" || eventStatus === "En curso") && isUserAffiliated) {
-      console.log("Ya estás adherido")
-      return "Ya estás adherido";
-    }
-  })();
   
-  return (
-    <Card
-      key={event.id}
-      style={{
-        width: "25%",
-        minWidth: 300,
-        display: "flex",
-        flexFlow: "column",
-      }}
-      actions={[
-        <Tooltip title="Detalles del evento">
-          <InfoCircleOutlined 
-            key="details" 
-            onClick={() => showDrawer(<InfoEvent event={event} />, "Detalles del evento")} 
-          />
-        </Tooltip>,
+    let botonAdherido = false;
+    const isUserAffiliated = event.affiliated_teachers.some(teacher => teacher.id === profileData.id);
+    const mostrar = (() => {
+      if (eventStatus === "Pendiente" && !isUserAffiliated) {
+        return "Adherirse al evento";
+      } 
+      if (eventStatus === "Pendiente" && isUserAffiliated) {
+        return "Ya estás adherido";
+      } 
+      if ((eventStatus === "Finalizado" || eventStatus === "En curso") && !isUserAffiliated) {
+        return "";
+      }
+      if ((eventStatus === "Finalizado" || eventStatus === "En curso") && isUserAffiliated) {
+        botonAdherido = true;
+        return "Ya estás adherido";
+      }
+    })();
+    const closeDrawer = () => {
+      setOpen(false);
+      showMessage("success", "Evento actualizado correctamente");
+      setDrawerContent(null);
+    }
+    const closeDrawerDelete = () => {
+      setOpen(false);
+      showMessage("success", "Evento borrado correctamente");
+      setDrawerContent(null);
+    }
+    const showError = () => {
+      showMessage("error", "Fallo la actualización");
+    }
+    
+    
+    return (
+      <Card
+        key={event.id}
+        style={{
+          display: "flex",
+          flexFlow: "column",
+          justifyContent: "space-between",
+          height: "fit-content",
+          height: "250px",
+          opacity: eventStatus === "Finalizado" ? 0.7 : 1, 
+          backgroundColor: eventStatus === "Finalizado" ? "#f1f2f4" : "white",        
+        }}
+        bordered
+        hoverable={eventStatus !== "Finalizado"}
+        
+        actions={[
+          <Tooltip title="Detalles del evento" style={{opacity: eventStatus === "Finalizado" ? 0.9 : 1, 
+            backgroundColor: eventStatus === "Finalizado" ? "#f1f2f4" : "white"}}  >
+            
+            <InfoCircleOutlined 
+              key="details" 
+              onClick={() => showDrawer(<InfoEvent estado={eventStatus} event={event} closeDrawer={closeDrawer} showError={showError} />, "Detalles del evento")} 
+            />
+          </Tooltip>,
 
-        mostrar && (
-          <Tooltip 
-            title={mostrar} 
-            key="action"
-          >
-            {mostrar === "Adherirse al evento" ? (
-              <UserAddOutlined onClick={() => showModal(event)} />
-            ) : (
-              <CheckCircleOutlined style={{ color: "green" }} onClick={() => showModalDesadherir(event)} />
-            )}
-          </Tooltip>
-        ),
-      ]}
-    >
-      <div style={{ display: "flex", flexDirection: "column", gap: 15 }}>
-        <h2 style={{ color: "#1890ff" }}>{event.name}</h2>
-        <h3>{event.type_event}</h3>
-        <p>
-          {event.startDate} - {event.endDate}
-          <p>{eventStatus}</p>
-        </p>
-      </div>
-    </Card>
-  );
-})}
-
-      </div>
-      <FloatButton.Group
-        visibilityHeight={1500}
-        trigger="click"
-        type="primary"
-        closeIcon={<DownOutlined />}
-        icon={<UpOutlined />}
+          mostrar && (
+            <Tooltip 
+              style={{opacity: eventStatus === "Finalizado" ? 0.9 : 1, 
+                backgroundColor: eventStatus === "Finalizado" ? "#f1f2f4" : "white"  }}
+              title={mostrar} 
+              key="action"
+            >
+              {mostrar === "Adherirse al evento" ? (
+                <UserAddOutlined onClick={() => showModal(event)} />
+              ) : (
+                <CheckCircleOutlined style={{ color: "green" }} onClick={() => showModalDesadherir(event,botonAdherido)} />
+              )}
+            </Tooltip>
+          ),
+        ]}
       >
+        <div style={{ display: "flex", flexDirection: "column", gap: 15 }}>
+          <h6 style={{ color: "#1890ff", margin: 0 }}>{event.name}</h6>
+          <h3 style={{ margin: 0 }}>{event.type_event}</h3>
+          <p style={{margin: 0}}>
+            {moment.utc(event.startDate).format('DD/MM/YYYY')} - {moment.utc(event.endDate).format('DD/MM/YYYY')}
+            <p style={{margin: 0}}>{eventStatus}</p>
+          </p>
+        </div>
+      </Card>
+    );
+  })}
+</div>
+
+      {sessionStorage.getItem('rol') === 'Directivo' ? (
+        <>
         <FloatButton
           icon={<FolderAddOutlined />}
           type="primary"
           tooltip="Agregar una evento"
           onClick={() => showDrawer(<FormCreateEvent handleVolver={handleVolver} handleSubmit={handleSubmit} />, "Agregar un nuevo evento")}
         />
-      </FloatButton.Group>
 
-      <Drawer
-        width={600}
-        title={drawerTitle}
-        onClose={onClose}
-        open={open}
-        closeIcon={false}
-        extra={
-          <Button
-            onClick={onClose}
-            size="large"
-            type="tertiary"
-            icon={<CloseOutlined />}
-          />
-        }
-      >
-        <div style={{ width: "100%", height: "100%" }}>{drawerContent}</div>
-      </Drawer>
+        <Drawer
+          width={600}
+          title={drawerTitle}
+          onClose={onClose}
+          open={open}
+          closeIcon={false}
+          extra={
+            <Button
+              onClick={onClose}
+              size="large"
+              type="tertiary"
+              icon={<CloseOutlined />}
+            />
+          }
+        >
+          <div style={{ width: "100%", height: "100%" }}>{drawerContent}</div>
+        </Drawer>
+        </>) : null}
     </>
   );
 }

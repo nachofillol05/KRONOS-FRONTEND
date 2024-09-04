@@ -1,14 +1,18 @@
 import Navegacion from "../layout/navegacion/navegaciones";
 import Landig from "../layout/landing/landings";
+import LayoutDefault from "../layouts/LayoutDefault.js";
+import LayoutLogin from "../layouts/LayoutSignin";
 
 /*Pages*/
 import Home from "../pages/home/Home";
 import Prueba from "../pages/prueba/prueba";
+import HomeTemplate from "../pages/HomeTemplate/Home.js";
+import LoginTemplate from "../pages/LoginTemplate/Login.js"; 
+import MailVerificado from "../pages/mailverificado/mailverificado.jsx"
+import MailEnviado from "../pages/mailenviado/mailenviado.jsx"
 //import Login from "../pages/login/logins"
 import Error404 from "../pages/pages_http/error404";
 import Page from "../pages/landingPage/landingPage";
-import Activation from "../pages/activation/activations";
-import ActivationSent from "../pages/activationSent/activationSents";
 
 import Materias from "../pages/materias/materias";
 import Personal from "../pages/personal/personal";
@@ -37,40 +41,28 @@ export const routes = [
     {
         path: "/perfil",
         exact: true,
-        private: false,
+        private: true,
         layout: Navegacion,
         component: Perfil
     },
 
-    {
-        path: "/login",
+    /*{
+        path: "/loginAnterior",
         exact: true,
         layout: Landig,
         component: Page
-    },
-    {
-        path: "/activation",
-        exact: true,
-        layout: Landig,
-        component: Activation
-    },
-    {
-        path: "/activation-sent",
-        exact: true,
-        layout: Landig,
-        component: ActivationSent
-    },
+    },*/
     {
         path: "/materias",
         exact: true,
-        private: true,
+        directive: true,
         layout: Navegacion,
         component: Materias
     },
     {
         path: "/personal",
         exact: true,
-        private: true,
+        directive: true,
         layout: Navegacion,
         component: Personal
     },
@@ -84,15 +76,36 @@ export const routes = [
     {
         path: "/eventos",
         exact: true,
-        private: false,
+        private: true,
         layout: Navegacion,
         component: EventsPage,
     },
     {
-        path: "/404",
+        path: "/landing",
+        exact: true,
+        private: false,
+        layout: LayoutDefault,
+        component: HomeTemplate,
+    },
+    {
+        path: "/login",
+        exact: true,
+        private: false,
+        layout: LayoutLogin,
+        component: LoginTemplate,
+    },
+    {
+        path: "/mailverificado/:token",
         exact: true,
         private: false,
         layout: Landig,
-        component: Error404,
+        component: MailVerificado,
+    },
+    {
+        path: "/mailenviado",
+        exact: true,
+        private: false,
+        layout: Landig,
+        component: MailEnviado,
     }
 ];

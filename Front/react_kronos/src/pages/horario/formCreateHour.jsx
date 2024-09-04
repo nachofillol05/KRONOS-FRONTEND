@@ -8,7 +8,7 @@ const format = 'HH:mm';
 const { RangePicker } = TimePicker;
 
 
-export default function FormCreateWorker({showDrawer }) {
+export default function FormCreateWorker({showDrawer}) {
     const [form] = Form.useForm();
 
     const handleSubmit = () => {

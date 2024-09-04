@@ -1,5 +1,44 @@
 .formItemProfile {
-    .css-dev-only-do-not-override-m4timi {
-      align-items: center;
-    }
+  .css-dev-only-do-not-override-m4timi {
+    align-items: center;
   }
+}
+
+.selected {
+  background-color: #1776ff;
+  border: #1161d2 1px solid;
+  border-radius: 0;
+}
+
+.NotSelected {
+  background-color: #f9f9f9;
+  border: #d4d4d4 1px solid;
+  border-radius: 0;
+}
+
+.CardProfile:where(.css-dev-only-do-not-override-m4timi).ant-card .ant-card-body {
+  padding: 0 !important;
+}
+
+.formItemProfile{
+  label{
+    height: 40px;
+  }
+}
+
+.upload-profile{
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  background-color: aliceblue;
+  width: 60%;
+  flex-grow: 1;
+  .ant-upload-list{
+    padding-inline: 20px;
+    width:100%;
+    flex-grow: 1;
+  }
+  .ant-upload-icon{
+    width: 50px;
+  }
+}

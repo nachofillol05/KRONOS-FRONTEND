@@ -7,9 +7,10 @@ export default function FormSearchDni({ handleSearch }) {
     const [form] = Form.useForm();
     const formRef = useRef(null);
     const [tipoDocumentos, setTipoDocumentos] = useState([]);
+    const [defaultTipoDocumento, setDefaultTipoDocumento] = useState(1);
 
-    useEffect(() => {  
-        fetch('http://127.0.0.1:8000/api/documentTypes/',{
+    useEffect(() => {
+        fetch('http://127.0.0.1:8000/api/documentTypes/', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -21,13 +22,15 @@ export default function FormSearchDni({ handleSearch }) {
                     label: tipo.name,
                 }));
                 setTipoDocumentos(datos);
-                console.log(datos);
-            })}, []);
+                setDefaultTipoDocumento(datos[0].value);
+                form.setFieldsValue({ tipoDni: datos[0].value });
+            });
+    }, []);
+    
     return (
         <Form form={form} ref={formRef} layout="vertical" hideRequiredMark>
             <Space.Compact>
                 <Form.Item
-                    initialValue={1}
                     style={{ width: '30%' }}
                     name="tipoDni"
                     rules={[
@@ -38,8 +41,8 @@ export default function FormSearchDni({ handleSearch }) {
                     ]}
                 >
                     <Select
-                        size='large'
-                        defaultValue={1}
+                        size="large"
+                        value={defaultTipoDocumento} 
                         options={tipoDocumentos}
                     />
                 </Form.Item>
@@ -58,7 +61,7 @@ export default function FormSearchDni({ handleSearch }) {
                 <Button
                     style={{ width: '10%' }}
                     size='large'
-                    onClick={() => handleSearch(formRef)}
+                    onClick={() => handleSearch(formRef, tipoDocumentos)}
                     type="primary"
                     icon={<SearchOutlined />}
                 />
