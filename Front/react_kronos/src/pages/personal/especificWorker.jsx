@@ -3,14 +3,15 @@ import { Button, Flex, Divider, Col, Row, Tooltip, Image } from 'antd';
 import { RollbackOutlined, PlusOutlined, MailOutlined } from '@ant-design/icons';
 import './personal.scss';
 
-export default function EspecificWorker({ handleVolverInfo, dni, onClose }) {
+export default function Especificworker({ handleVolverInfo, id, onClose }) {
     const [selectedCells, setSelectedCells] = useState([]);
-    const [worker, setWorker] = useState({});
+    const [worker, setworker] = useState({});
 
     const days = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes'];
     const modules = ['Módulo 1', 'Módulo 2', 'Módulo 3', 'Módulo 4', 'Módulo 5'];
+
     useEffect(() => {
-        fetch('http://127.0.0.1:8000/api/teachers/', {
+        fetch('http://127.0.0.1:8000/api/staff/', {
             method: "GET",
             headers: {
                 'Authorization': 'Token ' + localStorage.getItem('token'),
@@ -24,17 +25,17 @@ export default function EspecificWorker({ handleVolverInfo, dni, onClose }) {
                 return response.json();
             })
             .then(data => {
-                const filteredWorker = data.find(worker => worker.document === dni);
-                if (filteredWorker) {
-                    setWorker(filteredWorker);
-                    console.log(filteredWorker);
+                const filteredworker= data.find(worker => worker.id === id);
+                if (filteredworker) {
+                    setworker(filteredworker);
+                    console.log(filteredworker);
                 } else {
-                    console.log('Worker not found');
-                    setWorker(null); // O maneja el caso donde no se encuentra el trabajador
+                    console.log('worker? not found');
+                    setworker(null); // O maneja el caso donde no se encuentra el trabajador
                 }
             })
             .catch(error => console.error('Error fetching data:', error));
-    }, [dni]);
+    }, [id]);
 
 
 
@@ -52,15 +53,15 @@ export default function EspecificWorker({ handleVolverInfo, dni, onClose }) {
                     />
                 </Flex>
                 <Flex gap={30}>
-                <label>Nombre: {worker.first_name} {worker.last_name}</label>
-                <label>Documento: {worker?.documentType?.name},  {worker.document}</label>
+                <label>Nombre: {worker?.first_name} {worker?.last_name}</label>
+                <label>Documento: {worker?.documentType?.name},  {worker?.document}</label>
                 </Flex>
                 <Flex gap={30}>
-                <label>Telefono:  {worker.email}</label>
-                <label>Email: {worker.email}</label>
+                <label>Telefono:  {worker?.email}</label>
+                <label>Email: {worker?.email}</label>
                 </Flex>
                 <Flex gap={30}>
-                        <label >Genero: {worker.gender}</label><label >Nacionalidad: {worker?.nationality?.name}</label>
+                        <label >Genero: {worker?.gender}</label><label >Nacionalidad: {worker?.nationality?.name}</label>
                 </Flex>
                 <Flex gap={30}>
                     <label >Provincia: {worker?.contactInfo?.province}</label><label >Ciudad: {worker?.contactInfo?.city}</label>

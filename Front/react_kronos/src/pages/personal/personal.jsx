@@ -61,9 +61,9 @@ export default function Personal() {
   };
 
 
-  const showEspecificWorker = (dni) => {
+  const showEspecificWorker = (id) => {
     showDrawer(
-      <EspecificWorker dni={dni} onClose={onClose} />, 'Información del trabajador'
+      <EspecificWorker id={id} onClose={onClose} />, 'Información del trabajador'
     )
   }
 
@@ -112,6 +112,7 @@ export default function Personal() {
                   user={body.user}
                   handleVolver={handleVolver}
                   handleContactar={() => showDrawer(<ContacWorker handleVolver={handleVolver} user={body.user} />, 'Contacata con el trabajador' )}
+                  onClose={onClose}
                 />,
                 "Información del Trabajador"
               );
@@ -319,6 +320,7 @@ export default function Personal() {
             return response.json();
         })
         .then((data) => {
+          console.log(data);
           setTeachers(data);
           setLoading(false);
         })
@@ -350,19 +352,29 @@ export default function Personal() {
         .catch((error) => console.error('Error fetching data:', error));
     }
     else if (activeFilter === 'Directivos') {
-        const schools = JSON.parse(localStorage.getItem('schools') || '[]');
-        const actualSchoolPk = parseInt(sessionStorage.getItem('actual_school'), 10);
-        if (schools && actualSchoolPk) {
-            const selectedSchool = schools.find(school => school.pk === actualSchoolPk);
-            if (selectedSchool.directives.length === 0) {
-              setTeachers([]);
-              return;
-            }
-            setTeachers(selectedSchool.directives);
-              
-  }
-      }
-  }, [activeFilter, searchName, subject, courses, recargar]);
+      const url = new URL(`http://127.0.0.1:8000/api/directives`);
+      if (searchName) url.searchParams.append('search', searchName);
+      //if (year) url.searchParams.append('year_id', year);
+      fetch(url.toString(), {
+          method: 'GET',
+          headers: {
+              'Authorization': 'Token ' + localStorage.getItem('token'),
+              'School-ID': sessionStorage.getItem('actual_school'),
+          },
+      })
+      .then((response) => {
+        if (!response.ok) {
+            setTeachers([]);
+            return;
+        }
+        return response.json();
+    })
+    .then((data) => {
+        console.log(data);
+        setTeachers(data);
+      })
+      .catch((error) => console.error('Error fetching data:', error));
+  }}, [activeFilter, searchName, subject, courses, recargar]);
 
   const columns = [
     { title: "Apellido", dataIndex: "last_name", key: "Apellido", width: 150 },
@@ -463,7 +475,7 @@ export default function Personal() {
         bordered
         onRow={(user) => ({
           onClick: () => {
-            showEspecificWorker(user.document);
+            showEspecificWorker(user.id);
           },
         })}
         pagination={false}

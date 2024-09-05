@@ -11,8 +11,9 @@
 }
 
 .CalendarioProfesor{
-    width: 75%;
-    margin-inline: auto;
+    width: 80%;
+    height: 100%;
+    margin: auto;
 }
 
 .dropdown {
@@ -107,7 +108,7 @@
 .espacioProfesor {
     cursor: pointer;
     min-height: 50px;
-    width: 100px;
+    width: 100%;
     background-color: #feffff;
     display: flex;
     justify-content: center;
@@ -115,6 +116,10 @@
     box-shadow: inset 0 0 0 1px #dddcdc;
     font-weight: bolder;
     color: black;
+}
+
+.casillaProfesor{
+    width: 100%;
 }
 
 
