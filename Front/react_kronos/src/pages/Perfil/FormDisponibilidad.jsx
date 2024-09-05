@@ -77,6 +77,7 @@ export default function FormDisponibilidad({ onClose }) {
         .then((response) => response.json())
         .then((data) => {
             setModulesData(Object.values(data));
+            console.log(data);
         });
     }, []);
 

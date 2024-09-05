@@ -101,6 +101,7 @@ export default function EventsPage() {
             return response.json();
         })
         .then(data => {
+          console.log(data)
             setEventos(data);
         })
         .catch(error => console.error('Error fetching data:', error));
@@ -375,11 +376,14 @@ export default function EventsPage() {
   
     let botonAdherido = false;
     const isUserAffiliated = event.affiliated_teachers.some(teacher => teacher.id === profileData.id);
+    const roles = event.roles.map(role => role.name);
+    const rol = sessionStorage.getItem('rol');
+    console.log(roles)
     const mostrar = (() => {
-      if (eventStatus === "Pendiente" && !isUserAffiliated) {
+      if (eventStatus === "Pendiente" && !isUserAffiliated && roles.includes(rol)) {
         return "Adherirse al evento";
       } 
-      if (eventStatus === "Pendiente" && isUserAffiliated) {
+      if (eventStatus === "Pendiente" && isUserAffiliated && roles.includes(rol)) {
         return "Ya estás adherido";
       } 
       if ((eventStatus === "Finalizado" || eventStatus === "En curso") && !isUserAffiliated) {
@@ -437,6 +441,7 @@ export default function EventsPage() {
               title={mostrar} 
               key="action"
             >
+              
               {mostrar === "Adherirse al evento" ? (
                 <UserAddOutlined onClick={() => showModal(event)} />
               ) : (
