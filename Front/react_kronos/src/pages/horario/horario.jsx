@@ -1,11 +1,12 @@
 import React, { Suspense, lazy, useState, useEffect, useCallback, useMemo } from 'react';
 import { FloatButton, Drawer, Button, Segmented, DatePicker } from 'antd';
 import {
-    InsertRowAboveOutlined, DownOutlined, UpOutlined, DownloadOutlined, HistoryOutlined, CloseOutlined, AppstoreOutlined, UserSwitchOutlined
-    , EyeOutlined, EditOutlined, FilterOutlined
+    InsertRowAboveOutlined, DownOutlined, UpOutlined, DownloadOutlined, HistoryOutlined, CloseOutlined, AppstoreOutlined, UserSwitchOutlined,
+    EyeOutlined, EditOutlined, FilterOutlined
 } from '@ant-design/icons';
-import Calendario from '../../components/calendario/CalendarioPrueba.jsx';
+import Calendario from '../../components/calendario/CalendarioProfesor.jsx';
 import './horarios.scss';
+
 const SelectTeacher = lazy(() => import('./selectTeacher.jsx'));
 const Historial = lazy(() => import('./historial.jsx'));
 const Horas = lazy(() => import('./infoHour.jsx'));
@@ -13,7 +14,7 @@ const SelectCourse = lazy(() => import('./selectCourses.jsx'));
 
 const format = 'DD/MM/YYYY';
 
-export default function Horario({ handleOpenDrawer, handleCloseDrawer }) {
+function Horario({ handleOpenDrawer, handleCloseDrawer }) {
     const [open, setOpen] = useState(false);
     const [drawerContent, setDrawerContent] = useState(null);
     const [drawerTitle, setDrawerTitle] = useState(null);
@@ -24,20 +25,16 @@ export default function Horario({ handleOpenDrawer, handleCloseDrawer }) {
         fetch("http://127.0.0.1:8000/api/viewschedule/", {
             method: "GET",
             headers: {
-                Authorization: "Token " + localStorage.getItem("token"),
+                Authorization: `Token ${localStorage.getItem("token")}`,
                 "School-ID": sessionStorage.getItem("actual_school"),
             },
         })
-            .then((response) => {
-                if (!response.ok) {
-                    throw new Error("Network response was not ok");
-                }
+            .then(response => {
+                if (!response.ok) throw new Error("Network response was not ok");
                 return response.json();
             })
-            .then((data) => {
-                setSubjects(data);
-            })
-            .catch((error) => console.error("Error fetching data:", error));
+            .then(data => setSubjects(data))
+            .catch(error => console.error("Error fetching data:", error));
     }, []);
 
     const showDrawer = useCallback((content, title) => {
@@ -51,19 +48,9 @@ export default function Horario({ handleOpenDrawer, handleCloseDrawer }) {
         setDrawerContent(null);
     }, []);
 
-    const memoizedCalendario = useMemo(() => (
-        <Calendario subjects={subjects} />
-    ), [subjects]);
-
     const memoizedSegmentedOptions = useMemo(() => [
-        {
-            value: 'Editar',
-            icon: <> <EditOutlined /> Editar</>,
-        },
-        {
-            value: 'Visualizar',
-            icon: <><EyeOutlined /> Visualizar</>,
-        },
+        { value: 'Editar', icon: <><EditOutlined /> Editar</> },
+        { value: 'Visualizar', icon: <><EyeOutlined /> Visualizar</> },
     ], []);
 
     return (
@@ -72,15 +59,15 @@ export default function Horario({ handleOpenDrawer, handleCloseDrawer }) {
                 <Segmented
                     size='large'
                     options={memoizedSegmentedOptions}
-                    onChange={(value) => { setEditar(value === 'Editar') }}
+                    onChange={(value) => setEditar(value === 'Editar')}
                 />
                 <DatePicker size='large' format={format} />
                 <Button icon={<FilterOutlined />} size='large' type='primary'>
                     Filtrar
                 </Button>
             </div>
-            {memoizedCalendario}
 
+            <Calendario subjects={subjects} mibooleano={editar} />
             <FloatButton.Group
                 visibilityHeight={1500}
                 trigger="click"
@@ -93,33 +80,25 @@ export default function Horario({ handleOpenDrawer, handleCloseDrawer }) {
                     onClick={() => showDrawer(
                         <Suspense fallback={<div>Loading...</div>}>
                             <SelectTeacher />
-                        </Suspense>
-                        , 'Seleccione un profesor'
-                    )}
+                        </Suspense>, 'Seleccione un profesor')}
                 />
                 <FloatButton icon={<HistoryOutlined />} type='primary' tooltip="Historial de cambios"
                     onClick={() => showDrawer(
                         <Suspense fallback={<div>Loading...</div>}>
                             <Historial />
-                        </Suspense>
-                        , 'Historial de cambios'
-                    )}
+                        </Suspense>, 'Historial de cambios')}
                 />
                 <FloatButton icon={<InsertRowAboveOutlined />} type='primary' tooltip="Horas catedra"
                     onClick={() => showDrawer(
                         <Suspense fallback={<div>Loading...</div>}>
                             <Horas showDrawer={showDrawer} />
-                        </Suspense>
-                        , 'Horas catedra'
-                    )}
+                        </Suspense>, 'Horas catedra')}
                 />
                 <FloatButton icon={<AppstoreOutlined />} type='primary' tooltip='Cursos'
                     onClick={() => showDrawer(
                         <Suspense fallback={<div>Loading...</div>}>
                             <SelectCourse showDrawer={showDrawer} />
-                        </Suspense>
-                        , 'Cursos'
-                    )}
+                        </Suspense>, 'Cursos')}
                 />
             </FloatButton.Group>
             <Drawer
@@ -140,3 +119,5 @@ export default function Horario({ handleOpenDrawer, handleCloseDrawer }) {
         </>
     );
 }
+
+export default React.memo(Horario);

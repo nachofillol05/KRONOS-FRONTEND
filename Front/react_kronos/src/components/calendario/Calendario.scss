@@ -1,6 +1,6 @@
 /* src/Calendario.css */
 .Calendario {
-    max-height: 86.5vh;
+    max-height: 83vh;
     height: fit-content;
     max-width: 100%;
     width: fit-content;
@@ -8,6 +8,11 @@
     overflow-x: auto; /* Permitir scroll horizontal */
 
     position: relative; /* Mantiene el contexto para el sticky */
+}
+
+.CalendarioProfesor{
+    width: 75%;
+    margin-inline: auto;
 }
 
 .dropdown {
@@ -97,6 +102,19 @@
 
 .espacio:hover {
     filter: brightness(95%);
+}
+
+.espacioProfesor {
+    cursor: pointer;
+    min-height: 50px;
+    width: 100px;
+    background-color: #feffff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: inset 0 0 0 1px #dddcdc;
+    font-weight: bolder;
+    color: black;
 }
 
 
