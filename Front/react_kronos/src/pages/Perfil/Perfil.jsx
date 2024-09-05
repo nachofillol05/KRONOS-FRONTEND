@@ -55,6 +55,7 @@ export default function Profile() {
         console.log(data);
         setProfileData(data);
         form.setFieldsValue({
+          ...data,
             documentType: data.documentType?.name || '',
             document: data.document || '',
             phone: data.phone || '',

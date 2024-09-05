@@ -27,6 +27,7 @@ export default function Personal() {
   const [documento, setDocumento] = useState(null);
   const [activeFilter, setActiveFilter] = useState('Profesores');
   const [courses, setCourse] = useState('');
+  const [recargar, setRecargar] = useState(false);
 
   const DescargarExcel = () => {
     console.log('Descargando...');
@@ -201,6 +202,7 @@ export default function Personal() {
             setLoading(false);
             onClose();
             showMessage("success", "Usuario creado con éxito");
+            setRecargar(!recargar);
             
             return response.json();  
           } else if (response.status === 400) {
@@ -295,72 +297,72 @@ export default function Personal() {
     }
   };
     //SOLO PARA TEACHERSSSSSSSSSSSSSSSS
-        useEffect(() => {
-            if (activeFilter === 'Profesores') {
-                const url = new URL('http://127.0.0.1:8000/api/teachers/');
-                if (searchName) url.searchParams.append('search_name', searchName);
-                if (subject) url.searchParams.append('subject_id', subject);
-    
-                setLoading(true);
-                fetch(url.toString(), {
-                    method: 'GET',
-                    headers: {
-                        'Authorization': 'Token ' + localStorage.getItem('token'),
-                        'School-ID': sessionStorage.getItem('actual_school'),
-                    },
-                })
-                .then((response) => {
-                    if (!response.ok) {
-                        setTeachers([]);
-                        return;
-                    }
-                    return response.json();
-                })
-                .then((data) => {
-                  setTeachers(data);
-                  setLoading(false);
-                })
-                .catch((error) => {
-                    setLoading(false);
-                });
-            } else if (activeFilter === 'Preceptores') {
-                const url = new URL(`http://127.0.0.1:8000/api/preceptors`);
-                if (searchName) url.searchParams.append('search', searchName);
-                //if (year) url.searchParams.append('year_id', year);
-                fetch(url.toString(), {
-                    method: 'GET',
-                    headers: {
-                        'Authorization': 'Token ' + localStorage.getItem('token'),
-                        'School-ID': sessionStorage.getItem('actual_school'),
-                    },
-                })
-                .then((response) => {
-                  if (!response.ok) {
-                      setTeachers([]);
-                      return;
-                  }
-                  return response.json();
-              })
-              .then((data) => {
-                  console.log(data);
-                  setTeachers(data);
-                })
-                .catch((error) => console.error('Error fetching data:', error));
+  useEffect(() => {
+    if (activeFilter === 'Profesores') {
+        const url = new URL('http://127.0.0.1:8000/api/teachers/');
+        if (searchName) url.searchParams.append('search_name', searchName);
+        if (subject) url.searchParams.append('subject_id', subject);
+
+        setLoading(true);
+        fetch(url.toString(), {
+            method: 'GET',
+            headers: {
+                'Authorization': 'Token ' + localStorage.getItem('token'),
+                'School-ID': sessionStorage.getItem('actual_school'),
+            },
+        })
+        .then((response) => {
+            if (!response.ok) {
+                setTeachers([]);
+                return;
             }
-            else if (activeFilter === 'Directivos') {
-                const schools = JSON.parse(localStorage.getItem('schools') || '[]');
-                const actualSchoolPk = parseInt(sessionStorage.getItem('actual_school'), 10);
-                if (schools && actualSchoolPk) {
-                    const selectedSchool = schools.find(school => school.pk === actualSchoolPk);
-                    if (selectedSchool.directives.length === 0) {
-                      setTeachers([]);
-                      return;
-                    }
-                    setTeachers(selectedSchool.directives);
-                    
-        }
+            return response.json();
+        })
+        .then((data) => {
+          setTeachers(data);
+          setLoading(false);
+        })
+        .catch((error) => {
+            setLoading(false);
+        });
+    } else if (activeFilter === 'Preceptores') {
+        const url = new URL(`http://127.0.0.1:8000/api/preceptors`);
+        if (searchName) url.searchParams.append('search', searchName);
+        //if (year) url.searchParams.append('year_id', year);
+        fetch(url.toString(), {
+            method: 'GET',
+            headers: {
+                'Authorization': 'Token ' + localStorage.getItem('token'),
+                'School-ID': sessionStorage.getItem('actual_school'),
+            },
+        })
+        .then((response) => {
+          if (!response.ok) {
+              setTeachers([]);
+              return;
+          }
+          return response.json();
+      })
+      .then((data) => {
+          console.log(data);
+          setTeachers(data);
+        })
+        .catch((error) => console.error('Error fetching data:', error));
+    }
+    else if (activeFilter === 'Directivos') {
+        const schools = JSON.parse(localStorage.getItem('schools') || '[]');
+        const actualSchoolPk = parseInt(sessionStorage.getItem('actual_school'), 10);
+        if (schools && actualSchoolPk) {
+            const selectedSchool = schools.find(school => school.pk === actualSchoolPk);
+            if (selectedSchool.directives.length === 0) {
+              setTeachers([]);
+              return;
             }
-        }, [activeFilter, searchName, subject, courses]);
+            setTeachers(selectedSchool.directives);
+              
+  }
+      }
+  }, [activeFilter, searchName, subject, courses, recargar]);
 
   const columns = [
     { title: "Apellido", dataIndex: "last_name", key: "Apellido", width: 150 },
