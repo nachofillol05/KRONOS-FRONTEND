@@ -4,7 +4,7 @@ import {
     InsertRowAboveOutlined, DownOutlined, UpOutlined, DownloadOutlined, HistoryOutlined, CloseOutlined, AppstoreOutlined, UserSwitchOutlined,
     EyeOutlined, EditOutlined, FilterOutlined
 } from '@ant-design/icons';
-import Calendario from '../../components/calendario/CalendarioProfesor.jsx';
+import CalendarioDirectivo from '../../components/calendario/CalendarioDirectivo.jsx';
 import './horarios.scss';
 
 const SelectTeacher = lazy(() => import('./selectTeacher.jsx'));
@@ -19,7 +19,7 @@ function Horario({ handleOpenDrawer, handleCloseDrawer }) {
     const [drawerContent, setDrawerContent] = useState(null);
     const [drawerTitle, setDrawerTitle] = useState(null);
     const [subjects, setSubjects] = useState([]);
-    const [editar, setEditar] = useState(true);
+    const [editar, setEditar] = useState(false);
 
     useEffect(() => {
         fetch("http://127.0.0.1:8000/api/viewschedule/", {
@@ -49,25 +49,24 @@ function Horario({ handleOpenDrawer, handleCloseDrawer }) {
     }, []);
 
     const memoizedSegmentedOptions = useMemo(() => [
-        { value: 'Editar', icon: <><EditOutlined /> Editar</> },
         { value: 'Visualizar', icon: <><EyeOutlined /> Visualizar</> },
+        { value: 'Editar', icon: <><EditOutlined /> Editar</> },
     ], []);
-
     return (
         <>
             <div className="contenedor-filtros contenedor-filtros-horario">
+                {sessionStorage.getItem('rol') === "Directivo" && (
                 <Segmented
                     size='large'
                     options={memoizedSegmentedOptions}
                     onChange={(value) => setEditar(value === 'Editar')}
-                />
+                />)}
                 <DatePicker size='large' format={format} />
                 <Button icon={<FilterOutlined />} size='large' type='primary'>
                     Filtrar
                 </Button>
             </div>
-
-            <Calendario subjects={subjects} mibooleano={editar} />
+            <CalendarioDirectivo subjects={subjects} mibooleano={editar} />
             <FloatButton.Group
                 visibilityHeight={1500}
                 trigger="click"

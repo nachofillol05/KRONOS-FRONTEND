@@ -17,9 +17,29 @@ import Materias from "../pages/materias/materias";
 import Personal from "../pages/personal/personal";
 import Perfil from "../pages/Perfil/Perfil";
 import Horario from "../pages/horario/horario";
+import HorarioProfesor from "../pages/horario/horarioProfesor";
 import EventsPage from "../pages/events/evento";
 
-
+const redirigirHorario = () => {
+    if (sessionStorage.getItem("rol") === "Profesor") {
+        console.log("Profesor");
+        return {
+            path: "/horarios",
+            exact: true,
+            private: true,
+            layout: Navegacion,
+            component: HorarioProfesor,
+        }
+    }else{
+        console.log("No Profesor");
+        return {
+            path: "/horarios",
+            exact: true,
+            private: true,
+            layout: Navegacion,
+            component: Horario,
+        }
+}}
 export const routes = [
     {
         path: "/",
@@ -65,13 +85,7 @@ export const routes = [
         layout: Navegacion,
         component: Personal
     },
-    {
-        path: "/horarios",
-        exact: true,
-        private: true,
-        layout: Navegacion,
-        component: Horario
-    },
+    redirigirHorario(),
     {
         path: "/eventos",
         exact: true,
