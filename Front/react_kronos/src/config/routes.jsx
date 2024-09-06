@@ -34,7 +34,7 @@ export const routes = [
         path: "/prueba",
         exact: true,
         private: false,
-        layout: Navegacion,
+        layout: LayoutLogin,
         component: Prueba
     },
     {
