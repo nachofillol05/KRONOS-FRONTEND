@@ -13,9 +13,20 @@ export default function Profile() {
   const [drawerContent, setDrawerContent] = useState(null);
   const [drawerTitle, setDrawerTitle] = useState(null);
   const [escuelaCompleta, setEscuelaCompleta] = useState(null);
+  const [tiposDocumentos,setTipoDocumentos] = useState([]);
+  const [nationalities, setNationalities] = useState([]);
+  const [file, setFile] = useState(null);
+
+  const handleFileChange = (e) => {
+    console.log(e)
+    console.log(e.file)
+    setFile(e.file); // Aquí obtienes el archivo real, no la ruta
+  };
 
 
+  /*const generos ={
 
+  }*/
 
   useEffect(() => {
     const schools = JSON.parse(localStorage.getItem('schools') || '[]');
@@ -24,6 +35,7 @@ export default function Profile() {
       const selectedSchool = schools.find(school => school.pk === actualSchoolPk);
       formSchool.setFieldsValue({
         ...selectedSchool,
+        //profile_picture: file,
         abreviacion: selectedSchool.abbreviation,
         city: selectedSchool.contactInfo.city,
         postalCode: selectedSchool.contactInfo.postalCode,
@@ -57,12 +69,12 @@ export default function Profile() {
         setProfileData(data);
         form.setFieldsValue({
           ...data,
-            documentType: data.documentType?.name || '',
+            documentType: isEditing? data.documentType?.id || '' : data.documentType?.name || '',
             document: data.document || '',
             phone: data.phone || '',
             hoursToWork: 12, // ESTO DEBERÁ SER CAMBIADO POR UN CÁLCULO DE LAS HORAS OCUPADAS
-            profile_picture: data.profile_picture || '',
-            nationality: data.nationality?.name || '',
+            //profile_picture: data.profile_picture || '',
+            nationality: isEditing? data.nationality?.id || '' : data.nationality?.name || '',
             city: data.contactInfo?.city || '',
             postalCode: data.contactInfo?.postalCode || '',
             province: data.contactInfo?.province || '',
@@ -71,24 +83,56 @@ export default function Profile() {
         });
     })
     .catch((error) => console.error('Error fetching data:', error));
+}, [isEditing]);
+
+useEffect(() => {
+  fetch('http://127.0.0.1:8000/api/documentTypes/', {
+      method: 'GET',
+      headers: {
+          'Content-Type': 'application/json',
+      }})
+      .then(response => response.json())
+      .then(data => {
+          const datos = data.map((tipo) => ({
+              value: tipo.id,
+              label: tipo.name,
+          }));
+          setTipoDocumentos(datos);
+      });
 }, []);
 
-  const tiposDoc = [
-    { value: 'DNI', label: 'DNI' },
-    { value: 'Pasaporte', label: 'Pasaporte' },
-    { value: 'Cedula', label: 'Cedula' },
-  ];
+useEffect(() => {
+  fetch('http://127.0.0.1:8000/api/nationality/', {
+      method: 'GET',
+      headers: {
+          'Content-Type': 'application/json',
+      }})
+      .then(response => response.json())
+      .then(data => {
+          const datos = data.map((tipo) => ({
+              value: tipo.id,
+              label: tipo.name,
+          }));
+          setNationalities(datos);
+      });
+}, []);
 
   const toggleEditMode = () => {
     setIsEditing(!isEditing);
   };
 
-  const handleFinishUser = (values) => {
-    const updatedProfile = {
-      ...profileData,
-      ...values,
+  const handleFinishUser = async (values) => {
+    // Enviar los datos del perfil
+    const profileData = {
+      document: values.document,
+      documentType: values.documentType,
+      email: values.email,
+      first_name: values.first_name,
+      gender: values.gender,
+      last_name: values.last_name,
+      nationality: values.nationality,
+      phone: values.phone || "",
       contactInfo: {
-        ...profileData.contactInfo,
         city: values.city,
         postalCode: values.postalCode,
         province: values.province,
@@ -96,32 +140,55 @@ export default function Profile() {
         streetNumber: values.streetNumber,
       }
     };
-
-    fetch('http://127.0.0.1:8000/api/profile/', {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Token ' + localStorage.getItem('token'),
-        'School-ID': sessionStorage.getItem('actual_school'),
-      },
-      body: JSON.stringify(updatedProfile),
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        return response.json();
-      })
-      .then((data) => {
-        console.log('Profile updated successfully:', data);
-        setProfileData(data);
-        setIsEditing(false);
-      })
-      .catch((error) => {
-        console.error('Error updating profile:', error);
+  
+    try {
+      const profileResponse = await fetch('http://127.0.0.1:8000/api/profile/', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Token ' + localStorage.getItem('token'),
+          'School-ID': sessionStorage.getItem('actual_school'),
+        },
+        body: JSON.stringify(profileData),
       });
+  
+      if (!profileResponse.ok) {
+        throw new Error('NO se pudieron actualizar los campos');
+      }
+      const profileDataResponse = await profileResponse.json();
+      console.log('Profile updated successfully:', profileDataResponse);
+  
+      console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaa",file)
+      if (values.profile_picture && file) {
+        const formData = new FormData();
+        formData.append('profile_picture', file);
+  
+        const pictureResponse = await fetch('http://127.0.0.1:8000/api/profile/', {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Token ' + localStorage.getItem('token'),
+            'School-ID': sessionStorage.getItem('actual_school'),
+          },
+          body: formData,
+        });
+  
+        if (!pictureResponse.ok) {
+          throw new Error('Network response was not ok for profile picture');
+        }
+  
+        const pictureDataResponse = await pictureResponse.json();
+        console.log('Profile picture updated successfully:', pictureDataResponse);
+      }
+  
+      setProfileData(profileDataResponse);
+      setIsEditing(false);
+    } catch (error) {
+      console.error('Error updating profile:', error);
+    }
   };
-
+  
+  
   const customDisabledStyle = {
     backgroundColor: 'transparent',
     color: 'black',
@@ -141,6 +208,7 @@ export default function Profile() {
     setDrawerContent(null);
   };
 
+  
   return (
     <>
       <Tabs onChange={() => { setIsEditing(false) }} defaultActiveKey="1" style={{ width: 600, marginInline: 'auto', marginTop: '50px' }}>
@@ -185,11 +253,11 @@ export default function Profile() {
               onFinish={handleFinishUser}
               style={{ height: '60vh', overflowY: 'auto', padding: '25px' }}
             >
-              <Form.Item>
+              <Form.Item name="profile_picture">
                 <Flex align='center' justify='space-between'style={{ width: isEditing ? '100%' : '70%', height: '50px' }}>
                   <label >Foto de perfil:</label>
                   {isEditing ?
-                    <Upload className='upload-profile' accept=".jpg,.jpeg,.png,.webp" maxCount={1}>
+                    <Upload className='upload-profile' accept=".jpg,.jpeg,.png,.webp" onChange={handleFileChange} maxCount={1}>
                       <Button
                         icon={<UploadOutlined />}>Click to Upload</Button>
                     </Upload> : null}
@@ -224,7 +292,7 @@ export default function Profile() {
                     style={{ width: '125px' }}
                   >
                     {isEditing ? (
-                      <Select style={{ height: '40px' }} options={tiposDoc} size='large' />
+                      <Select style={{ height: '40px' }} options={tiposDocumentos} size='large' />
                     ) : (
                       <Input
                         size='large'
@@ -290,11 +358,15 @@ export default function Profile() {
                   />
                 </Form.Item>
                 <Form.Item label="Nacionalidad" name="nationality" layout='horizontal' style={{ flexGrow: 1 }} className="formItemProfile">
-                  <Input
-                    size='large'
-                    style={!isEditing ? customDisabledStyle : { height: '40px' }}
-                    disabled={!isEditing}
-                  />
+                  {isEditing ? (
+                    <Select style={{ height: '40px' }} options={nationalities} size='large' />
+                  ) : (
+                    <Input
+                      size='large'
+                      style={!isEditing ? customDisabledStyle : { height: '40px' }}
+                      disabled={!isEditing}
+                    />
+                  )}
                 </Form.Item>
               </Flex>
               <Flex gap={25}>
@@ -320,6 +392,22 @@ export default function Profile() {
                     size='large'
                     type="number"
                     style={!isEditing ? customDisabledStyle : {}}
+                    disabled={!isEditing}
+                  />
+                </Form.Item>
+              </Flex>
+              <Flex gap={25}>
+                <Form.Item label="Provincia" name="province" layout='horizontal' style={{ flexGrow: 1 }} className="formItemProfile">
+                  <Input
+                    size='large'
+                    style={!isEditing ? customDisabledStyle : { height: '40px' }}
+                    disabled={!isEditing}
+                  />
+                </Form.Item>
+                <Form.Item label="Ciudad" name="city" layout='horizontal' style={{ flexGrow: 1 }} className="formItemProfile">
+                  <Input
+                    size='large'
+                    style={!isEditing ? customDisabledStyle : { height: '40px' }}
                     disabled={!isEditing}
                   />
                 </Form.Item>
