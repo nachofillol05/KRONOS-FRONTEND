@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Card, Form, Select, Input, Image, Flex, Divider, FloatButton, Drawer, Upload, Tabs, Row, Col, Space } from 'antd';
+import { Button, Card, Form, Select, Input, Flex, FloatButton, Drawer, Upload, Tabs, Space } from 'antd';
 import { ClockCircleOutlined, UploadOutlined } from '@ant-design/icons';
 import './Perfil.scss';
 import FormDisponibilidad from './FormDisponibilidad';

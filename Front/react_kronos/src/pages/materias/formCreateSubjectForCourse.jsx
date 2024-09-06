@@ -1,5 +1,5 @@
 import React, { useEffect,useState } from 'react';
-import { Form, Input, Button, Tooltip, Space, Select, ColorPicker, Flex } from 'antd';
+import { Form, Input, Button, Tooltip, Select, Flex } from 'antd';
 import { InfoCircleOutlined, RollbackOutlined, PlusOutlined } from '@ant-design/icons';
 const { TextArea } = Input;
 
@@ -9,6 +9,7 @@ export default function FormCreateSubject({ handleSubmit, onClose, cursos, value
     const [materiasCompleta, setMateriasCompleta] = useState([]);
     const [cursosSelect, setCursosSelect] = useState([]);
     const [form] = Form.useForm();
+    
     useEffect(() => {
     const url = new URL('http://127.0.0.1:8000/api/subjects/');
         fetch(url.toString(), {

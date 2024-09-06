@@ -1,4 +1,7 @@
-
+:where(.css-dev-only-do-not-override-1bci7t8).ant-float-btn-group{
+    width: 55px !important;
+    right: 5%;
+}
 
 :where(.css-dev-only-do-not-override-m4timi).ant-float-btn-group-circle .ant-float-btn-circle:not(:last-child) .ant-float-btn-body {
     width: 55px !important;
@@ -12,7 +15,7 @@
 
 
 :where(.css-dev-only-do-not-override-m4timi).ant-float-btn-group {
-    inset-inline-end: 75px !important;
+    inset-inline-end: 200px !important;
     inset-block-end: 50px !important;
 
 }

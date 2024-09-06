@@ -1,5 +1,4 @@
-
-import React, { useState, useCallback, useMemo } from 'react';
+import React, { useState, useCallback, useMemo, useEffect } from 'react';
 import { Row, Col, Dropdown, Menu, Avatar, Tooltip } from 'antd';
 import { UserOutlined, FilterOutlined } from '@ant-design/icons';
 import './Calendario.scss';
@@ -15,10 +14,51 @@ const subjects = [
 
 const days = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes'];
 const hours = ['1°', '2°', '3°', '4°', '5°'];
-const courses = ['1°A', '1°B', '1°C', '2°A', '2°B', '2°C'];
 
 export default function Calendario({ mibooleano }) {
     const [selectedItems, setSelectedItems] = useState({});
+    const [coursesDinamic, setCoursesDinamic] = useState([]);
+    const [modulesData, setModulesData] = useState([]);
+
+    useEffect(() => {
+        fetch('http://localhost:8000/api/modules/', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Token ${localStorage.getItem('token')}`,
+                'School-ID': sessionStorage.getItem('actual_school'),
+            },
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                setModulesData(Object.values(data));
+                console.log(data);
+            });
+    }, []);
+
+    useEffect(() => {
+        fetch('http://127.0.0.1:8000/api/courses/', {
+            method: "GET",
+            headers: {
+                'Authorization': 'Token ' + localStorage.getItem('token'),
+                'School-ID': sessionStorage.getItem('actual_school'),
+            },
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                const courses = data.map(curs => ({
+                    value: curs.id,
+                    label: curs.name,
+                }));
+                setCoursesDinamic(courses);
+            })
+            .catch(error => console.error('Error fetching data:', error));
+    }, []);
 
     const handleMenuClick = useCallback((e, key) => {
         setSelectedItems(prevState => ({
@@ -57,102 +97,100 @@ export default function Calendario({ mibooleano }) {
     const memoizedSubjects = useMemo(() => subjects, []);
     const memoizedDays = useMemo(() => days, []);
     const memoizedHours = useMemo(() => hours, []);
-    const memoizedCourses = useMemo(() => courses, []);
+    const memoizedCourses = useMemo(() => coursesDinamic, [coursesDinamic]);
 
     return (
-        <>
-            <div className="Calendario" style={{ margin: 'auto'}}>
-                <Row wrap={false}>
-                    <Col className='columna'>
-                        <Row className='esquina' style={{ width: '200px' }}>
-                            <Row className='casilla esquina'>Día</Row>
-                            <Row className='casilla esquina'>Hora</Row>
-                        </Row>
-                        {memoizedDays.map((day, dayIndex) => (
-                            <Row key={dayIndex}>
-                                <Col className='casilla columna'>{day}</Col>
-                                <Col className='hora'>
-                                    {memoizedHours.map((module, moduleIndex) => (
-                                        <Row className='casilla columna' key={moduleIndex}>
-                                            {module}
-                                        </Row>
-                                    ))}
-                                </Col>
-                            </Row>
-                        ))}
-                    </Col>
-                    <Row wrap={false}>
-                        {memoizedCourses.map((course, courseIndex) => (
-                            <Col key={courseIndex}>
-                                <Row className='casilla encabezado'>{course}</Row>
-                                {memoizedDays.map((day, dayIndex) => (
-                                    <React.Fragment key={dayIndex}>
-                                        {memoizedHours.map((hour, hourIndex) => {
-                                            const key = getCellKey(dayIndex, hourIndex, courseIndex);
-                                            const selectedSubjectValue = selectedItems[key];
-                                            const subject = memoizedSubjects.find(sub => sub.value === selectedSubjectValue);
-
-                                            const menu = (
-                                                <Menu onClick={(e) => handleMenuClick(e, key)}>
-                                                    {memoizedSubjects.map((subject) => (
-                                                        <Menu.Item key={subject.value}>
-                                                            {subject.label}
-                                                        </Menu.Item>
-                                                    ))}
-                                                </Menu>
-                                            );
-
-                                            return (
-                                                <Col key={key}>
-                                                    {mibooleano ? (
-                                                        <Dropdown overlay={menu} trigger={['click']}>
-                                                            <a className='espacio' style={{
-                                                                color: subject ? subject.color : 'black',
-                                                                backgroundColor: subject ? makeColorTransparent(subject.color, 0.1) : null,
-                                                            }}>
-                                                                <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
-                                                                    {subject ? subject.avatar : null}
-                                                                    {subject ? subject.value : ""}
-                                                                </div>
-                                                            </a>
-                                                        </Dropdown>
-                                                    ) : (
-                                                        <Tooltip 
-                                                            arrow={false} 
-                                                            trigger={'click'} 
-                                                            title={subject ? (
-                                                                <div style={{color: '#8e96a3'}}>
-                                                                    <b style={{ color: '#444' }}>{subject.label}</b>
-                                                                    <p style={{ marginBlock: 5 }}> {`${day} ${hour} módulo, ${course}`}</p>
-                                                                    <a style={{ color: '#227cae', textDecoration: 'none' }}>
-                                                                        <FilterOutlined /> Filtrar por este profesor
-                                                                    </a>
-                                                                </div>
-                                                            ) : ""}
-                                                            color='#ffffff'
-                                                            overlayClassName='calendar-tooltip'
-                                                        >
-                                                            <a className='espacio' style={{
-                                                                color: subject ? subject.color : 'black',
-                                                                backgroundColor: subject ? makeColorTransparent(subject.color, 0.1) : null,
-                                                            }}>
-                                                                <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
-                                                                    {subject ? subject.avatar : null}
-                                                                    {subject ? subject.value : ""}
-                                                                </div>
-                                                            </a>
-                                                        </Tooltip>
-                                                    )}
-                                                </Col>
-                                            );
-                                        })}
-                                    </React.Fragment>
-                                ))}
-                            </Col>
-                        ))}
+        <div className="Calendario" style={{ margin: 'auto' }}>
+            <Row wrap={false}>
+                <Col className='columna'>
+                    <Row className='esquina' style={{ width: '200px' }}>
+                        <Row className='casilla esquina'>Día</Row>
+                        <Row className='casilla esquina'>Hora</Row>
                     </Row>
+                    {memoizedDays.map((day, dayIndex) => (
+                        <Row key={dayIndex}>
+                            <Col className='casilla columna'>{day}</Col>
+                            <Col key={dayIndex}>
+                            {memoizedHours.map((hour, hourIndex) => (
+                            
+                                <Row className='casilla columna'>{hour}</Row>
+                            
+                            ))}
+                            </Col>
+                        </Row>
+                    ))}
+                </Col>
+                <Row wrap={false}>
+                    {memoizedCourses.map((course, courseIndex) => (
+                        <Col key={courseIndex}>
+                            <Row className='casilla encabezado'>{course.label}</Row>
+                            {memoizedDays.map((day, dayIndex) => (
+                                <React.Fragment key={dayIndex}>
+                                    {memoizedHours.map((hour, hourIndex) => {
+                                        const key = getCellKey(dayIndex, hourIndex, courseIndex);
+                                        const selectedSubjectValue = selectedItems[key];
+                                        const subject = memoizedSubjects.find(sub => sub.value === selectedSubjectValue);
+
+                                        const menu = (
+                                            <Menu onClick={(e) => handleMenuClick(e, key)}>
+                                                {memoizedSubjects.map((subject) => (
+                                                    <Menu.Item key={subject.value}>
+                                                        {subject.label}
+                                                    </Menu.Item>
+                                                ))}
+                                            </Menu>
+                                        );
+
+                                        return (
+                                            <Col key={key}>
+                                                {mibooleano ? (
+                                                    <Dropdown overlay={menu} trigger={['click']}>
+                                                        <a className='espacio' style={{
+                                                            color: subject ? subject.color : 'black',
+                                                            backgroundColor: subject ? makeColorTransparent(subject.color, 0.1) : null,
+                                                        }}>
+                                                            <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
+                                                                {subject ? subject.avatar : null}
+                                                                {subject ? subject.value : ""}
+                                                            </div>
+                                                        </a>
+                                                    </Dropdown>
+                                                ) : (
+                                                    <Tooltip
+                                                        arrow={false}
+                                                        trigger={'click'}
+                                                        title={subject ? (
+                                                            <div style={{ color: '#8e96a3' }}>
+                                                                <b style={{ color: '#444' }}>{subject.label}</b>
+                                                                <p style={{ marginBlock: 5 }}> {`${day} ${hour} módulo, ${course.label}`}</p>
+                                                                <a style={{ color: '#227cae', textDecoration: 'none' }}>
+                                                                    <FilterOutlined /> Filtrar por este profesor
+                                                                </a>
+                                                            </div>
+                                                        ) : ""}
+                                                        color='#ffffff'
+                                                        overlayClassName='calendar-tooltip'
+                                                    >
+                                                        <a className='espacio' style={{
+                                                            color: subject ? subject.color : 'black',
+                                                            backgroundColor: subject ? makeColorTransparent(subject.color, 0.1) : null,
+                                                        }}>
+                                                            <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
+                                                                {subject ? subject.avatar : null}
+                                                                {subject ? subject.value : ""}
+                                                            </div>
+                                                        </a>
+                                                    </Tooltip>
+                                                )}
+                                            </Col>
+                                        );
+                                    })}
+                                </React.Fragment>
+                            ))}
+                        </Col>
+                    ))}
                 </Row>
-            </div>
-        </>
+            </Row>
+        </div>
     );
 }

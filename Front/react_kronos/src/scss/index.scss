@@ -26,6 +26,11 @@ input[type="number"] {
     justify-content: start !important;
 }
 
+:where(.css-dev-only-do-not-override-1bci7t8).ant-float-btn-group-circle .ant-float-btn-circle:not(:last-child) .ant-float-btn-body{
+    width: 100% !important;
+    height: 100% !important;
+}
+
 
 .contenedor-filtros{
     height: 12vh;
