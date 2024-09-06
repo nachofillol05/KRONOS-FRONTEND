@@ -143,15 +143,6 @@
 @mixin divider($type: false, $layout: false) {
 	@if ( $type == 'before' ) {
 		position: relative;
-
-		&::before {
-			content: '';
-			position: absolute;
-			top: 0;
-			left: 0;
-			width: 100%;
-			@include divider-mix($layout);
-		}
 	} @else if ($type == 'after') {
 		position: relative;
 

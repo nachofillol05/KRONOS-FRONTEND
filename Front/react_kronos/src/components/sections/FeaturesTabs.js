@@ -20,7 +20,7 @@ class FeaturesTabs extends React.Component {
     const {
       className,
       topOuterDivider,
-      bottomOuterDivider,      
+      bottomOuterDivider,
       topDivider,
       bottomDivider,
       hasBgColor,
@@ -78,9 +78,9 @@ class FeaturesTabs extends React.Component {
                   </div>
                   <div className="text-color-high fw-600 text-sm">
                     ITS Villada
-                  </div>                  
+                  </div>
                 </Tab>
-                <Tab tabId="tab-d">
+                <Tab tabId="tab-b">
                   <div className="features-tabs-tab-image mb-12">
                     <Image
                       src={require('../../assets/images/colelogo.png')}
@@ -91,41 +91,29 @@ class FeaturesTabs extends React.Component {
                   <div className="text-color-high fw-600 text-sm">
                     Jesus Maria
                   </div>
-                </Tab>                
+                </Tab>
               </TabList>
               <TabPanel id="tab-a">
-                <Image
-                  className="has-shadow"
-                  src={require('../../assets/images/villadafrente.jpeg')}
-                  alt="Features tabs image 01"
-                  width={896}
-                  height={504} />
+                <div style={{ width: 800, height: 500, margin: 'auto' }}>
+                  <Image
+                    className="has-shadow"
+                    src={require('../../assets/images/villadafrente.jpeg')}
+                    alt="Features tabs image 01"
+                    style={{ width: '100%', height: '100%', objectFit: 'cover', backgroundSize: 'cover' }}
+                  />
+                </div>
               </TabPanel>
+
               <TabPanel id="tab-b">
-                <Image
-                  className="has-shadow"
-                  src={require('../../assets/images/jesusmariaimg.png')}
-                  alt="Features tabs image 02"
-                  width={896}
-                  height={504} />
+              <div style={{ width: 800, height: 500, margin: 'auto' }}>
+                  <Image
+                    className="has-shadow"
+                    src={require('../../assets/images/jesusmariaimg.png')}
+                    alt="Features tabs image 01"
+                    style={{ width: '100%', height: '100%', objectFit: 'cover', backgroundSize: 'cover' }}
+                  />
+                </div>
               </TabPanel>
-              <TabPanel id="tab-c">
-                <Image
-                  className="has-shadow"
-                  src={require('../../assets/images/villadafrente.jpeg')}
-                  alt="Features tabs image 03"
-                  width={896}
-                  height={504} />
-              </TabPanel>
-              
-              <TabPanel id="tab-d">
-                <Image
-                  className="has-shadow"
-                  src={require('../../assets/images/jesusmariaimg.png')}
-                  alt="Features tabs image 04"
-                  width={896}
-                  height={504} />
-              </TabPanel>              
             </Tabs>
           </div>
         </div>

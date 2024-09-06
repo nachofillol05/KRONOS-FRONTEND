@@ -1,9 +1,7 @@
+// Horario.jsx
 import React, { Suspense, lazy, useState, useEffect, useCallback, useMemo } from 'react';
 import { FloatButton, Drawer, Button, Segmented, DatePicker } from 'antd';
-import {
-    InsertRowAboveOutlined, DownOutlined, UpOutlined, DownloadOutlined, HistoryOutlined, CloseOutlined, AppstoreOutlined, UserSwitchOutlined,
-    EyeOutlined, EditOutlined, FilterOutlined
-} from '@ant-design/icons';
+import { InsertRowAboveOutlined, DownOutlined, UpOutlined, DownloadOutlined, HistoryOutlined, CloseOutlined, AppstoreOutlined, UserSwitchOutlined, EyeOutlined, EditOutlined, FilterOutlined } from '@ant-design/icons';
 import CalendarioDirectivo from '../../components/calendario/CalendarioDirectivo.jsx';
 import './horarios.scss';
 
@@ -19,8 +17,9 @@ function Horario({ handleOpenDrawer, handleCloseDrawer }) {
     const [drawerContent, setDrawerContent] = useState(null);
     const [drawerTitle, setDrawerTitle] = useState(null);
     const [subjects, setSubjects] = useState([]);
-    const [editar, setEditar] = useState(false);
+    const [editar, setEditar] = useState(false); // Controla si el calendario es editable o no
 
+    // Obtención de datos del servidor (materias)
     useEffect(() => {
         fetch("http://127.0.0.1:8000/api/viewschedule/", {
             method: "GET",
@@ -52,6 +51,7 @@ function Horario({ handleOpenDrawer, handleCloseDrawer }) {
         { value: 'Visualizar', icon: <><EyeOutlined /> Visualizar</> },
         { value: 'Editar', icon: <><EditOutlined /> Editar</> },
     ], []);
+
     return (
         <>
             <div className="contenedor-filtros contenedor-filtros-horario">
@@ -59,13 +59,14 @@ function Horario({ handleOpenDrawer, handleCloseDrawer }) {
                 <Segmented
                     size='large'
                     options={memoizedSegmentedOptions}
-                    onChange={(value) => setEditar(value === 'Editar')}
+                    onChange={(value) => setEditar(value === 'Editar')} // Cambia el estado de 'editar'
                 />)}
                 <DatePicker size='large' format={format} />
                 <Button icon={<FilterOutlined />} size='large' type='primary'>
                     Filtrar
                 </Button>
             </div>
+            {/* Pasar el estado editar al calendario */}
             <CalendarioDirectivo subjects={subjects} mibooleano={editar} />
             <FloatButton.Group
                 visibilityHeight={1500}

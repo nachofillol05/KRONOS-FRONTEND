@@ -46,7 +46,6 @@ export default function FormSearchDni({ handleSearch }) {
                     style={{ width: '60%' }}
                     name="documento"
                     rules={[
-<<<<<<< HEAD
                         {required: true, message: 'Ingrese un documento válido.'}
                     ]}
                 >
@@ -56,16 +55,6 @@ export default function FormSearchDni({ handleSearch }) {
                         autoSize={true} 
                         placeholder="Documento"
                     />
-=======
-                        {
-                            required: true,
-                            message: 'Por favor ingrese el documento',
-                            min: 8,
-                        },
-                    ]}
-                >
-                    <Input size='large' type="number" autoSize={true} placeholder="Documento" />{/*//AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA PONERLE LEN MINIMO DE 8*/}
->>>>>>> de83a25de13f9bc86c13dd545a2ac3528741152d
                 </Form.Item>
 
                 <Button //Submit button
