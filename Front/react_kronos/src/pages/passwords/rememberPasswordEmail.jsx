@@ -8,6 +8,11 @@ const { Title, Text } = Typography;
 
 export default function Login() {
 
+    const handleBackToMenu = () => {
+        navigate('/'); // Asume que tienes una ruta al menú principal
+    };
+
+
     const onFinish = (values) => {
         console.log('Received values of form: ', values);
     };
@@ -56,7 +61,7 @@ export default function Login() {
                     </Form.Item>
 
                     <div style={{ textAlign: 'center' }}>
-                        <Button type="link" style={{ padding: 0, fontSize: '14px' }}>
+                        <Button type="link" style={{ padding: 0, fontSize: '14px' }} onClick={handleBackToMenu}>
                             Volver al menu
                         </Button>
                     </div>

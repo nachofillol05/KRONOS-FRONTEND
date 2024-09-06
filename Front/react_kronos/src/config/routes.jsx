@@ -45,7 +45,7 @@ export const routes = [
         path: "/",
         exact: true,
         private: true,
-        layout: Navegacion,
+        layout: Landig,
         component: Home,
 
     },

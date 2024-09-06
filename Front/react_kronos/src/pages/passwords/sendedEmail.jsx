@@ -13,7 +13,7 @@ export default function Login() {
     const primaryColor = token.colorPrimary;
 
     const handleBackToMenu = () => {
-        navigate('/menu'); // Asume que tienes una ruta al menú principal
+        navigate('/'); // Asume que tienes una ruta al menú principal
     };
 
     return (
