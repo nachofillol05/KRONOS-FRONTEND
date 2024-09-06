@@ -67,7 +67,7 @@ class News extends React.Component {
   <div className="tiles-item-inner has-shadow">
   <figure className="news-item-image m-0">
   <Image
-  src={require('./../../assets/images/news-image-01.jpg')}
+  src={require('./../../assets/images/control.jpg')}
   alt="News 01"
   width={344}
   height={194} />
@@ -75,7 +75,7 @@ class News extends React.Component {
   <div className="news-item-content">
   <div className="news-item-body">
   <h3 className="news-item-title h4 mt-0 mb-8">
-  <a href="https://cruip.com">Mejor control</a>
+  <a>Mejor control</a>
   </h3>
   <p className="mb-16 text-sm">
   Obten mejor control y administración sobre tu personal.
@@ -89,7 +89,7 @@ class News extends React.Component {
   <div className="tiles-item-inner has-shadow">
   <figure className="news-item-image m-0">
   <Image
-  src={require('./../../assets/images/news-image-02.jpg')}
+  src={require('./../../assets/images/scheduleimg')}
   alt="News 02"
   width={344}
   height={194} />
@@ -97,7 +97,7 @@ class News extends React.Component {
   <div className="news-item-content">
   <div className="news-item-body">
   <h3 className="news-item-title h4 mt-0 mb-8">
-  <a href="https://cruip.com">Horarios claros</a>
+  <a>Horarios claros</a>
   </h3>
   <p className="mb-16 text-sm">
   Crea horarios claros y fáciles de comprender para ti y para tu equipo.
@@ -111,7 +111,7 @@ class News extends React.Component {
   <div className="tiles-item-inner has-shadow">
   <figure className="news-item-image m-0">
   <Image
-  src={require('./../../assets/images/news-image-03.jpg')}
+  src={require('./../../assets/images/configuration.png')}
   alt="News 03"
   width={344}
   height={194} />
@@ -119,7 +119,7 @@ class News extends React.Component {
   <div className="news-item-content">
   <div className="news-item-body">
   <h3 className="news-item-title h4 mt-0 mb-8">
-  <a href="https://cruip.com">Configuracion directa</a>
+  <a>Configuracion directa</a>
   </h3>
   <p className="mb-16 text-sm">
   Elige como administrar tu equipo con una configuracion clara, conscisa y fácil de usar.
