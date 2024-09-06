@@ -26,7 +26,8 @@ export default function Personal() {
   const [tipoDocumento, setTipoDocumento] = useState(null);
   const [documento, setDocumento] = useState(null);
   const [activeFilter, setActiveFilter] = useState('Profesores');
-  const [courses, setCourse] = useState('');
+  const [courses, setCourses] = useState('');
+  const [course,setCourse]=useState('');
   const [recargar, setRecargar] = useState(false);
 
   const DescargarExcel = () => {
@@ -77,14 +78,39 @@ export default function Personal() {
       "Buscar personal"
     );
   };
+  const ok=(body,values,options)=>{
+    console.log("dni entra a 200");
+    console.log("dni no encontrado:", body);
+    console.log("Tipo documentos: ", options);
+    const selectedItem = options.find(
+      (option) => option.value === values.tipoDni
+    );
+    console.log("Selected item:", selectedItem);
+    showDrawer(
+      <FormCreateWorker
+        tipoDocumento={selectedItem.label}
+        tipoDocumentoId={selectedItem.value}
+        documento={values.documento}
+        handleSubmit={handleSubmit}
+        handleVolver={handleVolver}
+      />,
+      "Agregar Personal"
+    );
+  }
 
+  const showModal = (body,values,options) => {
+    Modal.confirm({
+        title: 'Creacion de personal',
+        content: (
+            <p>Este documento no le pertenece a ningun personal.¿Quiere crear uno?</p>
+        ),
+        closable: true,
+        okText: 'Confirmar',
+        onOk: () => ok(body,values,options),
+        cancelText: 'Cancelar',
+    });
+};
 
-  /*const showInfoWorker = (documento) => {
-        
-
-        
-    };
-    */
 
   const handleSearch = (formRef, options) => {
     formRef.current
@@ -117,23 +143,8 @@ export default function Personal() {
                 "Información del Trabajador"
               );
             } else if (status === 200) {
-              console.log("dni entra a 200");
-              console.log("dni no encontrado:", body);
-              console.log("Tipo documentos: ", options);
-              const selectedItem = options.find(
-                (option) => option.value === values.tipoDni
-              );
-              console.log("Selected item:", selectedItem);
-              showDrawer(
-                <FormCreateWorker
-                  tipoDocumento={selectedItem.label}
-                  tipoDocumentoId={selectedItem.value}
-                  documento={values.documento}
-                  handleSubmit={handleSubmit}
-                  handleVolver={handleVolver}
-                />,
-                "Agregar Personal"
-              );
+              showModal(body,values,options);
+              
             }
           })
           .catch((error) => {
@@ -186,7 +197,6 @@ export default function Personal() {
           documentType: values.tipoDocumento,
           email: values.email,
           phone: values.telefono,
-          password: values.documento,
         });
         console.log("Body: ", body);
         setLoading(true);
@@ -258,7 +268,7 @@ export default function Personal() {
           value: curs.id,
           label: curs.name,
         }));
-        setCourse(courses);
+        setCourses(courses);
       })
       .catch((error) => console.error("Error fetching data:", error));
   }, []);
@@ -330,7 +340,7 @@ export default function Personal() {
     } else if (activeFilter === 'Preceptores') {
         const url = new URL(`http://127.0.0.1:8000/api/preceptors`);
         if (searchName) url.searchParams.append('search', searchName);
-        //if (year) url.searchParams.append('year_id', year);
+        if (course) url.searchParams.append('year_id', course);
         fetch(url.toString(), {
             method: 'GET',
             headers: {
@@ -374,7 +384,7 @@ export default function Personal() {
         setTeachers(data);
       })
       .catch((error) => console.error('Error fetching data:', error));
-  }}, [activeFilter, searchName, subject, courses, recargar]);
+  }}, [activeFilter, searchName, subject, course, recargar]);
 
   const columns = [
     { title: "Apellido", dataIndex: "last_name", key: "Apellido", width: 150 },
@@ -467,7 +477,7 @@ export default function Personal() {
             width: 300,
           }}
           placeholder="Buscar Personal"
-          onPressEnter={onChangePersonal}
+          onPressEnter={onChangePersonal} //VEEEEEEEEEEEER DE CAMBIAR POR UN ONCHANGE O SI EXISTE UN ONFINALCHANGE
           allowClear
         />
       </div>

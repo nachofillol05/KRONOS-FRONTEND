@@ -75,7 +75,7 @@ export default function EventsPage() {
   }, []);
 
   useEffect(() => {
-    const url = new URL('http://127.0.0.1:8000/api/events/');
+    const url = new URL('http://127.0.0.1:8000/api/events/?role='+ sessionStorage.getItem('rol'));
     if (date) {
         url.searchParams.append('maxDate', date);
     }
@@ -85,6 +85,7 @@ export default function EventsPage() {
     if (nombre) {
         url.searchParams.append('name', nombre);
     }
+    console.log(url)
     fetch(url.toString(), {
         method: "GET",
         headers: {
@@ -308,7 +309,6 @@ export default function EventsPage() {
     setDate(encodeURIComponent(dateString))
   }
 
-  //cambiar event.type_event.name ponerlo entre llaves
   return (
     <>
       {contextHolder}
@@ -364,7 +364,6 @@ export default function EventsPage() {
     const eventEndDate = moment(event.endDate).utc().format('YYYY-MM-DD');
     const todayDate = moment(today).utc().format('YYYY-MM-DD');
     
-
     if (eventEndDate < todayDate) {
       return "Finalizado";
     } else if (eventStartDate > todayDate) {
@@ -378,7 +377,8 @@ export default function EventsPage() {
     const isUserAffiliated = event.affiliated_teachers.some(teacher => teacher.id === profileData.id);
     const roles = event.roles.map(role => role.name);
     const rol = sessionStorage.getItem('rol');
-    console.log(roles)
+    console.log(roles);
+    console.log(rol);
     const mostrar = (() => {
       if (eventStatus === "Pendiente" && !isUserAffiliated && roles.includes(rol)) {
         return "Adherirse al evento";
@@ -430,7 +430,7 @@ export default function EventsPage() {
             
             <InfoCircleOutlined 
               key="details" 
-              onClick={() => showDrawer(<InfoEvent estado={eventStatus} event={event} closeDrawer={closeDrawer} showError={showError} />, "Detalles del evento")} 
+              onClick={() => showDrawer(<InfoEvent estado={eventStatus} event={event} closeDrawer={closeDrawer} closeDrawerDelete={closeDrawerDelete} showError={showError} />, "Detalles del evento")} 
             />
           </Tooltip>,
 
@@ -472,7 +472,7 @@ export default function EventsPage() {
           tooltip="Agregar una evento"
           onClick={() => showDrawer(<FormCreateEvent handleVolver={handleVolver} handleSubmit={handleSubmit} />, "Agregar un nuevo evento")}
         />
-
+        </>) : null}
         <Drawer
           width={600}
           title={drawerTitle}
@@ -490,7 +490,6 @@ export default function EventsPage() {
         >
           <div style={{ width: "100%", height: "100%" }}>{drawerContent}</div>
         </Drawer>
-        </>) : null}
     </>
   );
 }
