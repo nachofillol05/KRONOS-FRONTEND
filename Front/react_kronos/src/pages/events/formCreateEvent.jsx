@@ -8,13 +8,6 @@ const dateFormat = 'DD/MM/YYYY';
 const { RangePicker } = DatePicker;
 const { TextArea } = Input;
 
-const roles = [
-    { value: '1', label: 'Profesor' },
-    { value: '2', label: 'Directivo' },
-    { value: '3', label: 'Preceptor' },
-];
-
-
 export default function FormCreateEvent({ handleSubmit, handleVolver }) {
     const [types, setTypes] = useState([]);
     const [form] = Form.useForm();
@@ -44,6 +37,7 @@ export default function FormCreateEvent({ handleSubmit, handleVolver }) {
                 label: rol.name,
             }));
             setRoles(rols);
+            console.log(rols);
         })
         .catch(error => console.error('Error fetching data:', error));
     }, []);

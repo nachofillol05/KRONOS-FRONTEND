@@ -26,7 +26,9 @@ export default function Personal() {
   const [tipoDocumento, setTipoDocumento] = useState(null);
   const [documento, setDocumento] = useState(null);
   const [activeFilter, setActiveFilter] = useState('Profesores');
-  const [courses, setCourse] = useState('');
+  const [courses, setCourses] = useState('');
+  const [course,setCourse]=useState('');
+  const [recargar, setRecargar] = useState(false);
 
   const DescargarExcel = () => {
     console.log('Descargando...');
@@ -60,9 +62,9 @@ export default function Personal() {
   };
 
 
-  const showEspecificWorker = (dni) => {
+  const showEspecificWorker = (id) => {
     showDrawer(
-      <EspecificWorker dni={dni} onClose={onClose} />, 'Información del trabajador'
+      <EspecificWorker id={id} onClose={onClose} />, 'Información del trabajador'
     )
   }
 
@@ -76,14 +78,39 @@ export default function Personal() {
       "Buscar/agregar personal."
     );
   };
+  const ok=(body,values,options)=>{
+    console.log("dni entra a 200");
+    console.log("dni no encontrado:", body);
+    console.log("Tipo documentos: ", options);
+    const selectedItem = options.find(
+      (option) => option.value === values.tipoDni
+    );
+    console.log("Selected item:", selectedItem);
+    showDrawer(
+      <FormCreateWorker
+        tipoDocumento={selectedItem.label}
+        tipoDocumentoId={selectedItem.value}
+        documento={values.documento}
+        handleSubmit={handleSubmit}
+        handleVolver={handleVolver}
+      />,
+      "Agregar Personal"
+    );
+  }
 
+  const showModal = (body,values,options) => {
+    Modal.confirm({
+        title: 'Creacion de personal',
+        content: (
+            <p>Este documento no le pertenece a ningun personal.¿Quiere crear uno?</p>
+        ),
+        closable: true,
+        okText: 'Confirmar',
+        onOk: () => ok(body,values,options),
+        cancelText: 'Cancelar',
+    });
+};
 
-  /*const showInfoWorker = (documento) => {
-        
-
-        
-    };
-    */
 
   const handleSearch = (formRef, options) => {
     formRef.current
@@ -106,34 +133,18 @@ export default function Personal() {
           )
           .then(({ status, body }) => {
             if (status === 400) {
-              console.log("dni entra a 400");
-              console.log("Dni encontrado:", body);
               showDrawer(
                 <InfoWorker
                   user={body.user}
                   handleVolver={handleVolver}
                   handleContactar={() => showDrawer(<ContacWorker handleVolver={handleVolver} user={body.user} />, 'Contacata con el trabajador' )}
+                  onClose={onClose}
                 />,
                 "Información del Trabajador"
               );
             } else if (status === 200) {
-              console.log("dni entra a 200");
-              console.log("dni no encontrado:", body);
-              console.log("Tipo documentos: ", options);
-              const selectedItem = options.find(
-                (option) => option.value === values.tipoDni
-              );
-              console.log("Selected item:", selectedItem);
-              showDrawer(
-                <FormCreateWorker
-                  tipoDocumento={selectedItem.label}
-                  tipoDocumentoId={selectedItem.value}
-                  documento={values.documento}
-                  handleSubmit={handleSubmit}
-                  handleVolver={handleVolver}
-                />,
-                "Agregar Personal"
-              );
+              showModal(body,values,options);
+              
             }
           })
           .catch((error) => {
@@ -186,9 +197,9 @@ export default function Personal() {
           documentType: values.tipoDocumento,
           email: values.email,
           phone: values.telefono,
-          password: values.documento,
         });
         console.log("Body: ", body);
+        setLoading(true);
         fetch("http://localhost:8000/api/Register/", {
           method: "POST",
           headers: {
@@ -198,18 +209,18 @@ export default function Personal() {
           },
           body: body,
         }).then((response) => {
-          if (!response.ok) {
-            console.log("Error:", response);
-            throw new Error("Error al crear el personal");
+          if (response.status === 201) {
+            setLoading(false);
+            onClose();
+            showMessage("success", "Usuario creado con éxito");
+            setRecargar(!recargar);
+            
+            return response.json();  
+          } else if (response.status === 400) {
+            showMessage("error", "Mail ya registrado");
           }
-          console.log("Response:", response);
-          return response.json();
-        });
-        setMessageConfig({
-          type: "success",
-          content: "Personal creado con exito",
-        });
-        onClose();
+      })
+       
       })
       .catch((errorInfo) => {
         setMessageConfig({
@@ -257,7 +268,7 @@ export default function Personal() {
           value: curs.id,
           label: curs.name,
         }));
-        setCourse(courses);
+        setCourses(courses);
       })
       .catch((error) => console.error("Error fetching data:", error));
   }, []);
@@ -297,72 +308,83 @@ export default function Personal() {
     }
   };
     //SOLO PARA TEACHERSSSSSSSSSSSSSSSS
-        useEffect(() => {
-            if (activeFilter === 'Profesores') {
-                const url = new URL('http://127.0.0.1:8000/api/teachers/');
-                if (searchName) url.searchParams.append('search_name', searchName);
-                if (subject) url.searchParams.append('subject_id', subject);
-    
-                setLoading(true);
-                fetch(url.toString(), {
-                    method: 'GET',
-                    headers: {
-                        'Authorization': 'Token ' + localStorage.getItem('token'),
-                        'School-ID': sessionStorage.getItem('actual_school'),
-                    },
-                })
-                .then((response) => {
-                    if (!response.ok) {
-                        setTeachers([]);
-                        return;
-                    }
-                    return response.json();
-                })
-                .then((data) => {
-                  setTeachers(data);
-                  setLoading(false);
-                })
-                .catch((error) => {
-                    setLoading(false);
-                });
-            } else if (activeFilter === 'Preceptores') {
-                const url = new URL(`http://127.0.0.1:8000/api/preceptors`);
-                if (searchName) url.searchParams.append('search', searchName);
-                //if (year) url.searchParams.append('year_id', year);
-                fetch(url.toString(), {
-                    method: 'GET',
-                    headers: {
-                        'Authorization': 'Token ' + localStorage.getItem('token'),
-                        'School-ID': sessionStorage.getItem('actual_school'),
-                    },
-                })
-                .then((response) => {
-                  if (!response.ok) {
-                      setTeachers([]);
-                      return;
-                  }
-                  return response.json();
-              })
-              .then((data) => {
-                  console.log(data);
-                  setTeachers(data);
-                })
-                .catch((error) => console.error('Error fetching data:', error));
+  useEffect(() => {
+    if (activeFilter === 'Profesores') {
+        const url = new URL('http://127.0.0.1:8000/api/teachers/');
+        if (searchName) url.searchParams.append('search_name', searchName);
+        if (subject) url.searchParams.append('subject_id', subject);
+
+        setLoading(true);
+        fetch(url.toString(), {
+            method: 'GET',
+            headers: {
+                'Authorization': 'Token ' + localStorage.getItem('token'),
+                'School-ID': sessionStorage.getItem('actual_school'),
+            },
+        })
+        .then((response) => {
+            if (!response.ok) {
+                setTeachers([]);
+                return;
             }
-            else if (activeFilter === 'Directivos') {
-                const schools = JSON.parse(localStorage.getItem('schools') || '[]');
-                const actualSchoolPk = parseInt(sessionStorage.getItem('actual_school'), 10);
-                if (schools && actualSchoolPk) {
-                    const selectedSchool = schools.find(school => school.pk === actualSchoolPk);
-                    if (selectedSchool.directives.length === 0) {
-                      setTeachers([]);
-                      return;
-                    }
-                    setTeachers(selectedSchool.directives);
-                    
+            return response.json();
+        })
+        .then((data) => {
+          console.log(data);
+          setTeachers(data);
+          setLoading(false);
+        })
+        .catch((error) => {
+            setLoading(false);
+        });
+    } else if (activeFilter === 'Preceptores') {
+        const url = new URL(`http://127.0.0.1:8000/api/preceptors`);
+        if (searchName) url.searchParams.append('search', searchName);
+        if (course) url.searchParams.append('year_id', course);
+        fetch(url.toString(), {
+            method: 'GET',
+            headers: {
+                'Authorization': 'Token ' + localStorage.getItem('token'),
+                'School-ID': sessionStorage.getItem('actual_school'),
+            },
+        })
+        .then((response) => {
+          if (!response.ok) {
+              setTeachers([]);
+              return;
+          }
+          return response.json();
+      })
+      .then((data) => {
+          console.log(data);
+          setTeachers(data);
+        })
+        .catch((error) => console.error('Error fetching data:', error));
+    }
+    else if (activeFilter === 'Directivos') {
+      const url = new URL(`http://127.0.0.1:8000/api/directives`);
+      if (searchName) url.searchParams.append('search', searchName);
+      //if (year) url.searchParams.append('year_id', year);
+      fetch(url.toString(), {
+          method: 'GET',
+          headers: {
+              'Authorization': 'Token ' + localStorage.getItem('token'),
+              'School-ID': sessionStorage.getItem('actual_school'),
+          },
+      })
+      .then((response) => {
+        if (!response.ok) {
+            setTeachers([]);
+            return;
         }
-            }
-        }, [activeFilter, searchName, subject, courses]);
+        return response.json();
+    })
+    .then((data) => {
+        console.log(data);
+        setTeachers(data);
+      })
+      .catch((error) => console.error('Error fetching data:', error));
+  }}, [activeFilter, searchName, subject, course, recargar]);
 
   const columns = [
     { title: "Apellido", dataIndex: "last_name", key: "Apellido", width: 150 },
@@ -455,7 +477,7 @@ export default function Personal() {
             width: 300,
           }}
           placeholder="Buscar Personal"
-          onPressEnter={onChangePersonal}
+          onPressEnter={onChangePersonal} //VEEEEEEEEEEEER DE CAMBIAR POR UN ONCHANGE O SI EXISTE UN ONFINALCHANGE
           allowClear
         />
       </div>
@@ -463,7 +485,7 @@ export default function Personal() {
         bordered
         onRow={(user) => ({
           onClick: () => {
-            showEspecificWorker(user.document);
+            showEspecificWorker(user.id);
           },
         })}
         pagination={false}

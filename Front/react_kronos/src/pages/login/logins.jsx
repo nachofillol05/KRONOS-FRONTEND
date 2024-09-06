@@ -13,20 +13,20 @@ export default function Login() {
     useEffect(() => {
         const token = localStorage.getItem('token');
         if (token) {
-                const actualSchool =JSON.parse(localStorage.getItem('schools'))[0].pk;
-                sessionStorage.setItem('actual_school',actualSchool);
-                    fetch('http://127.0.0.1:8000/api/school/myroles/', {
-                        method: "GET",
-                        headers: {
-                          'Authorization': 'Token ' + token,
-                          'School-ID': actualSchool,
-                        },
-                      }).then(response => response.json())
-                        .then(data => {
-                            localStorage.setItem('roles', JSON.stringify(data.roles));
-                            sessionStorage.setItem('rol',data.roles[0]);
-                            navigate('/horarios');
-                            });
+            const actualSchool = JSON.parse(localStorage.getItem('schools'))[0].pk;
+            sessionStorage.setItem('actual_school', actualSchool);
+            fetch('http://127.0.0.1:8000/api/school/myroles/', {
+                method: "GET",
+                headers: {
+                    'Authorization': 'Token ' + token,
+                    'School-ID': actualSchool,
+                },
+            }).then(response => response.json())
+                .then(data => {
+                    localStorage.setItem('roles', JSON.stringify(data.roles));
+                    sessionStorage.setItem('rol', data.roles[0]);
+                    navigate('/horarios');
+                });
         } else {
             console.log('No hay token almacenado');
         }
@@ -47,22 +47,6 @@ export default function Login() {
                 "password": passwordValue
             })
         })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-        })
-        .then(responseData => {
-            localStorage.setItem('token', responseData.Token); 
-
-            fetch('http://127.0.0.1:8000/api/user_schools/', {
-                method: "GET",
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Token ' + localStorage.getItem('token'),
-                }
-            })
             .then(response => {
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
@@ -70,37 +54,53 @@ export default function Login() {
                 return response.json();
             })
             .then(responseData => {
+                localStorage.setItem('token', responseData.Token);
 
-                localStorage.setItem('schools',JSON.stringify(responseData)); 
-                sessionStorage.setItem('actual_school',JSON.stringify(responseData[0].pk));
-                setShowError(false);
-                fetch('http://127.0.0.1:8000/api/school/myroles/', {
+                fetch('http://127.0.0.1:8000/api/user_schools/', {
                     method: "GET",
                     headers: {
-                      'Authorization': 'Token ' + localStorage.getItem('token'),
-                      'School-ID': sessionStorage.getItem('actual_school'),
-                    },
-                  }).then(response => response.json())
-                    .then(data => {
-                            localStorage.setItem('roles', JSON.stringify(data.roles));
-                            sessionStorage.setItem('rol',data.roles[0]);
-                        console.log('Login success');
-                        navigate('/horarios');
-                        });
-                
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Token ' + localStorage.getItem('token'),
+                    }
+                })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.json();
+                    })
+                    .then(responseData => {
+
+                        localStorage.setItem('schools', JSON.stringify(responseData));
+                        sessionStorage.setItem('actual_school', JSON.stringify(responseData[0].pk));
+                        setShowError(false);
+                        fetch('http://127.0.0.1:8000/api/school/myroles/', {
+                            method: "GET",
+                            headers: {
+                                'Authorization': 'Token ' + localStorage.getItem('token'),
+                                'School-ID': sessionStorage.getItem('actual_school'),
+                            },
+                        }).then(response => response.json())
+                            .then(data => {
+                                localStorage.setItem('roles', JSON.stringify(data.roles));
+                                sessionStorage.setItem('rol', data.roles[0]);
+                                console.log('Login success');
+                                navigate('/horarios');
+                            });
+
+                    })
+                    .catch(error => {
+                        console.error('Login failed:', error);
+                        setShowError(true);
+                    });
+                // ACA OBTENDRIA LOS ROLES DEL USUARIO
+                /*sessionStorage.setItem('roles',JSON.stringify(responseData));
+                sessionStorage.setItem('roles',JSON.stringify(responseData[0].pk));*/
             })
             .catch(error => {
                 console.error('Login failed:', error);
                 setShowError(true);
-            });         
-            // ACA OBTENDRIA LOS ROLES DEL USUARIO
-            /*sessionStorage.setItem('roles',JSON.stringify(responseData));
-            sessionStorage.setItem('roles',JSON.stringify(responseData[0].pk));*/
-        })
-        .catch(error => {
-            console.error('Login failed:', error);
-            setShowError(true);
-        });
+            });
     }
 
 

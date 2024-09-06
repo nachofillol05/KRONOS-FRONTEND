@@ -6,6 +6,7 @@ import './PrivateRoute.scss';
 const PrivateRoute = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(null);
   const navigate = useNavigate();
+  const [mailVerified, setMailVerified] = useState(null);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -27,12 +28,28 @@ const PrivateRoute = ({ children }) => {
             "token": localStorage.getItem('token'),
           })
         });
-
         if (response.ok) {
-          setIsAuthenticated(true);
-          response.json().then(data => {
-            localStorage.setItem('user', JSON.stringify(data));
-          });
+        fetch('http://127.0.0.1:8000/api/isVerified/', {
+            method: "GET",
+            headers: {
+                'Authorization': 'Token ' + localStorage.getItem('token'),
+                'School-ID': sessionStorage.getItem('actual_school'),
+            },
+        }).then(response => response.json())
+            .then(data => {
+                setIsAuthenticated(true);
+                setMailVerified(data.user_is_verified);
+                if(data.user_is_verified){
+                    response.json().then(data => {
+                        localStorage.setItem('user', JSON.stringify(data));
+                    });
+                } else {
+                  setMailVerified(false);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
         } else {
           setIsAuthenticated(false);
           return navigate('/landing');
@@ -47,7 +64,7 @@ const PrivateRoute = ({ children }) => {
     verifyToken();
   }, [navigate]);
 
-  if (isAuthenticated === null) {
+  if (isAuthenticated === null || mailVerified === null) {
     return (
       <div className="spinner-container">
         <Spin size="large" />
@@ -55,7 +72,13 @@ const PrivateRoute = ({ children }) => {
     );
   }
 
-  return isAuthenticated ? children : navigate('/login');
+  if (isAuthenticated && mailVerified) {
+    return children;
+  } else if (!isAuthenticated ) {
+    return navigate('/landing');
+  } else {
+    return navigate('/mailenviado');
+  }
 };
 
 export default PrivateRoute;

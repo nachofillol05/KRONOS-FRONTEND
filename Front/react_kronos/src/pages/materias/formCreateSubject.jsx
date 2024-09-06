@@ -29,11 +29,12 @@ export default function FormCreateSubject({ handleSubmit, onClose, cursos, value
                         rules={[
                             {
                                 required: true,
+                                
                                 message: '',
                             },
                         ]}
                     >
-                        <Input size='large' autoSize placeholder="Abreviacion" count={{ show: true, max: 5 }} />
+                        <Input size='large' autoSize placeholder="Abreviacion" count={{ show: true, max: 3 }} />
                     </Form.Item>
                 </Space.Compact>
                 <Form.Item
