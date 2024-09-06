@@ -73,7 +73,7 @@ export default function Personal() {
   const handleVolver = () => {
     showDrawer(
       <FormSearchDni handleSearch={handleSearch} />,
-      "Buscar personal"
+      "Buscar/agregar personal."
     );
   };
 

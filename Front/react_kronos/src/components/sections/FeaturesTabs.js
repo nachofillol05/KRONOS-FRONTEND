@@ -47,12 +47,12 @@ class FeaturesTabs extends React.Component {
     // Agrega un segundo conjunto de datos de encabezado
     const sectionHeader1 = {
       title: '¿Que es Kronos?',
-      paragraph: 'Texto de ejemplo'
+      paragraph: 'Kronos es una herramienta que aspira a revolucionar el manejo y administracion de horarios junto su personal. Principalmente trabajamos con isntituciones académicas, pero Kronos puede ser utilizado también en pequeñas empresas o cualquiera que pueda utilizar nuestros servicios.'
     };
 
     const sectionHeader2 = {
       title: 'Nuestros Colegios',
-      paragraph: 'Texto de ejemplo'
+      paragraph: 'Estas son las instituciones educativas con las que estamos asociados.'
     };
 
     return (
@@ -117,6 +117,7 @@ class FeaturesTabs extends React.Component {
                   width={896}
                   height={504} />
               </TabPanel>
+              
               <TabPanel id="tab-d">
                 <Image
                   className="has-shadow"
