@@ -53,10 +53,11 @@ export default function FormSearchDni({ handleSearch }) {
                         {
                             required: true,
                             message: 'Por favor ingrese el documento',
+                            min: 8,
                         },
                     ]}
                 >
-                    <Input size='large' type="number" autoSize={true} placeholder="Documento" />
+                    <Input size='large' type="number" autoSize={true} placeholder="Documento" />{/*//AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA PONERLE LEN MINIMO DE 8*/}
                 </Form.Item>
                 <Button
                     style={{ width: '10%' }}

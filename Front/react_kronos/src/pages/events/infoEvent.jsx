@@ -303,6 +303,7 @@ export default function InfoWorker({ event, estado, closeDrawer,closeDrawerDelet
                     />
                 </div>         
             </Flex>
+            {sessionStorage.getItem('rol') === 'Directivo'?(
             <Flex gap={'10px'} justify='end'>
                 <Button
                     style={{ width: '100px', marginRight: '10px' }}
@@ -340,6 +341,7 @@ export default function InfoWorker({ event, estado, closeDrawer,closeDrawerDelet
                     )
                 )}
             </Flex>
+            ):null}
         </Form>
     );
 }

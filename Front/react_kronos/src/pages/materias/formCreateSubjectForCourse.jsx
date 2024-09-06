@@ -1,10 +1,56 @@
-import React from 'react';
+import React, { useEffect,useState } from 'react';
 import { Form, Input, Button, Tooltip, Space, Select, ColorPicker, Flex } from 'antd';
 import { InfoCircleOutlined, RollbackOutlined, PlusOutlined } from '@ant-design/icons';
 const { TextArea } = Input;
 
-export default function FormCreateSubject({ handleSubmit, onClose, cursos, value, setValue }) {
+export default function FormCreateSubject({ handleSubmit, onClose, cursos, value, setValue}) {
+    const [materiasSelect, setMateriasSelect] = useState([]);
+    const [materiasSeleccionada, setMateriasSeleccionada] = useState(null);
+    const [materiasCompleta, setMateriasCompleta] = useState([]);
+    const [cursosSelect, setCursosSelect] = useState([]);
     const [form] = Form.useForm();
+    useEffect(() => {
+    const url = new URL('http://127.0.0.1:8000/api/subjects/');
+        fetch(url.toString(), {
+            method: "GET",
+            headers: {
+                'Authorization': 'Token ' + localStorage.getItem('token'),
+                'School-ID': sessionStorage.getItem('actual_school'),
+            },
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                setMateriasCompleta(data);
+                setMateriasSelect(data.map(materia => ({label: materia.name, value: materia.id})));
+            })
+            .catch(error => console.error('Error fetching data:', error));
+    }, []);
+
+    useEffect(() => {
+        if (materiasSeleccionada !== null) {
+            const cursosId = cursos.map(curso => curso.id);
+            const materiaSeleccionadaCompleta = materiasCompleta.find(materia => materiasSeleccionada === materia.id);
+            if (materiaSeleccionadaCompleta && Array.isArray(materiaSeleccionadaCompleta.courses)) {
+                const cursosAsignadosId = materiaSeleccionadaCompleta.courses.map(curso => curso.id);
+                const cursosNoAsignados = cursos
+                    .filter(curso => !cursosAsignadosId.includes(curso.id))
+                    .map(curso => ({ label: curso.name, value: curso.id }));
+                    setCursosSelect(cursosNoAsignados);
+            } else {
+                console.log('Materia seleccionada no encontrada o no tiene cursos asociados');
+                console.log('la materia seleccionada esta asignada a todos los cursos');
+            }
+        }
+    }, [materiasSeleccionada, cursos, materiasCompleta]);
+    
+    
+    
+    
     return (
         <Form form={form} layout="vertical" >
             <Flex gap={10}>
@@ -21,8 +67,9 @@ export default function FormCreateSubject({ handleSubmit, onClose, cursos, value
                 >
                     <Select
                         size='large'
+                        onChange={(value) => setMateriasSeleccionada(value)}
                         placeholder="Materia"
-                        options={cursos}
+                        options={materiasSelect}
                     />
                 </Form.Item>
                 <Form.Item
@@ -37,9 +84,10 @@ export default function FormCreateSubject({ handleSubmit, onClose, cursos, value
                     ]}
                 >
                     <Select
+                        disabled={materiasSeleccionada == null}
                         size='large'
                         placeholder="Curso"
-                        options={cursos}
+                        options={cursosSelect}
                     />
                 </Form.Item>
                 <Form.Item

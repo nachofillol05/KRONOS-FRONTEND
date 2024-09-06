@@ -77,6 +77,8 @@ export default function Materias() {
     const [messageApi, contextHolder] = message.useMessage();
     const [messageConfig, setMessageConfig] = useState({ type: '', content: '' });
     const [expandedRowKeys, setExpandedRowKeys] = useState([]);
+    const [recargar, setRecargar] = useState(false);
+    const [CursoCompleto, SetCursoCompleto] = useState([]);
 
     const showModal = (record) => {
         if (!('children' in record)) {  
@@ -116,10 +118,7 @@ export default function Materias() {
     const handleSubmit = (form) => {
         form.validateFields()
             .then(values => {
-                
-                onClose(); 
                 const hexColor = values.color.toHexString();
-
                 const body = {
                     name: values.materia,
                     abbreviation: values.abreviacion,
@@ -136,8 +135,8 @@ export default function Materias() {
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify(body),
-
                 })
+                setRecargar(!recargar);
                 onClose();
             })
             .catch(errorInfo => {
@@ -146,6 +145,39 @@ export default function Materias() {
                 setMessageConfig({ type: 'error', content: 'Por favor, complete todos los campos.' });
             });
     };
+
+    const handleSubmitConectarCurso = (form) => {
+        form.validateFields()
+            .then(values => {
+                console.log('entro')
+                console.log('aaaaaaaaaaaa',values)
+                const body = {
+                    subject: values.materia,
+                    course: values.curso,
+                    weeklyHours: values.horasCatedras,
+                    studyPlan: values.planEstudio,
+                };
+                console.log('Formulario completado:', body);
+                fetch('http://127.0.0.1:8000/api/coursesubjects/', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': 'Token ' + localStorage.getItem('token'),
+                        'School-ID': sessionStorage.getItem('actual_school'),
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(body),
+
+                })
+                setRecargar(!recargar);
+                onClose();
+            })
+            .catch(errorInfo => {
+                showMessage('error', 'Por favor, complete todos los campos.');
+
+                setMessageConfig({ type: 'error', content: 'Por favor, complete todos los campos.' });
+            });
+    };
+
 
         const showMessage = (type, content) => {
             switch (type) {
@@ -201,7 +233,7 @@ export default function Materias() {
                         console.log(data);
                     })
                     .catch(error => console.error('Error fetching data:', error));
-            }, [start_time, end_time, Subjectname, teacher]);
+            }, [start_time, end_time, Subjectname, teacher,recargar]);
 
     const columns = [
         { title: 'Nombre', dataIndex: 'name', key: 'name', width: '30%', },
@@ -238,7 +270,7 @@ export default function Materias() {
                     value: curs.id,
                     label: curs.year.name + ' ' + curs.name,
                 }));
-
+                SetCursoCompleto(data);
                 setCursos(courses);
             })
             .catch(error => console.error('Error fetching data:', error));
@@ -310,6 +342,36 @@ export default function Materias() {
         const value = event.target.value;
         setSubjectname(value);
     }
+    
+    const descargarExcel = () => {
+        fetch('http://127.0.0.1:8000/api/subjects/?export=excel', {
+            method: "GET",
+            headers: {
+                Authorization: "Token " + localStorage.getItem("token"),
+                "School-ID": sessionStorage.getItem("actual_school"),
+            },
+            })
+            .then((response) => {
+                if (!response.ok) {
+                throw new Error("Network response was not ok");
+                }
+                return response.blob();
+            })
+            .then((blob) => {
+                const url = window.URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.setAttribute('download', 'Materias.xlsx');
+                document.body.appendChild(link);
+                link.click();
+                link.remove();
+                window.URL.revokeObjectURL(url);
+            })
+            .catch((error) => {
+                console.error("Error al descargar el archivo:", error);
+            });
+    }
+
     return (
         <>
             {contextHolder}
@@ -364,7 +426,7 @@ export default function Materias() {
                         closeIcon={<DownOutlined />}
                         icon={<UpOutlined />}
                     >
-                        <FloatButton icon={<DownloadOutlined />} tooltip="Descargar tabla" />
+                        <FloatButton icon={<DownloadOutlined />} onClick={descargarExcel} tooltip="Descargar tabla" />
                         <FloatButton icon={<FileAddOutlined />} type='primary' tooltip="Agregar una materia"
                             onClick={() => showDrawer(
                                 <FormCreateSubject handleSubmit={handleSubmit} onClose={onClose} cursos={cursos} value={value} setValue={setValue} />,
@@ -373,7 +435,7 @@ export default function Materias() {
                         />
                         <FloatButton icon={<FileSearchOutlined />} type='primary' tooltip="Asignar materia a un curso"
                             onClick={() => showDrawer(
-                                <FormCreateSubjectForCourse handleSubmit={handleSubmit} onClose={onClose} cursos={cursos} value={value} setValue={setValue} />,
+                                <FormCreateSubjectForCourse handleSubmit={handleSubmitConectarCurso} onClose={onClose} cursos={CursoCompleto} value={value} setValue={setValue} />,
                                 'Asignar materia a un curso'
                             )}
                         />

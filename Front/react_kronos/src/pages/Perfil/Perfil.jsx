@@ -29,7 +29,8 @@ export default function Profile() {
         postalCode: selectedSchool.contactInfo.postalCode,
         province: selectedSchool.contactInfo.province,
         street: selectedSchool.contactInfo.street,
-        streetNumber: selectedSchool.contactInfo.streetNumber
+        streetNumber: selectedSchool.contactInfo.streetNumber,
+        logo: selectedSchool.logo,
       });
       setEscuelaCompleta(selectedSchool.logo);
     }
@@ -337,7 +338,7 @@ export default function Profile() {
               style={{ height: '60vh', overflowY: 'auto', padding: '25px' }}
 
             >
-              <Form.Item>
+              <Form.Item  name="name">
                 <Flex align='center' justify='space-between' style={{ width: '100%', height: '50px' }}>
                   <label >Logo del colegio:</label>
                   {isEditing ?
@@ -348,7 +349,7 @@ export default function Profile() {
                   <img
                     width={50}
                     height={50}
-                    src="https://via.placeholder.com/150"
+                    src={escuelaCompleta? 'data:image/png;base64,' +escuelaCompleta : "https://via.placeholder.com/150"} 
                     style={{ borderRadius: '50%' }}
                   />
                 </Flex>

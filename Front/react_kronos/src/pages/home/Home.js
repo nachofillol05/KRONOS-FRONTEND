@@ -13,6 +13,11 @@ const hours = ['1°', '2°', '3°', '4°', '5°', '6°', '7°', '8°', '9°', '1
         '6°A', '6°B', '6°C',
         '7°A', '7°B', '7°C'
     ];
+    const sampleMateria = {
+        value: 'MAT',
+        label: 'Matemática',
+        color: '#FF0000',
+    };
 
     // Inicializando scheduleList con varias materias
     const scheduleList = [

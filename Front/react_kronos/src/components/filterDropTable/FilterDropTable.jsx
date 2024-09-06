@@ -85,7 +85,7 @@ const FilterDropdownTable = ({ options, placeholder, value = [], onChange }) => 
         >
             <Badge count={selectedKeys.length}>
                 <Button size="large">
-                    {placeholder} : {tempSelectedKeys.length} <DownOutlined />
+                    {placeholder} {tempSelectedKeys.length} <DownOutlined />
                 </Button>
             </Badge>
         </Dropdown>
