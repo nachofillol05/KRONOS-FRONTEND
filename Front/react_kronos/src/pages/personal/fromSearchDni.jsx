@@ -23,7 +23,7 @@ export default function FormSearchDni({ handleSearch }) {
                 }));
                 setTipoDocumentos(datos);
                 setDefaultTipoDocumento(datos[0].value);
-                form.setFieldsValue({ tipoDni: datos[0].value });
+                form.setFieldsValue({ tipoDocumento: datos[0].value });
             });
     }, []);
     
@@ -33,7 +33,7 @@ export default function FormSearchDni({ handleSearch }) {
 
                 <Form.Item //Dropdown seleccionar tipo DNI
                     style={{ width: '30%' }}
-                    name="tipoDni"
+                    name="tipoDocumento"
                 >
                     <Select
                         size="large"

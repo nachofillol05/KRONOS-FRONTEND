@@ -116,6 +116,7 @@ export default function Personal() {
     formRef.current
       .validateFields()
       .then((values) => {
+        console.log(values, "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
         fetch("http://localhost:8000/api/create_teacher/", {
           method: "POST",
           headers: {
@@ -123,6 +124,7 @@ export default function Personal() {
             "School-ID": sessionStorage.getItem("actual_school"),
           },
           body: JSON.stringify({
+            documentType:values.tipoDocumento,
             document: values.documento,
           }),
         })

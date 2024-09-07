@@ -8,6 +8,29 @@ export default function InfoWorker({ onClose, handleVolver, handleContactar, use
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [selectedRoles, setSelectedRoles] = useState([]); // Estado para manejar los checkboxes
     const [courses, setCourse] = useState([]);
+    const [roles, setRoles] = useState([]);
+
+    useEffect(() => {
+        fetch(`http://127.0.0.1:8000/api/rolesUser/${user.id}/`, {
+            method: "GET",
+            headers: {
+                Authorization: "Token " + localStorage.getItem("token"),
+                "School-ID": sessionStorage.getItem("actual_school"),
+            },
+        })
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error("Network response was not ok");
+                }
+                return response.json();
+            })
+            .then((data) => {
+                console.log(data.roles)
+                setRoles(data.roles)
+            })
+            .catch((error) => console.error("Error fetching data:", error));
+    }, []);
+
 
     const showModal = () => {
         setSelectedRoles([]); // Desmarca todos los checkboxes al abrir el modal
@@ -71,6 +94,9 @@ export default function InfoWorker({ onClose, handleVolver, handleContactar, use
                     <label>Telefono:  {user.email}</label>
                     <label>Email: {user.email}</label>
                 </Flex>
+                <Flex gap={30}>
+                    <label>Roles: {roles}</label>
+                </Flex>
                 <Divider orientation='left'>Asignaturas</Divider>
                 <List
                     size="small"
@@ -110,9 +136,9 @@ export default function InfoWorker({ onClose, handleVolver, handleContactar, use
                     onChange={handleCheckboxChange} // Maneja los cambios en los checkboxes
                 >
                     <Flex gap={30}>
-                        <Checkbox key={'Profesor'} value="Profesor">Profesor</Checkbox>
-                        <Checkbox key={'Preceptor'} value="Preceptor">Preceptor</Checkbox>
-                        <Checkbox key={'Directivo'} value="Directivo">Directivo</Checkbox>
+                        <Checkbox key={'Profesor'} checked={roles.includes('Profesor')} value="Profesor">Profesor</Checkbox>{/*Esto no anda ver como aplicarlo*/}
+                        <Checkbox key={'Preceptor'} checked={roles.includes('Preceptor')} value="Preceptor">Preceptor</Checkbox>{/*Esto no anda ver como aplicarlo*/}
+                        <Checkbox key={'Directivo'} checked={roles.includes('Directivo')} value="Directivo">Directivo</Checkbox>{/*Esto no anda ver como aplicarlo*/}
                     </Flex>
                 </Checkbox.Group>
 

@@ -4,12 +4,12 @@ import { UserOutlined, FilterOutlined } from '@ant-design/icons';
 import './Calendario.scss';
 
 const subjects = [
-    { abreviation: 'MAT',value: "Matematica",teacher:"Juan", label: 'Matemática', color: '#FF0000', avatar: <Avatar size={'small'} icon={<UserOutlined />} /> },
-    { abreviation: 'LEN',value: "Lengua",teacher:"Pedro", label: 'Lengua', color: '#0000FF', avatar: <Avatar size={'small'} icon={<UserOutlined />} /> },
-    { abreviation: 'BIO',value: "Biologia",teacher:"Manuel", label: 'Biología', color: '#FFFF00', avatar: <Avatar size={'small'} icon={<UserOutlined />} /> },
-    { abreviation: 'QIM',value: "Quimica",teacher:"Monica", label: 'Química', color: '#00FF00', avatar: <Avatar size={'small'} icon={<UserOutlined />} /> },
-    { abreviation: 'MUS',value: "Musica",teacher:"Agustin", label: 'Música', color: '#FF00FF', avatar: <Avatar size={'small'} icon={<UserOutlined />} /> },
-    { abreviation: 'FIS',value: "Fisica",teacher:"Ethel", label: 'Fisica', color: '#808080', avatar: <Avatar size={'small'} icon={<UserOutlined />} /> }
+    { value: 'MAT', label: 'Matemática', color: '#FF0000', avatar: <Avatar size={'small'} icon={<UserOutlined />} /> },
+    { value: 'LEN', label: 'Lengua', color: '#0000FF', avatar: <Avatar size={'small'} icon={<UserOutlined />} /> },
+    { value: 'BIO', label: 'Biología', color: '#FFFF00', avatar: <Avatar size={'small'} icon={<UserOutlined />} /> },
+    { value: 'QIM', label: 'Química', color: '#00FF00', avatar: <Avatar size={'small'} icon={<UserOutlined />} /> },
+    { value: 'MUS', label: 'Música', color: '#FF00FF', avatar: <Avatar size={'small'} icon={<UserOutlined />} /> },
+    { value: 'FIS', label: 'Fisica', color: '#808080', avatar: <Avatar size={'small'} icon={<UserOutlined />} /> }
 ];
 
 const days = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes'];
@@ -20,33 +20,6 @@ export default function Calendario({ materias, mibooleano }) {
     const [selectedItems, setSelectedItems] = useState({});
     const [coursesDinamic, setCoursesDinamic] = useState([]);
     const [modulesData, setModulesData] = useState([]);
-
-
-    const obtenerMateriasModule = (moduleId, courseId) => {
-        // Construir la URL con los parámetros
-        const url = new URL('http://localhost:8000/api/subjectpermodule/');
-        const params = { module_id: moduleId, course_id: courseId };
-        
-        // Agregar los parámetros a la URL
-        Object.keys(params).forEach(key => url.searchParams.append(key, params[key]));
-    
-        // Realizar la solicitud fetch
-        fetch(url, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Token ${localStorage.getItem('token')}`,
-                'School-ID': sessionStorage.getItem('actual_school'),
-            },
-        })
-            .then((response) => response.json())
-            .then((data) => {
-                setModulesData(Object.values(data));
-            })
-            .catch(error => console.error('Error fetching data:', error));
-    }
-
-    
 
     useEffect(() => {
         fetch('http://localhost:8000/api/modules/', {
@@ -60,6 +33,7 @@ export default function Calendario({ materias, mibooleano }) {
             .then((response) => response.json())
             .then((data) => {
                 setModulesData(Object.values(data));
+                console.log(data);
             });
     }, []);
 
@@ -126,7 +100,6 @@ export default function Calendario({ materias, mibooleano }) {
     const memoizedHours = useMemo(() => hours, []);
     const memoizedCourses = useMemo(() => coursesDinamic, [coursesDinamic]);
 
-
     return (
         <div className="Calendario" style={{ margin: 'auto' }}>
             <Row wrap={false}>
@@ -140,7 +113,9 @@ export default function Calendario({ materias, mibooleano }) {
                             <Col className='casilla columna'>{day}</Col>
                             <Col key={dayIndex}>
                             {memoizedHours.map((hour, hourIndex) => (
+                            
                                 <Row className='casilla columna'>{hour}</Row>
+                            
                             ))}
                             </Col>
                         </Row>
@@ -156,26 +131,10 @@ export default function Calendario({ materias, mibooleano }) {
                                         const key = getCellKey(dayIndex, hourIndex, courseIndex);
                                         const selectedSubjectValue = selectedItems[key];
                                         const subject = memoizedSubjects.find(sub => sub.value === selectedSubjectValue);
-
-                                        // Buscar la materia que coincida con el día, módulo y curso
-                                        const matchingMateria = materias.find(materia => 
-                                            materia.day.toLowerCase() === day.toLowerCase() &&
-                                            materia.moduleNumber === parseInt(hour) &&
-                                            materia.course_id === course.value
-                                        );
-
-                                        // Definir el sujeto basado en la materia coincidente
-                                        const displaySubject = matchingMateria ? {
-                                            value: matchingMateria.subject_name,
-                                            abreviation: matchingMateria.subject_abreviation,
-                                            color: matchingMateria.subject_color || 'white',
-                                            avatar: (
-                                                <Avatar size={'small'} icon={<UserOutlined />} />
-                                            ),
-                                            teacher: matchingMateria.nombre,
-                                        } : subject;
-
-                                        //const optionMaterias = obtenerMateriasModule(); // pasar el id del modulo y el id del curso
+                                        //console.log(memoizedSubjects);
+                                        //console.log(hour, day, course);
+                                        //2 Jueves Objectlabel: "2°B",value: 5
+                                        
                                         const menu = (
                                             <Menu onClick={(e) => handleMenuClick(e, key)}>
                                                 {memoizedSubjects.map((subject) => (
@@ -185,17 +144,18 @@ export default function Calendario({ materias, mibooleano }) {
                                                 ))}
                                             </Menu>
                                         );
+
                                         return (
                                             <Col key={key}>
                                                 {mibooleano ? (
                                                     <Dropdown overlay={menu} trigger={['click']}>
                                                         <a className='espacio' style={{
-                                                            color: displaySubject? displaySubject.color: "",
-                                                            backgroundColor: makeColorTransparent(displaySubject? displaySubject.color: "white", 0.1),
+                                                            color: subject ? subject.color : 'black',
+                                                            backgroundColor: subject ? makeColorTransparent(subject.color, 0.1) : null,
                                                         }}>
                                                             <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
-                                                                {displaySubject? displaySubject.avatar : ""}
-                                                                {displaySubject? displaySubject.abreviation: ""}
+                                                                {subject ? subject.avatar : null}
+                                                                {subject ? subject.value : ""}
                                                             </div>
                                                         </a>
                                                     </Dropdown>
@@ -203,11 +163,10 @@ export default function Calendario({ materias, mibooleano }) {
                                                     <Tooltip
                                                         arrow={false}
                                                         trigger={'click'}
-                                                        title={displaySubject ? (
-                                                            <div style={{ color: '#8e96a', display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                                                                <b style={{ color: '#444' }}>{displaySubject.value}</b>
-                                                                <b style={{ color: '#444' }}>{displaySubject.teacher}</b>
-                                                                <p style={{ color: '#444',marginBlock: 5 }}> {`${day} ${hour} módulo, ${course.label}`}</p>
+                                                        title={subject ? (
+                                                            <div style={{ color: '#8e96a3' }}>
+                                                                <b style={{ color: '#444' }}>{subject.label}</b>
+                                                                <p style={{ marginBlock: 5 }}> {`${day} ${hour} módulo, ${course.label}`}</p>
                                                                 <a style={{ color: '#227cae', textDecoration: 'none' }}>
                                                                     <FilterOutlined /> Filtrar por este profesor
                                                                 </a>
@@ -217,12 +176,12 @@ export default function Calendario({ materias, mibooleano }) {
                                                         overlayClassName='calendar-tooltip'
                                                     >
                                                         <a className='espacio' style={{
-                                                            color: displaySubject? displaySubject.color: "",
-                                                            backgroundColor: makeColorTransparent(displaySubject? displaySubject.color: "white", 0.1),
+                                                            color: subject ? subject.color : 'black',
+                                                            backgroundColor: subject ? makeColorTransparent(subject.color, 0.1) : null,
                                                         }}>
                                                             <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
-                                                                {displaySubject? displaySubject.avatar : ""}
-                                                                {displaySubject? displaySubject.abreviation: ""}
+                                                                {subject ? subject.avatar : null}
+                                                                {subject ? subject.value : ""}
                                                             </div>
                                                         </a>
                                                     </Tooltip>

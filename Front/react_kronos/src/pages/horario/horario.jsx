@@ -67,7 +67,7 @@ function Horario({ handleOpenDrawer, handleCloseDrawer }) {
                 </Button>
             </div>
             {/* Pasar el estado editar al calendario */}
-            <CalendarioDirectivo subjects={subjects} mibooleano={editar} />
+            <CalendarioDirectivo materias={subjects} mibooleano={editar} />
             <FloatButton.Group
                 visibilityHeight={1500}
                 trigger="click"
