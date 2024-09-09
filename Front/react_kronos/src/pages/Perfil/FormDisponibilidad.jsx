@@ -50,20 +50,7 @@ export default function FormDisponibilidad({ onClose }) {
             }
         });
     };
-    useEffect(() => {
-        fetch('http://localhost:8000/api//', {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Token ${localStorage.getItem('token')}`,
-                'School-ID': sessionStorage.getItem('actual_school'),
-            },
-        })
-        .then((response) => response.json())
-        .then((data) => {
-            setModulesData(Object.values(data));
-        });
-    }, []);
+    
 
     useEffect(() => {
         fetch('http://localhost:8000/api/modules/', {

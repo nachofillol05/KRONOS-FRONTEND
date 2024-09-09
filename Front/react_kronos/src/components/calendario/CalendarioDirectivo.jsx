@@ -186,7 +186,6 @@ export default function Calendario({ materias, mibooleano }) {
     const days = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes'];
 
     const memoizedSubjects = useMemo(() => subjects, []);
-    const memoizedModules = useMemo(() => modulesData, []);
     const memoizedDays = useMemo(() => days, []);
     const memoizedCourses = useMemo(() => coursesDinamic, [coursesDinamic]);
 
@@ -202,7 +201,7 @@ export default function Calendario({ materias, mibooleano }) {
                             <Row className='casilla esquina'>Hora</Row>
                         </Row>
                         {memoizedDays.map((day) => {
-                            const moduleData = memoizedModules.filter(
+                            const moduleData = modulesData.filter(
                                 (data) => data.day.toLowerCase() === day.toLowerCase()
                             );
                             return (
@@ -223,7 +222,7 @@ export default function Calendario({ materias, mibooleano }) {
                             <Col key={courseIndex}>
                                 <Row className='casilla encabezado'>{course.label}</Row>
                                 {memoizedDays.map((day, dayIndex) => {
-                                    const moduleData = memoizedModules.filter(
+                                    const moduleData = modulesData.filter(
                                         (data) => data.day.toLowerCase() === day.toLowerCase()
                                     );
                                     return (
@@ -284,7 +283,7 @@ export default function Calendario({ materias, mibooleano }) {
                                                                     <div style={{ color: '#8e96a', display: 'flex', flexDirection: 'column', gap: '8px' }}>
                                                                         <b style={{ color: '#444' }}>{displaySubject.value}</b>
                                                                         <b style={{ color: '#444' }}>{displaySubject.teacher}</b>
-                                                                        <p style={{ color: '#444', marginBlock: 5 }}> {`${day} ${module.hour} módulo, ${course.label}`}</p>
+                                                                        <p style={{ color: '#444', marginBlock: 5 }}> {`${day} ${module.moduleNumber} módulo, ${course.label}`}</p>
                                                                         <a style={{ color: '#227cae', textDecoration: 'none' }}>
                                                                             <FilterOutlined /> Filtrar por este profesor
                                                                         </a>
@@ -316,12 +315,10 @@ export default function Calendario({ materias, mibooleano }) {
 
                 </Row>
             </div>
-
-            {/* Botones de acción */}
             <div>
-                {materias.length === 0 ? (
+                {sessionStorage.getItem('rol') === "Directivo" && materias.length === 0? (
                     <Button type="primary" onClick={generarHorario}>Generar automáticamente</Button>
-                ) : mostrarAceptar ? (
+                ) : sessionStorage.getItem('rol') === "Directivo" && mostrarAceptar ? (
                     <Button type="primary" onClick={aceptarHorario}>Aceptar horario</Button>
                 ) : null}
             </div>
