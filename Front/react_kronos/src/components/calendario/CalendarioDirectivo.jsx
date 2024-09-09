@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useMemo, useEffect } from 'react';
-import { Row, Col, Dropdown, Menu, Avatar, Tooltip } from 'antd';
+import { Row, Col, Dropdown, Menu, Avatar, Tooltip, Button } from 'antd';
 import { UserOutlined, FilterOutlined } from '@ant-design/icons';
 import './Calendario.scss';
 
@@ -193,7 +193,52 @@ export default function Calendario({ materias, mibooleano }) {
         "endTime": "14:00:00",
         "startTime": "13:00:00"
     }]);
+    const [mostrarAceptar, setMostrarAceptar] = useState(false);
 
+    const generarHorario = () => {
+        console.log("Generar horario");
+        fetch('http://127.0.0.1:8000/api/new_schedule/', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Token ${localStorage.getItem('token')}`,
+                'School-ID': sessionStorage.getItem('actual_school'),
+            },
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                materias = data;
+            });
+            setMostrarAceptar(true);
+
+    }
+    const aceptarHorario = () => {
+        console.log("Aceptar horario");
+        fetch('http://127.0.0.1:8000/api/create_schedule/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Token ${localStorage.getItem('token')}`,
+                'School-ID': sessionStorage.getItem('actual_school'),
+            },
+        })
+            .then((response) => {
+                if (response.ok) {
+                    console.log("Horario aceptado");
+                    return response.json();
+                } else {
+                    console.log("Horario no aceptado");
+                    throw new Error('Network response was not ok');
+                }
+            })
+            .then((data) => {
+                console.log(data);
+            })
+            .catch((error) => {
+                console.error('Error fetching data:', error);
+            });
+            setMostrarAceptar(false);
+        }
 
     const obtenerMateriasModule = (moduleId, courseId) => {
         // Construir la URL con los parámetros
@@ -220,6 +265,23 @@ export default function Calendario({ materias, mibooleano }) {
     }
 
 
+
+    /*useEffect(() => {
+        fetch('http://localhost:8000/api/subjects/', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Token ${localStorage.getItem('token')}`,
+                'School-ID': sessionStorage.getItem('actual_school'),
+            },
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                console.log(data);
+                setSubjects(data);
+            });
+    }, []);
+*/
 
     useEffect(() => {
         fetch('http://localhost:8000/api/modules/', {
@@ -300,6 +362,7 @@ export default function Calendario({ materias, mibooleano }) {
     const memoizedCourses = useMemo(() => coursesDinamic, [coursesDinamic]);
 
     return (
+        <>
         <div className="Calendario" style={{ margin: 'auto' }}>
             {/* Fila que envuelve el contenido del calendario */}
             <Row wrap={false}>
@@ -429,5 +492,13 @@ export default function Calendario({ materias, mibooleano }) {
                 </Row>
             </Row>
         </div>
+        <div>
+                {materias.length === 0 ? (
+                    <Button type="primary" onClick={generarHorario}>Generar automaticamente</Button> 
+                    ): mostrarAceptar ? (
+                        <Button type="primary" onClick={aceptarHorario}>Aceptar horario</Button>
+                    ) : null}
+        </div>
+        </>
     );
 }
