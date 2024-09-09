@@ -30,8 +30,8 @@ export default function FormDisponibilidad({ onClose }) {
         });
     };
 
-    const handleCellClick = (event, day, module) => {
-        const key = `${day}-${module}`;
+    const handleCellClick = (event, module) => {
+        const key = module;
         const button = event.target;
 
         if (button.classList.contains('selected')) {
@@ -77,7 +77,7 @@ export default function FormDisponibilidad({ onClose }) {
         .then((response) => response.json())
         .then((data) => {
             setModulesData(Object.values(data));
-            console.log(data);
+            console.log(Object.values(data));
         });
     }, []);
 
@@ -102,11 +102,11 @@ export default function FormDisponibilidad({ onClose }) {
                                         type="primary"
                                         style={{ width: '100%' }}
                                         className={
-                                            selectedCells.includes(`${day}-${module.moduleNumber}`)
+                                            selectedCells.includes(`${module.id}`)
                                                 ? 'selected'
                                                 : 'NotSelected'
                                         }
-                                        onClick={(event) => handleCellClick(event, day, module.moduleNumber)}
+                                        onClick={(event) => handleCellClick(event, module.id)}
                                     >{module.moduleNumber}</Button>
                                 </Col>
                                      

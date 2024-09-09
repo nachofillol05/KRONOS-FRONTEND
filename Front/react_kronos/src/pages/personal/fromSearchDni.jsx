@@ -46,7 +46,7 @@ export default function FormSearchDni({ handleSearch }) {
                     style={{ width: '60%' }}
                     name="documento"
                     rules={[
-                        {required: true, message: 'Ingrese un documento válido.'}
+                        {required: true, message: 'Ingrese un documento válido.',min: 8},
                     ]}
                 >
                     <Input 

@@ -7,6 +7,7 @@ import InfoWorker from './infoWorker';
 import FormCreateWorker from './formCreateWorker';
 import ContacWorker from './contactWorker';
 import EspecificWorker from './especificWorker';
+import Password from "antd/es/input/Password";
 
 export default function Personal() {
   const [teachers, setTeachers] = useState([]);
@@ -69,6 +70,9 @@ export default function Personal() {
   }
 
   const handleFilterChange = (e) => {
+    setSubject(null);
+    setCourse(null);
+    setSearchName(null);
     setActiveFilter(e.target.value);
   };
 
@@ -80,10 +84,10 @@ export default function Personal() {
   };
   const ok=(body,values,options)=>{
     console.log("dni entra a 200");
-    console.log("dni no encontrado:", body);
-    console.log("Tipo documentos: ", options);
+    console.log("values:", values);
+    console.log("options: ", options);
     const selectedItem = options.find(
-      (option) => option.value === values.tipoDni
+      (option) => option.value === values.tipoDocumento
     );
     console.log("Selected item:", selectedItem);
     showDrawer(
@@ -199,6 +203,7 @@ export default function Personal() {
           documentType: values.tipoDocumento,
           email: values.email,
           phone: values.telefono,
+          password: values.documento,
         });
         console.log("Body: ", body);
         setLoading(true);
@@ -456,6 +461,7 @@ export default function Personal() {
 
           <Select
             style={{ width: 250 }}
+            value={subject}
             size='large'
             showSearch
             placeholder="Seleccione una materia"
@@ -465,6 +471,7 @@ export default function Personal() {
           />) || activeFilter === 'Preceptores' && (
             <Select
               style={{ width: 250 }}
+              value={course}
               size='large'
               showSearch
               placeholder="Seleccione un curso"

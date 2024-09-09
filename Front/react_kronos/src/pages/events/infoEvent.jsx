@@ -119,7 +119,7 @@ export default function InfoWorker({ event, estado, closeDrawer,closeDrawerDelet
             name: event.name,
             eventType: event.eventType.name,
             description: event.description,
-            dateRange: [moment.utc(event.startDate), moment.utc(event.endDate)],
+            dateRange:  `${moment(event.startDate).format('DD/MM/YYYY')} - ${moment(event.endDate).format('DD/MM/YYYY')}`,
             Rolesdirigido: rolesLista,
             duration: dur,
         });
@@ -133,7 +133,7 @@ export default function InfoWorker({ event, estado, closeDrawer,closeDrawerDelet
                 eventType: event.eventType.id,
                 description: event.description,
                 Rolesdirigido: rolesListaId,
-                dateRange: [moment.utc(event.startDate), moment.utc(event.endDate)],
+                dateRange: `${moment(event.startDate).format('DD/MM/YYYY')} - ${moment(event.endDate).format('DD/MM/YYYY')}`,
                 duration: dur
             });
         }
@@ -265,11 +265,10 @@ export default function InfoWorker({ event, estado, closeDrawer,closeDrawerDelet
                 <Divider />
                 <h3>Fechas</h3>
                 <Form.Item className="formInfoEventItem" label="Fechas" name="dateRange" layout='horizontal'>
-                    <RangePicker
+                    <Input
                         size='large'
+                        style={customDisabledStyle}
                         disabled={true}
-                        disabledDate={disabledDate}
-                        format={dateFormat}
                     />
                 </Form.Item>
                 <Form.Item className="formInfoEventItem" label="Duracion" name="duration" layout='horizontal'>

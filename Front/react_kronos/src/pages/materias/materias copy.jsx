@@ -5,7 +5,6 @@ import { Table, Select, Input, FloatButton, Drawer, Form, Button, message, Modal
 import { FileAddOutlined, DownOutlined, UpOutlined, DownloadOutlined, CloseOutlined, FileSearchOutlined } from '@ant-design/icons';
 import FormCreateSubject from './formCreateSubject.jsx';
 import FormCreateSubjectForCourse from './formCreateSubjectForCourse.jsx';
-import ModalComponent from './ModalAsignacion.jsx';
 
 
 export default function Materias() {
@@ -33,7 +32,6 @@ export default function Materias() {
     const [selectedTeacher, setSelectedTeacher] = useState(null);
 
     const asignarMateria = (coursesubject_id) => {
-        
         const body = {
             teacher: selectedTeacher,
             coursesubjects: coursesubject_id,
@@ -49,11 +47,7 @@ export default function Materias() {
             body: JSON.stringify(body),
         })
         setIsModalOpen(false)
-        
     }
-    useEffect(() => {
-        setRecargar(!recargar)
-    }, [isModalOpen])
 
     useEffect(() => {
         if (messageConfig.type) {
@@ -360,7 +354,7 @@ export default function Materias() {
             setParentRecord(parent);
         }
     };
-    
+
     return (
         <>
             {contextHolder}
@@ -445,15 +439,31 @@ export default function Materias() {
                         </div>
                     </Drawer>
                 </>) : (<FloatButton icon={<DownloadOutlined />} tooltip="Descargar tabla" />)}
-                <ModalComponent
-                    isModalOpen={isModalOpen}
-                    setIsModalOpen={setIsModalOpen}
-                    record={record}
-                    parentRecord={parentRecord}
-                    teachers={teachers}
-                    setSelectedTeacher={setSelectedTeacher}
-                    asignarMateria={asignarMateria}
-                />
+            <Modal
+                width={400}
+                title="Asigna profesor a la materia"
+                open={isModalOpen}
+                onOk={() => asignarMateria(record.id)}
+                onCancel={() => setIsModalOpen(false)}>
+                <Flex style={{ height: '120px' }} vertical gap={10} justify='space-evenly'>
+
+                    <p style={{ margin: 0 }}> La materia <b>{parentRecord.name} </b> - <b style={{ textTransform: 'uppercase' }}>{parentRecord.abbreviation}</b>  del curso   <b>{record.course_name}</b></p>
+
+                    <Flex gap={10} align='center'>
+                        <h6 style={{ margin: 0 }}>Profesor :</h6>
+                        <Select
+                            size='large'
+                            value={record.teacher_subject_schools? record.teacher_subject_schools[0]?.teacher_id: null}
+                            style={{ flexGrow: 1 }}
+                            showSearch
+                            placeholder="Buscar profesor"
+                            options={teachers}
+                            onChange={(value) => setSelectedTeacher(value)} 
+                        />
+
+                    </Flex>
+                </Flex>
+            </Modal>
         </>
     )
 }
