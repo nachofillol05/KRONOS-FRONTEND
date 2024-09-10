@@ -418,8 +418,7 @@ export default function EventsPage() {
           justifyContent: "space-between",
           height: "fit-content",
           height: "250px",
-          opacity: eventStatus === "Finalizado" ? 0.7 : 1, 
-          backgroundColor: eventStatus === "Finalizado" ? "#f1f2f4" : "white",        
+          filter: eventStatus === "Finalizado" ? "grayscale(100%) brightness(0.8)" : "grayscale(0%)",      
         }}
         bordered
         hoverable={eventStatus !== "Finalizado"}
