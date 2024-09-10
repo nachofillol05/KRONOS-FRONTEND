@@ -16,11 +16,12 @@ export default function Profile() {
   const [tiposDocumentos,setTipoDocumentos] = useState([]);
   const [nationalities, setNationalities] = useState([]);
   const [file, setFile] = useState(null);
+  const [profilePicture, setProfilePicture] = useState(null);
 
   const handleFileChange = (e) => {
-    console.log(e)
-    console.log(e.file)
-    setFile(e.file); // Aquí obtienes el archivo real, no la ruta
+    console.log("aaaaaaaaaaaaaaaaaaaaaaaaa ",URL.createObjectURL(e.file.originFileObj))
+    setFile(e.file);
+    setProfilePicture(URL.createObjectURL(e.file.originFileObj));
   };
 
 
@@ -35,7 +36,6 @@ export default function Profile() {
       const selectedSchool = schools.find(school => school.pk === actualSchoolPk);
       formSchool.setFieldsValue({
         ...selectedSchool,
-        //profile_picture: file,
         abreviacion: selectedSchool.abbreviation,
         city: selectedSchool.contactInfo.city,
         postalCode: selectedSchool.contactInfo.postalCode,
@@ -67,6 +67,7 @@ export default function Profile() {
     .then((data) => {
         console.log(data);
         setProfileData(data);
+        setProfilePicture(data.profile_picture);
         form.setFieldsValue({
           ...data,
             documentType: isEditing? data.documentType?.id || '' : data.documentType?.name || '',
@@ -159,28 +160,29 @@ useEffect(() => {
       console.log('Profile updated successfully:', profileDataResponse);
   
       console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaa",file)
-      if (values.profile_picture && file) {
+      
+      if (values.profile_picture && file.originFileObj) {
         const formData = new FormData();
-        formData.append('profile_picture', file);
-  
-        const pictureResponse = await fetch('http://127.0.0.1:8000/api/profile/', {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Token ' + localStorage.getItem('token'),
-            'School-ID': sessionStorage.getItem('actual_school'),
-          },
-          body: formData,
+        formData.append('profile_picture', file.originFileObj); // Usar originFileObj
+    
+        const pictureResponse = await fetch('http://127.0.0.1:8000/api/profilePicture/', {
+            method: 'PUT',
+            headers: {
+                'Authorization': 'Token ' + localStorage.getItem('token'),
+                'School-ID': sessionStorage.getItem('actual_school'),
+            },
+            body: formData, // Enviar el FormData con el archivo
         });
-  
+    
         if (!pictureResponse.ok) {
-          throw new Error('Network response was not ok for profile picture');
+            throw new Error('Network response was not ok for profile picture');
         }
-  
+    
         const pictureDataResponse = await pictureResponse.json();
         console.log('Profile picture updated successfully:', pictureDataResponse);
-      }
-  
+        setProfilePicture(pictureDataResponse.profile_picture);
+    }
+    
       setProfileData(profileDataResponse);
       setIsEditing(false);
     } catch (error) {
@@ -264,8 +266,8 @@ useEffect(() => {
                   <img
                     width={50}
                     height={50}
-                    src="https://via.placeholder.com/150"
-                    style={{ borderRadius: '50%' }}
+                    src={profilePicture ? profilePicture : "https://via.placeholder.com/150"}
+                    style={{ borderRadius: '50%', objectFit: 'cover' }}
                   />
                 </Flex>
               </Form.Item>

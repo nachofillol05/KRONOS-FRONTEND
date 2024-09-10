@@ -11,7 +11,7 @@ const dateFormat = 'DD/MM/YYYY';
 export default function InfoWorker({ event, estado, closeDrawer,closeDrawerDelete,showError }) {
     const [form] = Form.useForm();
     const [isEditing, setIsEditing] = useState(false);
-    const [dur, setDur] = useState(calculateDuration(event.startDate, event.endDate));
+    const [dur, setDur] = useState(calculateDuration(event.startDate, event.endDate)!=1? + calculateDuration(event.startDate, event.endDate) +" días": calculateDuration(event.startDate, event.endDate) + " día");
     const [loading, setLoading] = useState(false);
 
     const [data, setData] = useState(event.affiliated_teachers || []);
@@ -168,8 +168,8 @@ export default function InfoWorker({ event, estado, closeDrawer,closeDrawerDelet
                 ...event,
                 ...values,
                 eventType: tipoEvento,
-                startDate: moment.utc(values.dateRange[0]).format('DD/MM/YYYY'),
-                endDate: moment.utc(values.dateRange[1]).format('DD/MM/YYYY'),
+                startDate: moment.utc(event.startDate).format('DD/MM/YYYY'),
+                endDate: moment.utc(event.endDate).format('DD/MM/YYYY'),
                 roles: rols,
             };
             console.log(JSON.stringify(updatedEvent))

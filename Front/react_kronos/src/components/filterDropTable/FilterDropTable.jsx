@@ -28,46 +28,27 @@ const FilterDropdownTable = ({ options, placeholder, value = [], onChange }) => 
     const handleVisibleChange = (flag) => {
         if (!flag) {
             setSelectedKeys(tempSelectedKeys);
-            if (onChange) {
-                onChange(tempSelectedKeys);
-            }
+            onChange(tempSelectedKeys);
         }
         setVisible(flag);
     };
 
-    const menuHeight = filteredOptions.length > 6 ? 240 : filteredOptions.length * 40; // Ajusta la altura dinámicamente
+    const menuHeight = filteredOptions.length > 6 ? 240 : filteredOptions.length * 40; // Adjust height dynamically
 
     const menu = (
-        <div 
-            className='close-shadow'
-            style={{
-                width: 300, backgroundColor: '#fff', borderRadius: 8, padding: 20,
-            }} 
-        >
+        <div style={{ width: 300, backgroundColor: '#ffffff', borderRadius: 8, padding: 16 }} >
             <Input
-                className='close-shadow'
                 size='large'
                 placeholder="Buscar..."
                 value={searchTerm}
                 onChange={handleSearchChange}
-                style={{
-                    marginBottom: 16,
-                    boxShadow: '0px 1px 2px -2px rgba(0, 0, 0, 0.16)' // Se corrigió el valor de boxShadow
-                }}
+                style={{ marginBottom: 8 }}
             />
 
-            <Menu 
-                size="large" 
-                className='close-shadow' 
-                style={{ height: menuHeight, overflowY: filteredOptions.length > 6 ? 'scroll' : 'auto', boxShadow: '0px 1px 2px -2px rgba(0, 0, 0, 0.16)' }} // Corregido el estilo boxShadow
-            >
+            <Menu size="large" style={{ height: menuHeight, overflowY: filteredOptions.length > 6 ? 'scroll' : 'auto' }}>
                 {filteredOptions.map((option) => (
                     <Menu.Item size="large" key={option.value} onClick={() => handleMenuClick(option)}>
-                        <Checkbox 
-                            size='large' 
-                            checked={tempSelectedKeys.includes(option.value)} 
-                            style={{ fontSize: 16 }}
-                        >
+                        <Checkbox size='large' checked={tempSelectedKeys.includes(option.value)} style={{ fontSize: 16 }}>
                             {option.label}
                         </Checkbox>
                     </Menu.Item>
@@ -80,14 +61,12 @@ const FilterDropdownTable = ({ options, placeholder, value = [], onChange }) => 
         <Dropdown
             overlay={menu}
             trigger={['click']}
-            open={visible} // Cambiado de `visible` a `open`
-            onOpenChange={handleVisibleChange} // Cambiado de `onVisibleChange` a `onOpenChange`
+            visible={visible}
+            onVisibleChange={handleVisibleChange}
         >
-            <Badge count={selectedKeys.length}>
                 <Button size="large">
-                    {placeholder} {tempSelectedKeys.length} <DownOutlined />
+                    {placeholder} ({selectedKeys.length}) <DownOutlined />
                 </Button>
-            </Badge>
         </Dropdown>
     );
 };

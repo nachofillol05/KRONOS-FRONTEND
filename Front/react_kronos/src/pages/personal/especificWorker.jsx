@@ -64,7 +64,7 @@ export default function Especificworker({ handleVolverInfo, id, onClose }) {
           <img
             width={50}
             height={50}
-            src="https://via.placeholder.com/150"
+            src={worker.profile_picture? worker.profile_picture : "https://via.placeholder.com/150"}
             style={{ borderRadius: "50%" }}
           />
         </Flex>
