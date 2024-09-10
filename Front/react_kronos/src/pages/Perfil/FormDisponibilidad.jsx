@@ -18,6 +18,7 @@ export default function FormDisponibilidad({ onClose }) {
             cancelText: 'Cancelar',
         });
     };
+    
 
     const actualizarAvailability = () => {
         const jsonData = JSON.stringify({ module: selectedCells });
@@ -67,11 +68,28 @@ export default function FormDisponibilidad({ onClose }) {
             console.log(Object.values(data));
         });
     }, []);
+    useEffect(() => {
+        fetch('http://localhost:8000/api/teacheravailability/', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Token ${localStorage.getItem('token')}`,
+                'School-ID': sessionStorage.getItem('actual_school'),
+            },
+        })
+        .then((response) => response.json())
+        .then((data) => {
+            const preselectedCells = data.filter(
+                (module) => module.availabilityState.name === 'Disponible'
+            ).map((module) => module.module.id);
+            setSelectedCells(preselectedCells); 
+        });
+    }, []);
 
     const days = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes'];
 
     console.log(selectedCells);
-
+    console.log(modulesData);
     return (
         <>
         <Row>
@@ -89,7 +107,7 @@ export default function FormDisponibilidad({ onClose }) {
                                         type="primary"
                                         style={{ width: '100%' }}
                                         className={
-                                            selectedCells.includes(`${module.id}`)
+                                            selectedCells.includes(module.id)
                                                 ? 'selected'
                                                 : 'NotSelected'
                                         }

@@ -189,7 +189,7 @@ const App = ({ children }) => {
                     >
                         <a onClick={e => e.preventDefault()} className="logo-img">
                             <img
-                                src={'data:image/png;base64,' + currentSchool.logo || 'https://via.placeholder.com/150'}
+                                src={currentSchool.logo || 'https://via.placeholder.com/150'}
                                 alt="logo"
                                 title={currentSchool.name}
                                 style={{ width: '75%' }}

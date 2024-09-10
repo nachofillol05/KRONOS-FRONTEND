@@ -19,6 +19,7 @@ import Perfil from "../pages/Perfil/Perfil";
 import Horario from "../pages/horario/horario";
 import HorarioProfesor from "../pages/horario/horarioProfesor";
 import EventsPage from "../pages/events/evento";
+import { useEffect } from "react";
 
 const redirigirHorario = () => {
     if (sessionStorage.getItem("rol") === "Profesor") {
