@@ -199,7 +199,9 @@ export default function Materias() {
                             key: materia.id,
                             children: materia.courses.map(course => ({
                                 ...course,
-                                name: course.name + " - " + (
+                                name: '',
+                                course: course.name,
+                                teachers:(
                                     course.teacher_subject_schools?.map(ts => ts.teacher_name).join(", ") || "Sin profesor"
                                 ),
                                 course_name: course.name
@@ -213,19 +215,19 @@ export default function Materias() {
             }, [start_time, end_time, Subjectname, teacher,recargar]);
 
     const columns = [
-        { title: 'Nombre', dataIndex: 'name', key: 'name', width: '30%', },
-        { title: 'Abreviacion', dataIndex: 'abbreviation', key: 'abbreviation', width: '20%', },
-        { title: 'Curso', dataIndex: 'course', key: 'course' },
-        { title: 'Horas catedra semanales', dataIndex: 'weeklyHours', key: 'weeklyHours' },
+        { title: 'Nombre', dataIndex: 'name', key: 'name', width: '20%', },
+        { title: 'Abreviacion', dataIndex: 'abbreviation', key: 'abbreviation', width: '15%', },
+        { title: 'Curso', dataIndex: 'course', key: 'course', width: '15%' },
+        { title: 'Profesores', dataIndex: 'teachers', key: 'teachers' },
         {
             title: 'Color',
             dataIndex: 'color',
             key: 'color',
+            width: '15%',
             render: (text) => (
                 <div style={{ width: '24px', height: '24px', backgroundColor: text, borderRadius: '4px' }} />
             )
-        },
-        { title: 'Descripcion', dataIndex: 'description', key: 'description' }
+        }
     ];
 
     useEffect(() => {
@@ -349,9 +351,7 @@ export default function Materias() {
             });
     }
 
-    const showModal = (record) => {
-        console.log("eeeeeeeeeeeeeeeeeeeeeeeeeeeees eeeeeeeeeeeeeeeeesaaaaaaaaaaaaaaaaaaaaa",record);
-        
+    const showModal = (record) => {        
         if (!('children' in record)) {  
             setRecord(record);
             setIsModalOpen(true);

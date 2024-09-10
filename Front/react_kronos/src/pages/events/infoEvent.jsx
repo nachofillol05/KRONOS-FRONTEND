@@ -8,10 +8,10 @@ import dayjs from 'dayjs';
 const { RangePicker } = DatePicker;
 const dateFormat = 'DD/MM/YYYY';
 
-export default function InfoWorker({ event, estado, closeDrawer,closeDrawerDelete,showError }) {
+export default function InfoWorker({ event, estado, closeDrawer, closeDrawerDelete, showError }) {
     const [form] = Form.useForm();
     const [isEditing, setIsEditing] = useState(false);
-    const [dur, setDur] = useState(calculateDuration(event.startDate, event.endDate)!=1? + calculateDuration(event.startDate, event.endDate) +" días": calculateDuration(event.startDate, event.endDate) + " día");
+    const [dur, setDur] = useState(calculateDuration(event.startDate, event.endDate) != 1 ? + calculateDuration(event.startDate, event.endDate) + " días" : calculateDuration(event.startDate, event.endDate) + " día");
     const [loading, setLoading] = useState(false);
 
     const [data, setData] = useState(event.affiliated_teachers || []);
@@ -27,23 +27,23 @@ export default function InfoWorker({ event, estado, closeDrawer,closeDrawerDelet
         });
     };
     const borrarEvento = () => {
-        fetch('http://127.0.0.1:8000/api/events/'+event.id+'/', {
+        fetch('http://127.0.0.1:8000/api/events/' + event.id + '/', {
             method: 'DELETE',
             headers: {
                 'Authorization': 'Token ' + localStorage.getItem('token'),
                 'School-ID': sessionStorage.getItem('actual_school'),
             },
         })
-        .then(response => {
-            if (!response.ok) {
-                showError();
-                throw new Error('Network response was not ok');
-            }
-            closeDrawerDelete();
-            if (response.status !== 204) {
-                return response.json();
-            }
-        })
+            .then(response => {
+                if (!response.ok) {
+                    showError();
+                    throw new Error('Network response was not ok');
+                }
+                closeDrawerDelete();
+                if (response.status !== 204) {
+                    return response.json();
+                }
+            })
     };
 
 
@@ -55,20 +55,20 @@ export default function InfoWorker({ event, estado, closeDrawer,closeDrawerDelet
                 'School-ID': sessionStorage.getItem('actual_school'),
             },
         })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json(); 
-        })
-        .then(data => {
-            const typeEvents = data.map(event => ({
-                value: event.id,
-                label: event.name,
-            }));
-            setTypes(typeEvents);
-        })
-        .catch(error => console.error('Error fetching data:', error));
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                const typeEvents = data.map(event => ({
+                    value: event.id,
+                    label: event.name,
+                }));
+                setTypes(typeEvents);
+            })
+            .catch(error => console.error('Error fetching data:', error));
     }, []);
 
     useEffect(() => {
@@ -79,20 +79,20 @@ export default function InfoWorker({ event, estado, closeDrawer,closeDrawerDelet
                 'School-ID': sessionStorage.getItem('actual_school'),
             },
         })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json(); 
-        })
-        .then(data => {
-            const rols = data.map(rol => ({
-                value: rol.id,
-                label: rol.name,
-            }));
-            setRolesList(rols);
-        })
-        .catch(error => console.error('Error fetching data:', error));
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                const rols = data.map(rol => ({
+                    value: rol.id,
+                    label: rol.name,
+                }));
+                setRolesList(rols);
+            })
+            .catch(error => console.error('Error fetching data:', error));
     }, []);
 
     const startDate = moment.utc(event.startDate).format(dateFormat);
@@ -102,10 +102,10 @@ export default function InfoWorker({ event, estado, closeDrawer,closeDrawerDelet
         if (!isEditing) {
             const start = new Date(startDate);
             const end = new Date(endDate);
-        
+
             const differenceInTime = end.getTime() - start.getTime();
             const differenceInDays = Math.ceil(differenceInTime / (1000 * 3600 * 24)) + 1;
-            
+
             return differenceInDays;
         }
     }
@@ -119,7 +119,7 @@ export default function InfoWorker({ event, estado, closeDrawer,closeDrawerDelet
             name: event.name,
             eventType: event.eventType.name,
             description: event.description,
-            dateRange:  `${moment(event.startDate).format('DD/MM/YYYY')} - ${moment(event.endDate).format('DD/MM/YYYY')}`,
+            dateRange: `${moment(event.startDate).format('DD/MM/YYYY')} - ${moment(event.endDate).format('DD/MM/YYYY')}`,
             Rolesdirigido: rolesLista,
             duration: dur,
         });
@@ -145,11 +145,11 @@ export default function InfoWorker({ event, estado, closeDrawer,closeDrawerDelet
     }
 
     const handleSave = () => {
-        let tipoEvento,rols;
+        let tipoEvento, rols;
         form.validateFields().then(values => {
-            if(typeof values.eventType === 'undefined' || isNaN(parseInt(values.eventType))) {
+            if (typeof values.eventType === 'undefined' || isNaN(parseInt(values.eventType))) {
                 tipoEvento = event.eventType.id;
-            }else{
+            } else {
                 tipoEvento = values.eventType;
             }
             if (Array.isArray(values.Rolesdirigido) && values.Rolesdirigido.every(role => Number.isInteger(role))) {
@@ -160,7 +160,7 @@ export default function InfoWorker({ event, estado, closeDrawer,closeDrawerDelet
                 console.log("No es un array de enteros");
             }
 
-            if(event.affiliated_teachers){
+            if (event.affiliated_teachers) {
                 values.affiliated_teachers = event.affiliated_teachers.map(teacher => teacher.id);
             }
 
@@ -173,7 +173,7 @@ export default function InfoWorker({ event, estado, closeDrawer,closeDrawerDelet
                 roles: rols,
             };
             console.log(JSON.stringify(updatedEvent))
-            fetch('http://127.0.0.1:8000/api/events/'+event.id+'/', {
+            fetch('http://127.0.0.1:8000/api/events/' + event.id + '/', {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -182,16 +182,16 @@ export default function InfoWorker({ event, estado, closeDrawer,closeDrawerDelet
                 },
                 body: JSON.stringify(updatedEvent),
             })
-            .then(response => {
-                if (!response.ok) {
-                    showError();
-                    throw new Error('Network response was not ok');
-                }
-                closeDrawer();
-                return response.json();
-            })
-            .then(data => console.log('Success:', data))
-            .catch(error => showError());
+                .then(response => {
+                    if (!response.ok) {
+                        showError();
+                        throw new Error('Network response was not ok');
+                    }
+                    closeDrawer();
+                    return response.json();
+                })
+                .then(data => console.log('Success:', data))
+                .catch(error => showError());
 
             toggleEditMode();
         }).catch(errorInfo => {
@@ -202,37 +202,34 @@ export default function InfoWorker({ event, estado, closeDrawer,closeDrawerDelet
     };
 
     const customDisabledStyle = {
-        backgroundColor: 'transparent',
+        background: 'transparent',
         color: 'black',
-        cursor: 'default',
         borderColor: 'transparent',
-        height: '38px',
-        width: '100%',
+        cursor: 'default',
+        height: '40px'
     };
 
     const disabledDate = (current) => {
         return current && current < dayjs().endOf('day');
     };
-    
+
 
     return (
         <Form
             form={form}
-            layout="vertical"
         >
             <Flex vertical style={{ width: '100%' }}>
-                <h3>Claves del evento</h3>
                 <Form.Item className="formInfoEventItem" label="Nombre" name="name" layout='horizontal'>
                     <Input
                         size='large'
-                        style={!isEditing ? customDisabledStyle : { height: '38px' }}
+                        style={!isEditing ? customDisabledStyle : { height: '40px' }}
                         disabled={!isEditing}
                     />
                 </Form.Item>
                 <Form.Item className="formInfoEventItem" layout="horizontal" label="Tipo de evento" name="eventType" style={{ width: '100%' }}>
                     {isEditing ? (
                         <Select
-                            style={{ width: '100%', height: '38px' }}
+                            style={{ width: '100%', height: '40px' }}
                             size='large'
                             options={types}
                         />
@@ -240,7 +237,7 @@ export default function InfoWorker({ event, estado, closeDrawer,closeDrawerDelet
                         <Input
                             size='large'
                             disabled
-                            style={{ height: '38px', ...customDisabledStyle }}
+                            style={{ height: '40px', ...customDisabledStyle }}
                         />
                     )}
                 </Form.Item>
@@ -251,19 +248,17 @@ export default function InfoWorker({ event, estado, closeDrawer,closeDrawerDelet
                         <Input
                             size='large'
                             disabled
-                            style={{ height: '38px', ...customDisabledStyle }}
+                            style={{ height: '40px', ...customDisabledStyle }}
                         />
                     )}
                 </Form.Item>
                 <Form.Item className="formInfoEventItem" label="Descripción" name="description" layout='horizontal'>
                     <Input
                         size='large'
-                        style={!isEditing ? customDisabledStyle : { height: '38px' }}
+                        style={!isEditing ? customDisabledStyle : { height: '40px' }}
                         disabled={!isEditing}
                     />
                 </Form.Item>
-                <Divider />
-                <h3>Fechas</h3>
                 <Form.Item className="formInfoEventItem" label="Fechas" name="dateRange" layout='horizontal'>
                     <Input
                         size='large'
@@ -282,6 +277,7 @@ export default function InfoWorker({ event, estado, closeDrawer,closeDrawerDelet
                 <div
                     id="scrollableDiv"
                     style={{
+                        marginTop: '20px',
                         height: 250,
                         overflow: 'auto',
                         padding: '0 16px',
@@ -300,47 +296,47 @@ export default function InfoWorker({ event, estado, closeDrawer,closeDrawerDelet
                             </List.Item>
                         )}
                     />
-                </div>         
+                </div>
             </Flex>
-            {sessionStorage.getItem('rol') === 'Directivo'?(
-            <Flex gap={'10px'} justify='end'>
-                <Button
-                    style={{ width: '100px', marginRight: '10px' }}
-                    onClick={()=>confirmDelete(event.name)}
-                    danger
-                >
-                    Borrar
-                </Button>
-                {isEditing ? (
-                    <>
-                        <Button
-                            style={{ width: '100px', marginRight: '10px' }}
-                            onClick={toggleEditMode}
-                            danger
-                        >
-                            Cancelar
-                        </Button>
-                        <Button
-                            type="primary"
-                            style={{ width: '100px' }}
-                            onClick={handleSave}
-                        >
-                            Guardar
-                        </Button>
-                    </>
-                ) : (
-                    estado == "Pendiente" && (
-                        <Button
-                            style={{ width: '100px' }}
-                            onClick={toggleEditMode}
-                            type="primary"
-                        >
-                            Editar
-                        </Button>
-                    )
-                )}
-            </Flex>
-            ):null}
+            {sessionStorage.getItem('rol') === 'Directivo' ? (
+                <Flex gap={'10px'} justify='end' style={{ marginBlock: '20px' }}>
+                    <Button
+                        style={{ width: '100px', marginRight: '10px' }}
+                        onClick={() => confirmDelete(event.name)}
+                        danger
+                    >
+                        Borrar
+                    </Button>
+                    {isEditing ? (
+                        <>
+                            <Button
+                                style={{ width: '100px', marginRight: '10px' }}
+                                onClick={toggleEditMode}
+                                danger
+                            >
+                                Cancelar
+                            </Button>
+                            <Button
+                                type="primary"
+                                style={{ width: '100px' }}
+                                onClick={handleSave}
+                            >
+                                Guardar
+                            </Button>
+                        </>
+                    ) : (
+                        estado == "Pendiente" && (
+                            <Button
+                                style={{ width: '100px' }}
+                                onClick={toggleEditMode}
+                                type="primary"
+                            >
+                                Editar
+                            </Button>
+                        )
+                    )}
+                </Flex>
+            ) : null}
         </Form>
     );
 }
