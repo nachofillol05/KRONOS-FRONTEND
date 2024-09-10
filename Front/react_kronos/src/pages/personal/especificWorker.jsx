@@ -108,18 +108,10 @@ export default function Especificworker({ handleVolverInfo, id, onClose }) {
               <React.Fragment key={day}>
                 {moduleData.map((module) => (
                   <Col
-                    style={{ width: "100%", paddingInline: 3 }}
+                    style={{ width: "95%", paddingInline: 3, marginInline: 'auto' }}
                     key={`${day}-${module.id}`}
+                    className="especificWorkerCasilla"
                   >
-                    <Button
-                      disabledtype="tertiary"
-                      key={`${day}-${module}`}
-                      className={
-                        selectedCells.includes(`${day}-${module}`)
-                          ? "selected desabilitados"
-                          : "NotSelected desabilitados"
-                      }
-                    ></Button>
                   </Col>
                 ))}
               </React.Fragment>

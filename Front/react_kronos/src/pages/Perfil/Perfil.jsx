@@ -264,10 +264,8 @@ useEffect(() => {
                         icon={<UploadOutlined />}>Click to Upload</Button>
                     </Upload> : null}
                   <img
-                    width={50}
-                    height={50}
                     src={profilePicture ? profilePicture : "https://via.placeholder.com/150"}
-                    style={{ borderRadius: '50%', objectFit: 'cover' }}
+                    style={{ borderRadius: '50%', objectFit: 'cover', width: '50px', height: '50px' }}
                   />
                 </Flex>
               </Form.Item>
