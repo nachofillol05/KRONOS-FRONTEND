@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Select, DatePicker, AutoComplete, Drawer, Card, Button, FloatButton, message, Tooltip, Modal, Input } from "antd";
+import { Select, DatePicker, AutoComplete, Drawer, Card, Button, FloatButton, message, Tooltip, Modal, Input, Theme } from "antd";
 import { InfoCircleOutlined, EditOutlined, CheckCircleOutlined, UserAddOutlined, CloseOutlined, DownOutlined, UpOutlined, FolderAddOutlined, ExclamationCircleFilled } from "@ant-design/icons";
 import FormCreateEvent from "./formCreateEvent";
 import moment from 'moment';
@@ -451,8 +451,8 @@ export default function EventsPage() {
         ]}
       >
         <div style={{ display: "flex", flexDirection: "column", gap: 15 }}>
-          <h6 style={{ color: "#1890ff", margin: 0 }}>{event.name}</h6>
-          <h3 style={{ margin: 0 }}>{event.type_event}</h3>
+        <h6 style={{ color: 333, margin: 0 }}>{event.name}</h6>
+        <h3 style={{ margin: 0 }}>{event.type_event}</h3>
           <p style={{margin: 0}}>
             {moment.utc(event.startDate).format('DD/MM/YYYY')} - {moment.utc(event.endDate).format('DD/MM/YYYY')}
             <p style={{margin: 0}}>{eventStatus}</p>

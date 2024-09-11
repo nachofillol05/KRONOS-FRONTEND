@@ -61,11 +61,14 @@ function Horario({ handleOpenDrawer, handleCloseDrawer }) {
                     options={memoizedSegmentedOptions}
                     onChange={(value) => setEditar(value === 'Editar')} // Cambia el estado de 'editar'
                 />)}
+                {/*
                 <DatePicker size='large' format={format} />
                 <Button icon={<FilterOutlined />} size='large' type='primary'>
                     Filtrar
                 </Button>
+                */}
             </div>
+
             {/* Pasar el estado editar al calendario */}
             <CalendarioDirectivo materias={subjects} mibooleano={editar} />
             <FloatButton.Group
