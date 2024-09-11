@@ -17,7 +17,7 @@ function Horario({ handleOpenDrawer, handleCloseDrawer }) {
     const [drawerContent, setDrawerContent] = useState(null);
     const [drawerTitle, setDrawerTitle] = useState(null);
     const [subjects, setSubjects] = useState([]);
-    const [editar, setEditar] = useState(false); // Controla si el calendario es editable o no
+    const [editar, setEditar] = useState(false);
 
     // Obtención de datos del servidor (materias)
     useEffect(() => {
@@ -67,7 +67,7 @@ function Horario({ handleOpenDrawer, handleCloseDrawer }) {
                 </Button>
             </div>
             {/* Pasar el estado editar al calendario */}
-            <CalendarioDirectivo materias={subjects} mibooleano={editar} />
+            <CalendarioDirectivo materia={subjects} mibooleano={editar}/>
             <FloatButton.Group
                 visibilityHeight={1500}
                 trigger="click"
