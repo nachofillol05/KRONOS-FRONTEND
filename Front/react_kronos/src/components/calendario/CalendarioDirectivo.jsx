@@ -21,6 +21,13 @@ export default function Calendario({ materias, mibooleano }) {
     const [modulesData, setModulesData] = useState([]);
     const [mostrarAceptar, setMostrarAceptar] = useState(false);
 
+    useEffect(() => {
+        if(sessionStorage.getItem('rol') === "Profesor"){
+            console.log("No deberiaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+            window.location.reload();
+        }
+    }, []);
+
     const generarHorario = () => {
         console.log("Generar horario");
         fetch('http://127.0.0.1:8000/api/new_schedule/', {
@@ -235,9 +242,10 @@ export default function Calendario({ materias, mibooleano }) {
                                                 // Buscar la materia que coincida con el día, módulo y curso
                                                 const matchingMateria = materias.find(materia =>
                                                     materia.day.toLowerCase() === day.toLowerCase() &&
-                                                    materia.moduleNumber === parseInt(module.hour) &&
+                                                    materia.moduleNumber === parseInt(module.moduleNumber) &&
                                                     materia.course_id === course.value
                                                 );
+                                                
 
                                                 // Definir el sujeto basado en la materia coincidente
                                                 const displaySubject = matchingMateria ? {

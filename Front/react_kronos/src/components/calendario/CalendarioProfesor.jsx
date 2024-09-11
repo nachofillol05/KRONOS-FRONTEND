@@ -182,7 +182,13 @@ export default function CalendarioProfesor({ mibooleano }) {
             "startTime": "13:00:00"
         }
     ]);
-
+    //quiero que se ejecute primero
+    useEffect(() => {
+        if(sessionStorage.getItem('rol') != "Profesor"){
+            console.log("No deberiaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+            window.location.reload();
+        }
+    }, []);
 
     useEffect(() => {
         fetch('http://localhost:8000/api/modules/', {
@@ -198,6 +204,7 @@ export default function CalendarioProfesor({ mibooleano }) {
             setModulesData(Object.values(data));
         });
     }, []);
+
 
 
     return (

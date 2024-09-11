@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { routes } from './config/routes'; 
 import { ConfigProvider } from 'antd';
@@ -6,6 +6,7 @@ import PrivateRoute from './components/privateRoute/privateRoute.jsx';
 import DirectiveRoute from './components/privateRoute/directiveRoute.jsx';
 
 export default function App() {
+  
   const themeTokens = {
     token: {
       colorPrimary: '#1DA57A', // Color principal
@@ -23,6 +24,9 @@ export default function App() {
 
     },
   };
+  useEffect(() => {
+    console.log("seeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee esta actualizando",sessionStorage.getItem('rol'));
+  }, [sessionStorage.getItem('rol')]);
   return (
     <ConfigProvider theme={themeTokens}>
       <Router>
@@ -56,4 +60,5 @@ export default function App() {
       </Router>
           </ConfigProvider>
   );
+
 }

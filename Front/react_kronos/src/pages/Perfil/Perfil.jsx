@@ -430,14 +430,14 @@ useEffect(() => {
                 <Flex align='center' justify='space-between' style={{ width: '100%', height: '50px' }}>
                   <label >Logo del colegio:</label>
                   {isEditing ?
-                    <Upload className='upload-profile' accept=".jpg,.jpeg,.png,.webp" maxCount={1}>
+                    <Upload className='upload-profile' accept=".jpg,.jpeg,.png" maxCount={1}>
                       <Button
                         icon={<UploadOutlined />}>Click to Upload</Button>
                     </Upload> : null}
                   <img
                     width={50}
                     height={50}
-                    src={escuelaCompleta? 'data:image/png;base64,' +escuelaCompleta : "https://via.placeholder.com/150"} 
+                    src={escuelaCompleta || "https://via.placeholder.com/150"} 
                     style={{ borderRadius: '50%' }}
                   />
                 </Flex>
