@@ -33,7 +33,7 @@ export default function Materias() {
     const [selectedTeacher, setSelectedTeacher] = useState(null);
 
     const asignarMateria = (coursesubject_id) => {
-        
+
         const body = {
             teacher: selectedTeacher,
             coursesubjects: coursesubject_id,
@@ -49,7 +49,7 @@ export default function Materias() {
             body: JSON.stringify(body),
         })
         setIsModalOpen(false)
-        
+
     }
     useEffect(() => {
         setRecargar(!recargar)
@@ -116,7 +116,7 @@ export default function Materias() {
         form.validateFields()
             .then(values => {
                 console.log('entro')
-                console.log('aaaaaaaaaaaa',values)
+                console.log('aaaaaaaaaaaa', values)
                 const body = {
                     subject: values.materia,
                     course: values.curso,
@@ -145,74 +145,74 @@ export default function Materias() {
     };
 
 
-        const showMessage = (type, content) => {
-            switch (type) {
-                case 'success':
-                    messageApi.success(content);
-                    break;
-                case 'error':
-                    messageApi.error(content);
-                    break;
-                case 'warning':
-                    messageApi.warning(content);
-                    break;
-                case 'info':
-                    messageApi.info(content);
-                    break;
-                default:
-                    messageApi.info(content);
-                    break;
-            }
-        };
-        
-            useEffect(() => {
-                const url = new URL('http://127.0.0.1:8000/api/subjects/');
-                if (end_time && start_time) {
-                    url.searchParams.append('start_time', start_time);
-                    url.searchParams.append('end_time', end_time);
+    const showMessage = (type, content) => {
+        switch (type) {
+            case 'success':
+                messageApi.success(content);
+                break;
+            case 'error':
+                messageApi.error(content);
+                break;
+            case 'warning':
+                messageApi.warning(content);
+                break;
+            case 'info':
+                messageApi.info(content);
+                break;
+            default:
+                messageApi.info(content);
+                break;
+        }
+    };
+
+    useEffect(() => {
+        const url = new URL('http://127.0.0.1:8000/api/subjects/');
+        if (end_time && start_time) {
+            url.searchParams.append('start_time', start_time);
+            url.searchParams.append('end_time', end_time);
+        }
+        if (teacher) {
+            url.searchParams.append('teacher', teacher);
+        }
+        if (Subjectname) {
+            url.searchParams.append('name', Subjectname);
+        }
+        console.log(url.toString());
+        console.log(sessionStorage.getItem('actual_school'));
+        fetch(url.toString(), {
+            method: "GET",
+            headers: {
+                'Authorization': 'Token ' + localStorage.getItem('token'),
+                'School-ID': sessionStorage.getItem('actual_school'),
+            },
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
                 }
-                if (teacher) {
-                    url.searchParams.append('teacher', teacher);
-                }
-                if (Subjectname) {
-                    url.searchParams.append('name', Subjectname);
-                }
-                console.log(url.toString());
-                console.log(sessionStorage.getItem('actual_school'));
-                fetch(url.toString(), {
-                    method: "GET",
-                    headers: {
-                        'Authorization': 'Token ' + localStorage.getItem('token'),
-                        'School-ID': sessionStorage.getItem('actual_school'),
-                    },
-                })
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error('Network response was not ok');
-                        }
-                        return response.json();
-                    })
-                    .then(data => {
-                        console.log(data)
-                        setMaterias(data.map(materia => ({
-                            ...materia,
-                            key: materia.id,
-                            children: materia.courses.map(course => ({
-                                ...course,
-                                name: '',
-                                course: course.name,
-                                teachers:(
-                                    course.teacher_subject_schools?.map(ts => ts.teacher_name).join(", ") || "Sin profesor"
-                                ),
-                                course_name: course.name
-                            }))
-                        })));
-                        //setMaterias(data.map(materia => ({ ...materia, key: materia.id, children: materia.courses })));
-                        setLoading(false);
-                        console.log(data);
-                    })
-                    .catch(error => console.error('Error fetching data:', error));
-            }, [start_time, end_time, Subjectname, teacher,recargar]);
+                return response.json();
+            })
+            .then(data => {
+                console.log(data)
+                setMaterias(data.map(materia => ({
+                    ...materia,
+                    key: materia.id,
+                    children: materia.courses.map(course => ({
+                        ...course,
+                        name: '',
+                        course: course.name,
+                        teachers: (
+                            course.teacher_subject_schools?.map(ts => ts.teacher_name).join(", ") || "Sin profesor"
+                        ),
+                        course_name: course.name
+                    }))
+                })));
+                //setMaterias(data.map(materia => ({ ...materia, key: materia.id, children: materia.courses })));
+                setLoading(false);
+                console.log(data);
+            })
+            .catch(error => console.error('Error fetching data:', error));
+    }, [start_time, end_time, Subjectname, teacher, recargar]);
 
     const columns = [
         { title: 'Nombre', dataIndex: 'name', key: 'name', width: '20%', },
@@ -321,7 +321,7 @@ export default function Materias() {
         const value = event.target.value;
         setSubjectname(value);
     }
-    
+
     const descargarExcel = () => {
         fetch('http://127.0.0.1:8000/api/subjects/?export=excel', {
             method: "GET",
@@ -329,10 +329,10 @@ export default function Materias() {
                 Authorization: "Token " + localStorage.getItem("token"),
                 "School-ID": sessionStorage.getItem("actual_school"),
             },
-            })
+        })
             .then((response) => {
                 if (!response.ok) {
-                throw new Error("Network response was not ok");
+                    throw new Error("Network response was not ok");
                 }
                 return response.blob();
             })
@@ -351,8 +351,8 @@ export default function Materias() {
             });
     }
 
-    const showModal = (record) => {        
-        if (!('children' in record)) {  
+    const showModal = (record) => {
+        if (!('children' in record)) {
             setRecord(record);
             setIsModalOpen(true);
             const parent = materias.find(materia => materia.courses && materia.courses.some(child => child.id === record.id));
@@ -360,13 +360,14 @@ export default function Materias() {
             setParentRecord(parent);
         }
     };
-    
+
     return (
         <>
             {contextHolder}
             <div className="contenedor-filtros contenedor-filtros-materias">
+                {/* 
                 <RangeSlider range onFinalChange={handleFinalRangeChange} defaultValue={[20, 50]} />
-
+*/}
                 <Select
                     size='large'
                     style={{ width: 250 }}
@@ -445,15 +446,15 @@ export default function Materias() {
                         </div>
                     </Drawer>
                 </>) : (<FloatButton icon={<DownloadOutlined />} tooltip="Descargar tabla" />)}
-                <ModalComponent
-                    isModalOpen={isModalOpen}
-                    setIsModalOpen={setIsModalOpen}
-                    record={record}
-                    parentRecord={parentRecord}
-                    teachers={teachers}
-                    setSelectedTeacher={setSelectedTeacher}
-                    asignarMateria={asignarMateria}
-                />
+            <ModalComponent
+                isModalOpen={isModalOpen}
+                setIsModalOpen={setIsModalOpen}
+                record={record}
+                parentRecord={parentRecord}
+                teachers={teachers}
+                setSelectedTeacher={setSelectedTeacher}
+                asignarMateria={asignarMateria}
+            />
         </>
     )
 }

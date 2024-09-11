@@ -1,10 +1,41 @@
-import React from 'react';
-import { Form, Input, Button, Tooltip, Space, Select, ColorPicker, Flex } from 'antd';
-import { InfoCircleOutlined, RollbackOutlined, PlusOutlined } from '@ant-design/icons';
+import React, { useCallback } from 'react';
+import { Form, Input, Button, Tooltip, Space, Select, ColorPicker, Flex, theme, Avatar } from 'antd';
+import { InfoCircleOutlined, RollbackOutlined, PlusOutlined, UserOutlined } from '@ant-design/icons';
 const { TextArea } = Input;
+
+
+
+
 
 export default function FormCreateSubject({ handleSubmit, onClose, cursos, value, setValue }) {
     const [form] = Form.useForm();
+
+    const { token } = theme.useToken();
+    const colorPrimary = token.colorPrimary;
+
+    const makeColorTransparent = useCallback((color, alpha) => {
+        alpha = Math.max(0, Math.min(1, alpha));
+        const hexToRgba = (hex) => {
+            let r = 0, g = 0, b = 0;
+            if (hex.length === 4) {
+                r = parseInt(hex[1] + hex[1], 16);
+                g = parseInt(hex[2] + hex[2], 16);
+                b = parseInt(hex[3] + hex[3], 16);
+            } else if (hex.length === 7) {
+                r = parseInt(hex[1] + hex[2], 16);
+                g = parseInt(hex[3] + hex[4], 16);
+                b = parseInt(hex[5] + hex[6], 16);
+            }
+            return `rgba(${r},${g},${b},${alpha})`;
+        };
+
+        if (/^#[0-9A-Fa-f]{3,6}$/.test(color)) {
+            return hexToRgba(color);
+        } else {
+            return color;
+        }
+    }, []);
+
     return (
         <Form form={form} layout="vertical" hideRequiredMark >
             <Flex gap={10}>
@@ -29,17 +60,17 @@ export default function FormCreateSubject({ handleSubmit, onClose, cursos, value
                         rules={[
                             {
                                 required: true,
-                                
+
                                 message: '',
                             },
                         ]}
                     >
-                        <Input size='large' autoSize placeholder="Abreviacion" count={{ show: true, max: 3 }} />
+                        <Input size='large' autoSize count={{ show: true, max: 3 }} />
                     </Form.Item>
                 </Space.Compact>
                 <Form.Item
-                    initialValue={'#ff0000'}
-                    style={{ width: '30%' }}
+                    initialValue={colorPrimary}
+                    style={{ width: '40%' }}
                     name="color"
                     label="Color de la materia"
                     rules={[
@@ -49,7 +80,7 @@ export default function FormCreateSubject({ handleSubmit, onClose, cursos, value
                         },
                     ]}
                 >
-                    <ColorPicker defaultValue="#ff0000" size="large" showText style={{ width: '100%' }} />
+                    <ColorPicker size="large" showText style={{ width: '100%' }} />
                 </Form.Item>
             </Flex>
             <Form.Item
@@ -62,9 +93,23 @@ export default function FormCreateSubject({ handleSubmit, onClose, cursos, value
                     },
                 ]}
             >
-                <TextArea size='large' placeholder="Ingrese la descripcion" allowClear style={{ height: '150px' }} />
+                <TextArea size='large' placeholder="Ingrese la descripcion" allowClear style={{ height: '100px' }} />
             </Form.Item>
-            <Form.Item>
+            <Flex
+                className='previewContainer'
+                justify='center'
+                align='center'
+                onMouseEnter={(e) => e.currentTarget.style.borderColor = colorPrimary} // Cambia el color al hacer hover
+                onMouseLeave={(e) => e.currentTarget.style.borderColor = '#cfcfcf'} // Vuelve al color original cuando quitas el hover
+            >
+                <Flex className="preview" align='center' gap={5}
+                    style={{ color: colorPrimary, backgroundColor: makeColorTransparent(colorPrimary, 0.22) }}>
+                    <Avatar size={'small'} icon={<UserOutlined />} />
+                    Abreviacion
+                </Flex>
+
+            </Flex>
+            <Form.Item style={{ marginTop: '25px' }}>
                 <Flex justify='flex-end' gap={10}>
                     <Tooltip title="Volver">
                         <Button size='large' iconPosition='end' icon={<RollbackOutlined />} style={{ width: "100px" }} onClick={onClose} />
