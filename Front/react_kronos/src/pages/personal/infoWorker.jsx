@@ -4,9 +4,9 @@ import { RollbackOutlined, PlusOutlined, MailOutlined } from '@ant-design/icons'
 import DropTable from '../../components/filterDropTable/FilterDropTable';
 
 export default function InfoWorker({ onClose, handleVolver, handleContactar, user }) {
-    const data = user.subjects.map(subject => `${subject.subject_name} - ${subject.school_name}`);
+    const data = [...new Set(user.subjects.map(subject => subject.subject_name))];
     const [isModalVisible, setIsModalVisible] = useState(false);
-    const [selectedRoles, setSelectedRoles] = useState([]); // Estado para manejar los checkboxes
+    const [selectedRoles, setSelectedRoles] = useState([]);
     const [courses, setCourse] = useState([]);
     const [roles, setRoles] = useState([]);
 

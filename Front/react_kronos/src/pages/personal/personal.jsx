@@ -15,7 +15,7 @@ export default function Personal() {
   const [activeButton, setActiveButton] = useState('Profesores');
   const [searchName, setSearchName] = useState('');
   const [subject, setSubject] = useState('');
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const asuntoRef = useRef(null);
   const contenidoRef = useRef(null);
   const [open, setOpen] = useState(false);
@@ -403,6 +403,7 @@ export default function Personal() {
 
 
   useEffect(() => {
+    
     fetch("http://127.0.0.1:8000/api/subjects/", {
       method: "GET",
       headers: {
@@ -422,7 +423,7 @@ export default function Personal() {
           label: subject.name,
         }));
         setSubjects(subjects);
-
+        setLoading(false);
       })
       .catch((error) => console.error('Error fetching data:', error));
   }, []);
@@ -461,7 +462,7 @@ export default function Personal() {
 
           <Select
             style={{ width: 250 }}
-            value={subject}
+            value={subject?subject:null}
             size='large'
             showSearch
             placeholder="Seleccione una materia"
@@ -497,11 +498,11 @@ export default function Personal() {
             showEspecificWorker(user.id);
           },
         })}
+        loading={loading}
         pagination={false}
         y={500}
         dataSource={teachers}
         columns={columns}
-        loading={loading}
         tableLayout={'fixed'}
         filterDropdownOpen={true}
         filtered={true}

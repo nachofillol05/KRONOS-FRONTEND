@@ -446,6 +446,7 @@ export default function Materias() {
                         </div>
                     </Drawer>
                 </>) : (<FloatButton icon={<DownloadOutlined />} tooltip="Descargar tabla" />)}
+                {sessionStorage.getItem('rol') === 'Directivo' && (
             <ModalComponent
                 isModalOpen={isModalOpen}
                 setIsModalOpen={setIsModalOpen}
@@ -454,7 +455,7 @@ export default function Materias() {
                 teachers={teachers}
                 setSelectedTeacher={setSelectedTeacher}
                 asignarMateria={asignarMateria}
-            />
+            />)}
         </>
     )
 }

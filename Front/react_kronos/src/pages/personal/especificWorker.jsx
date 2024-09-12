@@ -96,29 +96,45 @@ export default function Especificworker({ handleVolverInfo, id, onClose }) {
       </Flex>
       <Divider orientation="left">Disponiblidad horaria</Divider>
       <Row>
-        {days.map((day) => {
-          const moduleData = modulesData.filter(
-            (data) => data.day.toLowerCase() === day.toLowerCase()
-          );
-          return (
-            <Col style={{ flexGrow: 1 }}>
-              <Row style={{ display: "flex", justifyContent: "center" }}>
-                {day}
-              </Row>
-              <React.Fragment key={day}>
-                {moduleData.map((module) => (
-                  <Col
-                    style={{ width: "95%", paddingInline: 3, marginInline: 'auto' }}
-                    key={`${day}-${module.id}`}
-                    className="especificWorkerCasilla"
-                  >
-                  </Col>
-                ))}
-              </React.Fragment>
-            </Col>
-          );
-        })}
-      </Row>
+  {days.map((day) => {
+    const moduleData = modulesData.filter(
+      (data) => data.day.toLowerCase() === day.toLowerCase()
+    );
+
+    return (
+      <Col style={{ flexGrow: 1 }} key={day}>
+        <Row style={{ display: "flex", justifyContent: "center" }}>
+          {day}
+        </Row>
+        <React.Fragment key={day}>
+          {moduleData.map((module) => {
+            // Verificar si el módulo está en la disponibilidad del profesor
+            const isAvailable = worker?.teacher_availability?.some(
+              (availability) =>
+                availability.module.moduleNumber === module.moduleNumber &&
+                availability.module.day.toLowerCase() === day.toLowerCase()
+            );
+
+            return (
+              <Col
+                style={{
+                  width: "95%",
+                  paddingInline: 3,
+                  marginInline: 'auto',
+                  backgroundColor: isAvailable ? "green" : "transparent", // Pintar de verde si está disponible
+                }}
+                key={`${day}-${module.id}`}
+                className="especificWorkerCasilla"
+              >
+              </Col>
+            );
+          })}
+        </React.Fragment>
+      </Col>
+    );
+  })}
+</Row>
+
       <br />
       <Flex justify="flex-end" gap={10}>
         <Tooltip label="volver">

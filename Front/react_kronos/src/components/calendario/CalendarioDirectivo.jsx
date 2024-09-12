@@ -12,6 +12,8 @@ const subjects = [
     { abreviation: 'FIS', value: "Fisica", teacher: "Ethel", label: 'Fisica', color: '#808080', avatar: <Avatar size={'small'} icon={<UserOutlined />} /> }
 ];
 
+const days = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes'];
+
 
 
 export default function Calendario({ materias, mibooleano }) {
@@ -27,52 +29,6 @@ export default function Calendario({ materias, mibooleano }) {
             window.location.reload();
         }
     }, []);
-
-    const generarHorario = () => {
-        console.log("Generar horario");
-        fetch('http://127.0.0.1:8000/api/new_schedule/', {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Token ${localStorage.getItem('token')}`,
-                'School-ID': sessionStorage.getItem('actual_school'),
-            },
-        })
-            .then((response) => response.json())
-            .then((data) => {
-                materias = data;
-            });
-        setMostrarAceptar(true);
-
-    }
-    const aceptarHorario = () => {
-        console.log("Aceptar horario");
-        fetch('http://127.0.0.1:8000/api/create_schedule/', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Token ${localStorage.getItem('token')}`,
-                'School-ID': sessionStorage.getItem('actual_school'),
-            },
-        })
-            .then((response) => {
-                if (response.ok) {
-                    console.log("Horario aceptado");
-                    return response.json();
-                } else {
-                    console.log("Horario no aceptado");
-                    throw new Error('Network response was not ok');
-                }
-            })
-            .then((data) => {
-                console.log(data);
-            })
-            .catch((error) => {
-                console.error('Error fetching data:', error);
-            });
-        setMostrarAceptar(false);
-    }
-
     const obtenerMateriasModule = (moduleId, courseId) => {
         // Construir la URL con los parámetros
         const url = new URL('http://localhost:8000/api/subjectpermodule/');
@@ -190,7 +146,7 @@ export default function Calendario({ materias, mibooleano }) {
         return `${dayIndex}-${hourIndex}-${courseIndex}`;
     }, []);
 
-    const days = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes'];
+   
 
     const memoizedSubjects = useMemo(() => subjects, []);
     const memoizedDays = useMemo(() => days, []);
@@ -235,6 +191,7 @@ export default function Calendario({ materias, mibooleano }) {
                                     return (
                                         <React.Fragment key={dayIndex}>
                                             {moduleData.map((module, hourIndex) => {
+                                                console.log("celda");
                                                 const key = getCellKey(dayIndex, hourIndex, courseIndex);
                                                 const selectedSubjectValue = selectedItems[key];
                                                 const subject = memoizedSubjects.find(sub => sub.value === selectedSubjectValue);
