@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Button, Flex, Divider, Col, Row, Tooltip, Image } from "antd";
+import { Button, Flex, Divider, Col, Row, Tooltip, Image, Skeleton } from "antd";
 import {
   RollbackOutlined,
   PlusOutlined,
@@ -11,6 +11,7 @@ export default function Especificworker({ handleVolverInfo, id, onClose }) {
   const [selectedCells, setSelectedCells] = useState([]);
   const [worker, setworker] = useState({});
   const [modulesData, setModulesData] = useState([]);
+  const [isSkeleton, setIsSkeleton] = useState(true);
 
   const days = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"];
 
@@ -37,6 +38,7 @@ export default function Especificworker({ handleVolverInfo, id, onClose }) {
           console.log("worker? not found");
           setworker(null); // O maneja el caso donde no se encuentra el trabajador
         }
+        setIsSkeleton(false);
       })
       .catch((error) => console.error("Error fetching data:", error));
   }, [id]);
@@ -57,16 +59,16 @@ export default function Especificworker({ handleVolverInfo, id, onClose }) {
   }, []);
 
   return (
-    <>
+    <Skeleton loading={isSkeleton} active>
       <Flex vertical gap={10}>
         <Flex align="center" gap={30} style={{ width: "70%", height: "50px" }}>
           <label>Foto de perfil:</label>
-          <img
-            width={50}
-            height={50}
-            src={worker.profile_picture? worker.profile_picture : "https://via.placeholder.com/150"}
-            style={{ borderRadius: "50%" }}
-          />
+          <div style={{ borderRadius: '50%', width:50, height: 50}}>
+                      <img
+                      src={worker.profile_picture? worker.profile_picture : "https://via.placeholder.com/150"}
+                      style={{ objectFit: 'cover', width: '100%', height: '100%', borderRadius: '50%' }}
+                    />
+                    </div>
         </Flex>
         <Flex gap={30}>
           <label>
@@ -96,29 +98,45 @@ export default function Especificworker({ handleVolverInfo, id, onClose }) {
       </Flex>
       <Divider orientation="left">Disponiblidad horaria</Divider>
       <Row>
-        {days.map((day) => {
-          const moduleData = modulesData.filter(
-            (data) => data.day.toLowerCase() === day.toLowerCase()
-          );
-          return (
-            <Col style={{ flexGrow: 1 }}>
-              <Row style={{ display: "flex", justifyContent: "center" }}>
-                {day}
-              </Row>
-              <React.Fragment key={day}>
-                {moduleData.map((module) => (
-                  <Col
-                    style={{ width: "95%", paddingInline: 3, marginInline: 'auto' }}
-                    key={`${day}-${module.id}`}
-                    className="especificWorkerCasilla"
-                  >
-                  </Col>
-                ))}
-              </React.Fragment>
-            </Col>
-          );
-        })}
-      </Row>
+  {days.map((day) => {
+    const moduleData = modulesData.filter(
+      (data) => data.day.toLowerCase() === day.toLowerCase()
+    );
+
+    return (
+      <Col style={{ flexGrow: 1 }} key={day}>
+        <Row style={{ display: "flex", justifyContent: "center" }}>
+          {day}
+        </Row>
+        <React.Fragment key={day}>
+          {moduleData.map((module) => {
+            // Verificar si el módulo está en la disponibilidad del profesor
+            const isAvailable = worker?.teacher_availability?.some(
+              (availability) =>
+                availability.module.moduleNumber === module.moduleNumber &&
+                availability.module.day.toLowerCase() === day.toLowerCase()
+            );
+
+            return (
+              <Col
+                style={{
+                  width: "95%",
+                  paddingInline: 3,
+                  marginInline: 'auto',
+                  backgroundColor: isAvailable ? "green" : "transparent", // Pintar de verde si está disponible
+                }}
+                key={`${day}-${module.id}`}
+                className="especificWorkerCasilla"
+              >
+              </Col>
+            );
+          })}
+        </React.Fragment>
+      </Col>
+    );
+  })}
+</Row>
+
       <br />
       <Flex justify="flex-end" gap={10}>
         <Tooltip label="volver">
@@ -132,6 +150,6 @@ export default function Especificworker({ handleVolverInfo, id, onClose }) {
         </Tooltip>
       </Flex>
       <br />
-    </>
+    </Skeleton>
   );
 }

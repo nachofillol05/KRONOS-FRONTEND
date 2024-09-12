@@ -12,7 +12,7 @@ const SelectCourse = lazy(() => import('./selectCourses.jsx'));
 
 const format = 'DD/MM/YYYY';
 
-function Horario({ handleOpenDrawer, handleCloseDrawer }) {
+function Horario() {
     const [open, setOpen] = useState(false);
     const [drawerContent, setDrawerContent] = useState(null);
     const [drawerTitle, setDrawerTitle] = useState(null);
@@ -39,7 +39,6 @@ function Horario({ handleOpenDrawer, handleCloseDrawer }) {
     }, []);
 
     const generarHorario = () => {
-        console.log("Generar horario");
         fetch('http://127.0.0.1:8000/api/new_schedule/', {
             method: 'GET',
             headers: {
@@ -105,7 +104,7 @@ function Horario({ handleOpenDrawer, handleCloseDrawer }) {
             })
             .then(data => setSubjects(data))
             .catch(error => console.error("Error fetching data:", error));
-    }, [subjects]);
+    }, []);
 
     const showDrawer = useCallback((content, title) => {
         setDrawerTitle(title);
@@ -123,9 +122,7 @@ function Horario({ handleOpenDrawer, handleCloseDrawer }) {
         { value: 'Editar', icon: <><EditOutlined /> Editar</> },
     ], []);
 
-    
-
-    
+    console.log("Horario.jsx");
 
     return (
         <>

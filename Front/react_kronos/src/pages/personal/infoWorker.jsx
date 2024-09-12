@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Flex, List, Divider, Tooltip, Modal, Checkbox } from 'antd';
+import { Button, Flex, List, Divider, Tooltip, Modal, Checkbox, Skeleton } from 'antd';
 import { RollbackOutlined, PlusOutlined, MailOutlined } from '@ant-design/icons';
 import DropTable from '../../components/filterDropTable/FilterDropTable';
 
 export default function InfoWorker({ onClose, handleVolver, handleContactar, user }) {
-    const data = user.subjects.map(subject => `${subject.subject_name} - ${subject.school_name}`);
+    const data = [...new Set(user.subjects.map(subject => subject.subject_name))];
     const [isModalVisible, setIsModalVisible] = useState(false);
-    const [selectedRoles, setSelectedRoles] = useState([]); // Estado para manejar los checkboxes
+    const [selectedRoles, setSelectedRoles] = useState([]);
     const [courses, setCourse] = useState([]);
     const [roles, setRoles] = useState([]);
+    const [isSkeleton, setIsSkeleton] = useState(true);
 
     useEffect(() => {
         fetch(`http://127.0.0.1:8000/api/rolesUser/${user.id}/`, {
@@ -29,6 +30,7 @@ export default function InfoWorker({ onClose, handleVolver, handleContactar, use
                 setRoles(data.roles)
             })
             .catch((error) => console.error("Error fetching data:", error));
+            setIsSkeleton(false);
     }, []);
 
 
@@ -75,7 +77,7 @@ export default function InfoWorker({ onClose, handleVolver, handleContactar, use
     }, []);
 
     return (
-        <>
+        <Skeleton loading={isSkeleton} active>
             <Flex vertical gap={10}>
                 <Flex align='center' gap={30} style={{ width: '70%', height: '50px' }}>
                     <label>Foto de perfil:</label>
@@ -154,6 +156,6 @@ export default function InfoWorker({ onClose, handleVolver, handleContactar, use
                     </div>
                 )}
             </Modal>
-        </>
+        </Skeleton>
     );
 }

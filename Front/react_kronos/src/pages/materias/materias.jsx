@@ -18,7 +18,7 @@ export default function Materias() {
     const [Subjectname, setSubjectname] = useState('');
     const [start_time, setStart_time] = useState('');
     const [end_time, setEnd_time] = useState('');
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
     const [open, setOpen] = useState(false);
     const [drawerContent, setDrawerContent] = useState(null);
     const [drawerTitle, setDrawerTitle] = useState(null);
@@ -32,6 +32,7 @@ export default function Materias() {
     const [CursoCompleto, SetCursoCompleto] = useState([]);
     const [selectedTeacher, setSelectedTeacher] = useState(null);
 
+    console.log('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaasssssssssssssssssssssssss')
     const asignarMateria = (coursesubject_id) => {
 
         const body = {
@@ -390,22 +391,22 @@ export default function Materias() {
                     allowClear
                 />
             </div>
-            <div className="table-container">
-                <Table
-                    onRow={(record) => ({
-                        onClick: () => showModal(record),
-                    })}
-                    loading={loading}
-                    dataSource={materias}
-                    columns={columns}
-                    tableLayout="fixed"
-                    pagination={false}
-                    y={500}
-                    expandRowByClick
-                    footer={false}
-                />
+            <Table
+                bordered
+                onRow={(record) => ({
+                    onClick: () => showModal(record),
+                })}
+                pagination={false}
+                y={500}
+                dataSource={materias}
+                columns={columns}
+                loading={loading}
+                tableLayout="fixed"
+                filterDropdownOpen={true}
+                filtered={true}
 
-            </div>
+            />
+
 
             {sessionStorage.getItem('rol') === 'Directivo' ? (
                 <>
@@ -446,6 +447,7 @@ export default function Materias() {
                         </div>
                     </Drawer>
                 </>) : (<FloatButton icon={<DownloadOutlined />} tooltip="Descargar tabla" />)}
+                {sessionStorage.getItem('rol') === 'Directivo' && (
             <ModalComponent
                 isModalOpen={isModalOpen}
                 setIsModalOpen={setIsModalOpen}
@@ -454,7 +456,7 @@ export default function Materias() {
                 teachers={teachers}
                 setSelectedTeacher={setSelectedTeacher}
                 asignarMateria={asignarMateria}
-            />
+            />)}
         </>
     )
 }
