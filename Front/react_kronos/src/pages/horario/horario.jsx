@@ -1,6 +1,6 @@
 // Horario.jsx
 import React, { Suspense, lazy, useState, useEffect, useCallback, useMemo } from 'react';
-import { FloatButton, Drawer, Button, Segmented, DatePicker } from 'antd';
+import { FloatButton, Drawer, Button, Segmented, DatePicker, Modal } from 'antd';
 import { InsertRowAboveOutlined, DownOutlined, UpOutlined, DownloadOutlined, HistoryOutlined, CloseOutlined, AppstoreOutlined, UserSwitchOutlined, EyeOutlined, EditOutlined, FilterOutlined } from '@ant-design/icons';
 import CalendarioDirectivo from '../../components/calendario/CalendarioDirectivo.jsx';
 import './horarios.scss';
@@ -18,6 +18,77 @@ function Horario({ handleOpenDrawer, handleCloseDrawer }) {
     const [drawerTitle, setDrawerTitle] = useState(null);
     const [subjects, setSubjects] = useState([]);
     const [editar, setEditar] = useState(false);
+    const [mostrarAceptar, setMostrarAceptar] = useState(false);
+    const [incomplete, setIncomplete] = useState([]);
+    const [showModal, setShowModal] = useState(false);
+
+    const openModal = () => {
+        setShowModal(true);
+    };
+
+    const closeModal = () => {
+        setShowModal(false);
+    };
+
+
+    useEffect(() => {
+        if(sessionStorage.getItem('rol') === "Profesor"){
+            console.log("No deberiaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+            window.location.reload();
+        }
+    }, []);
+
+    const generarHorario = () => {
+        console.log("Generar horario");
+        fetch('http://127.0.0.1:8000/api/new_schedule/', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Token ${localStorage.getItem('token')}`,
+                'School-ID': sessionStorage.getItem('actual_school'),
+            },
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                console.log(data[0]);
+                console.log(data[1]);
+                setSubjects(data[0]);
+                setIncomplete(data[1]);
+                if (data[1].length > 0){
+                    openModal();
+                }
+            });
+        setMostrarAceptar(true);
+
+    }
+    const aceptarHorario = () => {
+        console.log("Aceptar horario");
+        fetch('http://127.0.0.1:8000/api/create_schedule/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Token ${localStorage.getItem('token')}`,
+                'School-ID': sessionStorage.getItem('actual_school'),
+            },
+        })
+            .then((response) => {
+                if (response.ok) {
+                    console.log("Horario aceptado");
+                    return response.json();
+                } else {
+                    console.log("Horario no aceptado");
+                    throw new Error('Network response was not ok');
+                }
+            })
+            .then((data) => {
+                console.log(data);
+            })
+            .catch((error) => {
+                console.error('Error fetching data:', error);
+            });
+        setMostrarAceptar(false);
+        setIncomplete([]);
+    }
 
     // Obtención de datos del servidor (materias)
     useEffect(() => {
@@ -34,7 +105,7 @@ function Horario({ handleOpenDrawer, handleCloseDrawer }) {
             })
             .then(data => setSubjects(data))
             .catch(error => console.error("Error fetching data:", error));
-    }, []);
+    }, [subjects]);
 
     const showDrawer = useCallback((content, title) => {
         setDrawerTitle(title);
@@ -51,6 +122,10 @@ function Horario({ handleOpenDrawer, handleCloseDrawer }) {
         { value: 'Visualizar', icon: <><EyeOutlined /> Visualizar</> },
         { value: 'Editar', icon: <><EditOutlined /> Editar</> },
     ], []);
+
+    
+
+    
 
     return (
         <>
@@ -70,7 +145,15 @@ function Horario({ handleOpenDrawer, handleCloseDrawer }) {
             </div>
 
             {/* Pasar el estado editar al calendario */}
-            <CalendarioDirectivo materia={subjects} mibooleano={editar}/>
+            <CalendarioDirectivo materias={subjects} mibooleano={editar}/>
+            <div>
+                {sessionStorage.getItem('rol') === "Directivo" && subjects.length === 0 && !mostrarAceptar? (
+                    <Button type="primary" onClick={generarHorario}>Generar automáticamente</Button>
+                ) : sessionStorage.getItem('rol') === "Directivo" && mostrarAceptar ? (
+                    <Button type="primary" onClick={aceptarHorario}>Aceptar horario</Button>
+                ) : null}
+            </div>	
+            
             <FloatButton.Group
                 visibilityHeight={1500}
                 trigger="click"
@@ -119,6 +202,30 @@ function Horario({ handleOpenDrawer, handleCloseDrawer }) {
                     {drawerContent}
                 </div>
             </Drawer>
+            
+            {showModal?(
+                <Modal
+                title="Error al generar horario"
+                visible={showModal}
+                onCancel={closeModal}
+                footer={[
+                    <Button key="ok" onClick={closeModal}>
+                        Cerrar
+                    </Button>
+                ]}
+            >
+                <div>
+                    <h2>Horario incompleto</h2>
+                    <p>El horario no se ha completado, faltan las siguientes materias:</p>
+                    <ul>
+                        {incomplete.map((materia, index) => (
+                            <li key={index}>{materia}</li>
+                        ))}
+                    </ul>
+                </div>
+            </Modal>
+            
+            ): null}
         </>
     );
 }

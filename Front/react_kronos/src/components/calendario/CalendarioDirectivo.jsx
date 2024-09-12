@@ -20,6 +20,7 @@ export default function Calendario({ materias, mibooleano }) {
     const [coursesDinamic, setCoursesDinamic] = useState([]);
     const [modulesData, setModulesData] = useState([]);
     const [mostrarAceptar, setMostrarAceptar] = useState(false);
+    const [incomplete, setIncomplete] = useState([]);
 
     useEffect(() => {
         if(sessionStorage.getItem('rol') === "Profesor"){
@@ -323,13 +324,7 @@ export default function Calendario({ materias, mibooleano }) {
 
                 </Row>
             </div>
-            <div>
-                {sessionStorage.getItem('rol') === "Directivo" && materias.length === 0? (
-                    <Button type="primary" onClick={generarHorario}>Generar automáticamente</Button>
-                ) : sessionStorage.getItem('rol') === "Directivo" && mostrarAceptar ? (
-                    <Button type="primary" onClick={aceptarHorario}>Aceptar horario</Button>
-                ) : null}
-            </div>
+            
         </>
     );
 
