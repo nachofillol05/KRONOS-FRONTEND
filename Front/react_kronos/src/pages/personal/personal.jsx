@@ -34,7 +34,7 @@ export default function Personal() {
   const DescargarExcel = () => {
     console.log('Descargando...');
 
-    fetch("http://127.0.0.1:8000/api/staff/?export=excel", {
+    fetch("http://127.0.0.1:8000/api/staff/export", {
       method: "GET",
       headers: {
         Authorization: "Token " + localStorage.getItem("token"),
@@ -486,7 +486,7 @@ export default function Personal() {
             width: 300,
           }}
           placeholder="Buscar Personal"
-          onPressEnter={onChangePersonal} //VEEEEEEEEEEEER DE CAMBIAR POR UN ONCHANGE O SI EXISTE UN ONFINALCHANGE
+          onChange={onChangePersonal} //VEEEEEEEEEEEER DE CAMBIAR POR UN ONCHANGE O SI EXISTE UN ONFINALCHANGE
           allowClear
         />
       </div>

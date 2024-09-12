@@ -73,8 +73,6 @@ export default function Profile() {
             documentType: isEditing? data.documentType?.id || '' : data.documentType?.name || '',
             document: data.document || '',
             phone: data.phone || '',
-            hoursToWork: 12, // ESTO DEBERÁ SER CAMBIADO POR UN CÁLCULO DE LAS HORAS OCUPADAS
-            //profile_picture: data.profile_picture || '',
             nationality: isEditing? data.nationality?.id || '' : data.nationality?.name || '',
             city: data.contactInfo?.city || '',
             postalCode: data.contactInfo?.postalCode || '',
@@ -121,6 +119,11 @@ useEffect(() => {
   const toggleEditMode = () => {
     setIsEditing(!isEditing);
   };
+  const generos = [
+    { value: 'masculino', label: 'Masculino' },
+    { value: 'femenino', label: 'Femenino' },
+    { value: 'otro', label: 'Otro' },
+  ];
 
   const handleFinishUser = async (values) => {
     // Enviar los datos del perfil
@@ -161,7 +164,7 @@ useEffect(() => {
   
       console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaa",file)
       
-      if (values.profile_picture && file.originFileObj) {
+      if (values.profile_picture && file) {
         const formData = new FormData();
         formData.append('profile_picture', file.originFileObj); // Usar originFileObj
     
@@ -335,7 +338,7 @@ useEffect(() => {
                 />
               </Form.Item>
               <Flex gap={25}>
-                <Form.Item label="Horas semanales por colegio" name="hoursToWorkxSchool" layout='horizontal' style={{ flexGorw: 1 }} className="formItemProfile">
+                <Form.Item label="Horas semanales por colegio" name="hoursToWorkBySchool" layout='horizontal' style={{ flexGorw: 1 }} className="formItemProfile">
                   <Input
                     size='large'
                     type="number"
@@ -343,7 +346,7 @@ useEffect(() => {
                     disabled
                   />
                 </Form.Item>
-                <Form.Item label="Horas semanales en total" name="hoursToWorkTotaly" layout='horizontal' style={{ flexGorw: 1 }} className="formItemProfile">
+                <Form.Item label="Horas semanales en total" name="hoursToWork" layout='horizontal' style={{ flexGorw: 1 }} className="formItemProfile">
                   <Input
                     size='large'
                     type="number"
@@ -354,11 +357,15 @@ useEffect(() => {
               </Flex>
               <Flex gap={25}>
                 <Form.Item label="Género" name="gender" layout='horizontal' style={{ flexGrow: 1 }} className="formItemProfile">
-                  <Input
-                    size='large'
-                    style={!isEditing ? customDisabledStyle : { height: '40px' }}
-                    disabled={!isEditing}
-                  />
+                {isEditing ? (
+                    <Select style={{ height: '40px' }} options={generos} size='large' />
+                  ) : (
+                    <Input
+                      size='large'
+                      style={!isEditing ? customDisabledStyle : { height: '40px' }}
+                      disabled={!isEditing}
+                    />
+                  )}
                 </Form.Item>
                 <Form.Item label="Nacionalidad" name="nationality" layout='horizontal' style={{ flexGrow: 1 }} className="formItemProfile">
                   {isEditing ? (

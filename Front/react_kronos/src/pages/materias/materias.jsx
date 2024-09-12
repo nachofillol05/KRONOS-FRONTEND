@@ -386,7 +386,7 @@ export default function Materias() {
                         width: 300,
                     }}
                     placeholder="Buscar Materia"
-                    onPressEnter={onChangeMateria}
+                    onChange={onChangeMateria}
                     allowClear
                 />
             </div>
