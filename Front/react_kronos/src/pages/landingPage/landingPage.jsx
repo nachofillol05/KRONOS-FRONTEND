@@ -48,7 +48,7 @@ export default function Activation() {
           </div>
       </div>
       <div className="reviews-land">
-          <h1>¿Por que necesitas Kronnos?</h1>
+          <h1>¿Por que necesitas Kronos?</h1>
           <div class="reviews">
           <img class="reviewland-img" src={reviewland} alt="review"></img>
           <img class="reviewland-img" src={reviewland} alt="review"></img>
