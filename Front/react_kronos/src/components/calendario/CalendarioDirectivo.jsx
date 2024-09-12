@@ -22,6 +22,30 @@ export default function Calendario({ materias, mibooleano }) {
     const [modulesData, setModulesData] = useState([]);
     const [mostrarAceptar, setMostrarAceptar] = useState(false);
     const [incomplete, setIncomplete] = useState([]);
+    //const [subjects, setSubjects] = useState([]);
+    
+    /*useEffect(() => {
+    
+        fetch("http://127.0.0.1:8000/api/subjects/", {
+          method: "GET",
+          headers: {
+            Authorization: "Token " + localStorage.getItem("token"),
+            "School-ID": sessionStorage.getItem("actual_school"),
+          },
+        })
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error("Network response was not ok");
+            }
+            return response.json();
+          })
+          .then((data) => {
+            console.log("aaaaaaaaaaaaaaaaa",data);
+            setSubjects(data);
+          })
+          .catch((error) => console.error('Error fetching data:', error));
+      }, []);
+*/
 
     useEffect(() => {
         if(sessionStorage.getItem('rol') === "Profesor"){

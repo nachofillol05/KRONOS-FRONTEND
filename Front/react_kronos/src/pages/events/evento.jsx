@@ -342,7 +342,7 @@ export default function EventsPage() {
             width: 300,
           }}
           placeholder="Buscar Evento"
-          onPressEnter={onChangeNombre}
+          onChange={onChangeNombre}
           allowClear
         />
       </div>
@@ -452,8 +452,8 @@ export default function EventsPage() {
       >
         <div style={{ display: "flex", flexDirection: "column", gap: 15 }}>
         <h6 style={{ color: 333, margin: 0 }}>{event.name}</h6>
-        <h3 style={{ margin: 0 }}>{event.type_event}</h3>
           <p style={{margin: 0}}>
+            <p style={{margin: 0}}>{event.eventType.name}</p>
             {moment.utc(event.startDate).format('DD/MM/YYYY')} - {moment.utc(event.endDate).format('DD/MM/YYYY')}
             <p style={{margin: 0}}>{eventStatus}</p>
           </p>

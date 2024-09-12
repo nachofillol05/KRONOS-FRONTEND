@@ -81,19 +81,19 @@ export default function InfoWorker({ onClose, handleVolver, handleContactar, use
             <Flex vertical gap={10}>
                 <Flex align='center' gap={30} style={{ width: '70%', height: '50px' }}>
                     <label>Foto de perfil:</label>
-                    <img
-                        width={50}
-                        height={50}
-                        src="https://via.placeholder.com/150"
-                        style={{ borderRadius: '50%' }}
+                    <div style={{ borderRadius: '50%', width:50, height: 50}}>
+                      <img
+                      src={user.profile_picture? user.profile_picture : "https://via.placeholder.com/150"}
+                      style={{ objectFit: 'cover', width: '100%', height: '100%', borderRadius: '50%' }}
                     />
+                    </div>
                 </Flex>
                 <Flex gap={30}>
                     <label>Nombre: {user.first_name} {user.last_name}</label>
                     <label>Documento: {user?.documentType?.name},  {user.document}</label>
                 </Flex>
                 <Flex gap={30}>
-                    <label>Telefono:  {user.email}</label>
+                    <label>Telefono:  {user.phone}</label>
                     <label>Email: {user.email}</label>
                 </Flex>
                 <Flex gap={30}>

@@ -302,8 +302,7 @@ useEffect(() => {
                     ) : (
                       <Input
                         size='large'
-                        style={!isEditing ? customDisabledStyle : { height: '40px' }}
-                        disabled={!isEditing}
+                        style={customDisabledStyle}
                       />
                     )}
                   </Form.Item>
@@ -324,8 +323,8 @@ useEffect(() => {
                 <Input
                   size='large'
                   autoSize
-                  style={!isEditing ? customDisabledStyle : { height: '40px' }}
-                  disabled={!isEditing}
+                  style={customDisabledStyle}
+                  disabled={true}
                 />
               </Form.Item>
               <Form.Item label="Teléfono" name="phone" layout='horizontal' style={{ width: '100%' }} className="formItemProfile">

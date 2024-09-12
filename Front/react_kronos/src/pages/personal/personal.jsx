@@ -143,7 +143,7 @@ export default function Personal() {
                 <InfoWorker
                   user={body.user}
                   handleVolver={handleVolver}
-                  handleContactar={() => showDrawer(<ContacWorker handleVolver={handleVolver} user={body.user} />, 'Contacata con el trabajador' )}
+                  handleContactar={() => showDrawer(<ContacWorker onClose={onClose} handleVolver={handleVolver} user={body.user} />, 'Contacata con el trabajador' )}
                   onClose={onClose}
                 />,
                 "Información del Trabajador"

@@ -4,7 +4,7 @@ import { SendOutlined, RollbackOutlined } from '@ant-design/icons';
 const { TextArea } = Input;
 
 
-export default function ContactWorker({ handleVolver, user }) {
+export default function ContactWorker({ onClose,handleVolver, user }) {
     const [form] = Form.useForm();
     const [loading, setLoading] = useState(false);
     
@@ -27,6 +27,7 @@ export default function ContactWorker({ handleVolver, user }) {
                 .then(data => {
                     console.log(data)
                     setLoading(false);
+                    onClose();
                 })
                 .catch(error => {
                     console.log("eeeerror")

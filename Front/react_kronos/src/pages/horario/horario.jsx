@@ -30,7 +30,6 @@ function Horario() {
         setShowModal(false);
     };
 
-
     useEffect(() => {
         if(sessionStorage.getItem('rol') === "Profesor"){
             console.log("No deberiaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
@@ -150,7 +149,7 @@ function Horario() {
                     <Button type="primary" onClick={aceptarHorario}>Aceptar horario</Button>
                 ) : null}
             </div>	
-            
+            {/*
             <FloatButton.Group
                 visibilityHeight={1500}
                 trigger="click"
@@ -184,6 +183,7 @@ function Horario() {
                         </Suspense>, 'Cursos')}
                 />
             </FloatButton.Group>
+            */}
             <Drawer
                 destroyOnClose={false}
                 width={600}

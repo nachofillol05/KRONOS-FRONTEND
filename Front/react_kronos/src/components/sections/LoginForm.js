@@ -179,7 +179,7 @@ export default function Login(props) {
                     </div>
                     {showError && <p>El documento y la contraseña no coinciden</p>}
                     <div className="signin-footer mb-32">
-                      <Link to="/recover-password/" className="func-link text-xs">Olvidó su contraseña?</Link>
+                      {/*<Link to="/recover-password/" className="func-link text-xs">Olvidó su contraseña?</Link>*/}
                     </div>
                   </fieldset>
                 </form>

@@ -9,9 +9,10 @@ const { TextArea } = Input;
 
 export default function FormCreateSubject({ handleSubmit, onClose, cursos, value, setValue }) {
     const [form] = Form.useForm();
-
     const { token } = theme.useToken();
     const colorPrimary = token.colorPrimary;
+    const [colorSelected, setColorSelected] = React.useState(token.colorPrimary);
+    const [AbreviacionSelected, setAbreviacionSelected] = React.useState(value.abreviacion);
 
     const makeColorTransparent = useCallback((color, alpha) => {
         alpha = Math.max(0, Math.min(1, alpha));
@@ -36,6 +37,7 @@ export default function FormCreateSubject({ handleSubmit, onClose, cursos, value
         }
     }, []);
 
+    console.log(colorSelected);
     return (
         <Form form={form} layout="vertical" hideRequiredMark >
             <Flex gap={10}>
@@ -57,6 +59,7 @@ export default function FormCreateSubject({ handleSubmit, onClose, cursos, value
                         style={{ width: '40%' }}
                         name="abreviacion"
                         label="Abreviacion"
+                        onChange={(e) => setAbreviacionSelected(e.target.value)}
                         rules={[
                             {
                                 required: true,
@@ -80,7 +83,7 @@ export default function FormCreateSubject({ handleSubmit, onClose, cursos, value
                         },
                     ]}
                 >
-                    <ColorPicker size="large" showText style={{ width: '100%' }} />
+                    <ColorPicker onChange={(e) => setColorSelected(e.toHexString())} size="large" showText style={{ width: '100%' }} />
                 </Form.Item>
             </Flex>
             <Form.Item
@@ -103,9 +106,9 @@ export default function FormCreateSubject({ handleSubmit, onClose, cursos, value
                 onMouseLeave={(e) => e.currentTarget.style.borderColor = '#cfcfcf'} // Vuelve al color original cuando quitas el hover
             >
                 <Flex className="preview" align='center' gap={5}
-                    style={{ color: colorPrimary, backgroundColor: makeColorTransparent(colorPrimary, 0.22) }}>
+                    style={{ color: colorSelected, backgroundColor: makeColorTransparent(colorSelected, 0.22) }}>
                     <Avatar size={'small'} icon={<UserOutlined />} />
-                    Abreviacion
+                    {AbreviacionSelected}
                 </Flex>
 
             </Flex>
