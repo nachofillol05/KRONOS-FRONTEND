@@ -277,7 +277,7 @@ export default function InfoWorker({ event, estado, closeDrawer, closeDrawerDele
                 <div
                     id="scrollableDiv"
                     style={{
-                        marginTop: '20px',
+                        marginBlock: '25px',
                         height: 250,
                         overflow: 'auto',
                         padding: '0 16px',

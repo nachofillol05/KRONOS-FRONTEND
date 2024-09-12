@@ -15,7 +15,6 @@ const subjects = [
 
 
 export default function Calendario({ materias, mibooleano }) {
-    console.log(materias);
     const [selectedItems, setSelectedItems] = useState({});
     const [coursesDinamic, setCoursesDinamic] = useState([]);
     const [modulesData, setModulesData] = useState([]);
