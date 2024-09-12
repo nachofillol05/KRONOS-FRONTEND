@@ -126,7 +126,7 @@ export default function EventsPage() {
       okText: 'Si, quiero adherirme',
     });
   };
-  
+  console.log('eventossssssssssssssssssssssssssssssssssssssssssssssssssss')
   const showModalDesadherir = (evento, botonAdherido) => {
     if(!botonAdherido){
       Modal.info({

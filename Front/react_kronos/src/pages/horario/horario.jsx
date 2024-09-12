@@ -12,7 +12,7 @@ const SelectCourse = lazy(() => import('./selectCourses.jsx'));
 
 const format = 'DD/MM/YYYY';
 
-function Horario({ handleOpenDrawer, handleCloseDrawer }) {
+function Horario() {
     const [open, setOpen] = useState(false);
     const [drawerContent, setDrawerContent] = useState(null);
     const [drawerTitle, setDrawerTitle] = useState(null);
@@ -123,9 +123,7 @@ function Horario({ handleOpenDrawer, handleCloseDrawer }) {
         { value: 'Editar', icon: <><EditOutlined /> Editar</> },
     ], []);
 
-    
-
-    
+    console.log("Horario.jsx");
 
     return (
         <>

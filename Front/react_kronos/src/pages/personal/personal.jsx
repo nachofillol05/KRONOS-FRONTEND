@@ -490,22 +490,22 @@ export default function Personal() {
           allowClear
         />
       </div>
-      <Table
-        bordered
-        onRow={(user) => ({
-          onClick: () => {
-            showEspecificWorker(user.id);
-          },
-        })}
-        pagination={false}
-        y={500}
-        dataSource={teachers}
-        columns={columns}
-        loading={loading}
-        tableLayout={'fixed'}
-        filterDropdownOpen={true}
-        filtered={true}
-      />
+          <Table
+            bordered
+            onRow={(user) => ({
+              onClick: () => {
+                showEspecificWorker(user.id);
+              },
+            })}
+            pagination={false}
+            y={500}
+            dataSource={teachers}
+            columns={columns}
+            loading={loading}
+            tableLayout={'fixed'}
+            filterDropdownOpen={true}
+            filtered={true}
+          />
       {sessionStorage.getItem('rol') === 'Directivo' ? (
         <>
           <FloatButton.Group
