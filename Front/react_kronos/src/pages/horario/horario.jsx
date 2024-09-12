@@ -122,9 +122,7 @@ function Horario() {
         { value: 'Editar', icon: <><EditOutlined /> Editar</> },
     ], []);
 
-    
-
-    
+    console.log("Horario.jsx");
 
     return (
         <>

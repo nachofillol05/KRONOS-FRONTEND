@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Button, Flex, Divider, Col, Row, Tooltip, Image } from "antd";
+import { Button, Flex, Divider, Col, Row, Tooltip, Image, Skeleton } from "antd";
 import {
   RollbackOutlined,
   PlusOutlined,
@@ -11,6 +11,7 @@ export default function Especificworker({ handleVolverInfo, id, onClose }) {
   const [selectedCells, setSelectedCells] = useState([]);
   const [worker, setworker] = useState({});
   const [modulesData, setModulesData] = useState([]);
+  const [isSkeleton, setIsSkeleton] = useState(true);
 
   const days = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"];
 
@@ -37,6 +38,7 @@ export default function Especificworker({ handleVolverInfo, id, onClose }) {
           console.log("worker? not found");
           setworker(null); // O maneja el caso donde no se encuentra el trabajador
         }
+        setIsSkeleton(false);
       })
       .catch((error) => console.error("Error fetching data:", error));
   }, [id]);
@@ -57,16 +59,16 @@ export default function Especificworker({ handleVolverInfo, id, onClose }) {
   }, []);
 
   return (
-    <>
+    <Skeleton loading={isSkeleton} active>
       <Flex vertical gap={10}>
         <Flex align="center" gap={30} style={{ width: "70%", height: "50px" }}>
           <label>Foto de perfil:</label>
-          <img
-            width={50}
-            height={50}
-            src={worker.profile_picture? worker.profile_picture : "https://via.placeholder.com/150"}
-            style={{ borderRadius: "50%" }}
-          />
+          <div style={{ borderRadius: '50%', width:50, height: 50}}>
+                      <img
+                      src={worker.profile_picture? worker.profile_picture : "https://via.placeholder.com/150"}
+                      style={{ objectFit: 'cover', width: '100%', height: '100%', borderRadius: '50%' }}
+                    />
+                    </div>
         </Flex>
         <Flex gap={30}>
           <label>
@@ -148,6 +150,6 @@ export default function Especificworker({ handleVolverInfo, id, onClose }) {
         </Tooltip>
       </Flex>
       <br />
-    </>
+    </Skeleton>
   );
 }
