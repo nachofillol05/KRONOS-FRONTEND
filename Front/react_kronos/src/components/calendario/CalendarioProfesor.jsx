@@ -1,233 +1,118 @@
 import React, { useState, useEffect } from 'react';
-import { Row, Col } from 'antd';
+import { Row, Col, Tooltip } from 'antd';
 import './Calendario.scss';
 
 const days = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes'];
 
-export default function CalendarioProfesor({ mibooleano }) {
-    const [modulesData, setModulesData] = useState([
-        {
-            "id": 1,
-            "moduleNumber": 1,
-            "day": "lunes",
-            "endTime": "10:00:00",
-            "startTime": "09:00:00"
-        },
-        {
-            "id": 2,
-            "moduleNumber": 2,
-            "day": "lunes",
-            "endTime": "11:00:00",
-            "startTime": "10:00:00"
-        },
-        {
-            "id": 3,
-            "moduleNumber": 3,
-            "day": "lunes",
-            "endTime": "12:00:00",
-            "startTime": "11:00:00"
-        },
-        {
-            "id": 4,
-            "moduleNumber": 4,
-            "day": "lunes",
-            "endTime": "13:00:00",
-            "startTime": "12:00:00"
-        },
-        {
-            "id": 5,
-            "moduleNumber": 5,
-            "day": "lunes",
-            "endTime": "14:00:00",
-            "startTime": "13:00:00"
-        },
-        {
-            "id": 6,
-            "moduleNumber": 1,
-            "day": "martes",
-            "endTime": "10:00:00",
-            "startTime": "09:00:00"
-        },
-        {
-            "id": 7,
-            "moduleNumber": 2,
-            "day": "martes",
-            "endTime": "11:00:00",
-            "startTime": "10:00:00"
-        },
-        {
-            "id": 8,
-            "moduleNumber": 3,
-            "day": "martes",
-            "endTime": "12:00:00",
-            "startTime": "11:00:00"
-        },
-        {
-            "id": 9,
-            "moduleNumber": 4,
-            "day": "martes",
-            "endTime": "13:00:00",
-            "startTime": "12:00:00"
-        },
-        {
-            "id": 10,
-            "moduleNumber": 5,
-            "day": "martes",
-            "endTime": "14:00:00",
-            "startTime": "13:00:00"
-        },
-        {
-            "id": 11,
-            "moduleNumber": 1,
-            "day": "miércoles",
-            "endTime": "10:00:00",
-            "startTime": "09:00:00"
-        },
-        {
-            "id": 12,
-            "moduleNumber": 2,
-            "day": "miércoles",
-            "endTime": "11:00:00",
-            "startTime": "10:00:00"
-        },
-        {
-            "id": 13,
-            "moduleNumber": 3,
-            "day": "miércoles",
-            "endTime": "12:00:00",
-            "startTime": "11:00:00"
-        },
-        {
-            "id": 14,
-            "moduleNumber": 4,
-            "day": "miércoles",
-            "endTime": "13:00:00",
-            "startTime": "12:00:00"
-        },
-        {
-            "id": 15,
-            "moduleNumber": 5,
-            "day": "miércoles",
-            "endTime": "14:00:00",
-            "startTime": "13:00:00"
-        },
-        {
-            "id": 16,
-            "moduleNumber": 1,
-            "day": "jueves",
-            "endTime": "10:00:00",
-            "startTime": "09:00:00"
-        },
-        {
-            "id": 17,
-            "moduleNumber": 2,
-            "day": "jueves",
-            "endTime": "11:00:00",
-            "startTime": "10:00:00"
-        },
-        {
-            "id": 18,
-            "moduleNumber": 3,
-            "day": "jueves",
-            "endTime": "12:00:00",
-            "startTime": "11:00:00"
-        },
-        {
-            "id": 19,
-            "moduleNumber": 4,
-            "day": "jueves",
-            "endTime": "13:00:00",
-            "startTime": "12:00:00"
-        },
-        {
-            "id": 20,
-            "moduleNumber": 5,
-            "day": "jueves",
-            "endTime": "14:00:00",
-            "startTime": "13:00:00"
-        },
-        {
-            "id": 21,
-            "moduleNumber": 1,
-            "day": "viernes",
-            "endTime": "10:00:00",
-            "startTime": "09:00:00"
-        },
-        {
-            "id": 22,
-            "moduleNumber": 2,
-            "day": "viernes",
-            "endTime": "11:00:00",
-            "startTime": "10:00:00"
-        },
-        {
-            "id": 23,
-            "moduleNumber": 3,
-            "day": "viernes",
-            "endTime": "12:00:00",
-            "startTime": "11:00:00"
-        },
-        {
-            "id": 24,
-            "moduleNumber": 4,
-            "day": "viernes",
-            "endTime": "13:00:00",
-            "startTime": "12:00:00"
-        },
-        {
-            "id": 25,
-            "moduleNumber": 5,
-            "day": "viernes",
-            "endTime": "14:00:00",
-            "startTime": "13:00:00"
-        }
-    ]);
-    //quiero que se ejecute primero
+const materias = [
+    // Lunes
+    { day: 'Lunes', moduleNumber: 1, course_id: 1, subject_name: 'Matemática', subject_abreviation: 'MAT', subject_color: '#FF0000', nombre: 'Juan' },
+    { day: 'Lunes', moduleNumber: 2, course_id: 1, subject_name: 'Biología', subject_abreviation: 'BIO', subject_color: '#FFFF00', nombre: 'Manuel' },
+    { day: 'Lunes', moduleNumber: 3, course_id: 2, subject_name: 'Lengua', subject_abreviation: 'LEN', subject_color: '#0000FF', nombre: 'Pedro' },
+    { day: 'Lunes', moduleNumber: 4, course_id: 3, subject_name: 'Química', subject_abreviation: 'QIM', subject_color: '#00FF00', nombre: 'Monica' },
+    { day: 'Lunes', moduleNumber: 5, course_id: 2, subject_name: 'Física', subject_abreviation: 'FIS', subject_color: '#808080', nombre: 'Ethel' },
+
+    // Martes
+    { day: 'Martes', moduleNumber: 1, course_id: 2, subject_name: 'Matemática', subject_abreviation: 'MAT', subject_color: '#FF0000', nombre: 'Juan' },
+    { day: 'Martes', moduleNumber: 2, course_id: 1, subject_name: 'Música', subject_abreviation: 'MUS', subject_color: '#FF00FF', nombre: 'Agustín' },
+    { day: 'Martes', moduleNumber: 3, course_id: 3, subject_name: 'Lengua', subject_abreviation: 'LEN', subject_color: '#0000FF', nombre: 'Pedro' },
+    { day: 'Martes', moduleNumber: 4, course_id: 1, subject_name: 'Química', subject_abreviation: 'QIM', subject_color: '#00FF00', nombre: 'Monica' },
+    { day: 'Martes', moduleNumber: 5, course_id: 3, subject_name: 'Física', subject_abreviation: 'FIS', subject_color: '#808080', nombre: 'Ethel' },
+
+    // Miércoles
+    { day: 'Miércoles', moduleNumber: 1, course_id: 3, subject_name: 'Biología', subject_abreviation: 'BIO', subject_color: '#FFFF00', nombre: 'Manuel' },
+    { day: 'Miércoles', moduleNumber: 2, course_id: 2, subject_name: 'Música', subject_abreviation: 'MUS', subject_color: '#FF00FF', nombre: 'Agustín' },
+    { day: 'Miércoles', moduleNumber: 3, course_id: 1, subject_name: 'Lengua', subject_abreviation: 'LEN', subject_color: '#0000FF', nombre: 'Pedro' },
+    { day: 'Miércoles', moduleNumber: 4, course_id: 1, subject_name: 'Matemática', subject_abreviation: 'MAT', subject_color: '#FF0000', nombre: 'Juan' },
+    { day: 'Miércoles', moduleNumber: 5, course_id: 2, subject_name: 'Física', subject_abreviation: 'FIS', subject_color: '#808080', nombre: 'Ethel' },
+
+    // Jueves
+    { day: 'Jueves', moduleNumber: 1, course_id: 1, subject_name: 'Química', subject_abreviation: 'QIM', subject_color: '#00FF00', nombre: 'Monica' },
+    { day: 'Jueves', moduleNumber: 2, course_id: 3, subject_name: 'Lengua', subject_abreviation: 'LEN', subject_color: '#0000FF', nombre: 'Pedro' },
+    { day: 'Jueves', moduleNumber: 3, course_id: 2, subject_name: 'Matemática', subject_abreviation: 'MAT', subject_color: '#FF0000', nombre: 'Juan' },
+    { day: 'Jueves', moduleNumber: 4, course_id: 1, subject_name: 'Biología', subject_abreviation: 'BIO', subject_color: '#FFFF00', nombre: 'Manuel' },
+    { day: 'Jueves', moduleNumber: 5, course_id: 2, subject_name: 'Física', subject_abreviation: 'FIS', subject_color: '#808080', nombre: 'Ethel' },
+
+    // Viernes
+    { day: 'Viernes', moduleNumber: 1, course_id: 2, subject_name: 'Música', subject_abreviation: 'MUS', subject_color: '#FF00FF', nombre: 'Agustín' },
+    { day: 'Viernes', moduleNumber: 2, course_id: 1, subject_name: 'Química', subject_abreviation: 'QIM', subject_color: '#00FF00', nombre: 'Monica' },
+    { day: 'Viernes', moduleNumber: 3, course_id: 3, subject_name: 'Biología', subject_abreviation: 'BIO', subject_color: '#FFFF00', nombre: 'Manuel' },
+    { day: 'Viernes', moduleNumber: 4, course_id: 1, subject_name: 'Matemática', subject_abreviation: 'MAT', subject_color: '#FF0000', nombre: 'Juan' },
+    { day: 'Viernes', moduleNumber: 5, course_id: 3, subject_name: 'Física', subject_abreviation: 'FIS', subject_color: '#808080', nombre: 'Ethel' }
+];
+export default function CalendarioProfesor() {
+    const [modulesData, setModulesData] = useState([]);
+
     useEffect(() => {
-        if(sessionStorage.getItem('rol') != "Profesor"){
-            console.log("No deberiaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+        if (sessionStorage.getItem('rol') !== "Profesor") {
             window.location.reload();
         }
     }, []);
 
-    useEffect(() => {
-        fetch('http://localhost:8000/api/modules/', {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Token ${localStorage.getItem('token')}`,
-                'School-ID': sessionStorage.getItem('actual_school'),
-            },
-        })
-        .then((response) => response.json())
-        .then((data) => {
-            setModulesData(Object.values(data));
-        });
-    }, []);
+    const getSubjectForDayAndModule = (day, moduleNumber) => {
+        return materias.find(
+            (subject) => subject.day === day && subject.moduleNumber === moduleNumber
+        );
+    };
 
-
+    const makeColorTransparent = (color, opacity) => {
+        const hexToRgba = (hex) => {
+            let r = 0, g = 0, b = 0;
+            if (hex.length === 4) {
+                r = parseInt(hex[1] + hex[1], 16);
+                g = parseInt(hex[2] + hex[2], 16);
+                b = parseInt(hex[3] + hex[3], 16);
+            } else if (hex.length === 7) {
+                r = parseInt(hex[1] + hex[2], 16);
+                g = parseInt(hex[3] + hex[4], 16);
+                b = parseInt(hex[5] + hex[6], 16);
+            }
+            return `rgba(${r},${g},${b},${opacity})`;
+        };
+        return hexToRgba(color);
+    };
 
     return (
         <div className="Calendario CalendarioProfesor">
-            {/* Header with days */}
-            <Row style={{marginTop: '50px'}}>
-                 {/* Empty corner for the hours */}
-                {days.map((day) => {
-                const moduleData = modulesData.filter(
-                    (data) => data.day.toLowerCase() === day.toLowerCase()
-                );
-                return(
-                    <Col style={{flexGrow:1}}>
-                    <Row className='casilla encabezado casillaProfesor'>{day}</Row>
-                    <React.Fragment key={day}>
-                        {moduleData.map((module) => (
-                                <Col className='casilla espacioProfesor' key={`${day}-${module.id}`}>
+            <Row style={{ marginTop: '50px' }}>
+                {days.map((day) => (
+                    <Col key={day} style={{ flexGrow: 1 }}>
+                        <Row className="casilla encabezado casillaProfesor">{day}</Row>
+                        {[1, 2, 3, 4, 5].map((moduleNumber) => {
+                            const subject = getSubjectForDayAndModule(day, moduleNumber);
+                            const backgroundColor = subject
+                                ? makeColorTransparent(subject.subject_color, 0.1)
+                                : 'white';
+                            const textColor = subject ? subject.subject_color : '#000';
+                            return (
+                                <Col key={`${day}-${moduleNumber}`} className="casilla">
+                                    <Tooltip
+                                        title={
+                                                <div>
+                                                    <b>{subject.subject_name}</b><br />
+                                                    Profesor: {subject.nombre}
+                                                </div>
+                                        }
+                                        color="black"
+                                        overlayClassName="calendar-tooltip"
+                                    >
+                                        <div
+                                            className="espacio"
+                                            style={{
+                                                backgroundColor,
+                                                color: textColor,
+                                                borderRadius: '5px',
+                                                cursor: subject ? 'pointer' : 'default',
+                                            }}
+                                        >
+                                            {subject ? subject.subject_abreviation : ''}
+                                        </div>
+                                    </Tooltip>
                                 </Col>
-                        ))}
-                    </React.Fragment>
-                    </Col>  
-                );
-            })}
+                            );
+                        })}
+                    </Col>
+                ))}
             </Row>
         </div>
     );
