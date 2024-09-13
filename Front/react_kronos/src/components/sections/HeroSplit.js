@@ -86,11 +86,11 @@ class HeroSplit extends React.Component {
                     Tu gestor de horarios escolares.
                   </p>
                 </div>
-                <div className="hero-figure split-item-image split-item-image-fill illustration-element-01 reveal-from-bottom">
+                <div className="split-item-image split-item-image-fill illustration-element-01 ">
                     <img
-                      src={require('../../assets/images/gifPrincipal.gif')}
+                      src={require('../../assets/images/img1Kronos.png')}
                       alt="Hero"
-                      style={{width:200, height:200, margin: 'auto'}} />
+                      style={{width:350, height:350, margin: 'auto'}} />
                 </div>
               </div>
             </div>

@@ -7,36 +7,29 @@ const days = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes'];
 const materias = [
     // Lunes
     { day: 'Lunes', moduleNumber: 1, course_id: 1, subject_name: 'Matemática', subject_abreviation: 'MAT', subject_color: '#FF0000', nombre: 'Juan' },
-    { day: 'Lunes', moduleNumber: 2, course_id: 1, subject_name: 'Biología', subject_abreviation: 'BIO', subject_color: '#FFFF00', nombre: 'Manuel' },
-    { day: 'Lunes', moduleNumber: 3, course_id: 2, subject_name: 'Lengua', subject_abreviation: 'LEN', subject_color: '#0000FF', nombre: 'Pedro' },
-    { day: 'Lunes', moduleNumber: 4, course_id: 3, subject_name: 'Química', subject_abreviation: 'QIM', subject_color: '#00FF00', nombre: 'Monica' },
+    { day: 'Lunes', moduleNumber: 2, course_id: 1, subject_name: 'Matemática', subject_abreviation: 'MAT', subject_color: '#FF0000', nombre: 'Juan' },
+    { day: 'Lunes', moduleNumber: 3, course_id: 1, subject_name: 'Matemática', subject_abreviation: 'MAT', subject_color: '#FF0000', nombre: 'Juan' },
+    { day: 'Lunes', moduleNumber: 4, course_id: 3, subject_name: 'Fisica', subject_abreviation: 'FIS', subject_color: '#808080', nombre: 'Monica' },
     { day: 'Lunes', moduleNumber: 5, course_id: 2, subject_name: 'Física', subject_abreviation: 'FIS', subject_color: '#808080', nombre: 'Ethel' },
 
     // Martes
-    { day: 'Martes', moduleNumber: 1, course_id: 2, subject_name: 'Matemática', subject_abreviation: 'MAT', subject_color: '#FF0000', nombre: 'Juan' },
-    { day: 'Martes', moduleNumber: 2, course_id: 1, subject_name: 'Música', subject_abreviation: 'MUS', subject_color: '#FF00FF', nombre: 'Agustín' },
-    { day: 'Martes', moduleNumber: 3, course_id: 3, subject_name: 'Lengua', subject_abreviation: 'LEN', subject_color: '#0000FF', nombre: 'Pedro' },
+    { day: 'Martes', moduleNumber: 2, course_id: 2, subject_name: 'Matemática', subject_abreviation: 'MAT', subject_color: '#FF0000', nombre: 'Juan' },
+    { day: 'Martes', moduleNumber: 3, course_id: 1, subject_name: 'Química', subject_abreviation: 'QIM', subject_color: '#00FF00', nombre: 'Monica' },
     { day: 'Martes', moduleNumber: 4, course_id: 1, subject_name: 'Química', subject_abreviation: 'QIM', subject_color: '#00FF00', nombre: 'Monica' },
-    { day: 'Martes', moduleNumber: 5, course_id: 3, subject_name: 'Física', subject_abreviation: 'FIS', subject_color: '#808080', nombre: 'Ethel' },
 
     // Miércoles
-    { day: 'Miércoles', moduleNumber: 1, course_id: 3, subject_name: 'Biología', subject_abreviation: 'BIO', subject_color: '#FFFF00', nombre: 'Manuel' },
-    { day: 'Miércoles', moduleNumber: 2, course_id: 2, subject_name: 'Música', subject_abreviation: 'MUS', subject_color: '#FF00FF', nombre: 'Agustín' },
-    { day: 'Miércoles', moduleNumber: 3, course_id: 1, subject_name: 'Lengua', subject_abreviation: 'LEN', subject_color: '#0000FF', nombre: 'Pedro' },
+    { day: 'Miércoles', moduleNumber: 1, course_id: 2, subject_name: 'Física', subject_abreviation: 'FIS', subject_color: '#808080', nombre: 'Ethel' },
+    { day: 'Miércoles', moduleNumber: 2, course_id: 2, subject_name: 'Física', subject_abreviation: 'FIS', subject_color: '#808080', nombre: 'Ethel' },
+    { day: 'Miércoles', moduleNumber: 3, course_id: 1, subject_name: 'Matemática', subject_abreviation: 'MAT', subject_color: '#FF0000', nombre: 'Pedro' },
     { day: 'Miércoles', moduleNumber: 4, course_id: 1, subject_name: 'Matemática', subject_abreviation: 'MAT', subject_color: '#FF0000', nombre: 'Juan' },
-    { day: 'Miércoles', moduleNumber: 5, course_id: 2, subject_name: 'Física', subject_abreviation: 'FIS', subject_color: '#808080', nombre: 'Ethel' },
 
     // Jueves
-    { day: 'Jueves', moduleNumber: 1, course_id: 1, subject_name: 'Química', subject_abreviation: 'QIM', subject_color: '#00FF00', nombre: 'Monica' },
-    { day: 'Jueves', moduleNumber: 2, course_id: 3, subject_name: 'Lengua', subject_abreviation: 'LEN', subject_color: '#0000FF', nombre: 'Pedro' },
-    { day: 'Jueves', moduleNumber: 3, course_id: 2, subject_name: 'Matemática', subject_abreviation: 'MAT', subject_color: '#FF0000', nombre: 'Juan' },
-    { day: 'Jueves', moduleNumber: 4, course_id: 1, subject_name: 'Biología', subject_abreviation: 'BIO', subject_color: '#FFFF00', nombre: 'Manuel' },
-    { day: 'Jueves', moduleNumber: 5, course_id: 2, subject_name: 'Física', subject_abreviation: 'FIS', subject_color: '#808080', nombre: 'Ethel' },
+    { day: 'Jueves', moduleNumber: 1, course_id: 2, subject_name: 'Matemática', subject_abreviation: 'MAT', subject_color: '#FF0000', nombre: 'Juan' },
+    { day: 'Jueves', moduleNumber: 2, course_id: 2, subject_name: 'Matemática', subject_abreviation: 'MAT', subject_color: '#FF0000', nombre: 'Juan' },
+    { day: 'Jueves', moduleNumber: 5, course_id: 1, subject_name: 'Química', subject_abreviation: 'QIM', subject_color: '#00FF00', nombre: 'Monica' },
 
     // Viernes
-    { day: 'Viernes', moduleNumber: 1, course_id: 2, subject_name: 'Música', subject_abreviation: 'MUS', subject_color: '#FF00FF', nombre: 'Agustín' },
     { day: 'Viernes', moduleNumber: 2, course_id: 1, subject_name: 'Química', subject_abreviation: 'QIM', subject_color: '#00FF00', nombre: 'Monica' },
-    { day: 'Viernes', moduleNumber: 3, course_id: 3, subject_name: 'Biología', subject_abreviation: 'BIO', subject_color: '#FFFF00', nombre: 'Manuel' },
     { day: 'Viernes', moduleNumber: 4, course_id: 1, subject_name: 'Matemática', subject_abreviation: 'MAT', subject_color: '#FF0000', nombre: 'Juan' },
     { day: 'Viernes', moduleNumber: 5, course_id: 3, subject_name: 'Física', subject_abreviation: 'FIS', subject_color: '#808080', nombre: 'Ethel' }
 ];
@@ -85,29 +78,18 @@ export default function CalendarioProfesor() {
                                 : 'white';
                             const textColor = subject ? subject.subject_color : '#000';
                             return (
-                                <Col key={`${day}-${moduleNumber}`} className="casilla">
-                                    <Tooltip
-                                        title={
-                                                <div>
-                                                    <b>{subject.subject_name}</b><br />
-                                                    Profesor: {subject.nombre}
-                                                </div>
-                                        }
-                                        color="black"
-                                        overlayClassName="calendar-tooltip"
-                                    >
+                                <Col key={`${day}-${moduleNumber}`} className="casilla casillaProfesor">
                                         <div
-                                            className="espacio"
+                                            className="espacioProfesor"
                                             style={{
                                                 backgroundColor,
                                                 color: textColor,
                                                 borderRadius: '5px',
-                                                cursor: subject ? 'pointer' : 'default',
+                                                flexGrow: 1,
                                             }}
                                         >
                                             {subject ? subject.subject_abreviation : ''}
                                         </div>
-                                    </Tooltip>
                                 </Col>
                             );
                         })}
