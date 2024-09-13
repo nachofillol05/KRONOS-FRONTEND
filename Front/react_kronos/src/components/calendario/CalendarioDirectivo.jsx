@@ -234,7 +234,9 @@ export default function Calendario({ materias, mibooleano }) {
                                                     abreviation: matchingMateria.subject_abreviation,
                                                     color: matchingMateria.subject_color || 'white',
                                                     avatar: (
-                                                        <Avatar size={'small'} icon={<UserOutlined />} />
+                                                        matchingMateria.profile_picture 
+                                                            ? <Avatar size={'small'} src={matchingMateria.profile_picture} /> 
+                                                            : <Avatar size={'small'} icon={<UserOutlined />} />
                                                     ),
                                                     teacher: matchingMateria.nombre,
                                                 } : subject;
