@@ -170,7 +170,6 @@ export default function Calendario({ materias, mibooleano }) {
         return `${dayIndex}-${hourIndex}-${courseIndex}`;
     }, []);
 
-   
 
     const memoizedSubjects = useMemo(() => subjects, []);
     const memoizedDays = useMemo(() => days, []);

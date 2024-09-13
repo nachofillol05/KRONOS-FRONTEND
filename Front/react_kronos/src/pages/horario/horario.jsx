@@ -1,6 +1,6 @@
 // Horario.jsx
 import React, { Suspense, lazy, useState, useEffect, useCallback, useMemo } from 'react';
-import { FloatButton, Drawer, Button, Segmented, DatePicker, Modal } from 'antd';
+import { FloatButton, Drawer, Button, Segmented, DatePicker, Modal, Spin } from 'antd';
 import { InsertRowAboveOutlined, DownOutlined, UpOutlined, DownloadOutlined, HistoryOutlined, CloseOutlined, AppstoreOutlined, UserSwitchOutlined, EyeOutlined, EditOutlined, FilterOutlined } from '@ant-design/icons';
 import CalendarioDirectivo from '../../components/calendario/CalendarioDirectivo.jsx';
 import './horarios.scss';
@@ -21,6 +21,7 @@ function Horario() {
     const [mostrarAceptar, setMostrarAceptar] = useState(false);
     const [incomplete, setIncomplete] = useState([]);
     const [showModal, setShowModal] = useState(false);
+    const [Loading, setLoading] = useState(true);
 
     const openModal = () => {
         setShowModal(true);
@@ -124,7 +125,7 @@ function Horario() {
     console.log("Horario.jsx");
 
     return (
-        <>
+        <Spin>
             <div className="contenedor-filtros contenedor-filtros-horario">
                 {sessionStorage.getItem('rol') === "Directivo" && (
                 <Segmented
@@ -223,7 +224,7 @@ function Horario() {
             </Modal>
             
             ): null}
-        </>
+        </Spin>
     );
 }
 

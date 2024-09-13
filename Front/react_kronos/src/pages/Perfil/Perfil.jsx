@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Card, Form, Select, Input, Flex, FloatButton, Drawer, Upload, Tabs, Space } from 'antd';
+import { Button, Card, Form, Select, Input, Flex, FloatButton, Drawer, Upload, Tabs, Space, Skeleton } from 'antd';
 import { ClockCircleOutlined, UploadOutlined } from '@ant-design/icons';
 import './Perfil.scss';
 import FormDisponibilidad from './FormDisponibilidad';
@@ -17,6 +17,8 @@ export default function Profile() {
   const [nationalities, setNationalities] = useState([]);
   const [file, setFile] = useState(null);
   const [profilePicture, setProfilePicture] = useState(null);
+  const [isSkeleton, setIsSkeleton] = useState(true);
+
 
   const handleFileChange = (e) => {
     console.log("aaaaaaaaaaaaaaaaaaaaaaaaa ",URL.createObjectURL(e.file.originFileObj))
@@ -80,6 +82,8 @@ export default function Profile() {
             street: data.contactInfo?.street || '',
             streetNumber: data.contactInfo?.streetNumber || '',
         });
+        
+        setIsSkeleton(false);
     })
     .catch((error) => console.error('Error fetching data:', error));
 }, [isEditing]);
@@ -252,12 +256,15 @@ useEffect(() => {
             }
             
           >
+    
+
             <Form
               form={form}
               layout="vertical"
               onFinish={handleFinishUser}
               style={{ height: '60vh', overflowY: 'auto', padding: '25px' }}
             >
+              <Skeleton loading={isSkeleton} active>
               <Form.Item name="profile_picture">
                 <Flex align='center' justify='space-between'style={{ width: isEditing ? '100%' : '70%', height: '50px' }}>
                   <label >Foto de perfil:</label>
@@ -421,7 +428,9 @@ useEffect(() => {
                   />
                 </Form.Item>
               </Flex>
+              </Skeleton>
             </Form>
+          
           </Card>
         </Tabs.TabPane>
         <Tabs.TabPane style={{ width: 600}} tab="Datos del colegio" key="2">

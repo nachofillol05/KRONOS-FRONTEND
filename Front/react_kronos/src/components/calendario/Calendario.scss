@@ -106,7 +106,6 @@
 }
 
 .espacioProfesor {
-    cursor: pointer;
     min-height: 50px;
     width: 100%;
     background-color: #feffff;
@@ -122,6 +121,10 @@
     width: 100%;
 }
 
+.casillaProfesor:hover{
+    filter: brightness(1) !important;
+}
+
 
 .calendar-tooltip{
     .ant-tooltip-inner{
@@ -132,4 +135,8 @@
         text-decoration: none;
         color: lightblue;
     }
+}
+
+.casillaProfesor{
+    width: 100%;
 }
