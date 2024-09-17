@@ -21,7 +21,7 @@ function Horario() {
     const [mostrarAceptar, setMostrarAceptar] = useState(false);
     const [incomplete, setIncomplete] = useState([]);
     const [showModal, setShowModal] = useState(false);
-    const [Loading, setLoading] = useState(true);
+    const [Loading, setLoading] = useState(false);
 
     const openModal = () => {
         setShowModal(true);
@@ -125,7 +125,7 @@ function Horario() {
     console.log("Horario.jsx");
 
     return (
-        <Spin>
+        <>
             <div className="contenedor-filtros contenedor-filtros-horario">
                 {sessionStorage.getItem('rol') === "Directivo" && (
                 <Segmented
@@ -150,7 +150,7 @@ function Horario() {
                     <Button type="primary" onClick={aceptarHorario}>Aceptar horario</Button>
                 ) : null}
             </div>	
-            {/*
+
             <FloatButton.Group
                 visibilityHeight={1500}
                 trigger="click"
@@ -184,7 +184,7 @@ function Horario() {
                         </Suspense>, 'Cursos')}
                 />
             </FloatButton.Group>
-            */}
+
             <Drawer
                 destroyOnClose={false}
                 width={600}
@@ -224,7 +224,7 @@ function Horario() {
             </Modal>
             
             ): null}
-        </Spin>
+        </>
     );
 }
 

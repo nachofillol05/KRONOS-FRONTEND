@@ -20,13 +20,7 @@ const SelectCourse = ({ showDrawer }) => {
       .then((response) => response.json())
       .then((data) => {
         console.log(data);
-        const mappedData = data.map((course) => ({
-          year: course.year.name,
-          division: course.name,
-          key: course.id,
-        }));
-        console.log(mappedData);
-        setCursos(mappedData);
+        setCursos(data);
       });
   }, []);
 

@@ -30,6 +30,16 @@ export default function Personal() {
   const [courses, setCourses] = useState('');
   const [course,setCourse]=useState('');
   const [recargar, setRecargar] = useState(false);
+  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+
+  const onSelectChange = (newSelectedRowKeys) => {
+    console.log('selectedRowKeys changed: ', newSelectedRowKeys);
+    setSelectedRowKeys(newSelectedRowKeys);
+  };
+  const rowSelection = {
+    selectedRowKeys,
+    onChange: onSelectChange,
+  };
 
   const DescargarExcel = () => {
     console.log('Descargando...');
@@ -492,12 +502,14 @@ export default function Personal() {
         />
       </div>
       <Table
+        rowKey={'id'}
         bordered
         onRow={(user) => ({
           onClick: () => {
             showEspecificWorker(user.id);
           },
         })}
+
         loading={loading}
         pagination={false}
         y={500}
@@ -506,6 +518,7 @@ export default function Personal() {
         tableLayout={'fixed'}
         filterDropdownOpen={true}
         filtered={true}
+        rowSelection={rowSelection}
       />
       {sessionStorage.getItem('rol') === 'Directivo' ? (
         <>

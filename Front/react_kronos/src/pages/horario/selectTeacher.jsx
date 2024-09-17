@@ -205,6 +205,7 @@ export default function SelectTeacher() {
     return (
         <Flex vertical gap={25} align='end'>
             <Table
+            
                 bordered
                 rowSelection={rowSelection}
                 columns={columns}
