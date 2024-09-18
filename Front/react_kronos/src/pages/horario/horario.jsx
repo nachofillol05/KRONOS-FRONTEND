@@ -4,13 +4,19 @@ import { FloatButton, Drawer, Button, Segmented, DatePicker, Modal, Spin } from 
 import { InsertRowAboveOutlined, DownOutlined, UpOutlined, DownloadOutlined, HistoryOutlined, CloseOutlined, AppstoreOutlined, UserSwitchOutlined, EyeOutlined, EditOutlined, FilterOutlined } from '@ant-design/icons';
 import CalendarioDirectivo from '../../components/calendario/CalendarioDirectivo.jsx';
 import './horarios.scss';
+import FilterDropdownTable from '../../components/filterDropTable/FilterDropTable.jsx';
 
 const SelectTeacher = lazy(() => import('./selectTeacher.jsx'));
 const Historial = lazy(() => import('./historial.jsx'));
 const Horas = lazy(() => import('./infoHour.jsx'));
 const SelectCourse = lazy(() => import('./selectCourses.jsx'));
+const roles = [
+    { value: '1', label: 'Profesor 1' },
+    { value: '2', label: 'Profesor 2' },
+    { value: '3', label: 'Profesor 3' },
+]
 
-const format = 'DD/MM/YYYY';
+const dateFormat = 'DD/MM/YYYY';
 
 function Horario() {
     const [open, setOpen] = useState(false);
@@ -91,7 +97,11 @@ function Horario() {
 
     // Obtención de datos del servidor (materias)
     useEffect(() => {
-        fetch("http://127.0.0.1:8000/api/viewschedule/", {
+        const url = new URL('http://127.0.0.1:8000/api/viewschedule/');
+        //if (searchName) url.searchParams.append('date', searchName);
+        //if (teachers) url.searchParams.append('teachers', teachers);
+        //if (courses) url.searchParams.append('courses', courses);
+        fetch(url, {
             method: "GET",
             headers: {
                 Authorization: `Token ${localStorage.getItem("token")}`,
@@ -104,6 +114,7 @@ function Horario() {
             })
             .then(data => setSubjects(data))
             .catch(error => console.error("Error fetching data:", error));
+            setLoading(false);
     }, []);
 
     const showDrawer = useCallback((content, title) => {
@@ -122,23 +133,36 @@ function Horario() {
         { value: 'Editar', icon: <><EditOutlined /> Editar</> },
     ], []);
 
-    console.log("Horario.jsx");
+    const change = (value) => {
+        console.log(value);
+    }
 
     return (
-        <Spin>
+        <>
             <div className="contenedor-filtros contenedor-filtros-horario">
+                {/*const rols = data.map(rol => ({
+                    value: rol.id,
+                    label: rol.name,
+                }));
+                setRoles(rols); */}
+            
                 {sessionStorage.getItem('rol') === "Directivo" && (
                 <Segmented
                     size='large'
                     options={memoizedSegmentedOptions}
                     onChange={(value) => setEditar(value === 'Editar')} // Cambia el estado de 'editar'
                 />)}
-                {/*
-                <DatePicker size='large' format={format} />
-                <Button icon={<FilterOutlined />} size='large' type='primary'>
-                    Filtrar
-                </Button>
-                */}
+                <FilterDropdownTable options={roles} onChange={change} placeholder={'Profesores: '} />
+                <FilterDropdownTable options={roles} onChange={change} placeholder={'Cursos: '} />
+                <DatePicker
+                    size="large"
+                    placeholder="Fecha"
+                    style={{
+                        width: 200,
+                    }}
+                    format={dateFormat} 
+                    allowClear
+                />
             </div>
 
             {/* Pasar el estado editar al calendario */}
@@ -150,7 +174,7 @@ function Horario() {
                     <Button type="primary" onClick={aceptarHorario}>Aceptar horario</Button>
                 ) : null}
             </div>	
-            {/*
+            
             <FloatButton.Group
                 visibilityHeight={1500}
                 trigger="click"
@@ -184,7 +208,7 @@ function Horario() {
                         </Suspense>, 'Cursos')}
                 />
             </FloatButton.Group>
-            */}
+            
             <Drawer
                 destroyOnClose={false}
                 width={600}
@@ -224,7 +248,7 @@ function Horario() {
             </Modal>
             
             ): null}
-        </Spin>
+            </>
     );
 }
 
