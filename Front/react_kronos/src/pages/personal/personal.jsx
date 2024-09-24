@@ -190,7 +190,6 @@ export default function Personal() {
     setDrawerContent(null);
     form.resetFields();
   };
-  //AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAGREGAR QUE CREE UN TEACHER CON LA SCHOOL
   const handleSubmit = (form) => {
     form
       .validateFields()

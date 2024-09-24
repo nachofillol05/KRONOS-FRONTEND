@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './materias.scss';
 import RangeSlider from "../../components/timerangeslider/timerange.jsx";
-import { Table, Select, Input, FloatButton, Drawer, Form, Button, message, Modal, Flex } from "antd";
+import { Spin, Table, Select, Input, FloatButton, Drawer, Form, Button, message, Modal, Flex } from "antd";
 import { FileAddOutlined, DownOutlined, UpOutlined, DownloadOutlined, CloseOutlined, FileSearchOutlined } from '@ant-design/icons';
 import FormCreateSubject from './formCreateSubject.jsx';
 import FormCreateSubjectForCourse from './formCreateSubjectForCourse.jsx';
@@ -18,7 +18,6 @@ export default function Materias() {
     const [Subjectname, setSubjectname] = useState('');
     const [start_time, setStart_time] = useState('');
     const [end_time, setEnd_time] = useState('');
-    const [loading, setLoading] = useState(true);
     const [open, setOpen] = useState(false);
     const [drawerContent, setDrawerContent] = useState(null);
     const [drawerTitle, setDrawerTitle] = useState(null);
@@ -31,8 +30,9 @@ export default function Materias() {
     const [recargar, setRecargar] = useState(false);
     const [CursoCompleto, SetCursoCompleto] = useState([]);
     const [selectedTeacher, setSelectedTeacher] = useState(null);
+    const [isLoading, setLoading] = useState(true)
 
-    console.log('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaasssssssssssssssssssssssss')
+
     const asignarMateria = (coursesubject_id) => {
 
         const body = {
@@ -145,7 +145,6 @@ export default function Materias() {
             });
     };
 
-
     const showMessage = (type, content) => {
         switch (type) {
             case 'success':
@@ -167,34 +166,36 @@ export default function Materias() {
     };
 
     useEffect(() => {
-        const url = new URL('http://127.0.0.1:8000/api/subjects/');
-        if (end_time && start_time) {
-            url.searchParams.append('start_time', start_time);
-            url.searchParams.append('end_time', end_time);
-        }
-        if (teacher) {
-            url.searchParams.append('teacher', teacher);
-        }
-        if (Subjectname) {
-            url.searchParams.append('name', Subjectname);
-        }
-        console.log(url.toString());
-        console.log(sessionStorage.getItem('actual_school'));
-        fetch(url.toString(), {
-            method: "GET",
-            headers: {
-                'Authorization': 'Token ' + localStorage.getItem('token'),
-                'School-ID': sessionStorage.getItem('actual_school'),
-            },
-        })
-            .then(response => {
+        const fetchData = async () => {
+            try {
+                const url = new URL('http://127.0.0.1:8000/api/subjects/');
+                if (end_time && start_time) {
+                    url.searchParams.append('start_time', start_time);
+                    url.searchParams.append('end_time', end_time);
+                }
+                if (teacher) {
+                    url.searchParams.append('teacher', teacher);
+                }
+                if (Subjectname) {
+                    url.searchParams.append('name', Subjectname);
+                }
+                console.log(url.toString());
+                console.log(sessionStorage.getItem('actual_school'));
+    
+                const response = await fetch(url.toString(), {
+                    method: "GET",
+                    headers: {
+                        'Authorization': 'Token ' + localStorage.getItem('token'),
+                        'School-ID': sessionStorage.getItem('actual_school'),
+                    },
+                });
+    
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
-                return response.json();
-            })
-            .then(data => {
-                console.log(data)
+    
+                const data = await response.json();
+    
                 setMaterias(data.map(materia => ({
                     ...materia,
                     key: materia.id,
@@ -208,12 +209,16 @@ export default function Materias() {
                         course_name: course.name
                     }))
                 })));
-                //setMaterias(data.map(materia => ({ ...materia, key: materia.id, children: materia.courses })));
-                setLoading(false);
-                console.log(data);
-            })
-            .catch(error => console.error('Error fetching data:', error));
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            } finally {
+                setLoading(false); // Esto se ejecutará siempre, tanto si hay un error como si no
+            }
+        };
+    
+        fetchData();
     }, [start_time, end_time, Subjectname, teacher, recargar]);
+    
 
     const columns = [
         { title: 'Nombre', dataIndex: 'name', key: 'name', width: '20%', },
@@ -363,101 +368,106 @@ export default function Materias() {
     };
 
     return (
-        <>
-            {contextHolder}
-            <div className="contenedor-filtros contenedor-filtros-materias">
-                {/* 
+        (isLoading ?
+            <div className="spinner-container">
+                <Spin size="large" />
+            </div>
+            :
+            <>
+                {contextHolder}
+                <div className="contenedor-filtros contenedor-filtros-materias">
+                    {/* 
                 <RangeSlider range onFinalChange={handleFinalRangeChange} defaultValue={[20, 50]} />
 */}
-                <Select
-                    size='large'
-                    style={{ width: 250 }}
-                    showSearch
-                    placeholder="Seleccione un Profesor"
-                    onChange={onChange}
-                    onSearch={onSearch}
-                    options={teachers}
-                    allowClear
+                    <Select
+                        size='large'
+                        style={{ width: 250 }}
+                        showSearch
+                        placeholder="Seleccione un Profesor"
+                        onChange={onChange}
+                        onSearch={onSearch}
+                        options={teachers}
+                        allowClear
+                    />
+
+
+                    <Input
+                        size="large"
+                        style={{
+                            width: 300,
+                        }}
+                        placeholder="Buscar Materia"
+                        onChange={onChangeMateria}
+                        allowClear
+                    />
+                </div>
+                <Table
+                    bordered
+                    onRow={(record) => ({
+                        onClick: () => showModal(record),
+                    })}
+                    pagination={false}
+                    y={500}
+                    dataSource={materias}
+                    columns={columns}
+                    tableLayout="fixed"
+                    filterDropdownOpen={true}
+                    filtered={true}
+                    expandRowByClick
+
                 />
 
 
-                <Input
-                    size="large"
-                    style={{
-                        width: 300,
-                    }}
-                    placeholder="Buscar Materia"
-                    onChange={onChangeMateria}
-                    allowClear
-                />
-            </div>
-            <Table
-                bordered
-                onRow={(record) => ({
-                    onClick: () => showModal(record),
-                })}
-                pagination={false}
-                y={500}
-                dataSource={materias}
-                columns={columns}
-                loading={loading}
-                tableLayout="fixed"
-                filterDropdownOpen={true}
-                filtered={true}
-                expandRowByClick
+                {sessionStorage.getItem('rol') === 'Directivo' ? (
+                    <>
+                        <FloatButton.Group
+                            visibilityHeight={1500}
+                            trigger="click"
+                            type="primary"
+                            closeIcon={<DownOutlined />}
+                            icon={<UpOutlined />}
+                        >
+                            <FloatButton icon={<DownloadOutlined />} onClick={descargarExcel} tooltip="Descargar tabla" />
+                            <FloatButton icon={<FileAddOutlined />} type='primary' tooltip="Agregar una materia"
+                                onClick={() => showDrawer(
+                                    <FormCreateSubject handleSubmit={handleSubmit} onClose={onClose} cursos={cursos} value={value} setValue={setValue} />,
+                                    'Agregar una materia'
+                                )}
+                            />
+                            <FloatButton icon={<FileSearchOutlined />} type='primary' tooltip="Asignar materia a un curso"
+                                onClick={() => showDrawer(
+                                    <FormCreateSubjectForCourse handleSubmit={handleSubmitConectarCurso} onClose={onClose} cursos={CursoCompleto} value={value} setValue={setValue} />,
+                                    'Asignar materia a un curso'
+                                )}
+                            />
+                        </FloatButton.Group>
 
-            />
-
-
-            {sessionStorage.getItem('rol') === 'Directivo' ? (
-                <>
-                    <FloatButton.Group
-                        visibilityHeight={1500}
-                        trigger="click"
-                        type="primary"
-                        closeIcon={<DownOutlined />}
-                        icon={<UpOutlined />}
-                    >
-                        <FloatButton icon={<DownloadOutlined />} onClick={descargarExcel} tooltip="Descargar tabla" />
-                        <FloatButton icon={<FileAddOutlined />} type='primary' tooltip="Agregar una materia"
-                            onClick={() => showDrawer(
-                                <FormCreateSubject handleSubmit={handleSubmit} onClose={onClose} cursos={cursos} value={value} setValue={setValue} />,
-                                'Agregar una materia'
-                            )}
-                        />
-                        <FloatButton icon={<FileSearchOutlined />} type='primary' tooltip="Asignar materia a un curso"
-                            onClick={() => showDrawer(
-                                <FormCreateSubjectForCourse handleSubmit={handleSubmitConectarCurso} onClose={onClose} cursos={CursoCompleto} value={value} setValue={setValue} />,
-                                'Asignar materia a un curso'
-                            )}
-                        />
-                    </FloatButton.Group>
-
-                    <Drawer
-                        width={600}
-                        title={drawerTitle}
-                        onClose={onClose}
-                        open={open}
-                        closeIcon={false}
-                        extra={
-                            <Button onClick={onClose} size='large' type='tertiary' icon={<CloseOutlined />} />
-                        }
-                    >
-                        <div style={{ width: '100%', height: '100%' }}>
-                            {drawerContent}
-                        </div>
-                    </Drawer>
-                </>) : (<FloatButton icon={<DownloadOutlined />} tooltip="Descargar tabla" />)}
+                        <Drawer
+                            width={600}
+                            title={drawerTitle}
+                            onClose={onClose}
+                            open={open}
+                            closeIcon={false}
+                            extra={
+                                <Button onClick={onClose} size='large' type='tertiary' icon={<CloseOutlined />} />
+                            }
+                        >
+                            <div style={{ width: '100%', height: '100%' }}>
+                                {drawerContent}
+                            </div>
+                        </Drawer>
+                    </>) : (<FloatButton icon={<DownloadOutlined />} tooltip="Descargar tabla" />)}
                 {sessionStorage.getItem('rol') === 'Directivo' && (
-            <ModalComponent
-                isModalOpen={isModalOpen}
-                setIsModalOpen={setIsModalOpen}
-                record={record}
-                parentRecord={parentRecord}
-                teachers={teachers}
-                setSelectedTeacher={setSelectedTeacher}
-                asignarMateria={asignarMateria}
-            />)}
-        </>
+                    <ModalComponent
+                        isModalOpen={isModalOpen}
+                        setIsModalOpen={setIsModalOpen}
+                        record={record}
+                        parentRecord={parentRecord}
+                        teachers={teachers}
+                        setSelectedTeacher={setSelectedTeacher}
+                        asignarMateria={asignarMateria}
+                    />)}
+            </>
+        )
     )
 }

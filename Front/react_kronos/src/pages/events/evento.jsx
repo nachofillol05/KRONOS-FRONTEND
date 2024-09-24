@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Select, DatePicker, AutoComplete, Drawer, Card, Button, FloatButton, message, Tooltip, Modal, Input, Theme } from "antd";
+import { Select, DatePicker, Spin, Drawer, Card, Button, FloatButton, message, Tooltip, Modal, Input, Theme } from "antd";
 import { InfoCircleOutlined, EditOutlined, CheckCircleOutlined, UserAddOutlined, CloseOutlined, DownOutlined, UpOutlined, FolderAddOutlined, ExclamationCircleFilled } from "@ant-design/icons";
 import FormCreateEvent from "./formCreateEvent";
 import moment from 'moment';
@@ -27,6 +27,8 @@ export default function EventsPage() {
   const [eventos, setEventos] = useState([]);
   const [tipos, setTipos] = useState([]);
   const [profileData, setProfileData] = useState({});
+  const [isLoading, setLoading] = useState(true)
+
 
   
   useEffect(() => {
@@ -73,40 +75,48 @@ export default function EventsPage() {
         })
         .catch(error => console.error('Error fetching data:', error));
   }, []);
-
   useEffect(() => {
-    const url = new URL('http://127.0.0.1:8000/api/events/?role='+ sessionStorage.getItem('rol'));
-    if (date) {
-        url.searchParams.append('maxDate', date);
-    }
-    if (tipoEvento) {
-        url.searchParams.append('eventType', tipoEvento);
-    }
-    if (nombre) {
-        url.searchParams.append('name', nombre);
-    }
-    console.log(url)
-    fetch(url.toString(), {
-        method: "GET",
-        headers: {
-            'Authorization': 'Token ' + localStorage.getItem('token'),
-            'School-ID': sessionStorage.getItem('actual_school'),
-        },
-    })
-        .then(response => {
+    const fetchData = async () => {
+        try {
+            const url = new URL('http://127.0.0.1:8000/api/events/?role=' + sessionStorage.getItem('rol'));
+            if (date) {
+                url.searchParams.append('maxDate', date);
+            }
+            if (tipoEvento) {
+                url.searchParams.append('eventType', tipoEvento);
+            }
+            if (nombre) {
+                url.searchParams.append('name', nombre);
+            }
+            console.log(url.toString());
+
+            const response = await fetch(url.toString(), {
+                method: "GET",
+                headers: {
+                    'Authorization': 'Token ' + localStorage.getItem('token'),
+                    'School-ID': sessionStorage.getItem('actual_school'),
+                },
+            });
+
             if (!response.ok) {
-                setEventos([])
-                showMessage('error', 'No hay eventos que cumplan los requerimientos')
+                setEventos([]);
+                showMessage('error', 'No hay eventos que cumplan los requerimientos');
                 throw new Error('Network response was not ok');
             }
-            return response.json();
-        })
-        .then(data => {
-          console.log(data)
+
+            const data = await response.json();
+            console.log(data);
             setEventos(data);
-        })
-        .catch(error => console.error('Error fetching data:', error));
-  }, [date, nombre, tipoEvento, isModalOpen, open, recargar]);
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        } finally {
+            setLoading(false); // Esto se ejecutará siempre, tanto si hay un error como si no
+        }
+    };
+
+    fetchData();
+}, [date, nombre, tipoEvento, isModalOpen, open, recargar]);
+
 
   useEffect(() => {
     if (messageConfig.type) {
@@ -126,7 +136,7 @@ export default function EventsPage() {
       okText: 'Si, quiero adherirme',
     });
   };
-  console.log('eventossssssssssssssssssssssssssssssssssssssssssssssssssss')
+
   const showModalDesadherir = (evento, botonAdherido) => {
     if(!botonAdherido){
       Modal.info({
@@ -310,6 +320,11 @@ export default function EventsPage() {
   }
 
   return (
+    (isLoading ?
+      <div className="spinner-container">
+        <Spin size="large" />
+      </div>
+      :
     <>
       {contextHolder}
       <div className="contenedor-filtros contenedor-filtros-eventos">
@@ -490,5 +505,6 @@ export default function EventsPage() {
           <div style={{ width: "100%", height: "100%" }}>{drawerContent}</div>
         </Drawer>
     </>
+    )
   );
 }
