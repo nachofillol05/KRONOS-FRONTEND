@@ -23,7 +23,7 @@ export default function Calendario({ materias, mibooleano }) {
     const [mostrarAceptar, setMostrarAceptar] = useState(false);
     const [incomplete, setIncomplete] = useState([]);
     //const [subjects, setSubjects] = useState([]);
-    
+
     /*useEffect(() => {
     
         fetch("http://127.0.0.1:8000/api/subjects/", {
@@ -48,7 +48,7 @@ export default function Calendario({ materias, mibooleano }) {
 */
 
     useEffect(() => {
-        if(sessionStorage.getItem('rol') === "Profesor"){
+        if (sessionStorage.getItem('rol') === "Profesor") {
             console.log("No deberiaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
             window.location.reload();
         }
@@ -225,7 +225,7 @@ export default function Calendario({ materias, mibooleano }) {
                                                     materia.moduleNumber === parseInt(module.moduleNumber) &&
                                                     materia.course_id === course.value
                                                 );
-                                                
+
 
                                                 // Definir el sujeto basado en la materia coincidente
                                                 const displaySubject = matchingMateria ? {
@@ -233,8 +233,8 @@ export default function Calendario({ materias, mibooleano }) {
                                                     abreviation: matchingMateria.subject_abreviation,
                                                     color: matchingMateria.subject_color || 'white',
                                                     avatar: (
-                                                        matchingMateria.profile_picture 
-                                                            ? <Avatar size={'small'} src={matchingMateria.profile_picture} /> 
+                                                        matchingMateria.profile_picture
+                                                            ? <Avatar size={'small'} src={matchingMateria.profile_picture} />
                                                             : <Avatar size={'small'} icon={<UserOutlined />} />
                                                     ),
                                                     teacher: matchingMateria.nombre,
@@ -305,7 +305,7 @@ export default function Calendario({ materias, mibooleano }) {
 
                 </Row>
             </div>
-            
+
         </>
     );
 

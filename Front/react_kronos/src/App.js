@@ -6,7 +6,7 @@ import PrivateRoute from './components/privateRoute/privateRoute.jsx';
 import DirectiveRoute from './components/privateRoute/directiveRoute.jsx';
 
 export default function App() {
-  
+  console.log("App.jsx");
   const themeTokens = {
     token: {
       colorPrimary: '#1DA57A', // Color principal
@@ -24,9 +24,6 @@ export default function App() {
 
     },
   };
-  useEffect(() => {
-    console.log("seeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee esta actualizando",sessionStorage.getItem('rol'));
-  }, [sessionStorage.getItem('rol')]);
   return (
     <ConfigProvider theme={themeTokens}>
       <Router>

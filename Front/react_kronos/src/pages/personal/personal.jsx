@@ -1,13 +1,13 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useContext } from "react";
 import "./personal.scss";
-import { Table, Select, AutoComplete, FloatButton, Drawer, Radio, Form, Space, Input, Button, Flex, message, Modal } from "antd";
+import { Table, Select, Spin, FloatButton, Drawer, Radio, Form, Space, Input, Button, Flex, message, Modal } from "antd";
 import { UsergroupAddOutlined, DownOutlined, UpOutlined, DownloadOutlined, SearchOutlined, CloseOutlined } from '@ant-design/icons';
 import FormSearchDni from './fromSearchDni';
 import InfoWorker from './infoWorker';
 import FormCreateWorker from './formCreateWorker';
 import ContacWorker from './contactWorker';
 import EspecificWorker from './especificWorker';
-import Password from "antd/es/input/Password";
+import { Contexto } from "../../layout/navegacion/navegaciones";
 
 export default function Personal() {
   const [teachers, setTeachers] = useState([]);
@@ -15,7 +15,6 @@ export default function Personal() {
   const [activeButton, setActiveButton] = useState('Profesores');
   const [searchName, setSearchName] = useState('');
   const [subject, setSubject] = useState('');
-  const [loading, setLoading] = useState(true);
   const asuntoRef = useRef(null);
   const contenidoRef = useRef(null);
   const [open, setOpen] = useState(false);
@@ -28,8 +27,19 @@ export default function Personal() {
   const [documento, setDocumento] = useState(null);
   const [activeFilter, setActiveFilter] = useState('Profesores');
   const [courses, setCourses] = useState('');
-  const [course,setCourse]=useState('');
+  const [course, setCourse] = useState('');
   const [recargar, setRecargar] = useState(false);
+  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+  const [isLoading, setLoading] = useState(true)
+
+  const onSelectChange = (newSelectedRowKeys) => {
+    console.log('selectedRowKeys changed: ', newSelectedRowKeys);
+    setSelectedRowKeys(newSelectedRowKeys);
+  };
+  const rowSelection = {
+    selectedRowKeys,
+    onChange: onSelectChange,
+  };
 
   const DescargarExcel = () => {
     console.log('Descargando...');
@@ -82,7 +92,7 @@ export default function Personal() {
       "Buscar/agregar personal."
     );
   };
-  const ok=(body,values,options)=>{
+  const ok = (body, values, options) => {
     console.log("dni entra a 200");
     console.log("values:", values);
     console.log("options: ", options);
@@ -102,19 +112,18 @@ export default function Personal() {
     );
   }
 
-  const showModal = (body,values,options) => {
+  const showModal = (body, values, options) => {
     Modal.confirm({
-        title: 'Creacion de personal',
-        content: (
-            <p>Este documento no le pertenece a ningun personal.¿Quiere crear uno?</p>
-        ),
-        closable: true,
-        okText: 'Confirmar',
-        onOk: () => ok(body,values,options),
-        cancelText: 'Cancelar',
+      title: 'Creacion de personal',
+      content: (
+        <p>Este documento no le pertenece a ningun personal.¿Quiere crear uno?</p>
+      ),
+      closable: true,
+      okText: 'Confirmar',
+      onOk: () => ok(body, values, options),
+      cancelText: 'Cancelar',
     });
-};
-
+  };
 
   const handleSearch = (formRef, options) => {
     formRef.current
@@ -128,7 +137,7 @@ export default function Personal() {
             "School-ID": sessionStorage.getItem("actual_school"),
           },
           body: JSON.stringify({
-            documentType:values.tipoDocumento,
+            documentType: values.tipoDocumento,
             document: values.documento,
           }),
         })
@@ -143,14 +152,14 @@ export default function Personal() {
                 <InfoWorker
                   user={body.user}
                   handleVolver={handleVolver}
-                  handleContactar={() => showDrawer(<ContacWorker onClose={onClose} handleVolver={handleVolver} user={body.user} />, 'Contacata con el trabajador' )}
+                  handleContactar={() => showDrawer(<ContacWorker onClose={onClose} handleVolver={handleVolver} user={body.user} />, 'Contacata con el trabajador')}
                   onClose={onClose}
                 />,
                 "Información del Trabajador"
               );
             } else if (status === 200) {
-              showModal(body,values,options);
-              
+              showModal(body, values, options);
+
             }
           })
           .catch((error) => {
@@ -162,14 +171,6 @@ export default function Personal() {
       });
   };
 
-  const Buscar = () => {
-    setLoading(true);
-    if (true) {
-      setDrawerContent();
-    }
-
-    setLoading(false);
-  };
 
   useEffect(() => {
     if (messageConfig.type) {
@@ -206,7 +207,6 @@ export default function Personal() {
           password: values.documento,
         });
         console.log("Body: ", body);
-        setLoading(true);
         fetch("http://localhost:8000/api/Register/", {
           method: "POST",
           headers: {
@@ -217,17 +217,16 @@ export default function Personal() {
           body: body,
         }).then((response) => {
           if (response.status === 201) {
-            setLoading(false);
             onClose();
             showMessage("success", "Usuario creado con éxito");
             setRecargar(!recargar);
-            
-            return response.json();  
+
+            return response.json();
           } else if (response.status === 400) {
             showMessage("error", "Mail ya registrado");
           }
-      })
-       
+        })
+
       })
       .catch((errorInfo) => {
         setMessageConfig({
@@ -314,84 +313,106 @@ export default function Personal() {
       onClose();
     }
   };
-    //SOLO PARA TEACHERSSSSSSSSSSSSSSSS
+  //SOLO PARA TEACHERSSSSSSSSSSSSSSSS
   useEffect(() => {
-    if (activeFilter === 'Profesores') {
-        const url = new URL('http://127.0.0.1:8000/api/teachers/');
-        if (searchName) url.searchParams.append('search_name', searchName);
-        if (subject) url.searchParams.append('subject_id', subject);
 
-        setLoading(true);
-        fetch(url.toString(), {
-            method: 'GET',
-            headers: {
+
+    const fetchData = async () => {
+      try {
+        let fetchPromises = [];
+
+        if (activeFilter === 'Profesores') {
+          const url = new URL('http://127.0.0.1:8000/api/teachers/');
+          if (searchName) url.searchParams.append('search_name', searchName);
+          if (subject) url.searchParams.append('subject_id', subject);
+
+          fetchPromises.push(
+            fetch(url.toString(), {
+              method: 'GET',
+              headers: {
                 'Authorization': 'Token ' + localStorage.getItem('token'),
                 'School-ID': sessionStorage.getItem('actual_school'),
-            },
-        })
-        .then((response) => {
-            if (!response.ok) {
-                setTeachers([]);
-                return;
-            }
-            return response.json();
-        })
-        .then((data) => {
-          console.log(data);
-          setTeachers(data);
-          setLoading(false);
-        })
-        .catch((error) => {
-            setLoading(false);
-        });
-    } else if (activeFilter === 'Preceptores') {
-        const url = new URL(`http://127.0.0.1:8000/api/preceptors`);
-        if (searchName) url.searchParams.append('search', searchName);
-        if (course) url.searchParams.append('year_id', course);
-        fetch(url.toString(), {
-            method: 'GET',
-            headers: {
-                'Authorization': 'Token ' + localStorage.getItem('token'),
-                'School-ID': sessionStorage.getItem('actual_school'),
-            },
-        })
-        .then((response) => {
-          if (!response.ok) {
-              setTeachers([]);
-              return;
-          }
-          return response.json();
-      })
-      .then((data) => {
-          console.log(data);
-          setTeachers(data);
-        })
-        .catch((error) => console.error('Error fetching data:', error));
-    }
-    else if (activeFilter === 'Directivos') {
-      const url = new URL(`http://127.0.0.1:8000/api/directives`);
-      if (searchName) url.searchParams.append('search', searchName);
-      //if (year) url.searchParams.append('year_id', year);
-      fetch(url.toString(), {
-          method: 'GET',
-          headers: {
-              'Authorization': 'Token ' + localStorage.getItem('token'),
-              'School-ID': sessionStorage.getItem('actual_school'),
-          },
-      })
-      .then((response) => {
-        if (!response.ok) {
-            setTeachers([]);
-            return;
+              },
+            })
+              .then((response) => {
+                if (!response.ok) {
+                  setTeachers([]);
+                  return;
+                }
+                return response.json();
+              })
+              .then((data) => {
+                console.log(data);
+                setTeachers(data);
+              })
+          );
         }
-        return response.json();
-    })
-    .then((data) => {
-        console.log(data);
-        setTeachers(data);
-      })
-      .catch((error) => console.error('Error fetching data:', error));
-  }}, [activeFilter, searchName, subject, course, recargar]);
+
+        else if (activeFilter === 'Preceptores') {
+          const url = new URL('http://127.0.0.1:8000/api/preceptors');
+          if (searchName) url.searchParams.append('search', searchName);
+          if (course) url.searchParams.append('year_id', course);
+
+          fetchPromises.push(
+            fetch(url.toString(), {
+              method: 'GET',
+              headers: {
+                'Authorization': 'Token ' + localStorage.getItem('token'),
+                'School-ID': sessionStorage.getItem('actual_school'),
+              },
+            })
+              .then((response) => {
+                if (!response.ok) {
+                  setTeachers([]);
+                  return;
+                }
+                return response.json();
+              })
+              .then((data) => {
+                console.log(data);
+                setTeachers(data);
+              })
+          );
+        }
+
+        else if (activeFilter === 'Directivos') {
+          const url = new URL('http://127.0.0.1:8000/api/directives');
+          if (searchName) url.searchParams.append('search', searchName);
+
+          fetchPromises.push(
+            fetch(url.toString(), {
+              method: 'GET',
+              headers: {
+                'Authorization': 'Token ' + localStorage.getItem('token'),
+                'School-ID': sessionStorage.getItem('actual_school'),
+              },
+            })
+              .then((response) => {
+                if (!response.ok) {
+                  setTeachers([]);
+                  return;
+                }
+                return response.json();
+              })
+              .then((data) => {
+                console.log(data);
+                setTeachers(data);
+              })
+          );
+        }
+
+        // Esperar a que todos los fetch terminen
+        await Promise.all(fetchPromises);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [activeFilter, searchName, subject, course, recargar]);
+
 
   const columns = [
     { title: "Apellido", dataIndex: "last_name", key: "Apellido", width: 150 },
@@ -403,7 +424,7 @@ export default function Personal() {
 
 
   useEffect(() => {
-    
+
     fetch("http://127.0.0.1:8000/api/subjects/", {
       method: "GET",
       headers: {
@@ -423,7 +444,6 @@ export default function Personal() {
           label: subject.name,
         }));
         setSubjects(subjects);
-        setLoading(false);
       })
       .catch((error) => console.error('Error fetching data:', error));
   }, []);
@@ -449,103 +469,113 @@ export default function Personal() {
     console.log(`selected ${value}`);
     setCourse(value);
   };
-  return (
-    <>
-      {contextHolder}
-      <div className="contenedor-filtros contenedor-filtros-personal">
-        <Radio.Group size='large' defaultValue="Profesores" buttonStyle="solid" onChange={handleFilterChange}>
-          <Radio.Button value="Profesores" >Profesor</Radio.Button>
-          <Radio.Button value="Preceptores" >Preceptor</Radio.Button>
-          <Radio.Button value="Directivos">Directivo</Radio.Button>
-        </Radio.Group>
-        {activeFilter === 'Profesores' && (
 
-          <Select
-            style={{ width: 250 }}
-            value={subject?subject:null}
-            size='large'
-            showSearch
-            placeholder="Seleccione una materia"
-            onChange={onChange}
-            options={subjects}
-            allowClear
-          />) || activeFilter === 'Preceptores' && (
+  return (
+    (isLoading ?
+      <div className="spinner-container">
+        <Spin size="large" />
+      </div>
+      :
+      <>
+        {contextHolder}
+        < div className="contenedor-filtros contenedor-filtros-personal">
+          <Radio.Group size='large' defaultValue="Profesores" buttonStyle="solid" onChange={handleFilterChange}>
+            <Radio.Button value="Profesores" >Profesor</Radio.Button>
+            <Radio.Button value="Preceptores" >Preceptor</Radio.Button>
+            <Radio.Button value="Directivos">Directivo</Radio.Button>
+          </Radio.Group>
+          {activeFilter === 'Profesores' && (
+
             <Select
               style={{ width: 250 }}
-              value={course}
+              value={subject ? subject : null}
               size='large'
               showSearch
-              placeholder="Seleccione un curso"
-              onChange={onChangeCourse}
-              options={courses}
+              placeholder="Seleccione una materia"
+              onChange={onChange}
+              options={subjects}
               allowClear
-            />
-          )}
-        <Input
-          size="large"
-          style={{
-            width: 300,
-          }}
-          placeholder="Buscar Personal"
-          onChange={onChangePersonal} //VEEEEEEEEEEEER DE CAMBIAR POR UN ONCHANGE O SI EXISTE UN ONFINALCHANGE
-          allowClear
-        />
-      </div>
-      <Table
-        bordered
-        onRow={(user) => ({
-          onClick: () => {
-            showEspecificWorker(user.id);
-          },
-        })}
-        loading={loading}
-        pagination={false}
-        y={500}
-        dataSource={teachers}
-        columns={columns}
-        tableLayout={'fixed'}
-        filterDropdownOpen={true}
-        filtered={true}
-      />
-      {sessionStorage.getItem('rol') === 'Directivo' ? (
-        <>
-          <FloatButton.Group
-            visibilityHeight={1500}
-            trigger="click"
-            type="primary"
-            closeIcon={<DownOutlined />}
-            icon={<UpOutlined />}
-          >
-            <FloatButton icon={<DownloadOutlined />} onClick={DescargarExcel} tooltip="Descargar tabla" />
-            <FloatButton icon={<UsergroupAddOutlined />} type='primary' tooltip="Agregar personal"
-              onClick={() => showDrawer(
-                <FormSearchDni handleSearch={handleSearch} />,
-                'Buscar personal'
-              )}
-            />
-          </FloatButton.Group>
-
-          <Drawer
-            destroyOnClose={false}
-            width={600}
-            title={drawerTitle}
-            onClose={onClose}
-            open={open}
-            closeIcon={false}
-            extra={
-              <Button
-                onClick={onClose}
-                size="large"
-                type="tertiary"
-                icon={<CloseOutlined />}
+            />) || activeFilter === 'Preceptores' && (
+              <Select
+                style={{ width: 250 }}
+                value={course}
+                size='large'
+                showSearch
+                placeholder="Seleccione un curso"
+                onChange={onChangeCourse}
+                options={courses}
+                allowClear
               />
-            }
-          >
-            <div style={{ width: "100%", height: "100%" }}>{drawerContent}</div>
-          </Drawer>
+            )}
+          <Input
+            size="large"
+            style={{
+              width: 300,
+            }}
+            placeholder="Buscar Personal"
+            onChange={onChangePersonal} //VEEEEEEEEEEEER DE CAMBIAR POR UN ONCHANGE O SI EXISTE UN ONFINALCHANGE
+            allowClear
+          />
+        </div >
+        <Table
+          rowKey={'id'}
+          bordered
+          onRow={(user) => ({
+            onClick: () => {
+              showEspecificWorker(user.id);
+            },
+          })}
+          pagination={false}
+          y={500}
+          dataSource={teachers}
+          columns={columns}
+          tableLayout={'fixed'}
+          filterDropdownOpen={true}
+          filtered={true}
+          rowSelection={rowSelection}
+        />
+        {
+          sessionStorage.getItem('rol') === 'Directivo' ? (
+            <>
+              <FloatButton.Group
+                visibilityHeight={1500}
+                trigger="click"
+                type="primary"
+                closeIcon={<DownOutlined />}
+                icon={<UpOutlined />}
+              >
+                <FloatButton icon={<DownloadOutlined />} onClick={DescargarExcel} tooltip="Descargar tabla" />
+                <FloatButton icon={<UsergroupAddOutlined />} type='primary' tooltip="Agregar personal"
+                  onClick={() => showDrawer(
+                    <FormSearchDni handleSearch={handleSearch} />,
+                    'Buscar personal'
+                  )}
+                />
+              </FloatButton.Group>
 
-        </>
-      ) : (<FloatButton icon={<DownloadOutlined />} tooltip="Descargar tabla" />)}
-    </>
+              <Drawer
+                destroyOnClose={false}
+                width={600}
+                title={drawerTitle}
+                onClose={onClose}
+                open={open}
+                closeIcon={false}
+                extra={
+                  <Button
+                    onClick={onClose}
+                    size="large"
+                    type="tertiary"
+                    icon={<CloseOutlined />}
+                  />
+                }
+              >
+                <div style={{ width: "100%", height: "100%" }}>{drawerContent}</div>
+              </Drawer>
+
+            </>
+          ) : (<FloatButton icon={<DownloadOutlined />} tooltip="Descargar tabla" />)
+        }`
+      </>
+    )
   );
 }

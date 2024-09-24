@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, createContext } from 'react';
 import {
     ScheduleOutlined,
     TableOutlined,
@@ -24,6 +24,9 @@ function getItem(label, key, icon, children) {
     };
 }
 
+export const Contexto = createContext();
+
+
 const App = ({ children }) => {
     const [collapsed, setCollapsed] = useState(false);
     const [dropdownItems, setDropdownItems] = useState([]);
@@ -35,6 +38,7 @@ const App = ({ children }) => {
     const [school, setSchool] = useState(sessionStorage.getItem('actual_school') || '');
     const [data, setData] = useState(null);
     const [selectHabilitado, setSelectHabilitado] = useState(true);
+    const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -59,7 +63,7 @@ const App = ({ children }) => {
                     sessionStorage.setItem('rol', data.roles[0]);
                     setRol(data.roles[0]);
                 }
-                if(!data.roles.includes(sessionStorage.getItem('rol'))){
+                if (!data.roles.includes(sessionStorage.getItem('rol'))) {
                     sessionStorage.setItem('rol', data.roles[0]);
                     setRol(data.roles[0]);
                 }
@@ -77,16 +81,13 @@ const App = ({ children }) => {
         const schools = JSON.parse(savedData || '[]');
         const actualSchoolPk = parseInt(sessionStorage.getItem('actual_school'), 10);
         const selectedSchool = schools.find(school => school.pk === actualSchoolPk);
-        console.log('selectedSchool', selectedSchool);
-        console.log('selectedSchool', selectedSchool);
-        console.log('Entro')
         const parsedData = JSON.parse(savedData);
         setDropdownItems(parsedData.map(school => ({
             key: school.pk.toString(),
             label: school.name,
         })));
         setEscuelaCompleta(selectedSchool);
-        
+
     }, []);
 
     const handleMenuItemClick = ({ key }) => {
@@ -138,7 +139,7 @@ const App = ({ children }) => {
     const defaultRol = rol || (roles.length > 0 ? roles[0] : undefined);
 
     let currentSchool = JSON.parse(localStorage.getItem('schools')).find(school => school.pk === Number(sessionStorage.getItem('actual_school')));
-    if(!currentSchool){
+    if (!currentSchool) {
         console.log(JSON.parse(localStorage.getItem('schools'))[0].pk);
         sessionStorage.setItem('actual_school', JSON.parse(localStorage.getItem('schools'))[0].pk);
         currentSchool = JSON.parse(localStorage.getItem('schools')).find(school => school.pk === Number(sessionStorage.getItem('actual_school')));;
@@ -156,67 +157,77 @@ const App = ({ children }) => {
     ];
 
     return (
-        <Layout style={{ minHeight: '100vh' }}>
-            <Sider
-                collapsible
-                collapsed={collapsed}
-                onCollapse={value => setCollapsed(value)}
-                width={175}
-                collapsedWidth={50}
-                breakpoint="lg"
-                style={{
-                    overflow: 'auto',
-                    height: '100vh',
-                    position: 'fixed',
-                    left: 0,
-                    top: 0,
-                    bottom: 0,
-                    zIndex: 1,
-                }}
-            >
-                <div className={`logo ${collapsed ? 'collapsed' : ''}`}>
-                    <Dropdown
-                        overlay={
-                            <Menu
-                                onClick={handleMenuItemClick}
-                                items={dropdownItems.filter(role => role.key !== sessionStorage.getItem('actual_school')).map(item => ({
-                                    key: item.key,
-                                    label: item.label,
-                                }))}
-                            />
-                        }
-                        trigger={['click']}
-                    >
-                        <a onClick={e => e.preventDefault()} className="logo-img">
-                            <img
-                                src={currentSchool.logo || 'https://via.placeholder.com/150'}
-                                alt="logo"
-                                title={currentSchool.name}
-                                style={{ width: '75%' }}
-                            />
-                        </a>
-                    </Dropdown>
-                    <Select
-                        placeholder="Rol"
-                        className={`logo-select ${selectHabilitado ? '' : 'custom-disabled-select'}`}
-                        onChange={changeRol}
-                        value={defaultRol}
-                        style={{
-                            width: '75%',
-                            pointerEvents: selectHabilitado ? 'auto' : 'none',
-                        }}
-                    >
-                        {renderOptions()}
-                    </Select>
-                </div>
-                <Menu theme="dark" defaultSelectedKeys={[getSelectedKey()]} mode="inline" items={items} />
-            </Sider>
-            <Layout style={{ marginLeft: collapsed ? 50 : 200 }}>
-                <Content style={{ padding: '0 24px', minHeight: 280 }}>
-                    {children}
-                </Content>
+        <Contexto.Provider value={{ setLoading, loading }}>
+
+            <Layout style={{ minHeight: '100vh' }}>
+                <Sider
+                    collapsible
+                    collapsed={collapsed}
+                    onCollapse={value => setCollapsed(value)}
+                    width={175}
+                    collapsedWidth={50}
+                    breakpoint="lg"
+                    style={{
+                        overflow: 'auto',
+                        height: '100vh',
+                        position: 'fixed',
+                        left: 0,
+                        top: 0,
+                        bottom: 0,
+                        zIndex: 1,
+                    }}
+                >
+                    <div className={`logo ${collapsed ? 'collapsed' : ''}`}>
+                        <Dropdown
+                            overlay={
+                                <Menu
+                                    onClick={handleMenuItemClick}
+                                    items={dropdownItems.filter(role => role.key !== sessionStorage.getItem('actual_school')).map(item => ({
+                                        key: item.key,
+                                        label: item.label,
+                                    }))}
+                                />
+                            }
+                            trigger={['click']}
+                        >
+                            <a onClick={e => e.preventDefault()} className="logo-img">
+                                <img
+                                    src={currentSchool.logo || 'https://via.placeholder.com/150'}
+                                    alt="logo"
+                                    title={currentSchool.name}
+                                    style={{ width: '75%' }}
+                                />
+                            </a>
+                        </Dropdown>
+                        <Select
+                            placeholder="Rol"
+                            className={`logo-select ${selectHabilitado ? '' : 'custom-disabled-select'}`}
+                            onChange={changeRol}
+                            value={defaultRol}
+                            style={{
+                                width: '75%',
+                                pointerEvents: selectHabilitado ? 'auto' : 'none',
+                            }}
+                        >
+                            {renderOptions()}
+                        </Select>
+                    </div>
+                    <Menu theme="dark" defaultSelectedKeys={[getSelectedKey()]} mode="inline" items={items} />
+                </Sider>
+                <Layout style={{ marginLeft: collapsed ? 50 : 200 }}>
+                    <Content style={{ padding: '0 24px', minHeight: 280 }}>
+                        {loading ? (
+                            <div className="spinner-container">
+                                <Spin size="large" />
+                            </div>
+                        ) : (
+                            children
+                        )}
+                    </Content>
+                </Layout>
+
             </Layout>
-        </Layout>
+        </Contexto.Provider>
     );
 };
 

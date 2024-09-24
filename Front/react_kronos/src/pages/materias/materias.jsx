@@ -404,6 +404,7 @@ export default function Materias() {
                 tableLayout="fixed"
                 filterDropdownOpen={true}
                 filtered={true}
+                expandRowByClick
 
             />
 
