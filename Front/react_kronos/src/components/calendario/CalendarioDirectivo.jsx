@@ -212,7 +212,7 @@ export default function Calendario({ materias, mibooleano }) {
     const memoizedSubjects = useMemo(() => subjects, []);
     const memoizedDays = useMemo(() => days, []);
     const memoizedCourses = useMemo(() => coursesDinamic, [coursesDinamic]);
-
+    console.log(materias)
     return (
         <>
             <div className="Calendario" style={{ margin: 'auto' }}>
@@ -263,6 +263,7 @@ export default function Calendario({ materias, mibooleano }) {
                                                     materia.moduleNumber === parseInt(module.moduleNumber) &&
                                                     materia.course_id === course.value
                                                 );
+                                                
                                                 
 
                                                 // Definir el sujeto basado en la materia coincidente
