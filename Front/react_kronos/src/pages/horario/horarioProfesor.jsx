@@ -29,12 +29,12 @@ function HorarioProfesor() {
 
     return (
         <>
-            <div className="contenedor-filtros contenedor-filtros-horario">
+            {/*<div className="contenedor-filtros contenedor-filtros-horario">
                 <DatePicker size='large' format={format} />
                 <Button icon={<FilterOutlined />} size='large' type='primary'>
                     Filtrar
                 </Button>
-            </div>
+            </div>*/}
             <CalendarioProfesor subjects={subjects} />
         </>
     );

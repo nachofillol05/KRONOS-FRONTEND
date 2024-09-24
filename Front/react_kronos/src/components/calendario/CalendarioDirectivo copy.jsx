@@ -23,61 +23,29 @@ export default function Calendario({ materias, mibooleano }) {
     const [mostrarAceptar, setMostrarAceptar] = useState(false);
     const [incomplete, setIncomplete] = useState([]);
     //const [subjects, setSubjects] = useState([]);
-    const [menu, setMenu] = useState(null); // Estado para guardar el menú
-
-    // Función para crear el menú dinámicamente al hacer clic
-    const handleDropdownClick = (moduleId, courseId, key) => {
-    setMenu(null)
-    console.log(moduleId, courseId, key);
-    const url = new URL('http://localhost:8000/api/subjectpermodule/');
-    const params = { module_id: moduleId, course_id: courseId };
-
-    // Agregar los parámetros a la URL
-    Object.keys(params).forEach(paramKey => url.searchParams.append(paramKey, params[paramKey]));
-
-    // Realizar la solicitud fetch
-    fetch(url, {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Token ${localStorage.getItem('token')}`,
-            'School-ID': sessionStorage.getItem('actual_school'),
-        },
-    })
-    .then((response) => response.json())
-    .then((data) => {
-        console.log(data)
-        
-        if (data && Array.isArray(data) && data.length > 0) {
-            const generatedMenu = (
-                <Menu onClick={(e) => handleMenuClick(e, key, courseId)}>
-                    {data.map((subject) => (
-                        <Menu.Item key={subject.id} value={subject.id}>
-                            {subject.name}
-                        </Menu.Item>
-                    ))}
-                </Menu>
-            );
-            setMenu(generatedMenu); // Solo actualizar el menú si hay datos
-        } else {
-            setMenu(
-                <Menu>
-                    <Menu.Item disabled key="no-data">No hay materias disponibles</Menu.Item>
-                </Menu>
-            ); // Menú vacío si no hay datos
-        }
-    })
-    .catch(error => {
-        console.error('Error fetching data:', error);
-        setMenu(
-            <Menu>
-                <Menu.Item disabled key="error">Error al cargar materias</Menu.Item>
-            </Menu>
-        ); // Menú con mensaje de error
-    });
-};
     
+    /*useEffect(() => {
     
+        fetch("http://127.0.0.1:8000/api/subjects/", {
+          method: "GET",
+          headers: {
+            Authorization: "Token " + localStorage.getItem("token"),
+            "School-ID": sessionStorage.getItem("actual_school"),
+          },
+        })
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error("Network response was not ok");
+            }
+            return response.json();
+          })
+          .then((data) => {
+            console.log("aaaaaaaaaaaaaaaaa",data);
+            setSubjects(data);
+          })
+          .catch((error) => console.error('Error fetching data:', error));
+      }, []);
+*/
 
     useEffect(() => {
         if(sessionStorage.getItem('rol') === "Profesor"){
@@ -104,8 +72,7 @@ export default function Calendario({ materias, mibooleano }) {
         })
             .then((response) => response.json())
             .then((data) => {
-                console.log(Object.values(data))
-                return Object.values(data);
+                setModulesData(Object.values(data));
             })
             .catch(error => console.error('Error fetching data:', error));
     }
@@ -169,12 +136,7 @@ export default function Calendario({ materias, mibooleano }) {
             .catch(error => console.error('Error fetching data:', error));
     }, []);
 
-    const handleMenuClick = useCallback((e, key,courseId) => {
-        console.log(e)
-        console.log(key)
-        console.log(courseId)
-        console.log("se añadio la materia")
-        //La key sera el id de la materia y puedo llegar a sacar el id del curso y de ahi saco el id del curso y ya tengo la que nceesito y hago el fetch
+    const handleMenuClick = useCallback((e, key) => {
         setSelectedItems(prevState => ({
             ...prevState,
             [key]: e.key
@@ -252,10 +214,10 @@ export default function Calendario({ materias, mibooleano }) {
                                     return (
                                         <React.Fragment key={dayIndex}>
                                             {moduleData.map((module, hourIndex) => {
+                                                console.log("celda");
                                                 const key = getCellKey(dayIndex, hourIndex, courseIndex);
-                                                //EEEEEEEEEEEEEEEEEEEEEESTO ES PARA LLENAR CUANDO SE SELECCIONA LA MATERIA
-                                                //const selectedSubjectValue = selectedItems[key];
-                                                //const subject = memoizedSubjects.find(sub => sub.value === selectedSubjectValue);
+                                                const selectedSubjectValue = selectedItems[key];
+                                                const subject = memoizedSubjects.find(sub => sub.value === selectedSubjectValue);
 
                                                 // Buscar la materia que coincida con el día, módulo y curso
                                                 const matchingMateria = materias.find(materia =>
@@ -276,13 +238,23 @@ export default function Calendario({ materias, mibooleano }) {
                                                             : <Avatar size={'small'} icon={<UserOutlined />} />
                                                     ),
                                                     teacher: matchingMateria.nombre,
-                                                } : null;
+                                                } : subject;
+
+                                                // Crear el menú
+                                                const menu = (
+                                                    <Menu onClick={(e) => handleMenuClick(e, key)}>
+                                                        {memoizedSubjects.map((subject) => (
+                                                            <Menu.Item key={subject.value}>
+                                                                {subject.label}
+                                                            </Menu.Item>
+                                                        ))}
+                                                    </Menu>
+                                                );
 
                                                 return (
                                                     <Col key={key}>
                                                         {mibooleano ? (
-<<<<<<< HEAD
-                                                            <Dropdown menu={menu} trigger={['click']}>
+                                                            <Dropdown overlay={menu} trigger={['click']}>
                                                                 <a className='espacio' style={{
                                                                     color: displaySubject ? displaySubject.color : "",
                                                                     backgroundColor: makeColorTransparent(displaySubject ? displaySubject.color : "white", 0.1),
@@ -293,27 +265,6 @@ export default function Calendario({ materias, mibooleano }) {
                                                                     </div>
                                                                 </a>
                                                             </Dropdown>
-=======
-                                                            <Dropdown
-                                                            overlay={menu || <Menu><Menu.Item disabled>Cargando...</Menu.Item></Menu>} // Menú por defecto mientras se carga
-                                                            trigger={['click']}
-                                                            onVisibleChange={(visible) => {
-                                                                if (visible) {
-                                                                    handleDropdownClick(module.id, course.value, key);
-                                                                }
-                                                            }}
-                                                        >
-                                                            <a className='espacio' style={{
-                                                                color: displaySubject ? displaySubject.color : "",
-                                                                backgroundColor: makeColorTransparent(displaySubject ? displaySubject.color : "white", 0.1),
-                                                            }}>
-                                                                <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
-                                                                    {displaySubject ? displaySubject.avatar : ""}
-                                                                    {displaySubject ? displaySubject.abreviation : ""}
-                                                                </div>
-                                                            </a>
-                                                        </Dropdown>                                                        
->>>>>>> f0ccc3c48a2da2ac8a6bf12e438766a73d732189
                                                         ) : (
                                                             <Tooltip
                                                                 arrow={false}
