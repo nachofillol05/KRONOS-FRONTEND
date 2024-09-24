@@ -74,9 +74,7 @@ const DirectiveRoute = ({ children }) => {
 
     if (isAuthenticated === null || mailVerified === null) {
         return (
-            <div className="spinner-container">
-                <Spin size="large" />
-            </div>
+            null
         );
     }
 

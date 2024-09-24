@@ -23,7 +23,6 @@ import { useEffect } from "react";
 
 const redirigirHorario = () => {
     if (sessionStorage.getItem("rol") === "Profesor") {
-        console.log("Profesor");
         return {
             path: "/horarios",
             exact: true,
@@ -32,7 +31,6 @@ const redirigirHorario = () => {
             component: HorarioProfesor,
         }
     }else{
-        console.log("No Profesor");
         return {
             path: "/horarios",
             exact: true,

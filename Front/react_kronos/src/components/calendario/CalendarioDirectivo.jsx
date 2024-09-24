@@ -254,7 +254,7 @@ export default function Calendario({ materias, mibooleano }) {
                                                 return (
                                                     <Col key={key}>
                                                         {mibooleano ? (
-                                                            <Dropdown overlay={menu} trigger={['click']}>
+                                                            <Dropdown menu={menu} trigger={['click']}>
                                                                 <a className='espacio' style={{
                                                                     color: displaySubject ? displaySubject.color : "",
                                                                     backgroundColor: makeColorTransparent(displaySubject ? displaySubject.color : "white", 0.1),
