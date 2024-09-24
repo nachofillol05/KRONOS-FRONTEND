@@ -281,19 +281,6 @@ export default function Calendario({ materias, mibooleano }) {
                                                 return (
                                                     <Col key={key}>
                                                         {mibooleano ? (
-<<<<<<< HEAD
-                                                            <Dropdown menu={menu} trigger={['click']}>
-                                                                <a className='espacio' style={{
-                                                                    color: displaySubject ? displaySubject.color : "",
-                                                                    backgroundColor: makeColorTransparent(displaySubject ? displaySubject.color : "white", 0.1),
-                                                                }}>
-                                                                    <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
-                                                                        {displaySubject ? displaySubject.avatar : ""}
-                                                                        {displaySubject ? displaySubject.abreviation : ""}
-                                                                    </div>
-                                                                </a>
-                                                            </Dropdown>
-=======
                                                             <Dropdown
                                                             overlay={menu || <Menu><Menu.Item disabled>Cargando...</Menu.Item></Menu>} // Menú por defecto mientras se carga
                                                             trigger={['click']}
@@ -313,7 +300,6 @@ export default function Calendario({ materias, mibooleano }) {
                                                                 </div>
                                                             </a>
                                                         </Dropdown>                                                        
->>>>>>> f0ccc3c48a2da2ac8a6bf12e438766a73d732189
                                                         ) : (
                                                             <Tooltip
                                                                 arrow={false}
