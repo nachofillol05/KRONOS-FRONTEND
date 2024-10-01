@@ -68,7 +68,7 @@ export default function FormCreateSubject({ handleSubmit, onClose, cursos, value
                             },
                         ]}
                     >
-                        <Input size='large' autoSize count={{ show: true, max: 3 }} />
+                        <Input size='large' autoSize count={{ show: true, max: 5 }} />
                     </Form.Item>
                 </Space.Compact>
                 <Form.Item

@@ -17,6 +17,7 @@ export default function InfoWorker({ event, estado, closeDrawer, closeDrawerDele
     const [data, setData] = useState(event.affiliated_teachers || []);
     const [rolesList, setRolesList] = useState([]);
     const [types, setTypes] = useState([]);
+    const [roless, setRoless] = useState([]);
 
     const confirmDelete = (nombre) => {
         Modal.confirm({
@@ -243,7 +244,7 @@ export default function InfoWorker({ event, estado, closeDrawer, closeDrawerDele
                 </Form.Item>
                 <Form.Item className="formInfoEventItem" layout="horizontal" label="Roles dirigido" name="Rolesdirigido" style={{ width: '100%' }}>
                     {isEditing ? (
-                        <FilterDropdownTable options={rolesList} placeholder={'Roles: '} />
+                        <FilterDropdownTable options={rolesList} tempSelectedKeys={roless} setTempSelectedKeys={setRoless}  placeholder={'Roles: '} />
                     ) : (
                         <Input
                             size='large'

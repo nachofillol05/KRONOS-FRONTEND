@@ -85,6 +85,16 @@ export default function Materias() {
     const handleSubmit = (form) => {
         form.validateFields()
             .then(values => {
+                const MateriaEncontrada = materias.find(materia => materia.name === values.materia);
+                const AbreviacionEncontrada = materias.find(materia => materia.abbreviation === values.abreviacion);
+                if (MateriaEncontrada) {
+                    showMessage('error', 'Ya existe una materia con ese nombre.');
+                    return;
+                }
+                if (AbreviacionEncontrada) {
+                    showMessage('error', 'Ya existe una materia con esa abreviacion.');
+                    return;
+                }
                 const hexColor = values.color.toHexString();
                 const body = {
                     name: values.materia,
@@ -108,8 +118,6 @@ export default function Materias() {
             })
             .catch(errorInfo => {
                 showMessage('error', 'Por favor, complete todos los campos.');
-
-                setMessageConfig({ type: 'error', content: 'Por favor, complete todos los campos.' });
             });
     };
 
@@ -405,6 +413,12 @@ export default function Materias() {
                     bordered
                     onRow={(record) => ({
                         onClick: () => showModal(record),
+                        onMouseEnter: () => {
+                            document.body.style.cursor = 'pointer';
+                        },
+                        onMouseLeave: () => {
+                            document.body.style.cursor = 'default';
+                        },
                     })}
                     pagination={false}
                     y={500}
@@ -414,7 +428,6 @@ export default function Materias() {
                     filterDropdownOpen={true}
                     filtered={true}
                     expandRowByClick
-
                 />
 
 
