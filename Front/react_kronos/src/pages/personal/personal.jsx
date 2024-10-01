@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useContext } from "react";
 import "./personal.scss";
 import { Table, Select, Spin, FloatButton, Drawer, Radio, Form, Space, Input, Button, Flex, message, Modal } from "antd";
-import { UsergroupAddOutlined, DownOutlined, UpOutlined, DownloadOutlined, SearchOutlined, CloseOutlined } from '@ant-design/icons';
+import { UsergroupAddOutlined, DownOutlined, UpOutlined, DownloadOutlined, MailOutlined, CloseOutlined } from '@ant-design/icons';
 import FormSearchDni from './fromSearchDni';
 import InfoWorker from './infoWorker';
 import FormCreateWorker from './formCreateWorker';
@@ -31,11 +31,15 @@ export default function Personal() {
   const [recargar, setRecargar] = useState(false);
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [isLoading, setLoading] = useState(true)
+  const [hasSelectedRows, setHasSelectedRows] = useState(false);
 
   const onSelectChange = (newSelectedRowKeys) => {
     console.log('selectedRowKeys changed: ', newSelectedRowKeys);
     setSelectedRowKeys(newSelectedRowKeys);
+    setHasSelectedRows(newSelectedRowKeys.length > 0);
+    
   };
+
   const rowSelection = {
     selectedRowKeys,
     onChange: onSelectChange,
@@ -532,6 +536,7 @@ export default function Personal() {
           filterDropdownOpen={true}
           filtered={true}
           rowSelection={rowSelection}
+          
         />
         {
           sessionStorage.getItem('rol') === 'Directivo' ? (
@@ -551,6 +556,14 @@ export default function Personal() {
                   )}
                 />
               </FloatButton.Group>
+
+              {hasSelectedRows ?
+                <FloatButton icon={<MailOutlined />} 
+                onClick={() => showDrawer(<ContacWorker onClose={onClose} handleVolver={handleVolver} user={{first_name: 'el personal', last_name: 'seleccionado'}}/>, 'Contactar con el personal')}
+                type='primary' style={{ right: '10%' }} />
+                :
+                null
+              }
 
               <Drawer
                 destroyOnClose={false}
