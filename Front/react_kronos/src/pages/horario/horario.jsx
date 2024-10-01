@@ -205,7 +205,7 @@ function Horario() {
                     ) : null}
                 </div>
 
-                <CalendarioDirectivo materias={subjects ? subjects : []} mibooleano={editar} />
+                <CalendarioDirectivo materias={subjects ? subjects : []} mibooleano={editar} setMaterias={setSubjects}/>
                 <div>
                     {sessionStorage.getItem('rol') === "Directivo" && !mostrarAceptar && !subjects?.length && !loading ? (
                         <Button type="primary" onClick={generarHorario}>Generar automáticamente</Button>
@@ -214,7 +214,11 @@ function Horario() {
                             <Button type="primary" onClick={aceptarHorario}>Aceptar horario</Button>
                             <Button type="primary" onClick={cancelarHorario}>Cancelar horario</Button>
                         </>
-                    ) : null}
+                    ) : 
+                    subjects?.length ? (
+                        <Button type="primary" onClick={generarHorario}>Completar automáticamente</Button>
+                    ) :
+                    null}
                 </div>
                 
                 <FloatButton.Group

@@ -3,79 +3,94 @@ import { Row, Col, Dropdown, Menu, Avatar, Tooltip, Button } from 'antd';
 import { UserOutlined, FilterOutlined } from '@ant-design/icons';
 import './Calendario.scss';
 
-const subjects = [
-    { abreviation: 'MAT', value: "Matematica", teacher: "Juan", label: 'Matemática', color: '#FF0000', avatar: <Avatar size={'small'} icon={<UserOutlined />} /> },
-    { abreviation: 'LEN', value: "Lengua", teacher: "Pedro", label: 'Lengua', color: '#0000FF', avatar: <Avatar size={'small'} icon={<UserOutlined />} /> },
-    { abreviation: 'BIO', value: "Biologia", teacher: "Manuel", label: 'Biología', color: '#FFFF00', avatar: <Avatar size={'small'} icon={<UserOutlined />} /> },
-    { abreviation: 'QIM', value: "Quimica", teacher: "Monica", label: 'Química', color: '#00FF00', avatar: <Avatar size={'small'} icon={<UserOutlined />} /> },
-    { abreviation: 'MUS', value: "Musica", teacher: "Agustin", label: 'Música', color: '#FF00FF', avatar: <Avatar size={'small'} icon={<UserOutlined />} /> },
-    { abreviation: 'FIS', value: "Fisica", teacher: "Ethel", label: 'Fisica', color: '#808080', avatar: <Avatar size={'small'} icon={<UserOutlined />} /> }
-];
 
 const days = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes'];
 
 
 
-export default function Calendario({ materias, mibooleano }) {
+export default function Calendario({ materias, mibooleano, setMaterias }) {
     const [selectedItems, setSelectedItems] = useState({});
     const [coursesDinamic, setCoursesDinamic] = useState([]);
     const [modulesData, setModulesData] = useState([]);
     const [mostrarAceptar, setMostrarAceptar] = useState(false);
     const [incomplete, setIncomplete] = useState([]);
-    //const [subjects, setSubjects] = useState([]);
     const [menu, setMenu] = useState(null); // Estado para guardar el menú
 
     // Función para crear el menú dinámicamente al hacer clic
     const handleDropdownClick = (moduleId, courseId, key) => {
-    setMenu(null)
-    console.log(moduleId, courseId, key);
-    const url = new URL('http://localhost:8000/api/subjectpermodule/');
-    const params = { module_id: moduleId, course_id: courseId };
+        setMenu(null); // Resetea el menú
+        const url = new URL('http://localhost:8000/api/subjectpermodule/');
+        const params = { module_id: moduleId, course_id: courseId };
+        Object.keys(params).forEach(paramKey => url.searchParams.append(paramKey, params[paramKey]));
 
-    // Agregar los parámetros a la URL
-    Object.keys(params).forEach(paramKey => url.searchParams.append(paramKey, params[paramKey]));
-
-    // Realizar la solicitud fetch
-    fetch(url, {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Token ${localStorage.getItem('token')}`,
-            'School-ID': sessionStorage.getItem('actual_school'),
-        },
-    })
-    .then((response) => response.json())
-    .then((data) => {
-        console.log(data)
-        
-        if (data && Array.isArray(data) && data.length > 0) {
-            const generatedMenu = (
-                <Menu onClick={(e) => handleMenuClick(e, key, courseId)}>
-                    {data.map((subject) => (
-                        <Menu.Item key={subject.id} value={subject.id}>
-                            {subject.name}
-                        </Menu.Item>
-                    ))}
-                </Menu>
-            );
-            setMenu(generatedMenu); // Solo actualizar el menú si hay datos
-        } else {
+        fetch(url, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Token ${localStorage.getItem('token')}`,
+                'School-ID': sessionStorage.getItem('actual_school'),
+            },
+        })
+        .then((response) => response.json())
+        .then((data) => {
+            if (data && Array.isArray(data) && data.length > 0) {
+                const generatedMenu = (
+                    <Menu onClick={(e) => handleMenuClick(moduleId, courseId, e)}>
+                        {data.map((subject) => (
+                            <Menu.Item key={subject.id} value={subject.id}>
+                                {subject.name}
+                            </Menu.Item>
+                        ))}
+                    </Menu>
+                );
+                setMenu(generatedMenu);
+            } else {
+                setMenu(
+                    <Menu>
+                        <Menu.Item disabled key="no-data">No hay materias disponibles</Menu.Item>
+                    </Menu>
+                );
+            }
+        })
+        .catch(error => {
             setMenu(
                 <Menu>
-                    <Menu.Item disabled key="no-data">No hay materias disponibles</Menu.Item>
+                    <Menu.Item disabled key="error">Error al cargar materias</Menu.Item>
                 </Menu>
-            ); // Menú vacío si no hay datos
-        }
-    })
-    .catch(error => {
-        console.error('Error fetching data:', error);
-        setMenu(
-            <Menu>
-                <Menu.Item disabled key="error">Error al cargar materias</Menu.Item>
-            </Menu>
-        ); // Menú con mensaje de error
-    });
-};
+            );
+        });
+    };
+
+    const handleMenuClick = useCallback((moduleId, courseId, e) => {
+        console.log(moduleId, courseId, e);
+        const selectedSubjectId = e.key;
+
+        fetch(`http://localhost:8000/api/subjectpermodule/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Token ${localStorage.getItem('token')}`,
+                'School-ID': sessionStorage.getItem('actual_school'),
+            },
+            body: JSON.stringify({
+                "schedules":[{
+                    subject_id: selectedSubjectId,
+                    course_id: courseId,
+                    module_id: moduleId
+                }]
+            }),
+        })
+        .then((response) => response.json())
+        .then((data) => {
+            console.log('Data actualizada: ', data);
+            console.log(materias)
+            setMaterias((prevMaterias) => [...prevMaterias, data]);
+            // Aquí puedes actualizar el calendario con los datos devueltos
+        })
+        .catch(error => {
+            console.error('Error fetching schedule data:', error);
+        });
+    }, []);
     
     
 
@@ -85,49 +100,7 @@ export default function Calendario({ materias, mibooleano }) {
             window.location.reload();
         }
     }, []);
-    const obtenerMateriasModule = (moduleId, courseId) => {
-        // Construir la URL con los parámetros
-        const url = new URL('http://localhost:8000/api/subjectpermodule/');
-        const params = { module_id: moduleId, course_id: courseId };
 
-        // Agregar los parámetros a la URL
-        Object.keys(params).forEach(key => url.searchParams.append(key, params[key]));
-
-        // Realizar la solicitud fetch
-        fetch(url, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Token ${localStorage.getItem('token')}`,
-                'School-ID': sessionStorage.getItem('actual_school'),
-            },
-        })
-            .then((response) => response.json())
-            .then((data) => {
-                console.log(Object.values(data))
-                return Object.values(data);
-            })
-            .catch(error => console.error('Error fetching data:', error));
-    }
-
-
-
-    /*useEffect(() => {
-        fetch('http://localhost:8000/api/subjects/', {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Token ${localStorage.getItem('token')}`,
-                'School-ID': sessionStorage.getItem('actual_school'),
-            },
-        })
-            .then((response) => response.json())
-            .then((data) => {
-                console.log(data);
-                setSubjects(data);
-            });
-    }, []);
-*/
 
     useEffect(() => {
         fetch('http://localhost:8000/api/modules/', {
@@ -169,7 +142,7 @@ export default function Calendario({ materias, mibooleano }) {
             .catch(error => console.error('Error fetching data:', error));
     }, []);
 
-    const handleMenuClick = useCallback((e, key,courseId) => {
+   /* const handleMenuClick = useCallback((e, key,courseId) => {
         console.log(e)
         console.log(key)
         console.log(courseId)
@@ -179,7 +152,7 @@ export default function Calendario({ materias, mibooleano }) {
             ...prevState,
             [key]: e.key
         }));
-    }, []);
+    }, []);*/
 
     const makeColorTransparent = useCallback((color, alpha) => {
         alpha = Math.max(0, Math.min(1, alpha));
@@ -209,7 +182,6 @@ export default function Calendario({ materias, mibooleano }) {
     }, []);
 
 
-    const memoizedSubjects = useMemo(() => subjects, []);
     const memoizedDays = useMemo(() => days, []);
     const memoizedCourses = useMemo(() => coursesDinamic, [coursesDinamic]);
     console.log(materias)
@@ -253,9 +225,6 @@ export default function Calendario({ materias, mibooleano }) {
                                         <React.Fragment key={dayIndex}>
                                             {moduleData.map((module, hourIndex) => {
                                                 const key = getCellKey(dayIndex, hourIndex, courseIndex);
-                                                //EEEEEEEEEEEEEEEEEEEEEESTO ES PARA LLENAR CUANDO SE SELECCIONA LA MATERIA
-                                                //const selectedSubjectValue = selectedItems[key];
-                                                //const subject = memoizedSubjects.find(sub => sub.value === selectedSubjectValue);
 
                                                 // Buscar la materia que coincida con el día, módulo y curso
                                                 const matchingMateria = materias.find(materia =>
