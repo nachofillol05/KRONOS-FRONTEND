@@ -84,6 +84,7 @@ export default function Personal() {
   }
 
   const handleFilterChange = (e) => {
+    setSelectedRowKeys([])
     setSubject(null);
     setCourse(null);
     setSearchName(null);
@@ -346,6 +347,8 @@ export default function Personal() {
               })
               .then((data) => {
                 console.log(data);
+                setSelectedRowKeys(selectedRowKeys)
+                console.log(selectedRowKeys)
                 setTeachers(data);
               })
           );
@@ -373,6 +376,8 @@ export default function Personal() {
               })
               .then((data) => {
                 console.log(data);
+                setSelectedRowKeys(selectedRowKeys)
+                console.log(selectedRowKeys)
                 setTeachers(data);
               })
           );
@@ -399,6 +404,8 @@ export default function Personal() {
               })
               .then((data) => {
                 console.log(data);
+                setSelectedRowKeys(selectedRowKeys)
+                console.log(selectedRowKeys)
                 setTeachers(data);
               })
           );

@@ -5,7 +5,8 @@ import {
     TeamOutlined,
     ContactsOutlined,
     UserOutlined,
-    LogoutOutlined
+    LogoutOutlined,
+    UserSwitchOutlined,
 } from '@ant-design/icons';
 import { Layout, Menu, Dropdown, Select, Spin } from 'antd';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
@@ -40,6 +41,8 @@ const App = ({ children }) => {
     const [selectHabilitado, setSelectHabilitado] = useState(true);
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
+
+    
 
     useEffect(() => {
         const fetchRolesAndSchools = async () => {
@@ -99,15 +102,15 @@ const App = ({ children }) => {
 
     const getSelectedKey = () => {
         switch (location.pathname) {
-            case '/perfil':
-                return '1';
             case '/horarios':
-                return '2';
+                return '1';
             case '/personal':
-                return '3';
+                return '2';
             case '/materias':
-                return '4';
+                return '3';
             case '/eventos':
+                return '4';
+            case '/perfil':
                 return '5';
             default:
                 return '1';
@@ -130,9 +133,7 @@ const App = ({ children }) => {
         return roles
             .filter(role => role !== sessionStorage.getItem('rol'))
             .map(role => (
-                <Option key={role} value={role}>
-                    {role}
-                </Option>
+                    getItem(<a onClick={() => changeRol(role)}>{role}</a>)
             ));
     };
 
@@ -146,13 +147,19 @@ const App = ({ children }) => {
     }
 
     const items = [
-        getItem(<Link to="/perfil">Perfil</Link>, '1', <UserOutlined />),
-        getItem(<Link to="/horarios">Horarios</Link>, '2', <TableOutlined />),
+        getItem(
+            defaultRol, 
+            '0', 
+            <UserSwitchOutlined />, 
+            roles.length >= 2 ? renderOptions() : null
+        ),
+        getItem(<Link to="/horarios">Horarios</Link>, '1', <TableOutlined />),
         ...((rol === 'Directivo' || rol === 'Preceptor') ? [
-            getItem(<Link to="/personal">Personal</Link>, '3', <TeamOutlined />),
-            getItem(<Link to="/materias">Materias</Link>, '4', <ScheduleOutlined />)
+            getItem(<Link to="/personal">Personal</Link>, '2', <TeamOutlined />),
+            getItem(<Link to="/materias">Materias</Link>, '3', <ScheduleOutlined />)
         ] : []),
-        getItem(<Link to="/eventos">Eventos</Link>, '5', <ContactsOutlined />),
+        getItem(<Link to="/eventos">Eventos</Link>, '4', <ContactsOutlined />),
+        getItem(<Link to="/perfil">Perfil</Link>, '5', <UserOutlined />),
         getItem(<a onClick={cerrarSesion}>Cerrar sesión</a>, '6', <LogoutOutlined />),
     ];
 
@@ -190,15 +197,16 @@ const App = ({ children }) => {
                             }
                             trigger={['click']}
                         >
-                            <a onClick={e => e.preventDefault()} className="logo-img">
+                            <div onClick={e => e.preventDefault()} className="logo-img">
                                 <img
                                     src={currentSchool.logo || 'https://via.placeholder.com/150'}
                                     alt="logo"
                                     title={currentSchool.name}
                                     style={{ width: '75%' }}
                                 />
-                            </a>
+                            </div>
                         </Dropdown>
+                        {/*
                         <Select
                             placeholder="Rol"
                             className={`logo-select ${selectHabilitado ? '' : 'custom-disabled-select'}`}
@@ -210,7 +218,7 @@ const App = ({ children }) => {
                             }}
                         >
                             {renderOptions()}
-                        </Select>
+                        </Select>*/}
                     </div>
                     <Menu theme="dark" defaultSelectedKeys={[getSelectedKey()]} mode="inline" items={items} />
                 </Sider>
