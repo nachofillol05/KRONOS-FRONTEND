@@ -409,6 +409,30 @@ export default function Personal() {
                 setTeachers(data);
               })
           );
+        }else if (activeFilter === 'Todos') {
+          const url = new URL('http://127.0.0.1:8000/api/staff');
+          if (searchName) url.searchParams.append('search', searchName);
+
+          fetchPromises.push(
+            fetch(url.toString(), {
+              method: 'GET',
+              headers: {
+                'Authorization': 'Token ' + localStorage.getItem('token'),
+                'School-ID': sessionStorage.getItem('actual_school'),
+              },
+            })
+              .then((response) => {
+                if (!response.ok) {
+                  setTeachers([]);
+                  return;
+                }
+                return response.json();
+              })
+              .then((data) => {
+                console.log(data);
+                setTeachers(data);
+              })
+          );
         }
 
         // Esperar a que todos los fetch terminen
@@ -493,6 +517,7 @@ export default function Personal() {
             <Radio.Button value="Profesores" >Profesor</Radio.Button>
             <Radio.Button value="Preceptores" >Preceptor</Radio.Button>
             <Radio.Button value="Directivos">Directivo</Radio.Button>
+            <Radio.Button value="Todos">Todos</Radio.Button>
           </Radio.Group>
           {activeFilter === 'Profesores' && (
 
@@ -530,11 +555,16 @@ export default function Personal() {
         <Table
           rowKey={'id'}
           bordered
+          
           onRow={(user) => ({
-            onClick: () => {
-              showEspecificWorker(user.id);
+            onClick: () => showEspecificWorker(user.id),
+            onMouseEnter: () => {
+                document.body.style.cursor = 'pointer';
             },
-          })}
+            onMouseLeave: () => {
+                document.body.style.cursor = 'default';
+            },
+        })}
           pagination={false}
           y={500}
           dataSource={teachers}
@@ -593,7 +623,7 @@ export default function Personal() {
 
             </>
           ) : (<FloatButton icon={<DownloadOutlined />} tooltip="Descargar tabla" />)
-        }`
+        }
       </>
     )
   );

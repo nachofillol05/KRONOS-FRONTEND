@@ -21,6 +21,10 @@ export default function Profile() {
   const [isLoading, setLoading] = useState(true)
 
 
+  const CambiarContraseña = () => {
+    console.log("Cambiar contraseña")
+  }
+
   const handleFileChange = (e) => {
     console.log("aaaaaaaaaaaaaaaaaaaaaaaaa ", URL.createObjectURL(e.file.originFileObj))
     setFile(e.file);
@@ -435,8 +439,13 @@ export default function Profile() {
                     />
                   </Form.Item>
                 </Flex>
+                <Button
+                    style={{ width: '100px' }}
+                    onClick={CambiarContraseña}
+                  >
+                    Cambiar contraseña
+                  </Button>
               </Form>
-
             </Card>
           </Tabs.TabPane>
           <Tabs.TabPane style={{ width: 600 }} tab="Datos del colegio" key="2">
