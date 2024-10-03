@@ -103,6 +103,9 @@ export default function Login() {
             });
     }
 
+    function cambioContrasenia() {
+        console.log('cambio contraseña');
+    }
 
 
     return (
@@ -120,6 +123,7 @@ export default function Login() {
                 <div className='botones'>
                     <Button text='Iniciar sesión' life onClick={handleLogin} />
                 </div>
+                <a onClick={cambioContrasenia}>Olvide mi contraseña</a>
             </form>
             {showError && <p>El usuario y la contraseña no coinciden</p>}
         </div>
