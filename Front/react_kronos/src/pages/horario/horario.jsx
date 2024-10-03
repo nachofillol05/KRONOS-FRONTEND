@@ -1,5 +1,5 @@
-import React, { Suspense, lazy, useState, useEffect, useCallback, useMemo,useRef } from 'react';
-import { FloatButton, Drawer, Button, Segmented, DatePicker, Modal, Spin } from 'antd';
+import React, { Suspense, lazy, useState, useEffect, useCallback, useMemo, useRef } from 'react';
+import { FloatButton, Drawer, Button, Segmented, DatePicker, Modal, Spin, Switch } from 'antd';
 import { InsertRowAboveOutlined, DownOutlined, UpOutlined, DownloadOutlined, HistoryOutlined, CloseOutlined, AppstoreOutlined, UserSwitchOutlined, EyeOutlined, EditOutlined, FilterOutlined } from '@ant-design/icons';
 import CalendarioDirectivo from '../../components/calendario/CalendarioDirectivo.jsx';
 import './horarios.scss';
@@ -38,7 +38,7 @@ function Horario() {
     const tipIndexRef = useRef(0);
     const [tipMessage, setTipMessage] = useState(messages[tipIndexRef.current]);
     const [cargandoAuto, setCargandoAuto] = useState(false);
-    const [teachers,setTeachers] =useState([])
+    const [teachers, setTeachers] = useState([])
     const [course, setCourse] = useState(null);
     const [teacher, setTeacher] = useState(null);
     const [date, setDate] = useState(null);
@@ -92,30 +92,30 @@ function Horario() {
                 'School-ID': sessionStorage.getItem('actual_school'),
             },
         })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-        })
-        .then(data => {
-            const teacherNames = data.map(teacher => ({
-                value: teacher.id,
-                label: teacher.first_name + ' ' + teacher.last_name,
-            }));
-            setTeachers(teacherNames);
-        })
-        .catch(error => console.error('Error fetching data:', error));
-    }, []); 
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                const teacherNames = data.map(teacher => ({
+                    value: teacher.id,
+                    label: teacher.first_name + ' ' + teacher.last_name,
+                }));
+                setTeachers(teacherNames);
+            })
+            .catch(error => console.error('Error fetching data:', error));
+    }, []);
 
     useEffect(() => {
-        if(loading&&cargandoAuto){
+        if (loading && cargandoAuto) {
             const intervalId = setInterval(() => {
                 tipIndexRef.current = (tipIndexRef.current + 1) % messages.length;
                 console.log("see ejecuta")
                 setTipMessage(messages[tipIndexRef.current]);  // Solo actualiza el mensaje
-            }, 5000); 
-    
+            }, 5000);
+
             return () => {
                 clearInterval(intervalId);
             };
@@ -124,9 +124,9 @@ function Horario() {
 
     useEffect(() => {
         const url = new URL('http://127.0.0.1:8000/api/viewschedule/');
-        console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa seeeeeeeeeeeeeeeeeeeeeeeee:",course)
-        if (teacher) teacher.forEach(element => {url.searchParams.append('teachers', element)});
-        if (course) course.forEach(element => {url.searchParams.append('courses', element)});
+        console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa seeeeeeeeeeeeeeeeeeeeeeeee:", course)
+        if (teacher) teacher.forEach(element => { url.searchParams.append('teachers', element) });
+        if (course) course.forEach(element => { url.searchParams.append('courses', element) });
         if (date) url.searchParams.append('date', date);
 
         console.log(url)
@@ -149,9 +149,9 @@ function Horario() {
                 console.error("Error fetching data:", error);
                 setLoading(false);
             });
-    }, [teacher,course,date]);
+    }, [teacher, course, date]);
 
-    
+
 
     const showDrawer = useCallback((content, title) => {
         setDrawerTitle(title);
@@ -168,7 +168,7 @@ function Horario() {
     };
 
     useEffect(() => {
-        if(sessionStorage.getItem('rol') === "Profesor"){
+        if (sessionStorage.getItem('rol') === "Profesor") {
             console.log("No deberiaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
             window.location.reload();
         }
@@ -238,40 +238,42 @@ function Horario() {
         { value: 'Visualizar', icon: <><EyeOutlined /> Visualizar</> },
         { value: 'Editar', icon: <><EditOutlined /> Editar</> },
     ], []);
-    
-    
+
+
     return (
         <>
-            <Spin 
-                spinning={loading} 
+            <Spin
+                spinning={loading}
                 tip={
                     cargandoAuto ? (
-                    <div>
-                        <div>Esto podría demorar unos minutos...</div>
-                        <div>Por favor, no salga de la página</div>
-                        <div>{tipMessage}</div>
-                    </div>
+                        <div>
+                            <div>Esto podría demorar unos minutos...</div>
+                            <div>Por favor, no salga de la página</div>
+                            <div>{tipMessage}</div>
+                        </div>
                     ) : (
-                    <div>
-                        <div>Esto podría demorar unos segundos...</div>
-                        <div>Cargando la tabla...</div>
-                    </div>
+                        <div>
+                            <div>Esto podría demorar unos segundos...</div>
+                            <div>Cargando la tabla...</div>
+                        </div>
                     )
                 }
             >
 
                 <div className="contenedor-filtros contenedor-filtros-horario">
                     {sessionStorage.getItem('rol') === "Directivo" && !mostrarAceptar && (
-                        <Segmented
-                            size='large'
-                            options={memoizedSegmentedOptions}
-                            onChange={(value) => setEditar(value === 'Editar')}
+                        <Switch
+                            size='default'
+                            checkedChildren="Editar"
+                            unCheckedChildren="Visualizar"
+                            onChange={(checked) => setEditar(checked)}
                         />
+
                     )}
                     {!mostrarAceptar ? (
                         <>
                             <FilterDropdownPersonalizado options={teachers} tempSelectedKeys={tempSelectedKeys} setTempSelectedKeys={setTempSelectedKeys} onChange={(value) => setTempTeacher(value)} placeholder={'Profesores: '} />
-                            <FilterDropdownTable options={courses} onChange={(value) => setTempCourse(value)} placeholder={'Cursos: '}/>
+                            <FilterDropdownTable options={courses} onChange={(value) => setTempCourse(value)} placeholder={'Cursos: '} />
                             <DatePicker
                                 size="large"
                                 placeholder="Fecha"
@@ -281,13 +283,13 @@ function Horario() {
                                 onChange={(date, dateString) => setTempDate(dateString)}
                             />
                             {mostrarAplicar ? (
-                            <Button type="primary" onClick={() => {
-                                setTeacher(tempSelectedKeys);
-                                setCourse(tempCourse);
-                                setDate(tempDate);
-                                setLoading(true);
-                                setCargandoAuto(false);
-                            }}>Aplicar Filtros</Button>) : null}
+                                <Button type="primary" onClick={() => {
+                                    setTeacher(tempSelectedKeys);
+                                    setCourse(tempCourse);
+                                    setDate(tempDate);
+                                    setLoading(true);
+                                    setCargandoAuto(false);
+                                }}>Aplicar Filtros</Button>) : null}
                             {(teacher || course || date) ? (
                                 <Button type="primary" onClick={() => {
                                     setTeacher(null);
@@ -299,12 +301,12 @@ function Horario() {
                                     setLoading(true);
                                     setMostrarAplicar(false);
                                 }}>Limpiar Filtros</Button>
-                            ):null}
+                            ) : null}
                         </>
                     ) : null}
                 </div>
 
-                <CalendarioDirectivo CursosMostrar={course} tempSelectedKeys={tempSelectedKeys} setTempSelectedKeys={setTempSelectedKeys} setTeacher={setTempTeacher} materias={subjects ? subjects : []} mibooleano={editar} setMaterias={setSubjects}/>
+                <CalendarioDirectivo CursosMostrar={course} tempSelectedKeys={tempSelectedKeys} setTempSelectedKeys={setTempSelectedKeys} setTeacher={setTempTeacher} materias={subjects ? subjects : []} mibooleano={editar} setMaterias={setSubjects} />
                 <div>
                     {sessionStorage.getItem('rol') === "Directivo" && !mostrarAceptar && !subjects?.length && !loading ? (
                         <Button type="primary" onClick={generarHorario}>Generar automáticamente</Button>
@@ -313,13 +315,13 @@ function Horario() {
                             <Button type="primary" onClick={aceptarHorario}>Aceptar horario</Button>
                             <Button type="primary" onClick={cancelarHorario}>Cancelar horario</Button>
                         </>
-                    ) : 
-                    subjects?.length ? (
-                        <Button type="primary" onClick={generarHorario}>Completar automáticamente</Button>
                     ) :
-                    null}
+                        subjects?.length ? (
+                            <Button type="primary" onClick={generarHorario}>Completar automáticamente</Button>
+                        ) :
+                            null}
                 </div>
-                
+
                 <FloatButton.Group
                     visibilityHeight={1500}
                     trigger="click"
@@ -341,7 +343,7 @@ function Horario() {
                             <Suspense fallback={<Spin />}><SelectCourse showDrawer={showDrawer} /></Suspense>, 'Cursos')}
                     />
                 </FloatButton.Group>
-                
+
                 <Drawer
                     destroyOnClose={false}
                     width={600}
@@ -357,7 +359,7 @@ function Horario() {
                         {drawerContent}
                     </div>
                 </Drawer>
-                
+
                 {showModal ? (
                     <Modal
                         title="Error al generar horario"
