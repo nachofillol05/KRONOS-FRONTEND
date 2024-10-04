@@ -12,8 +12,6 @@ export default function InfoWorker({ event, estado, closeDrawer, closeDrawerDele
     const [form] = Form.useForm();
     const [isEditing, setIsEditing] = useState(false);
     const [dur, setDur] = useState(calculateDuration(event.startDate, event.endDate) != 1 ? + calculateDuration(event.startDate, event.endDate) + " días" : calculateDuration(event.startDate, event.endDate) + " día");
-    const [loading, setLoading] = useState(false);
-
     const [data, setData] = useState(event.affiliated_teachers || []);
     const [rolesList, setRolesList] = useState([]);
     const [types, setTypes] = useState([]);

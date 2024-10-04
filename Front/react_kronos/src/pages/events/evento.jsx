@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import { Select, DatePicker, Spin, Drawer, Card, Button, FloatButton, message, Tooltip, Modal, Input, Theme } from "antd";
 import { InfoCircleOutlined, EditOutlined, CheckCircleOutlined, UserAddOutlined, CloseOutlined, DownOutlined, UpOutlined, FolderAddOutlined, ExclamationCircleFilled } from "@ant-design/icons";
 import FormCreateEvent from "./formCreateEvent";
+import { fetchProfile } from "../../services/users"
+import { fetchTypeEvent } from "../../services/events"
 import moment from 'moment';
 import InfoEvent from "./infoEvent";
 import dayjs from 'dayjs';
@@ -30,51 +32,33 @@ export default function EventsPage() {
   const [isLoading, setLoading] = useState(true)
 
 
-  
   useEffect(() => {
-    fetch('http://127.0.0.1:8000/api/profile/', {
-        method: "GET",
-        headers: {
-            'Authorization': 'Token ' + localStorage.getItem('token'),
-            'School-ID': sessionStorage.getItem('actual_school'),
-        },
-    })
-        .then((response) => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-        })
-        .then((data) => {
-            setProfileData(data);
-        })
-        .catch((error) => console.error('Error fetching data:', error));
+    const getTypesEvent = async() => {
+      try {
+        const data = await fetchTypeEvent()
+        const dataConvert = data.map(tipo => ({
+          value: tipo.id,
+          label: tipo.name,
+        }))
+        setTipos(dataConvert)
+      }  catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    }
+
+    const getProfile = async() => {
+      try {
+        const data = await fetchProfile()
+        setProfileData(data)
+      } catch (error) {
+        console.error("Error fetching data:", error.data);
+      }
+    }
+
+    getProfile()
+    getTypesEvent()
   }, []);
 
-
-  useEffect(() => {
-    fetch('http://127.0.0.1:8000/api/typeevent/', {
-        method: "GET",
-        headers: {
-            'Authorization': 'Token ' + localStorage.getItem('token'),
-            'School-ID': sessionStorage.getItem('actual_school'),
-        },
-    })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-        })
-        .then(data => {
-            const tipos = data.map(tipo => ({
-                value: tipo.id,
-                label: tipo.name,
-            }));
-            setTipos(tipos);
-        })
-        .catch(error => console.error('Error fetching data:', error));
-  }, []);
   useEffect(() => {
     const fetchData = async () => {
         try {
@@ -88,8 +72,6 @@ export default function EventsPage() {
             if (nombre) {
                 url.searchParams.append('name', nombre);
             }
-            console.log(url.toString());
-
             const response = await fetch(url.toString(), {
                 method: "GET",
                 headers: {
@@ -105,7 +87,6 @@ export default function EventsPage() {
             }
 
             const data = await response.json();
-            console.log(data);
             setEventos(data);
         } catch (error) {
             console.error('Error fetching data:', error);
@@ -270,7 +251,6 @@ export default function EventsPage() {
         closeDrawerCreate();
         return response.json();
     })
-    .then(data => console.log('Success:', data))
     .catch(error => console.error('Error:', error));
   };
 
@@ -392,8 +372,6 @@ export default function EventsPage() {
     const isUserAffiliated = event.affiliated_teachers.some(teacher => teacher.id === profileData.id);
     const roles = event.roles.map(role => role.name);
     const rol = sessionStorage.getItem('rol');
-    console.log(roles);
-    console.log(rol);
     const mostrar = (() => {
       if (eventStatus === "Pendiente" && !isUserAffiliated && roles.includes(rol)) {
         return "Adherirse al evento";
@@ -423,7 +401,7 @@ export default function EventsPage() {
       showMessage("error", "Fallo la actualización");
     }
     
-    
+
     return (
       <Card
         key={event.id}
