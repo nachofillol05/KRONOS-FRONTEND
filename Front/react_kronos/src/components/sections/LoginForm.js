@@ -1,11 +1,14 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { fetchLogin } from '../../services/apiService.js'
+
+import { fetchMyRoles, fetchMySchools } from '../../services/users.js'
 import classNames from 'classnames';
 import { SectionProps } from '../../utils/SectionProps';
-import { Link } from 'react-router-dom';
 import SectionHeader from './partials/SectionHeader';
-import Input from '../elements/Input';  // Assuming this is a custom Input component
+import Input from '../elements/Input';
 import Button from '../elements/Button';
+
 
 const propTypes = {
   ...SectionProps.types
@@ -13,6 +16,16 @@ const propTypes = {
 
 const defaultProps = {
   ...SectionProps.defaults
+}
+
+const getRoles = async () => {
+  try {
+      const data = await fetchMyRoles();
+      localStorage.setItem('roles', JSON.stringify(data.roles));
+      sessionStorage.setItem('rol', data.roles[0]);
+  } catch (error) {
+      console.error(error);
+  }
 }
 
 export default function Login(props) {
@@ -23,93 +36,46 @@ export default function Login(props) {
 
   useEffect(() => {
     const token = localStorage.getItem('token');
-    if (token) {
-      const actualSchool = JSON.parse(localStorage.getItem('schools'))[0].pk;
-      sessionStorage.setItem('actual_school', actualSchool);
-      fetch('http://127.0.0.1:8000/api/school/myroles/', {
-        method: "GET",
-        headers: {
-          'Authorization': 'Token ' + token,
-          'School-ID': actualSchool,
-        },
-      })
-      .then(response => response.json())
-      .then(data => {
-        localStorage.setItem('roles', JSON.stringify(data.roles));
-        sessionStorage.setItem('rol', data.roles[0]);
-        navigate('/horarios');
-      });
-    } else {
-      console.log('No hay token almacenado');
+    if (!token) {
+        return;
     }
-  }, [navigate]);
 
-  function handleLogin(event) {
+    const schools = JSON.parse(localStorage.getItem('schools'));
+    if (!schools && schools.length < 1) {
+        console.error('No hay escuelas almacenadas');
+    }
+    // guardar en sesion la primera escuela
+    sessionStorage.setItem('actual_school', schools[0].pk)
+
+    getRoles();
+}, [])
+
+async function handlerLogin (event) {
     event.preventDefault();
     const usernameValue = inputUserRef.current.value;
     const passwordValue = inputPasswordRef.current.value;
 
-    fetch('http://127.0.0.1:8000/api/login/', {
-      method: "POST",
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        "document": usernameValue,
-        "password": passwordValue
-      })
-    })
-    .then(response => {
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-      return response.json();
-    })
-    .then(responseData => {
-      localStorage.setItem('token', responseData.Token);
+    try {
+        const body = {
+            "document": usernameValue,
+            "password": passwordValue
+        }
+        const loginData = await fetchLogin(body)
+        localStorage.setItem('token', loginData.Token);
 
-      fetch('http://127.0.0.1:8000/api/user_schools/', {
-        method: "GET",
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Token ' + localStorage.getItem('token'),
-        }
-      })
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        return response.json();
-      })
-      .then(responseData => {
-        localStorage.setItem('schools', JSON.stringify(responseData));
-        sessionStorage.setItem('actual_school', JSON.stringify(responseData[0].pk));
-        setShowError(false);
-        fetch('http://127.0.0.1:8000/api/school/myroles/', {
-          method: "GET",
-          headers: {
-            'Authorization': 'Token ' + localStorage.getItem('token'),
-            'School-ID': sessionStorage.getItem('actual_school'),
-          },
-        })
-        .then(response => response.json())
-        .then(data => {
-          localStorage.setItem('roles', JSON.stringify(data.roles));
-          sessionStorage.setItem('rol', data.roles[0]);
-          console.log('Login success');
-          navigate('/horarios');
-        });
-      })
-      .catch(error => {
-        console.error('Login failed:', error);
+        const mySchoolsData = await fetchMySchools()
+        localStorage.setItem('schools', JSON.stringify(mySchoolsData));
+        // primer pk colegio en la sesion
+        sessionStorage.setItem('actual_school', JSON.stringify(mySchoolsData[0].pk));
+
+        getRoles();
+
+        navigate('/horarios');
+    } catch(error) {
+        console.error('Login Failed', error)
         setShowError(true);
-      });
-    })
-    .catch(error => {
-      console.error('Login failed:', error);
-      setShowError(true);
-    });
-  }
+    }
+}
 
   const {
     className,
@@ -152,7 +118,7 @@ export default function Login(props) {
           <div className="tiles-wrap">
             <div className="tiles-item">
               <div className="tiles-item-inner">
-                <form onSubmit={handleLogin}>
+                <form onSubmit={handlerLogin}>
                   <fieldset>
                     <div className="mb-12">
                       <Input
