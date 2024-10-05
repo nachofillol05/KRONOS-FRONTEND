@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { message } from "antd";
 import { useNavigate } from 'react-router-dom';
 import { fetchLogin } from '../../services/apiService.js'
-
 import { fetchMyRoles, fetchMySchools } from '../../services/users.js'
 import classNames from 'classnames';
 import { SectionProps } from '../../utils/SectionProps';
@@ -29,10 +29,11 @@ const getRoles = async () => {
 }
 
 export default function Login(props) {
-  const [showError, setShowError] = useState(false);
+  const [isLoading, setLoading] = useState(false);
   const navigate = useNavigate();
   const inputUserRef = useRef(null);
   const inputPasswordRef = useRef(null);
+
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -48,10 +49,12 @@ export default function Login(props) {
     sessionStorage.setItem('actual_school', schools[0].pk)
 
     getRoles();
-}, [])
+  }, [])
 
-async function handlerLogin (event) {
+  async function handlerLogin (event) {
     event.preventDefault();
+    setLoading(true)
+    
     const usernameValue = inputUserRef.current.value;
     const passwordValue = inputPasswordRef.current.value;
 
@@ -72,8 +75,13 @@ async function handlerLogin (event) {
 
         navigate('/horarios');
     } catch(error) {
-        console.error('Login Failed', error)
-        setShowError(true);
+      const messageError = () => {
+        message.error('Documento o contraseña incorrectos. Por favor, inténtelo nuevamente.', 5);
+      };
+      console.error('Login Failed', error);
+      messageError();
+    } finally {
+      setLoading(false)
     }
 }
 
@@ -141,9 +149,14 @@ async function handlerLogin (event) {
                       />
                     </div>
                     <div className="mt-24 mb-32">
-                      <Button color="primary" wide>Iniciar sesión</Button>
+                      <Button 
+                        color="primary" 
+                        wide
+                        loading={isLoading}
+                      >
+                        Iniciar sesión
+                      </Button>
                     </div>
-                    {showError && <p>El documento y la contraseña no coinciden</p>}
                     <div className="signin-footer mb-32">
                       {/*<Link to="/recover-password/" className="func-link text-xs">Olvidó su contraseña?</Link>*/}
                     </div>
