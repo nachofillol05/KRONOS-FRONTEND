@@ -114,6 +114,9 @@ export default function Login(props) {
   const sectionHeader = {
     title: 'Iniciar sesión',
   };
+  const cambioContrasenia = () => {
+    console.log('cambio contraseña');
+  }
 
   return (
     <section
@@ -158,7 +161,7 @@ export default function Login(props) {
                       </Button>
                     </div>
                     <div className="signin-footer mb-32">
-                      {/*<Link to="/recover-password/" className="func-link text-xs">Olvidó su contraseña?</Link>*/}
+                      <a onClick={cambioContrasenia}>Olvidé mi contraseña</a>
                     </div>
                   </fieldset>
                 </form>

@@ -66,7 +66,6 @@ export default function Login() {
             setShowError(true);
         }
     }
-
     return (
         <div className="login-container">
             <h1>Iniciar Sesión</h1>
@@ -82,6 +81,7 @@ export default function Login() {
                 <div className='botones'>
                     <Button text='Iniciar sesión' life onClick={handlerLogin} />
                 </div>
+                <a onClick={cambioContrasenia}>Olvide mi contraseña</a>
             </form>
             {showError && <p>El usuario y la contraseña no coinciden</p>}
         </div>

@@ -1,4 +1,4 @@
-import { fetchData, postData, deleteData } from "./apiService"
+import { fetchData, postData, deleteData, putData } from "./apiService"
 
 export const fetchTypesEvent = async () => {
     return await fetchData("typeevent")
@@ -24,6 +24,14 @@ export const desaffiliateEvent = async (event_id) => {
 
 export const createEvent = async (data) => {
     return await postData('events/', data)
+}
+
+export const updateEvent = async (pk, data) => {
+    return await putData(`events/${pk}/`, data)
+}
+
+export const deleteEvent = async (pk, data = null) => {
+    return await deleteData('events', pk, data)
 }
 
 export const fetchRoles = async () => {

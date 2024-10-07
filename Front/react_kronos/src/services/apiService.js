@@ -80,9 +80,9 @@ export const saveData = async (endpoint, data, method) => {
   }
 };
 
-export const deleteData = async (endpoint, data = null) => {
+export const deleteData = async (endpoint, pk, data = null) => {
   try {
-    const response = await fetch(`${API_BASE_URL}/${endpoint}`, {
+    const response = await fetch(`${API_BASE_URL}/${endpoint}/${pk}/`, {
       method: "DELETE",
       headers: {
         'Authorization': getToken(),
