@@ -3,6 +3,7 @@ import FilterDropdownTable from '../../components/filterDropTable/FilterDropTabl
 import React, { useEffect, useState } from 'react';
 import { RollbackOutlined, PlusOutlined } from '@ant-design/icons';
 import dayjs from 'dayjs';
+import { fetchTypesEvent, fetchRoles} from '../../services/events.js'
 
 const dateFormat = 'DD/MM/YYYY';
 const { RangePicker } = DatePicker;
@@ -13,59 +14,41 @@ export default function FormCreateEvent({ handleSubmit, handleVolver }) {
     const [form] = Form.useForm();
     const [roles, setRoles] = useState([]);
 
+    useEffect(() => {
+        const getTypesEvent = async () => {
+            try {
+              const data = await fetchTypesEvent();
+              const dataConvert = data.map(tipo => ({
+                value: tipo.id,
+                label: tipo.name,
+              }));
+              setTypes(dataConvert);
+            }  catch (error) {
+              console.error("Error fetching data:", error);
+            }
+        }
+
+        const getRolesEvents = async () => {
+            try {
+                const data = await fetchRoles();
+                const convertData = data.map(role => ({
+                    value: role.id,
+                    label: role.name
+                }));
+                setRoles(convertData)
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        }
+
+        getTypesEvent();
+        getRolesEvents();
+    }, [])
+
     const disabledDate = (current) => {
         return current && current < dayjs().endOf('day');
     };
 
-    useEffect(() => {
-        fetch('http://127.0.0.1:8000/api/roles/', {
-            method: "GET",
-            headers: {
-                'Authorization': 'Token ' + localStorage.getItem('token'),
-                'School-ID': sessionStorage.getItem('actual_school'),
-            },
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json(); 
-        })
-        .then(data => {
-            const rols = data.map(rol => ({
-                value: rol.id,
-                label: rol.name,
-            }));
-            setRoles(rols);
-            console.log(rols);
-        })
-        .catch(error => console.error('Error fetching data:', error));
-    }, []);
-    
-
-    useEffect(() => {
-        fetch('http://127.0.0.1:8000/api/typeevent/', {
-            method: "GET",
-            headers: {
-                'Authorization': 'Token ' + localStorage.getItem('token'),
-                'School-ID': sessionStorage.getItem('actual_school'),
-            },
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json(); 
-        })
-        .then(data => {
-            const typeEvents = data.map(event => ({
-                value: event.id,
-                label: event.name,
-            }));
-            setTypes(typeEvents);
-        })
-        .catch(error => console.error('Error fetching data:', error));
-    }, []);
 
     const onFormSubmit = () => {
         form.validateFields()

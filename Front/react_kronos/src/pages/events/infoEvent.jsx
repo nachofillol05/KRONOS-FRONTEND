@@ -1,23 +1,19 @@
 import React, { useState, useEffect } from 'react';
-import { List, Divider, Flex, Form, Input, Button, Select, Avatar, DatePicker, Modal } from 'antd';
+import { List, Flex, Form, Input, Button, Select, Avatar, Modal } from 'antd';
+import { deleteEvent, fetchRoles, updateEvent } from '../../services/events.js'
 import FilterDropdownTable from '../../components/filterDropTable/FilterDropTable.jsx';
 import moment from 'moment';
 import './events.scss';
 import dayjs from 'dayjs';
 
-const { RangePicker } = DatePicker;
-const dateFormat = 'DD/MM/YYYY';
+const dateFormat = 'DD/MM-/YYYY';
 
-export default function InfoWorker({ event, estado, closeDrawer, closeDrawerDelete, showError }) {
+export default function InfoWorker({ event, estado, closeDrawer, typeEvent, closeDrawerDelete, showError }) {
     const [form] = Form.useForm();
     const [isEditing, setIsEditing] = useState(false);
-    const [dur, setDur] = useState(calculateDuration(event.startDate, event.endDate) != 1 ? + calculateDuration(event.startDate, event.endDate) + " días" : calculateDuration(event.startDate, event.endDate) + " día");
-    const [loading, setLoading] = useState(false);
-
-    const [data, setData] = useState(event.affiliated_teachers || []);
     const [rolesList, setRolesList] = useState([]);
-    const [types, setTypes] = useState([]);
-    const [roless, setRoless] = useState([]);
+    const [dur, setDur] = useState(calculateDuration(event.startDate, event.endDate) !== 1 ? + calculateDuration(event.startDate, event.endDate) + " días" : calculateDuration(event.startDate, event.endDate) + " día")
+    const [data, setData] = useState(event.affiliated_teachers || [])
 
     const confirmDelete = (nombre) => {
         Modal.confirm({
@@ -27,73 +23,33 @@ export default function InfoWorker({ event, estado, closeDrawer, closeDrawerDele
             onOk: borrarEvento,
         });
     };
-    const borrarEvento = () => {
-        fetch('http://127.0.0.1:8000/api/events/' + event.id + '/', {
-            method: 'DELETE',
-            headers: {
-                'Authorization': 'Token ' + localStorage.getItem('token'),
-                'School-ID': sessionStorage.getItem('actual_school'),
-            },
-        })
-            .then(response => {
-                if (!response.ok) {
-                    showError();
-                    throw new Error('Network response was not ok');
-                }
-                closeDrawerDelete();
-                if (response.status !== 204) {
-                    return response.json();
-                }
-            })
+
+    const borrarEvento = async () => {
+        try {
+            const data = await deleteEvent(event.id)
+            closeDrawerDelete();
+            return data
+        } catch (error) {
+            showError();
+            throw new Error('Error fetch in event', error.data);
+        }
     };
 
-
     useEffect(() => {
-        fetch('http://127.0.0.1:8000/api/typeevent/', {
-            method: "GET",
-            headers: {
-                'Authorization': 'Token ' + localStorage.getItem('token'),
-                'School-ID': sessionStorage.getItem('actual_school'),
-            },
-        })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
-            .then(data => {
-                const typeEvents = data.map(event => ({
-                    value: event.id,
-                    label: event.name,
-                }));
-                setTypes(typeEvents);
-            })
-            .catch(error => console.error('Error fetching data:', error));
-    }, []);
+        const getRoles = async() => {
+            try {
+              const data = await fetchRoles();
+              const dataConvert = data.map(rol => ({
+                value: rol.id,
+                label: rol.name,
+              }));
+              setRolesList(dataConvert);
+            }  catch (error) {
+              console.error("Error fetching data:", error);
+            }
+        }
 
-    useEffect(() => {
-        fetch('http://127.0.0.1:8000/api/roles/', {
-            method: "GET",
-            headers: {
-                'Authorization': 'Token ' + localStorage.getItem('token'),
-                'School-ID': sessionStorage.getItem('actual_school'),
-            },
-        })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
-            .then(data => {
-                const rols = data.map(rol => ({
-                    value: rol.id,
-                    label: rol.name,
-                }));
-                setRolesList(rols);
-            })
-            .catch(error => console.error('Error fetching data:', error));
+        getRoles();
     }, []);
 
     const startDate = moment.utc(event.startDate).format(dateFormat);
@@ -148,17 +104,17 @@ export default function InfoWorker({ event, estado, closeDrawer, closeDrawerDele
     const handleSave = () => {
         let tipoEvento, rols;
         form.validateFields().then(values => {
+
             if (typeof values.eventType === 'undefined' || isNaN(parseInt(values.eventType))) {
                 tipoEvento = event.eventType.id;
             } else {
                 tipoEvento = values.eventType;
             }
+
             if (Array.isArray(values.Rolesdirigido) && values.Rolesdirigido.every(role => Number.isInteger(role))) {
                 rols = values.Rolesdirigido;
-                console.log("Es un array de enteros");
             } else {
                 rols = event.roles.map(role => role.id);
-                console.log("No es un array de enteros");
             }
 
             if (event.affiliated_teachers) {
@@ -173,34 +129,23 @@ export default function InfoWorker({ event, estado, closeDrawer, closeDrawerDele
                 endDate: moment.utc(event.endDate).format('DD/MM/YYYY'),
                 roles: rols,
             };
-            console.log(JSON.stringify(updatedEvent))
-            fetch('http://127.0.0.1:8000/api/events/' + event.id + '/', {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Token ' + localStorage.getItem('token'),
-                    'School-ID': sessionStorage.getItem('actual_school'),
-                },
-                body: JSON.stringify(updatedEvent),
+            
+            updateEvent(event.id, updatedEvent)     
+            .then(data => {
+                console.log('Success:', data);
+                closeDrawer();
             })
-                .then(response => {
-                    if (!response.ok) {
-                        showError();
-                        throw new Error('Network response was not ok');
-                    }
-                    closeDrawer();
-                    return response.json();
-                })
-                .then(data => console.log('Success:', data))
-                .catch(error => showError());
+            .catch(error => {
+                showError();
+                console.error('Failed to save form:', error);
+            });
 
-            toggleEditMode();
-        }).catch(errorInfo => {
-            showError();
-            console.error('Failed to save form:', errorInfo);
-        });
-
-    };
+        toggleEditMode();
+    }).catch(errorInfo => {
+        showError();
+        console.error('Failed to save form:', errorInfo);
+    });
+};
 
     const customDisabledStyle = {
         background: 'transparent',
@@ -209,11 +154,6 @@ export default function InfoWorker({ event, estado, closeDrawer, closeDrawerDele
         cursor: 'default',
         height: '40px'
     };
-
-    const disabledDate = (current) => {
-        return current && current < dayjs().endOf('day');
-    };
-
 
     return (
         <Form
@@ -232,7 +172,7 @@ export default function InfoWorker({ event, estado, closeDrawer, closeDrawerDele
                         <Select
                             style={{ width: '100%', height: '40px' }}
                             size='large'
-                            options={types}
+                            options={typeEvent}
                         />
                     ) : (
                         <Input
