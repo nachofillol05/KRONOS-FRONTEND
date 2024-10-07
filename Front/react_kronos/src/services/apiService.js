@@ -96,3 +96,18 @@ export const deleteData = async (endpoint, pk, data = null) => {
     throw error;
   }
 };
+
+export const fetchLogin = async (data) => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/login/`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+    return await handleResponse(response);
+  } catch (error) {
+    throw error;
+  }
+};
