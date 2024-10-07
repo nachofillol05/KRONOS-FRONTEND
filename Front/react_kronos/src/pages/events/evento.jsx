@@ -22,7 +22,6 @@ export default function EventsPage() {
   const [recargar, setRecargar] = useState(false);
   const [messageApi, contextHolder] = message.useMessage();
   const [messageConfig, setMessageConfig] = useState({ type: '', content: '' });
-  const [eventName, setEventName] = useState('');
   const [nombre, setNombre] = useState([]);
   const [tipoEvento, setTipoEvento] = useState([]);
   const [date, setDate] = useState('');
@@ -351,7 +350,7 @@ export default function EventsPage() {
             
             <InfoCircleOutlined 
               key="details" 
-              onClick={() => showDrawer(<InfoEvent estado={eventStatus} event={event} closeDrawer={closeDrawer} closeDrawerDelete={closeDrawerDelete} showError={showError} />, "Detalles del evento")} 
+              onClick={() => showDrawer(<InfoEvent estado={eventStatus} event={event} typeEvent={tipos} closeDrawer={closeDrawer} closeDrawerDelete={closeDrawerDelete} showError={showError} />, "Detalles del evento")} 
             />
           </Tooltip>,
 
