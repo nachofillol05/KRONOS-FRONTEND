@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Row, Col, Tooltip } from 'antd';
+import { Row, Col, Tooltip, Avatar } from 'antd';
+import { UserOutlined } from '@ant-design/icons';
 import './Calendario.scss';
 
 const days = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes'];
@@ -86,9 +87,16 @@ export default function CalendarioProfesor() {
                                                 color: textColor,
                                                 borderRadius: '5px',
                                                 flexGrow: 1,
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                gap: '10px',
                                             }}
                                         >
-                                            {subject ? subject.subject_abreviation : ''}
+                                            {subject ? <Avatar size={'small'} icon={<UserOutlined />} /> : ''}
+                                            <>{subject ? subject.subject_abreviation : ''}</>
+                                            <> - </>
+                                            <> {subject ? subject.course_id : ''}</>
+                                            
                                         </div>
                                 </Col>
                             );

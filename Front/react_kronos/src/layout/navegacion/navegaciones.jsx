@@ -5,15 +5,16 @@ import {
     TeamOutlined,
     ContactsOutlined,
     UserOutlined,
-    LogoutOutlined
+    LogoutOutlined,
+    UserSwitchOutlined,
+    BankOutlined
 } from '@ant-design/icons';
-import { Layout, Menu, Dropdown, Select, Spin } from 'antd';
+import { Layout, Menu, Dropdown, Spin } from 'antd';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 import './navegaciones.scss';
 
 const { Content, Sider } = Layout;
-const { Option } = Select;
 
 function getItem(label, key, icon, children) {
     return {
@@ -25,7 +26,6 @@ function getItem(label, key, icon, children) {
 }
 
 export const Contexto = createContext();
-
 
 const App = ({ children }) => {
     const [collapsed, setCollapsed] = useState(false);
@@ -59,13 +59,12 @@ const App = ({ children }) => {
                 localStorage.setItem('roles', JSON.stringify(data.roles));
                 setRoles(data.roles);
                 setSelectHabilitado(data.roles.length > 1);
-                if (sessionStorage.getItem('rol') === '') {
-                    sessionStorage.setItem('rol', data.roles[0]);
-                    setRol(data.roles[0]);
-                }
-                if (!data.roles.includes(sessionStorage.getItem('rol'))) {
-                    sessionStorage.setItem('rol', data.roles[0]);
-                    setRol(data.roles[0]);
+                
+                const savedRole = sessionStorage.getItem('rol');
+                if (!savedRole || !data.roles.includes(savedRole)) {
+                    const defaultRole = data.roles[0];
+                    sessionStorage.setItem('rol', defaultRole);
+                    setRol(defaultRole);
                 }
             } catch (error) {
                 console.error('Error fetching roles:', error);
@@ -73,21 +72,29 @@ const App = ({ children }) => {
             }
         };
 
-        fetchRolesAndSchools();
+        if (token && school) {
+            fetchRolesAndSchools();
+        } else {
+            navigate('/landing');
+        }
     }, [token, school, navigate]);
 
     useEffect(() => {
-        const savedData = localStorage.getItem('schools');
-        const schools = JSON.parse(savedData || '[]');
-        const actualSchoolPk = parseInt(sessionStorage.getItem('actual_school'), 10);
-        const selectedSchool = schools.find(school => school.pk === actualSchoolPk);
-        const parsedData = JSON.parse(savedData);
-        setDropdownItems(parsedData.map(school => ({
-            key: school.pk.toString(),
-            label: school.name,
-        })));
-        setEscuelaCompleta(selectedSchool);
-
+        try {
+            const savedData = localStorage.getItem('schools');
+            if (savedData) {
+                const schools = JSON.parse(savedData);
+                const actualSchoolPk = parseInt(sessionStorage.getItem('actual_school'), 10);
+                const selectedSchool = schools.find(school => school.pk === actualSchoolPk);
+                setDropdownItems(schools.map(school => ({
+                    key: school.pk.toString(),
+                    label: school.name,
+                })));
+                setEscuelaCompleta(selectedSchool);
+            }
+        } catch (error) {
+            console.error('Error parsing school data:', error);
+        }
     }, []);
 
     const handleMenuItemClick = ({ key }) => {
@@ -99,18 +106,18 @@ const App = ({ children }) => {
 
     const getSelectedKey = () => {
         switch (location.pathname) {
-            case '/perfil':
-                return '1';
             case '/horarios':
-                return '2';
-            case '/personal':
                 return '3';
-            case '/materias':
+            case '/personal':
                 return '4';
-            case '/eventos':
+            case '/materias':
                 return '5';
+            case '/eventos':
+                return '6';
+            case '/perfil':
+                return '7';
             default:
-                return '1';
+                return '3';
         }
     };
 
@@ -130,31 +137,43 @@ const App = ({ children }) => {
         return roles
             .filter(role => role !== sessionStorage.getItem('rol'))
             .map(role => (
-                <Option key={role} value={role}>
-                    {role}
-                </Option>
+                getItem(<a onClick={() => changeRol(role)}>{role}</a>)
+            ));
+    };
+
+    const renderSchool = () => {
+        return dropdownItems
+            .filter(item => item.key !== sessionStorage.getItem('actual_school'))
+            .map(item => (
+                getItem(<a onClick={() => handleMenuItemClick(item.key)}>{item.key}</a>)
             ));
     };
 
     const defaultRol = rol || (roles.length > 0 ? roles[0] : undefined);
 
-    let currentSchool = JSON.parse(localStorage.getItem('schools')).find(school => school.pk === Number(sessionStorage.getItem('actual_school')));
+    let currentSchool = JSON.parse(localStorage.getItem('schools') || '[]').find(school => school.pk === Number(sessionStorage.getItem('actual_school')));
     if (!currentSchool) {
-        console.log(JSON.parse(localStorage.getItem('schools'))[0].pk);
-        sessionStorage.setItem('actual_school', JSON.parse(localStorage.getItem('schools'))[0].pk);
-        currentSchool = JSON.parse(localStorage.getItem('schools')).find(school => school.pk === Number(sessionStorage.getItem('actual_school')));;
+        const firstSchool = JSON.parse(localStorage.getItem('schools'))[0];
+        sessionStorage.setItem('actual_school', firstSchool.pk);
+        currentSchool = firstSchool;
     }
 
     const items = [
-        getItem(<Link to="/perfil">Perfil</Link>, '1', <UserOutlined />),
-        getItem(<Link to="/horarios">Horarios</Link>, '2', <TableOutlined />),
-        ...((rol === 'Directivo' || rol === 'Preceptor') ? [
-            getItem(<Link to="/personal">Personal</Link>, '3', <TeamOutlined />),
-            getItem(<Link to="/materias">Materias</Link>, '4', <ScheduleOutlined />)
+        dropdownItems.length >= 2
+            ? getItem(currentSchool.name, '1', <BankOutlined />, renderSchool())
+            : null,
+        roles.length >= 2
+            ? getItem(defaultRol, '2', <UserSwitchOutlined />, renderOptions())
+            : null,
+        getItem(<Link to="/horarios">Horarios</Link>, '3', <TableOutlined />),
+        ...(rol === 'Directivo' || rol === 'Preceptor' ? [
+            getItem(<Link to="/personal">Personal</Link>, '4', <TeamOutlined />),
+            getItem(<Link to="/materias">Materias</Link>, '5', <ScheduleOutlined />)
         ] : []),
-        getItem(<Link to="/eventos">Eventos</Link>, '5', <ContactsOutlined />),
-        getItem(<a onClick={cerrarSesion}>Cerrar sesión</a>, '6', <LogoutOutlined />),
-    ];
+        getItem(<Link to="/eventos">Eventos</Link>, '6', <ContactsOutlined />),
+        getItem(<Link to="/perfil">Perfil</Link>, '7', <UserOutlined />),
+        getItem(<a onClick={cerrarSesion}>Cerrar sesión</a>, '8', <LogoutOutlined />),
+    ].filter(Boolean); // Remove null items
 
     return (
         <Contexto.Provider value={{ setLoading, loading }}>
@@ -186,33 +205,23 @@ const App = ({ children }) => {
                                         key: item.key,
                                         label: item.label,
                                     }))}
+                                    
                                 />
+                                
                             }
                             trigger={['click']}
                         >
-                            <a onClick={e => e.preventDefault()} className="logo-img">
+                            <div onClick={e => e.preventDefault()} className="logo-img">
                                 <img
                                     src={currentSchool.logo || 'https://via.placeholder.com/150'}
                                     alt="logo"
-                                    title={currentSchool.name}
                                     style={{ width: '75%' }}
                                 />
-                            </a>
+                            </div>
                         </Dropdown>
-                        <Select
-                            placeholder="Rol"
-                            className={`logo-select ${selectHabilitado ? '' : 'custom-disabled-select'}`}
-                            onChange={changeRol}
-                            value={defaultRol}
-                            style={{
-                                width: '75%',
-                                pointerEvents: selectHabilitado ? 'auto' : 'none',
-                            }}
-                        >
-                            {renderOptions()}
-                        </Select>
                     </div>
-                    <Menu theme="dark" defaultSelectedKeys={[getSelectedKey()]} mode="inline" items={items} />
+                    
+                    <Menu theme="dark" mode='vertical' defaultSelectedKeys={[getSelectedKey()]}  items={items} />
                 </Sider>
                 <Layout style={{ marginLeft: collapsed ? 50 : 200 }}>
                     <Content style={{ padding: '0 24px', minHeight: 280 }}>

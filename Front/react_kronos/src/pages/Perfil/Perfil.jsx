@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Card, Form, Select, Input, Flex, FloatButton, Drawer, Upload, Tabs, Space, Spin } from 'antd';
-import { ClockCircleOutlined, UploadOutlined } from '@ant-design/icons';
+import { Button, Card, Form, Select, Input, Flex, FloatButton, Drawer, Upload, Tabs, Space, Spin,Modal,message } from 'antd';
+import { ClockCircleOutlined, UploadOutlined, EditOutlined, UpOutlined,DownOutlined } from '@ant-design/icons';
 import './Perfil.scss';
 import FormDisponibilidad from './FormDisponibilidad';
 
@@ -9,6 +9,7 @@ export default function Profile() {
   const [isEditing, setIsEditing] = useState(false);
   const [profileData, setProfileData] = useState({});
   const [form] = Form.useForm();
+  const [formCambio]=Form.useForm();
   const [formSchool] = Form.useForm();
   const [open, setOpen] = useState(false);
   const [drawerContent, setDrawerContent] = useState(null);
@@ -19,7 +20,53 @@ export default function Profile() {
   const [file, setFile] = useState(null);
   const [profilePicture, setProfilePicture] = useState(null);
   const [isLoading, setLoading] = useState(true)
+  const [isModalVisible, setIsModalVisible] = useState(false);
 
+  const showModal = () => {
+    setIsModalVisible(true);
+  };
+
+  const handleOk = async () => {
+    try {
+      setLoading(true);
+      const values = await formCambio.validateFields();
+      
+      fetch('http://127.0.0.1:8000/api/changePassword/', {
+        method: "POST",
+        headers: {
+          'Authorization': 'Token ' + localStorage.getItem('token'),
+          'School-ID': sessionStorage.getItem('actual_school'),
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          current_password: values.currentPassword,
+          new_password: values.newPassword,
+        }),
+      })
+        .then((response) => {
+          if (!response.ok) {
+        throw new Error('Network response was not ok');
+          }
+          return response.json();
+        })
+        .then((data) => {
+          message.success('Contraseña cambiada con éxito!');
+          setIsModalVisible(false);
+          formCambio.resetFields();
+          console.log('Password changed successfully:', data);
+        });
+      console.log('New password:', values);
+    } catch (error) {
+      console.error('Error en el formulario', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+
+  const CambiarContraseña = () => {
+    console.log("Cambiar contraseña")
+  }
 
   const handleFileChange = (e) => {
     console.log("aaaaaaaaaaaaaaaaaaaaaaaaa ", URL.createObjectURL(e.file.originFileObj))
@@ -219,6 +266,20 @@ export default function Profile() {
     setOpen(false);
     setDrawerContent(null);
   };
+  const handleCancel = () => {
+    setIsModalVisible(false);
+    formCambio.resetFields();
+  };
+
+  // Validar que la nueva contraseña y la confirmación coincidan
+  const validateConfirmPassword = ({ getFieldValue }) => ({
+    validator(_, value) {
+      if (!value || getFieldValue('newPassword') === value) {
+        return Promise.resolve();
+      }
+      return Promise.reject(new Error('Las contraseñas no coinciden!'));
+    },
+  });
 
 
   return (
@@ -435,8 +496,13 @@ export default function Profile() {
                     />
                   </Form.Item>
                 </Flex>
+                <Button
+                    style={{ width: '100px' }}
+                    onClick={showModal}
+                  >
+                    Cambiar contraseña
+                  </Button>
               </Form>
-
             </Card>
           </Tabs.TabPane>
           <Tabs.TabPane style={{ width: 600 }} tab="Datos del colegio" key="2">
@@ -523,6 +589,13 @@ export default function Profile() {
           </Tabs.TabPane>
 
         </Tabs >
+        <FloatButton.Group
+                visibilityHeight={1500}
+                trigger="click"
+                type="primary"
+                closeIcon={<DownOutlined />}
+                icon={<UpOutlined />}
+              >
         {sessionStorage.getItem('rol') === 'Profesor' ? (
           <>
             <FloatButton
@@ -539,7 +612,51 @@ export default function Profile() {
             </Drawer>
           </>
         ) : null}
+      <FloatButton
+              icon={<EditOutlined />}
+              tooltip="Cambiar contraseña"
+              onClick={() => showModal()}
+          />
+        </FloatButton.Group>
+      <Modal
+        title="Cambiar Contraseña"
+        visible={isModalVisible}
+        onOk={handleOk}
+        confirmLoading={isLoading}
+        onCancel={handleCancel}
+        okText="Cambiar"
+        cancelText="Cancelar"
+      >
+        <Form form={formCambio} layout="vertical">
+          <Form.Item
+            name="currentPassword"
+            label="Contraseña Actual"
+            rules={[{ required: true, message: 'Por favor ingrese su contraseña actual' }]}
+          >
+            <Input.Password placeholder="Contraseña actual" />
+          </Form.Item>
 
+          <Form.Item
+            name="newPassword"
+            label="Nueva Contraseña"
+            rules={[{ required: true, message: 'Por favor ingrese la nueva contraseña' }]}
+          >
+            <Input.Password placeholder="Nueva contraseña" />
+          </Form.Item>
+
+          <Form.Item
+            name="confirmPassword"
+            label="Confirmar Nueva Contraseña"
+            dependencies={['newPassword']}
+            rules={[
+              { required: true, message: 'Por favor confirme su nueva contraseña' },
+              validateConfirmPassword,
+            ]}
+          >
+            <Input.Password placeholder="Confirmar nueva contraseña" />
+          </Form.Item>
+        </Form>
+      </Modal>
       </>
     )
   );

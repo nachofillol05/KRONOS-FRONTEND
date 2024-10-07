@@ -31,23 +31,31 @@ export default function FormCreateSubject({ handleSubmit, onClose, cursos, value
             })
             .catch(error => console.error('Error fetching data:', error));
     }, []);
-
+    //EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEESTO NO ANDAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
     useEffect(() => {
         if (materiasSeleccionada !== null) {
-            const cursosId = cursos.map(curso => curso.id);
             const materiaSeleccionadaCompleta = materiasCompleta.find(materia => materiasSeleccionada === materia.id);
+    
             if (materiaSeleccionadaCompleta && Array.isArray(materiaSeleccionadaCompleta.courses)) {
-                const cursosAsignadosId = materiaSeleccionadaCompleta.courses.map(curso => curso.id);
+                console.log('materia seleccionada', materiaSeleccionadaCompleta);
+    
+                // Los IDs de los cursos asignados ya están en el array
+                const cursosAsignadosId = materiaSeleccionadaCompleta.courses;
+                console.log('cursos asignados', cursosAsignadosId);
+    
+                // Filtrar cursos que no están en el array de cursos asignados
                 const cursosNoAsignados = cursos
-                    .filter(curso => !cursosAsignadosId.includes(curso.id))
+                    .filter(curso => !cursosAsignadosId.includes(curso))
                     .map(curso => ({ label: curso.name, value: curso.id }));
-                    setCursosSelect(cursosNoAsignados);
+    
+                setCursosSelect(cursosNoAsignados);
+                console.log('cursos no asignados', cursosNoAsignados);
             } else {
-                console.log('Materia seleccionada no encontrada o no tiene cursos asociados');
-                console.log('la materia seleccionada esta asignada a todos los cursos');
+                console.log('la materia seleccionada está asignada a todos los cursos');
             }
         }
     }, [materiasSeleccionada, cursos, materiasCompleta]);
+    
     
     
     

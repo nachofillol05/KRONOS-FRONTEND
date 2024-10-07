@@ -184,7 +184,7 @@ export default function InfoWorker({ event, estado, closeDrawer, typeEvent, clos
                 </Form.Item>
                 <Form.Item className="formInfoEventItem" layout="horizontal" label="Roles dirigido" name="Rolesdirigido" style={{ width: '100%' }}>
                     {isEditing ? (
-                        <FilterDropdownTable options={rolesList} placeholder={'Roles: '} />
+                        <FilterDropdownTable options={rolesList} tempSelectedKeys={roless} setTempSelectedKeys={setRoless}  placeholder={'Roles: '} />
                     ) : (
                         <Input
                             size='large'
