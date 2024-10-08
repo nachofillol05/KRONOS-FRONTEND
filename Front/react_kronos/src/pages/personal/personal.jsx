@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useContext } from "react";
 import "./personal.scss";
 import { Table, Select, Spin, FloatButton, Drawer, Radio, Form, Space, Input, Button, Flex, message, Modal } from "antd";
-import { UsergroupAddOutlined, DownOutlined, UpOutlined, DownloadOutlined, MailOutlined, CloseOutlined } from '@ant-design/icons';
+import { SearchOutlined, UsergroupAddOutlined, DownOutlined, UpOutlined, DownloadOutlined, MailOutlined, CloseOutlined } from '@ant-design/icons';
 import FormSearchDni from './fromSearchDni';
 import InfoWorker from './infoWorker';
 import FormCreateWorker from './formCreateWorker';
@@ -543,6 +543,13 @@ export default function Personal() {
               />
             )}
           <Input
+                      suffix={
+                        <SearchOutlined
+                          style={{
+                            color: 'rgba(0,0,0,.45)',
+                          }}
+                        />
+                      }
             size="large"
             style={{
               width: 300,

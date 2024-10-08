@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Select, DatePicker, Spin, Drawer, Card, Button, FloatButton, message, Tooltip, Modal, Input, Theme } from "antd";
-import { InfoCircleOutlined, EditOutlined, CheckCircleOutlined, UserAddOutlined, CloseOutlined, DownOutlined, UpOutlined, FolderAddOutlined, ExclamationCircleFilled } from "@ant-design/icons";
+import { InfoCircleOutlined, SearchOutlined, CheckCircleOutlined, UserAddOutlined, CloseOutlined, DownOutlined, UpOutlined, FolderAddOutlined, ExclamationCircleFilled } from "@ant-design/icons";
 import FormCreateEvent from "./formCreateEvent";
 import { fetchProfile } from "../../services/users"
 import { fetchTypesEvent, fetchEvents, affiliateEvent, desaffiliateEvent, createEvent } from "../../services/events"
@@ -32,7 +32,7 @@ export default function EventsPage() {
 
 
   useEffect(() => {
-    const getTypesEvent = async() => {
+    const getTypesEvent = async () => {
       try {
         const data = await fetchTypesEvent();
         const dataConvert = data.map(tipo => ({
@@ -40,12 +40,12 @@ export default function EventsPage() {
           label: tipo.name,
         }));
         setTipos(dataConvert);
-      }  catch (error) {
+      } catch (error) {
         console.error("Error fetching data:", error);
       }
     }
 
-    const getProfile = async() => {
+    const getProfile = async () => {
       try {
         const data = await fetchProfile();
         setProfileData(data);
@@ -58,10 +58,10 @@ export default function EventsPage() {
     getTypesEvent();
   }, []);
 
-  
+
 
   useEffect(() => {
-    const getEvents = async() => {
+    const getEvents = async () => {
       try {
         const data = await fetchEvents(
           sessionStorage.getItem('rol'),
@@ -78,15 +78,15 @@ export default function EventsPage() {
         setLoading(false);
       }
     }
-  
+
     getEvents();
-}, [date, nombre, tipoEvento, isModalOpen, open, recargar]);
+  }, [date, nombre, tipoEvento, isModalOpen, open, recargar]);
 
 
   useEffect(() => {
     if (messageConfig.type) {
-        showMessage(messageConfig.type, messageConfig.content);
-        setMessageConfig({ type: '', content: '' });
+      showMessage(messageConfig.type, messageConfig.content);
+      setMessageConfig({ type: '', content: '' });
     }
   }, [messageConfig]);
 
@@ -103,7 +103,7 @@ export default function EventsPage() {
   };
 
   const showModalDesadherir = (evento, botonAdherido) => {
-    if(!botonAdherido){
+    if (!botonAdherido) {
       Modal.info({
         title: 'cancelar adición',
         content: (
@@ -165,13 +165,13 @@ export default function EventsPage() {
 
   const handleSubmit = async (values) => {
     const body = {
-        name: values.nombre,
-        description: values.descripcion,
-        startDate: formatDate(values.dates[0].toDate()),   
-        endDate: formatDate(values.dates[1].toDate()),   
-        eventType: values.tipoEvento,
-        roles: values.Rolesdirigido,
-        affiliated_teachers: [],
+      name: values.nombre,
+      description: values.descripcion,
+      startDate: formatDate(values.dates[0].toDate()),
+      endDate: formatDate(values.dates[1].toDate()),
+      eventType: values.tipoEvento,
+      roles: values.Rolesdirigido,
+      affiliated_teachers: [],
     };
     try {
       const data = await createEvent(body);
@@ -199,21 +199,21 @@ export default function EventsPage() {
 
   const showMessage = (type, content) => {
     switch (type) {
-        case 'success':
-            messageApi.success(content);
-            break;
-        case 'error':
-            messageApi.error(content);
-            break;
-        case 'warning':
-            messageApi.warning(content);
-            break;
-        case 'info':
-            messageApi.info(content);
-            break;
-        default:
-            messageApi.info(content);
-            break;
+      case 'success':
+        messageApi.success(content);
+        break;
+      case 'error':
+        messageApi.error(content);
+        break;
+      case 'warning':
+        messageApi.warning(content);
+        break;
+      case 'info':
+        messageApi.info(content);
+        break;
+      default:
+        messageApi.info(content);
+        break;
     }
   };
   const onChange = (value) => {
@@ -233,166 +233,177 @@ export default function EventsPage() {
         <Spin size="large" />
       </div>
       :
-    <>
-      {contextHolder}
-      <div className="contenedor-filtros contenedor-filtros-eventos">
-        <Select
-          size="large"
-          style={{
-            width: 200,
-          }}
-          options={tipos}
-          onChange={onChange}
-          showSearch
-          placeholder="tipo de evento"
-          allowClear
-        />
+      <>
+        {contextHolder}
+        <div className="contenedor-filtros contenedor-filtros-eventos">
+          <Select
+            size="large"
+            style={{
+              width: 200,
+            }}
+            options={tipos}
+            onChange={onChange}
+            showSearch
+            placeholder="Tipo de evento"
+            allowClear
+          />
 
-        <DatePicker
-          size="large"
-          placeholder="Fecha"
-          style={{
-            width: 200,
-          }}
-          onChange={onChangeDate}
-          format={dateFormat}
-          allowClear
-        />
+          <DatePicker
+            size="large"
+            placeholder="Fecha"
+            style={{
+              width: 200,
+            }}
+            onChange={onChangeDate}
+            format={dateFormat}
+            allowClear
+          />
 
-        <Input
-          size="large"
-          style={{
-            width: 300,
-          }}
-          placeholder="Buscar Evento"
-          onChange={onChangeNombre}
-          allowClear
-        />
-      </div>
-      <div
-  style={{
-    display: "grid",
-    gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
-    gap: 15,
-    padding: 15,
-    height: "86.5vh",
-    overflowY: "scroll",
-    backgroundColor: "#f1f2f4",
-    boxShadow: "0 0 0 3px #dddcdc",
-  }}
->
-{eventos.map((event) => {
-  const eventStatus = (() => {
-    const eventStartDate = moment(event.startDate).utc().format('YYYY-MM-DD');
-    const eventEndDate = moment(event.endDate).utc().format('YYYY-MM-DD');
-    const todayDate = moment(today).utc().format('YYYY-MM-DD');
-    
-    if (eventEndDate < todayDate) {
-      return "Finalizado";
-    } else if (eventStartDate > todayDate) {
-      return "Pendiente";
-    } else {
-      return "En curso";
-    }
-  })();
-  
-    let botonAdherido = false;
-    const isUserAffiliated = event.affiliated_teachers.some(teacher => teacher.id === profileData.id);
-    const roles = event.roles.map(role => role.name);
-    const rol = sessionStorage.getItem('rol');
-    const mostrar = (() => {
-      if (eventStatus === "Pendiente" && !isUserAffiliated && roles.includes(rol)) {
-        return "Adherirse al evento";
-      } 
-      if (eventStatus === "Pendiente" && isUserAffiliated && roles.includes(rol)) {
-        return "Ya estás adherido";
-      } 
-      if ((eventStatus === "Finalizado" || eventStatus === "En curso") && !isUserAffiliated) {
-        return "";
-      }
-      if ((eventStatus === "Finalizado" || eventStatus === "En curso") && isUserAffiliated) {
-        botonAdherido = true;
-        return "Ya estás adherido";
-      }
-    })();
-    const closeDrawer = () => {
-      setOpen(false);
-      showMessage("success", "Evento actualizado correctamente");
-      setDrawerContent(null);
-    }
-    const closeDrawerDelete = () => {
-      setOpen(false);
-      showMessage("success", "Evento borrado correctamente");
-      setDrawerContent(null);
-    }
-    const showError = () => {
-      showMessage("error", "Fallo la actualización");
-    }
-    
-
-    return (
-      <Card
-        key={event.id}
-        style={{
-          display: "flex",
-          flexFlow: "column",
-          justifyContent: "space-between",
-          height: "fit-content",
-          height: "250px",
-          filter: eventStatus === "Finalizado" ? "grayscale(100%) brightness(0.8)" : "grayscale(0%)",      
-        }}
-        bordered
-        hoverable={eventStatus !== "Finalizado"}
-        
-        actions={[
-          <Tooltip title="Detalles del evento" style={{opacity: eventStatus === "Finalizado" ? 0.9 : 1, 
-            backgroundColor: eventStatus === "Finalizado" ? "#f1f2f4" : "white"}}  >
-            
-            <InfoCircleOutlined 
-              key="details" 
-              onClick={() => showDrawer(<InfoEvent estado={eventStatus} event={event} typeEvent={tipos} closeDrawer={closeDrawer} closeDrawerDelete={closeDrawerDelete} showError={showError} />, "Detalles del evento")} 
-            />
-          </Tooltip>,
-
-          mostrar && (
-            <Tooltip 
-              style={{opacity: eventStatus === "Finalizado" ? 0.9 : 1, 
-                backgroundColor: eventStatus === "Finalizado" ? "#f1f2f4" : "white"  }}
-              title={mostrar} 
-              key="action"
-            >
-              
-              {mostrar === "Adherirse al evento" ? (
-                <UserAddOutlined onClick={() => showModal(event)} />
-              ) : (
-                <CheckCircleOutlined style={{ color: "green" }} onClick={() => showModalDesadherir(event,botonAdherido)} />
-              )}
-            </Tooltip>
-          ),
-        ]}
-      >
-        <div style={{ display: "flex", flexDirection: "column", gap: 15 }}>
-        <h6 style={{ color: 333, margin: 0 }}>{event.name}</h6>
-          <p style={{margin: 0}}>
-            <p style={{margin: 0}}>{event.eventType.name}</p>
-            {moment.utc(event.startDate).format('DD/MM/YYYY')} - {moment.utc(event.endDate).format('DD/MM/YYYY')}
-            <p style={{margin: 0}}>{eventStatus}</p>
-          </p>
+          <Input
+            suffix={
+              <SearchOutlined
+                style={{
+                  color: 'rgba(0,0,0,.45)',
+                }}
+              />
+            }
+            size="large"
+            style={{
+              width: 300,
+            }}
+            placeholder="Buscar Evento"
+            onChange={onChangeNombre}
+            allowClear
+          />
         </div>
-      </Card>
-    );
-  })}
-</div>
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
+            gap: 15,
+            padding: 15,
+            height: "86.5vh",
+            overflowY: "scroll",
+            backgroundColor: "#f1f2f4",
+            boxShadow: "0 0 0 3px #dddcdc",
+          }}
+        >
+          {eventos.map((event) => {
+            const eventStatus = (() => {
+              const eventStartDate = moment(event.startDate).utc().format('YYYY-MM-DD');
+              const eventEndDate = moment(event.endDate).utc().format('YYYY-MM-DD');
+              const todayDate = moment(today).utc().format('YYYY-MM-DD');
 
-      {sessionStorage.getItem('rol') === 'Directivo' ? (
-        <>
-        <FloatButton
-          icon={<FolderAddOutlined />}
-          type="primary"
-          tooltip="Agregar una evento"
-          onClick={() => showDrawer(<FormCreateEvent handleVolver={handleVolver} handleSubmit={handleSubmit} />, "Agregar un nuevo evento")}
-        />
-        </>) : null}
+              if (eventEndDate < todayDate) {
+                return "Finalizado";
+              } else if (eventStartDate > todayDate) {
+                return "Pendiente";
+              } else {
+                return "En curso";
+              }
+            })();
+
+            let botonAdherido = false;
+            const isUserAffiliated = event.affiliated_teachers.some(teacher => teacher.id === profileData.id);
+            const roles = event.roles.map(role => role.name);
+            const rol = sessionStorage.getItem('rol');
+            const mostrar = (() => {
+              if (eventStatus === "Pendiente" && !isUserAffiliated && roles.includes(rol)) {
+                return "Adherirse al evento";
+              }
+              if (eventStatus === "Pendiente" && isUserAffiliated && roles.includes(rol)) {
+                return "Ya estás adherido";
+              }
+              if ((eventStatus === "Finalizado" || eventStatus === "En curso") && !isUserAffiliated) {
+                return "";
+              }
+              if ((eventStatus === "Finalizado" || eventStatus === "En curso") && isUserAffiliated) {
+                botonAdherido = true;
+                return "Ya estás adherido";
+              }
+            })();
+            const closeDrawer = () => {
+              setOpen(false);
+              showMessage("success", "Evento actualizado correctamente");
+              setDrawerContent(null);
+            }
+            const closeDrawerDelete = () => {
+              setOpen(false);
+              showMessage("success", "Evento borrado correctamente");
+              setDrawerContent(null);
+            }
+            const showError = () => {
+              showMessage("error", "Fallo la actualización");
+            }
+
+
+            return (
+              <Card
+                key={event.id}
+                style={{
+                  display: "flex",
+                  flexFlow: "column",
+                  justifyContent: "space-between",
+                  height: "fit-content",
+                  height: "250px",
+                  filter: eventStatus === "Finalizado" ? "grayscale(100%) brightness(0.8)" : "grayscale(0%)",
+                }}
+                bordered
+                hoverable={eventStatus !== "Finalizado"}
+
+                actions={[
+                  <Tooltip title="Detalles del evento" style={{
+                    opacity: eventStatus === "Finalizado" ? 0.9 : 1,
+                    backgroundColor: eventStatus === "Finalizado" ? "#f1f2f4" : "white"
+                  }}  >
+
+                    <InfoCircleOutlined
+                      key="details"
+                      onClick={() => showDrawer(<InfoEvent estado={eventStatus} event={event} typeEvent={tipos} closeDrawer={closeDrawer} closeDrawerDelete={closeDrawerDelete} showError={showError} />, "Detalles del evento")}
+                    />
+                  </Tooltip>,
+
+                  mostrar && (
+                    <Tooltip
+                      style={{
+                        opacity: eventStatus === "Finalizado" ? 0.9 : 1,
+                        backgroundColor: eventStatus === "Finalizado" ? "#f1f2f4" : "white"
+                      }}
+                      title={mostrar}
+                      key="action"
+                    >
+
+                      {mostrar === "Adherirse al evento" ? (
+                        <UserAddOutlined onClick={() => showModal(event)} />
+                      ) : (
+                        <CheckCircleOutlined style={{ color: "green" }} onClick={() => showModalDesadherir(event, botonAdherido)} />
+                      )}
+                    </Tooltip>
+                  ),
+                ]}
+              >
+                <div style={{ display: "flex", flexDirection: "column", gap: 15 }}>
+                  <h6 style={{ color: 333, margin: 0 }}>{event.name}</h6>
+                  <p style={{ margin: 0 }}>
+                    <p style={{ margin: 0 }}>{event.eventType.name}</p>
+                    {moment.utc(event.startDate).format('DD/MM/YYYY')} - {moment.utc(event.endDate).format('DD/MM/YYYY')}
+                    <p style={{ margin: 0 }}>{eventStatus}</p>
+                  </p>
+                </div>
+              </Card>
+            );
+          })}
+        </div>
+
+        {sessionStorage.getItem('rol') === 'Directivo' ? (
+          <>
+            <FloatButton
+              icon={<FolderAddOutlined />}
+              type="primary"
+              tooltip="Agregar una evento"
+              onClick={() => showDrawer(<FormCreateEvent handleVolver={handleVolver} handleSubmit={handleSubmit} />, "Agregar un nuevo evento")}
+            />
+          </>) : null}
         <Drawer
           width={600}
           title={drawerTitle}
@@ -410,7 +421,7 @@ export default function EventsPage() {
         >
           <div style={{ width: "100%", height: "100%" }}>{drawerContent}</div>
         </Drawer>
-    </>
+      </>
     )
   );
 }

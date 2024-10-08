@@ -2,10 +2,11 @@ import React, { useState, useEffect } from 'react';
 import './materias.scss';
 import RangeSlider from "../../components/timerangeslider/timerange.jsx";
 import { Spin, Table, Select, Input, FloatButton, Drawer, Form, Button, message, Modal, Flex } from "antd";
-import { EditOutlined, FileAddOutlined, DownOutlined, UpOutlined, DownloadOutlined, CloseOutlined, FileSearchOutlined } from '@ant-design/icons';
+import { SearchOutlined, EditOutlined, FileAddOutlined, DownOutlined, UpOutlined, DownloadOutlined, CloseOutlined, FileSearchOutlined } from '@ant-design/icons';
 import FormCreateSubject from './formCreateSubject.jsx';
 import FormCreateSubjectForCourse from './formCreateSubjectForCourse.jsx';
 import ModalComponent from './ModalAsignacion.jsx';
+import AsignarProfesor from './asignacionProfesorDrawer.jsx'
 
 
 export default function Materias() {
@@ -32,14 +33,30 @@ export default function Materias() {
     const [isLoading, setLoading] = useState(true)
     const [materias, setMaterias] = useState([]);
 
+    const removeTeacher = async (teacherToRemove) => {
+        if (teacherToRemove) {
+            try {
+                await fetch('http://127.0.0.1:8000/api/teachersubjectschool/' + teacherToRemove + '/', {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': 'Token ' + localStorage.getItem('token'),
+                        'School-ID': sessionStorage.getItem('actual_school'),
+                        'Content-Type': 'application/json'
+                    },
+                });
+                setRecargar(!recargar);
+            } catch (error) {
+                console.error('Error removing teacher:', error);
+            }
+        }
+    };
 
-
-    const asignarMateria = (coursesubject_id) => {
+    const asignarMateria = (coursesubject_id, idTeacher) => {
         const body = {
-            teacher: selectedTeacher,
+            teacher: idTeacher,
             coursesubjects: coursesubject_id,
         }
-        console.log(body)
+        setRecargar(!recargar);
         fetch('http://127.0.0.1:8000/api/teachersubjectschool/', {
             method: 'POST',
             headers: {
@@ -49,8 +66,7 @@ export default function Materias() {
             },
             body: JSON.stringify(body),
         })
-        setIsModalOpen(false)
-
+        setRecargar(!recargar);
     }
     useEffect(() => {
         setRecargar(!recargar)
@@ -173,7 +189,6 @@ export default function Materias() {
         }
     };
 
-
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -190,7 +205,7 @@ export default function Materias() {
                 }
                 console.log(url.toString());
                 console.log(sessionStorage.getItem('actual_school'));
-    
+
                 const response = await fetch(url.toString(), {
                     method: "GET",
                     headers: {
@@ -198,13 +213,13 @@ export default function Materias() {
                         'School-ID': sessionStorage.getItem('actual_school'),
                     },
                 });
-    
+
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
-    
+
                 const data = await response.json();
-    
+
                 setMaterias(data.map(materia => ({
                     ...materia,
                     key: materia.id,
@@ -224,11 +239,10 @@ export default function Materias() {
                 setLoading(false); // Esto se ejecutará siempre, tanto si hay un error como si no
             }
         };
-    
+
         fetchData();
     }, [start_time, end_time, Subjectname, teacher, recargar]);
 
-    
     const columns = [
         { title: 'Nombre', dataIndex: 'name', key: 'name', width: '20%', },
         { title: 'Abreviacion', dataIndex: 'abbreviation', key: 'abbreviation', width: '15%', },
@@ -237,36 +251,56 @@ export default function Materias() {
             title: 'Color',
             dataIndex: 'color',
             key: 'color',
-            width: '15%',
+            width: '10%',
             render: (text) => (
-                <div style={{ width: '24px', height: '24px', backgroundColor: text, borderRadius: '4px' }} />
+                <div style={{ width: '100%', height: '24px', backgroundColor: text, borderRadius: '4px' }} />
             )
         },
-        { title: 'Accion', render: () => <a><EditOutlined /></a>, key: 'action', width: '10%', }
+        { title: 'Accion', render: () => <Button size='small' style={{ display: 'flex', justifyContent: 'center', margin: 'auto' }} type='link' icon={<EditOutlined />} />, key: 'action', width: '10%', }
 
     ];
 
     const expandColumns = [
         { title: 'Curso', dataIndex: 'course', key: 'course', width: '10%', },
         { title: 'Profesores', dataIndex: 'teachers', key: 'teachers' },
-        { title: 'Accion', render: () => <a><EditOutlined/></a>, key: 'action', width: '10%', }
+        { title: 'Accion', render: () => <Button size='small' style={{ display: 'flex', justifyContent: 'center', margin: 'auto' }} type='link' icon={<EditOutlined />} />, key: 'action', width: '15%', }
     ]
 
     const expandedRowRender = (record) => (
         <Table
-        tableLayout="fixed"
-        columns={expandColumns} 
-        dataSource={record.anidadas} 
-        pagination={false}
-        onRow={(record) => ({
-            onClick: () => showModal(record),
-            onMouseEnter: () => {
-                document.body.style.cursor = 'pointer';
-            },
-            onMouseLeave: () => {
-                document.body.style.cursor = 'default';
-            },
-        })}/>
+            bordered
+            tableLayout="fixed"
+            columns={expandColumns}
+            dataSource={record.anidadas}
+            pagination={false}
+            onRow={(record) => {
+                const parent = materias.find(materia =>
+                    materia.courses && materia.courses.some(child => child.id === record.id)
+                );
+                setParentRecord(parent); // Actualiza el estado de parentRecord
+
+                return {
+                    onClick: () => showDrawer(
+                        <AsignarProfesor
+                            onClose={onClose}
+                            record={record}
+                            parentRecord={parent} // Asegúrate de pasar el objeto parent aquí
+                            teachers={teachers}
+                            setSelectedTeacher={setSelectedTeacher}
+                            asignarMateria={asignarMateria}
+                            removeTeacher={removeTeacher}
+                        />,
+                        'Asigna profesor a la materia'
+                    ),
+                    onMouseEnter: () => {
+                        document.body.style.cursor = 'pointer';
+                    },
+                    onMouseLeave: () => {
+                        document.body.style.cursor = 'default';
+                    },
+                };
+            }}
+        />
     );
 
     useEffect(() => {
@@ -391,11 +425,11 @@ export default function Materias() {
     }
 
     const showModal = (record) => {
-            setRecord(record);
-            setIsModalOpen(true);
-            const parent = materias.find(materia => materia.courses && materia.courses.some(child => child.id === record.id));
-            console.log(parent);
-            setParentRecord(parent);
+        setRecord(record);
+        setIsModalOpen(true);
+        const parent = materias.find(materia => materia.courses && materia.courses.some(child => child.id === record.id));
+        console.log(parent);
+        setParentRecord(parent);
 
     };
 
@@ -424,6 +458,13 @@ export default function Materias() {
 
 
                     <Input
+                        suffix={
+                            <SearchOutlined
+                                style={{
+                                    color: 'rgba(0,0,0,.45)',
+                                }}
+                            />
+                        }
                         size="large"
                         style={{
                             width: 300,
