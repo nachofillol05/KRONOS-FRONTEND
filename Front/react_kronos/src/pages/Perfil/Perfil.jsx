@@ -28,9 +28,7 @@ export default function Profile() {
 
   const handleOk = async () => {
     try {
-      setLoading(true);
       const values = await formCambio.validateFields();
-      
       fetch('http://127.0.0.1:8000/api/changePassword/', {
         method: "POST",
         headers: {
@@ -45,21 +43,23 @@ export default function Profile() {
       })
         .then((response) => {
           if (!response.ok) {
-        throw new Error('Network response was not ok');
+            message.error('Contraseña incorrecta');
+            return
           }
           return response.json();
         })
         .then((data) => {
-          message.success('Contraseña cambiada con éxito!');
-          setIsModalVisible(false);
-          formCambio.resetFields();
-          console.log('Password changed successfully:', data);
+          if(data!=undefined){
+            message.success('Contraseña cambiada con éxito!');
+            formCambio.resetFields();
+            console.log('Password changed successfully:', data);
+            setIsModalVisible(false);
+          }
         });
-      console.log('New password:', values);
     } catch (error) {
       console.error('Error en el formulario', error);
     } finally {
-      setLoading(false);
+      //setLoading(false);
     }
   };
 
@@ -618,45 +618,57 @@ export default function Profile() {
               onClick={() => showModal()}
           />
         </FloatButton.Group>
-      <Modal
-        title="Cambiar Contraseña"
-        visible={isModalVisible}
-        onOk={handleOk}
-        confirmLoading={isLoading}
-        onCancel={handleCancel}
-        okText="Cambiar"
-        cancelText="Cancelar"
-      >
-        <Form form={formCambio} layout="vertical">
-          <Form.Item
-            name="currentPassword"
-            label="Contraseña Actual"
-            rules={[{ required: true, message: 'Por favor ingrese su contraseña actual' }]}
-          >
-            <Input.Password placeholder="Contraseña actual" />
-          </Form.Item>
+        <Modal
+          title="Cambiar Contraseña"
+          visible={isModalVisible}
+          onOk={handleOk}
+          confirmLoading={isLoading}
+          onCancel={handleCancel}
+          okText="Cambiar"
+          cancelText="Cancelar"
+        >
+          <Form form={formCambio} layout="vertical">
+            <Form.Item
+              name="currentPassword"
+              label="Contraseña Actual"
+              rules={[
+                { required: true, message: 'Por favor ingrese su contraseña actual' },
+              ]}
+            >
+              <Input.Password placeholder="Contraseña actual" />
+            </Form.Item>
 
-          <Form.Item
-            name="newPassword"
-            label="Nueva Contraseña"
-            rules={[{ required: true, message: 'Por favor ingrese la nueva contraseña' }]}
-          >
-            <Input.Password placeholder="Nueva contraseña" />
-          </Form.Item>
+            <Form.Item
+              name="newPassword"
+              label="Nueva Contraseña"
+              rules={[
+                { required: true, message: 'Por favor ingrese la nueva contraseña' },
+                { min: 9, message: 'La contraseña debe tener al menos 9 caracteres' },
+              ]}
+            >
+              <Input.Password placeholder="Nueva contraseña" />
+            </Form.Item>
 
-          <Form.Item
-            name="confirmPassword"
-            label="Confirmar Nueva Contraseña"
-            dependencies={['newPassword']}
-            rules={[
-              { required: true, message: 'Por favor confirme su nueva contraseña' },
-              validateConfirmPassword,
-            ]}
-          >
-            <Input.Password placeholder="Confirmar nueva contraseña" />
-          </Form.Item>
-        </Form>
-      </Modal>
+            <Form.Item
+              name="confirmPassword"
+              label="Confirmar Nueva Contraseña"
+              dependencies={['newPassword']}
+              rules={[
+                { required: true, message: 'Por favor confirme su nueva contraseña' },
+                ({ getFieldValue }) => ({
+                  validator(_, value) {
+                    if (!value || getFieldValue('newPassword') === value) {
+                      return Promise.resolve();
+                    }
+                    return Promise.reject(new Error('Las contraseñas no coinciden'));
+                  },
+                }),
+              ]}
+            >
+              <Input.Password placeholder="Confirmar nueva contraseña" />
+            </Form.Item>
+          </Form>
+        </Modal>
       </>
     )
   );

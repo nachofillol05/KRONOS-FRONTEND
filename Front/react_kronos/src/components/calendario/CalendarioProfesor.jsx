@@ -3,9 +3,11 @@ import { Row, Col, Tooltip, Avatar } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
 import './Calendario.scss';
 
-const days = ['lunes', 'martes', 'miércoles', 'jueves', 'viernes'];
+const days = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes'];
 
 export default function CalendarioProfesor({ subjects }) {
+    console.log(subjects);
+    const [modulesData, setModulesData] = useState([]);
 
     useEffect(() => {
         if (sessionStorage.getItem('rol') !== "Profesor") {
@@ -49,32 +51,25 @@ export default function CalendarioProfesor({ subjects }) {
                                 : 'white';
                             const textColor = subject ? subject.subject_color : '#000';
                             return (
-                                <Col key={`${day}-${module}`} className="casilla casillaProfesor">
-                                    <div
-                                        className="espacioProfesor"
-                                        style={{
-                                            backgroundColor,
-                                            color: textColor,
-                                            borderRadius: '5px',
-                                            flexGrow: 1,
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            gap: '10px',
-                                        }}
-                                    >
-                                        {subject ? (
-                                            <Avatar size={'small'} icon={<UserOutlined />} />
-                                        ) : (
-                                            ''
-                                        )}
-                                        {subject ? (
-                                            <>
-                                                {subject.subject_abreviation} - {subject.course_name}
-                                            </>
-                                        ) : (
-                                            ''
-                                        )}
-                                    </div>
+                                <Col key={`${day}-${moduleNumber}`} className="casilla casillaProfesor">
+                                        <div
+                                            className="espacioProfesor"
+                                            style={{
+                                                backgroundColor,
+                                                color: textColor,
+                                                borderRadius: '5px',
+                                                flexGrow: 1,
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                gap: '10px',
+                                            }}
+                                        >
+                                            {subject ? <Avatar size={'small'} icon={<UserOutlined />} /> : ''}
+                                            <>{subject ? subject.subject_abreviation : ''}</>
+                                            <> - </>
+                                            <> {subject ? subject.course_id : ''}</>
+                                            
+                                        </div>
                                 </Col>
                             );
                         })}

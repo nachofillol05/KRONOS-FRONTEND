@@ -41,7 +41,7 @@ const PrivateRoute = ({ children }) => {
                 setMailVerified(data.user_is_verified);
                 if(data.user_is_verified){
                     response.json().then(data => {
-                        localStorage.setItem('user', JSON.stringify(data));
+                        localStorage.setItem('user', true);
                     });
                 } else {
                   setMailVerified(false);
