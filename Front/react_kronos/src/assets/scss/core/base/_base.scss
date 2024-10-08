@@ -38,13 +38,6 @@ ol {
 	list-style: decimal;
 }
 
-li {
-
-	&:not(:last-child) {
-		margin-bottom: $spacing--shared-v / 2;
-	}
-}
-
 li > ul,
 li > ol {
 	margin-top: $spacing--shared-v / 2;

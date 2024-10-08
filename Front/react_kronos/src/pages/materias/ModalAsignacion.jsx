@@ -7,7 +7,6 @@ const ModalComponent = ({ isModalOpen, setIsModalOpen, record, parentRecord, tea
     const [confirmModalOpen, setConfirmModalOpen] = useState(false);
     const [teacherToRemove, setTeacherToRemove] = useState(null);
 
-    // Filtrar profesores para el select (excluir los ya asignados)
     const assignedTeachers = record.teacher_subject_schools || [];
     const filteredTeachers = teachers.filter(teacher => !assignedTeachers.some(at => at.teacher_id === teacher.value));
 

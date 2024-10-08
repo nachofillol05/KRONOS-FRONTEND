@@ -1,8 +1,8 @@
 @import '../../scss/index.scss';
 
 .contenedor-filtros-materias{
-  justify-content: space-between;
-  padding-inline: 3vw;
+  justify-content: flex-start;
+  gap: 30px;
 }
 
 .filtros-container > * {
