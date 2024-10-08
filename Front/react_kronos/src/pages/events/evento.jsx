@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import { Select, DatePicker, Spin, Drawer, Card, Button, FloatButton, message, Tooltip, Modal, Input, Theme } from "antd";
 import { InfoCircleOutlined, EditOutlined, CheckCircleOutlined, UserAddOutlined, CloseOutlined, DownOutlined, UpOutlined, FolderAddOutlined, ExclamationCircleFilled } from "@ant-design/icons";
 import FormCreateEvent from "./formCreateEvent";
+import { fetchProfile } from "../../services/users"
+import { fetchTypesEvent, fetchEvents, affiliateEvent, desaffiliateEvent, createEvent } from "../../services/events"
 import moment from 'moment';
 import InfoEvent from "./infoEvent";
 import dayjs from 'dayjs';
@@ -20,7 +22,6 @@ export default function EventsPage() {
   const [recargar, setRecargar] = useState(false);
   const [messageApi, contextHolder] = message.useMessage();
   const [messageConfig, setMessageConfig] = useState({ type: '', content: '' });
-  const [eventName, setEventName] = useState('');
   const [nombre, setNombre] = useState([]);
   const [tipoEvento, setTipoEvento] = useState([]);
   const [date, setDate] = useState('');
@@ -30,91 +31,55 @@ export default function EventsPage() {
   const [isLoading, setLoading] = useState(true)
 
 
+  useEffect(() => {
+    const getTypesEvent = async() => {
+      try {
+        const data = await fetchTypesEvent();
+        const dataConvert = data.map(tipo => ({
+          value: tipo.id,
+          label: tipo.name,
+        }));
+        setTipos(dataConvert);
+      }  catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    }
+
+    const getProfile = async() => {
+      try {
+        const data = await fetchProfile();
+        setProfileData(data);
+      } catch (error) {
+        console.error("Error fetching data:", error.data);
+      }
+    }
+
+    getProfile();
+    getTypesEvent();
+  }, []);
+
   
-  useEffect(() => {
-    fetch('http://127.0.0.1:8000/api/profile/', {
-        method: "GET",
-        headers: {
-            'Authorization': 'Token ' + localStorage.getItem('token'),
-            'School-ID': sessionStorage.getItem('actual_school'),
-        },
-    })
-        .then((response) => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-        })
-        .then((data) => {
-            setProfileData(data);
-        })
-        .catch((error) => console.error('Error fetching data:', error));
-  }, []);
-
 
   useEffect(() => {
-    fetch('http://127.0.0.1:8000/api/typeevent/', {
-        method: "GET",
-        headers: {
-            'Authorization': 'Token ' + localStorage.getItem('token'),
-            'School-ID': sessionStorage.getItem('actual_school'),
-        },
-    })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-        })
-        .then(data => {
-            const tipos = data.map(tipo => ({
-                value: tipo.id,
-                label: tipo.name,
-            }));
-            setTipos(tipos);
-        })
-        .catch(error => console.error('Error fetching data:', error));
-  }, []);
-  useEffect(() => {
-    const fetchData = async () => {
-        try {
-            const url = new URL('http://127.0.0.1:8000/api/events/?role=' + sessionStorage.getItem('rol'));
-            if (date) {
-                url.searchParams.append('maxDate', date);
-            }
-            if (tipoEvento) {
-                url.searchParams.append('eventType', tipoEvento);
-            }
-            if (nombre) {
-                url.searchParams.append('name', nombre);
-            }
-            console.log(url.toString());
-
-            const response = await fetch(url.toString(), {
-                method: "GET",
-                headers: {
-                    'Authorization': 'Token ' + localStorage.getItem('token'),
-                    'School-ID': sessionStorage.getItem('actual_school'),
-                },
-            });
-
-            if (!response.ok) {
-                setEventos([]);
-                showMessage('error', 'No hay eventos que cumplan los requerimientos');
-                throw new Error('Network response was not ok');
-            }
-
-            const data = await response.json();
-            console.log(data);
-            setEventos(data);
-        } catch (error) {
-            console.error('Error fetching data:', error);
-        } finally {
-            setLoading(false); // Esto se ejecutará siempre, tanto si hay un error como si no
-        }
-    };
-
-    fetchData();
+    const getEvents = async() => {
+      try {
+        const data = await fetchEvents(
+          sessionStorage.getItem('rol'),
+          date,
+          tipoEvento,
+          nombre
+        );
+        setEventos(data);
+      } catch (error) {
+        setEventos([]);
+        showMessage('error', 'No hay eventos que cumplan los requerimientos');
+        console.error("Error fetching data:", error.data);
+      } finally {
+        setLoading(false);
+      }
+    }
+  
+    getEvents();
 }, [date, nombre, tipoEvento, isModalOpen, open, recargar]);
 
 
@@ -151,74 +116,28 @@ export default function EventsPage() {
     }
   };
 
-  //CAMBIAAAAAAAAAAAAAAAAAAAAAAAAAAR A LA VISTAAAAAAAAAAAAAAAAA NUEVA QUEEEEEEEEEEEEEEE HIZOOOOOOOOOO OREEEEEEEEEEEEEEEE
-
-  const handleOkDesadherir = (evento) => {
-    fetch('http://127.0.0.1:8000/api/events/affiliated/', {
-      method: "DELETE",
-      headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Token ' + localStorage.getItem('token'),
-          'School-ID': sessionStorage.getItem('actual_school'),
-      },
-      body: JSON.stringify({
-        'event_id': evento.id,
-      }),
-    })
-    .then(response => {
-        if (!response.ok) {
-            showMessage("error", "Error al deshaderirse al evento");
-            return null;
-        }
-        return response.text();
-    })
-    .then(text => {
-        if (text) {
-            return JSON.parse(text); 
-        }
-        return {}; 
-    })
-    .then(data => {
-        showMessage("success", "Desadherido al evento correctamente");
-        setRecargar(!recargar);
-    })
-    .catch(error => console.error('Error fetching data:', error));
+  const handleOkDesadherir = async (evento) => {
+    try {
+      const data = await desaffiliateEvent(evento.id);
+      showMessage("success", "Desadherido al evento correctamente");
+      setRecargar(!recargar);
+    } catch (error) {
+      showMessage("error", "Error al deshaderirse al evento");
+    } finally {
       setIsModalOpen(false);
+    }
   };
 
-  const handleOk = (evento) => {
-      fetch('http://127.0.0.1:8000/api/events/affiliated/', {
-        method: "POST",
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Token ' + localStorage.getItem('token'),
-            'School-ID': sessionStorage.getItem('actual_school'),
-        },
-        body: JSON.stringify({
-          'event_id': evento.id,
-        }),
-    })
-    .then(response => {
-        if (!response.ok) {
-            showMessage("error", "Error al adherirse al evento");
-            return null;
-        }
-        return response.text();
-    })
-    .then(text => {
-        if (text) {
-            return JSON.parse(text); 
-        }
-        return {}; 
-    })
-    .then(data => {
-        showMessage("success", "Adherido al evento correctamente");
-        setRecargar(!recargar);
-    })
-    .catch(error => console.error('Error fetching data:', error));
-    
-  
+  const handleOk = async (evento) => {
+    try {
+      const data = await affiliateEvent(evento.id);
+      showMessage("success", "Adherido al evento correctamente");
+      setRecargar(!recargar);
+    } catch (error) {
+      showMessage("error", "Error al adherirse al evento");
+    } finally {
       setIsModalOpen(false);
+    }
   };
 
   const handleCancel = () => {
@@ -244,7 +163,7 @@ export default function EventsPage() {
     setDrawerContent(null);
   }
 
-  const handleSubmit = (values) => {
+  const handleSubmit = async (values) => {
     const body = {
         name: values.nombre,
         description: values.descripcion,
@@ -254,24 +173,13 @@ export default function EventsPage() {
         roles: values.Rolesdirigido,
         affiliated_teachers: [],
     };
-    fetch('http://127.0.0.1:8000/api/events/', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Token ' + localStorage.getItem('token'),
-            'School-ID': sessionStorage.getItem('actual_school'),
-        },
-        body: JSON.stringify(body),
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-        closeDrawerCreate();
-        return response.json();
-    })
-    .then(data => console.log('Success:', data))
-    .catch(error => console.error('Error:', error));
+    try {
+      const data = await createEvent(body);
+      closeDrawerCreate();
+      return data;
+    } catch (error) {
+      console.error("Error fetching data:", error.data);
+    }
   };
 
   const showDrawer = (content, title) => {
@@ -392,8 +300,6 @@ export default function EventsPage() {
     const isUserAffiliated = event.affiliated_teachers.some(teacher => teacher.id === profileData.id);
     const roles = event.roles.map(role => role.name);
     const rol = sessionStorage.getItem('rol');
-    console.log(roles);
-    console.log(rol);
     const mostrar = (() => {
       if (eventStatus === "Pendiente" && !isUserAffiliated && roles.includes(rol)) {
         return "Adherirse al evento";
@@ -423,7 +329,7 @@ export default function EventsPage() {
       showMessage("error", "Fallo la actualización");
     }
     
-    
+
     return (
       <Card
         key={event.id}
@@ -444,7 +350,7 @@ export default function EventsPage() {
             
             <InfoCircleOutlined 
               key="details" 
-              onClick={() => showDrawer(<InfoEvent estado={eventStatus} event={event} closeDrawer={closeDrawer} closeDrawerDelete={closeDrawerDelete} showError={showError} />, "Detalles del evento")} 
+              onClick={() => showDrawer(<InfoEvent estado={eventStatus} event={event} typeEvent={tipos} closeDrawer={closeDrawer} closeDrawerDelete={closeDrawerDelete} showError={showError} />, "Detalles del evento")} 
             />
           </Tooltip>,
 
