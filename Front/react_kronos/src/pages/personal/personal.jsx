@@ -157,7 +157,7 @@ export default function Personal() {
                 <InfoWorker
                   user={body.user}
                   handleVolver={handleVolver}
-                  handleContactar={() => showDrawer(<ContacWorker onClose={onClose} handleVolver={handleVolver} user={body.user} />, 'Contacata con el trabajador')}
+                  handleContactar={() => showDrawer(<ContacWorker onClose={onClose} handleVolver={handleVolver} user={body.user.email} />, 'Contacata con el trabajador')}
                   onClose={onClose}
                 />,
                 "Información del Trabajador"
@@ -553,9 +553,8 @@ export default function Personal() {
           />
         </div >
         <Table
-          rowKey={'id'}
+          rowKey={'email'}
           bordered
-          
           onRow={(user) => ({
             onClick: () => showEspecificWorker(user.id),
             onMouseEnter: () => {
@@ -596,7 +595,7 @@ export default function Personal() {
 
               {hasSelectedRows ?
                 <FloatButton icon={<MailOutlined />} 
-                onClick={() => showDrawer(<ContacWorker onClose={onClose} handleVolver={handleVolver} user={{first_name: 'el personal', last_name: 'seleccionado'}}/>, 'Contactar con el personal')}
+                onClick={() => showDrawer(<ContacWorker onClose={onClose} handleVolver={handleVolver} user={selectedRowKeys}/>, 'Contactar con el personal')}
                 type='primary' style={{ right: '10%' }} />
                 :
                 null
@@ -624,6 +623,28 @@ export default function Personal() {
             </>
           ) : (<FloatButton icon={<DownloadOutlined />} tooltip="Descargar tabla" />)
         }
+        {/*{showModal ? (
+          <Modal
+              title="Reporte de creación"
+              visible={showModal}
+              onCancel={closeModal}
+              footer={[
+                  <Button key="ok" onClick={closeModal}>
+                      Cerrar
+                  </Button>
+              ]}
+          >
+              <div>
+                  <h2>Horario incompleto</h2>
+                  <p>El horario no se ha completado, faltan las siguientes materias:</p>
+                  <ul>
+                      {incomplete.map((materia, index) => (
+                          <li key={index}>{materia}</li>
+                      ))}
+                  </ul>
+              </div>
+          </Modal>
+        ) : null}*/}
       </>
     )
   );

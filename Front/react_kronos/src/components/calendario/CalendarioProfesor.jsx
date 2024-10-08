@@ -5,36 +5,8 @@ import './Calendario.scss';
 
 const days = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes'];
 
-const materias = [
-    // Lunes
-    { day: 'Lunes', moduleNumber: 1, course_id: 1, subject_name: 'Matemática', subject_abreviation: 'MAT', subject_color: '#FF0000', nombre: 'Juan' },
-    { day: 'Lunes', moduleNumber: 2, course_id: 1, subject_name: 'Matemática', subject_abreviation: 'MAT', subject_color: '#FF0000', nombre: 'Juan' },
-    { day: 'Lunes', moduleNumber: 3, course_id: 1, subject_name: 'Matemática', subject_abreviation: 'MAT', subject_color: '#FF0000', nombre: 'Juan' },
-    { day: 'Lunes', moduleNumber: 4, course_id: 3, subject_name: 'Fisica', subject_abreviation: 'FIS', subject_color: '#808080', nombre: 'Monica' },
-    { day: 'Lunes', moduleNumber: 5, course_id: 2, subject_name: 'Física', subject_abreviation: 'FIS', subject_color: '#808080', nombre: 'Ethel' },
-
-    // Martes
-    { day: 'Martes', moduleNumber: 2, course_id: 2, subject_name: 'Matemática', subject_abreviation: 'MAT', subject_color: '#FF0000', nombre: 'Juan' },
-    { day: 'Martes', moduleNumber: 3, course_id: 1, subject_name: 'Química', subject_abreviation: 'QIM', subject_color: '#00FF00', nombre: 'Monica' },
-    { day: 'Martes', moduleNumber: 4, course_id: 1, subject_name: 'Química', subject_abreviation: 'QIM', subject_color: '#00FF00', nombre: 'Monica' },
-
-    // Miércoles
-    { day: 'Miércoles', moduleNumber: 1, course_id: 2, subject_name: 'Física', subject_abreviation: 'FIS', subject_color: '#808080', nombre: 'Ethel' },
-    { day: 'Miércoles', moduleNumber: 2, course_id: 2, subject_name: 'Física', subject_abreviation: 'FIS', subject_color: '#808080', nombre: 'Ethel' },
-    { day: 'Miércoles', moduleNumber: 3, course_id: 1, subject_name: 'Matemática', subject_abreviation: 'MAT', subject_color: '#FF0000', nombre: 'Pedro' },
-    { day: 'Miércoles', moduleNumber: 4, course_id: 1, subject_name: 'Matemática', subject_abreviation: 'MAT', subject_color: '#FF0000', nombre: 'Juan' },
-
-    // Jueves
-    { day: 'Jueves', moduleNumber: 1, course_id: 2, subject_name: 'Matemática', subject_abreviation: 'MAT', subject_color: '#FF0000', nombre: 'Juan' },
-    { day: 'Jueves', moduleNumber: 2, course_id: 2, subject_name: 'Matemática', subject_abreviation: 'MAT', subject_color: '#FF0000', nombre: 'Juan' },
-    { day: 'Jueves', moduleNumber: 5, course_id: 1, subject_name: 'Química', subject_abreviation: 'QIM', subject_color: '#00FF00', nombre: 'Monica' },
-
-    // Viernes
-    { day: 'Viernes', moduleNumber: 2, course_id: 1, subject_name: 'Química', subject_abreviation: 'QIM', subject_color: '#00FF00', nombre: 'Monica' },
-    { day: 'Viernes', moduleNumber: 4, course_id: 1, subject_name: 'Matemática', subject_abreviation: 'MAT', subject_color: '#FF0000', nombre: 'Juan' },
-    { day: 'Viernes', moduleNumber: 5, course_id: 3, subject_name: 'Física', subject_abreviation: 'FIS', subject_color: '#808080', nombre: 'Ethel' }
-];
-export default function CalendarioProfesor() {
+export default function CalendarioProfesor({ subjects }) {
+    console.log(subjects);
     const [modulesData, setModulesData] = useState([]);
 
     useEffect(() => {
@@ -44,8 +16,8 @@ export default function CalendarioProfesor() {
     }, []);
 
     const getSubjectForDayAndModule = (day, moduleNumber) => {
-        return materias.find(
-            (subject) => subject.day === day && subject.moduleNumber === moduleNumber
+        return subjects.find(
+            (subject) => subject.day.toLowerCase() === day.toLowerCase() && subject.moduleNumber === moduleNumber
         );
     };
 
@@ -80,24 +52,31 @@ export default function CalendarioProfesor() {
                             const textColor = subject ? subject.subject_color : '#000';
                             return (
                                 <Col key={`${day}-${moduleNumber}`} className="casilla casillaProfesor">
-                                        <div
-                                            className="espacioProfesor"
-                                            style={{
-                                                backgroundColor,
-                                                color: textColor,
-                                                borderRadius: '5px',
-                                                flexGrow: 1,
-                                                display: 'flex',
-                                                alignItems: 'center',
-                                                gap: '10px',
-                                            }}
-                                        >
-                                            {subject ? <Avatar size={'small'} icon={<UserOutlined />} /> : ''}
-                                            <>{subject ? subject.subject_abreviation : ''}</>
-                                            <> - </>
-                                            <> {subject ? subject.course_id : ''}</>
-                                            
-                                        </div>
+                                    <div
+                                        className="espacioProfesor"
+                                        style={{
+                                            backgroundColor,
+                                            color: textColor,
+                                            borderRadius: '5px',
+                                            flexGrow: 1,
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            gap: '10px',
+                                        }}
+                                    >
+                                        {subject ? (
+                                            <Avatar size={'small'} icon={<UserOutlined />} />
+                                        ) : (
+                                            ''
+                                        )}
+                                        {subject ? (
+                                            <>
+                                                {subject.subject_abreviation} - {subject.course_name}
+                                            </>
+                                        ) : (
+                                            ''
+                                        )}
+                                    </div>
                                 </Col>
                             );
                         })}

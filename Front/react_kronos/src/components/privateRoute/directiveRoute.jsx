@@ -51,7 +51,7 @@ const DirectiveRoute = ({ children }) => {
                         if ((sessionStorage.getItem('rol') === "Directivo" && JSON.stringify(rolesData).includes("Directivo")) ||
                             (sessionStorage.getItem('rol') === "Preceptor" && JSON.stringify(rolesData).includes("Preceptor"))) {
                             setIsAuthenticated(true);
-                            localStorage.setItem('user', JSON.stringify(userData));
+                            localStorage.setItem('user', true);
                         } else {
                             setIsAuthenticated(false);
                         }

@@ -11,7 +11,7 @@ const format = 'DD/MM/YYYY';
 function HorarioProfesor() {
     const [subjects, setSubjects] = useState([]);
     useEffect(() => {
-        fetch("http://127.0.0.1:8000/api/viewschedule/", {
+        fetch("http://127.0.0.1:8000/api/ViewTeacherSchedule/", {
             method: "GET",
             headers: {
                 Authorization: `Token ${localStorage.getItem("token")}`,
@@ -26,7 +26,7 @@ function HorarioProfesor() {
             .catch(error => console.error("Error fetching data:", error));
     }, []);
 
-
+    console.log(subjects)
     return (
         <>
             {/*<div className="contenedor-filtros contenedor-filtros-horario">
