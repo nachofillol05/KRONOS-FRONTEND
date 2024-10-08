@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import './materias.scss';
 import RangeSlider from "../../components/timerangeslider/timerange.jsx";
 import { Spin, Table, Select, Input, FloatButton, Drawer, Form, Button, message, Modal, Flex } from "antd";
-import { FileAddOutlined, DownOutlined, UpOutlined, DownloadOutlined, CloseOutlined, FileSearchOutlined } from '@ant-design/icons';
+import { EditOutlined, FileAddOutlined, DownOutlined, UpOutlined, DownloadOutlined, CloseOutlined, FileSearchOutlined } from '@ant-design/icons';
 import FormCreateSubject from './formCreateSubject.jsx';
 import FormCreateSubjectForCourse from './formCreateSubjectForCourse.jsx';
 import ModalComponent from './ModalAsignacion.jsx';
@@ -12,7 +12,6 @@ export default function Materias() {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [record, setRecord] = useState([]);
     const [parentRecord, setParentRecord] = useState([]);
-    const [materias, setMaterias] = useState([]);
     const [teachers, setTeachers] = useState([]);
     const [teacher, setTeacher] = useState('');
     const [Subjectname, setSubjectname] = useState('');
@@ -31,10 +30,11 @@ export default function Materias() {
     const [CursoCompleto, SetCursoCompleto] = useState([]);
     const [selectedTeacher, setSelectedTeacher] = useState(null);
     const [isLoading, setLoading] = useState(true)
+    const [materias, setMaterias] = useState([]);
+
 
 
     const asignarMateria = (coursesubject_id) => {
-
         const body = {
             teacher: selectedTeacher,
             coursesubjects: coursesubject_id,
@@ -173,6 +173,7 @@ export default function Materias() {
         }
     };
 
+
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -207,9 +208,9 @@ export default function Materias() {
                 setMaterias(data.map(materia => ({
                     ...materia,
                     key: materia.id,
-                    children: materia.courses.map(course => ({
+                    anidadas: materia.courses.map(course => ({
                         ...course,
-                        name: '',
+                        name: materia.name,
                         course: course.name,
                         teachers: (
                             course.teacher_subject_schools?.map(ts => ts.teacher_name).join(", ") || "Sin profesor"
@@ -226,13 +227,12 @@ export default function Materias() {
     
         fetchData();
     }, [start_time, end_time, Subjectname, teacher, recargar]);
-    
 
+    
     const columns = [
         { title: 'Nombre', dataIndex: 'name', key: 'name', width: '20%', },
         { title: 'Abreviacion', dataIndex: 'abbreviation', key: 'abbreviation', width: '15%', },
-        { title: 'Curso', dataIndex: 'course', key: 'course', width: '15%' },
-        { title: 'Profesores', dataIndex: 'teachers', key: 'teachers' },
+        { title: 'Descripcion', dataIndex: 'description', key: 'description' },
         {
             title: 'Color',
             dataIndex: 'color',
@@ -241,8 +241,33 @@ export default function Materias() {
             render: (text) => (
                 <div style={{ width: '24px', height: '24px', backgroundColor: text, borderRadius: '4px' }} />
             )
-        }
+        },
+        { title: 'Accion', render: () => <a><EditOutlined /></a>, key: 'action', width: '10%', }
+
     ];
+
+    const expandColumns = [
+        { title: 'Curso', dataIndex: 'course', key: 'course', width: '10%', },
+        { title: 'Profesores', dataIndex: 'teachers', key: 'teachers' },
+        { title: 'Accion', render: () => <a><EditOutlined/></a>, key: 'action', width: '10%', }
+    ]
+
+    const expandedRowRender = (record) => (
+        <Table
+        tableLayout="fixed"
+        columns={expandColumns} 
+        dataSource={record.anidadas} 
+        pagination={false}
+        onRow={(record) => ({
+            onClick: () => showModal(record),
+            onMouseEnter: () => {
+                document.body.style.cursor = 'pointer';
+            },
+            onMouseLeave: () => {
+                document.body.style.cursor = 'default';
+            },
+        })}/>
+    );
 
     useEffect(() => {
         fetch('http://127.0.0.1:8000/api/courses/', {
@@ -366,13 +391,12 @@ export default function Materias() {
     }
 
     const showModal = (record) => {
-        if (!('children' in record)) {
             setRecord(record);
             setIsModalOpen(true);
             const parent = materias.find(materia => materia.courses && materia.courses.some(child => child.id === record.id));
             console.log(parent);
             setParentRecord(parent);
-        }
+
     };
 
     return (
@@ -411,8 +435,7 @@ export default function Materias() {
                 </div>
                 <Table
                     bordered
-                    onRow={(record) => ({
-                        onClick: () => showModal(record),
+                    onRow={() => ({
                         onMouseEnter: () => {
                             document.body.style.cursor = 'pointer';
                         },
@@ -428,6 +451,10 @@ export default function Materias() {
                     filterDropdownOpen={true}
                     filtered={true}
                     expandRowByClick
+                    expandable={{
+                        expandedRowRender,
+                        defaultExpandedRowKeys: ['0'],
+                    }}
                 />
 
 

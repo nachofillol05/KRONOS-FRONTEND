@@ -555,7 +555,6 @@ export default function Personal() {
         <Table
           rowKey={'id'}
           bordered
-          
           onRow={(user) => ({
             onClick: () => showEspecificWorker(user.id),
             onMouseEnter: () => {
@@ -566,7 +565,6 @@ export default function Personal() {
             },
         })}
           pagination={false}
-          y={500}
           dataSource={teachers}
           columns={columns}
           tableLayout={'fixed'}
