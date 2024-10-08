@@ -44,39 +44,32 @@ export default function CalendarioProfesor({ subjects }) {
                 {days.map((day) => (
                     <Col key={day} style={{ flexGrow: 1 }}>
                         <Row className="casilla encabezado casillaProfesor">{day}</Row>
-                        {[1, 2, 3, 4, 5].map((moduleNumber) => {
-                            const subject = getSubjectForDayAndModule(day, moduleNumber);
-                            const backgroundColor = subject
+                        {subjects.filter((module) => module.day === day).map((module) => {
+                            const subject = getSubjectForDayAndModule(day, module.moduleNumber);
+                            const backgroundColor =  subject
                                 ? makeColorTransparent(subject.subject_color, 0.1)
                                 : 'white';
                             const textColor = subject ? subject.subject_color : '#000';
                             return (
                                 <Col key={`${day}-${moduleNumber}`} className="casilla casillaProfesor">
-                                    <div
-                                        className="espacioProfesor"
-                                        style={{
-                                            backgroundColor,
-                                            color: textColor,
-                                            borderRadius: '5px',
-                                            flexGrow: 1,
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            gap: '10px',
-                                        }}
-                                    >
-                                        {subject ? (
-                                            <Avatar size={'small'} icon={<UserOutlined />} />
-                                        ) : (
-                                            ''
-                                        )}
-                                        {subject ? (
-                                            <>
-                                                {subject.subject_abreviation} - {subject.course_name}
-                                            </>
-                                        ) : (
-                                            ''
-                                        )}
-                                    </div>
+                                        <div
+                                            className="espacioProfesor"
+                                            style={{
+                                                backgroundColor,
+                                                color: textColor,
+                                                borderRadius: '5px',
+                                                flexGrow: 1,
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                gap: '10px',
+                                            }}
+                                        >
+                                            {subject ? <Avatar size={'small'} icon={<UserOutlined />} /> : ''}
+                                            <>{subject ? subject.subject_abreviation : ''}</>
+                                            <> - </>
+                                            <> {subject ? subject.course_id : ''}</>
+                                            
+                                        </div>
                                 </Col>
                             );
                         })}
