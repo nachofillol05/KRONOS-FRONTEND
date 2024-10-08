@@ -45,6 +45,7 @@ export default function Personal() {
     onChange: onSelectChange,
   };
 
+
   const DescargarExcel = () => {
     console.log('Descargando...');
 
@@ -199,8 +200,6 @@ export default function Personal() {
     form
       .validateFields()
       .then((values) => {
-        console.log("Values:", values);
-        console.log("documento:", documento);
         const body = JSON.stringify({
           first_name: values.nombre,
           last_name: values.apellido,
@@ -210,7 +209,6 @@ export default function Personal() {
           phone: values.telefono,
           password: values.documento,
         });
-        console.log("Body: ", body);
         fetch("http://localhost:8000/api/Register/", {
           method: "POST",
           headers: {
@@ -346,9 +344,7 @@ export default function Personal() {
                 return response.json();
               })
               .then((data) => {
-                console.log(data);
-                setSelectedRowKeys(selectedRowKeys)
-                console.log(selectedRowKeys)
+                setHasSelectedRows(false);
                 setTeachers(data);
               })
           );
@@ -375,9 +371,7 @@ export default function Personal() {
                 return response.json();
               })
               .then((data) => {
-                console.log(data);
-                setSelectedRowKeys(selectedRowKeys)
-                console.log(selectedRowKeys)
+                setHasSelectedRows(false);
                 setTeachers(data);
               })
           );
@@ -403,9 +397,7 @@ export default function Personal() {
                 return response.json();
               })
               .then((data) => {
-                console.log(data);
-                setSelectedRowKeys(selectedRowKeys)
-                console.log(selectedRowKeys)
+                setHasSelectedRows(false);
                 setTeachers(data);
               })
           );
@@ -430,6 +422,7 @@ export default function Personal() {
               })
               .then((data) => {
                 console.log(data);
+                setHasSelectedRows(false);
                 setTeachers(data);
               })
           );
@@ -552,28 +545,28 @@ export default function Personal() {
             allowClear
           />
         </div >
-        <Table
-          rowKey={'email'}
-          bordered
-          onRow={(user) => ({
-            onClick: () => showEspecificWorker(user.id),
-            onMouseEnter: () => {
-                document.body.style.cursor = 'pointer';
-            },
-            onMouseLeave: () => {
-                document.body.style.cursor = 'default';
-            },
-        })}
-          pagination={false}
-          y={500}
-          dataSource={teachers}
-          columns={columns}
-          tableLayout={'fixed'}
-          filterDropdownOpen={true}
-          filtered={true}
-          rowSelection={rowSelection}
-          
-        />
+          <Table
+            rowKey={'email'}
+            bordered
+            onRow={(user) => ({
+              onClick: () => showEspecificWorker(user.id),
+              onMouseEnter: () => {
+                  document.body.style.cursor = 'pointer';
+              },
+              onMouseLeave: () => {
+                  document.body.style.cursor = 'default';
+              },
+          })}
+            pagination={false}
+            y={500}
+            dataSource={teachers}
+            columns={columns}
+            tableLayout={'fixed'}
+            filterDropdownOpen={true}
+            filtered={true}
+            rowSelection={rowSelection}
+            
+          />
         {
           sessionStorage.getItem('rol') === 'Directivo' ? (
             <>
@@ -594,7 +587,7 @@ export default function Personal() {
               </FloatButton.Group>
 
               {hasSelectedRows ?
-                <FloatButton icon={<MailOutlined />} 
+                <FloatButton icon={<MailOutlined />}  tooltip="Mandar mail a seleccionados"
                 onClick={() => showDrawer(<ContacWorker onClose={onClose} handleVolver={handleVolver} user={selectedRowKeys}/>, 'Contactar con el personal')}
                 type='primary' style={{ right: '10%' }} />
                 :

@@ -6,9 +6,9 @@ import DropTable from '../../components/filterDropTable/FilterDropTable';
 export default function InfoWorker({ onClose, handleVolver, handleContactar, user }) {
     const data = [...new Set(user.subjects.map(subject => subject.subject_name))];
     const [isModalVisible, setIsModalVisible] = useState(false);
-    const [selectedRoles, setSelectedRoles] = useState([]);
     const [courses, setCourse] = useState([]);
     const [roles, setRoles] = useState([]);
+    const [selectedRoles, setSelectedRoles] = useState([]);
     const [isSkeleton, setIsSkeleton] = useState(true);
 
     useEffect(() => {
@@ -28,6 +28,7 @@ export default function InfoWorker({ onClose, handleVolver, handleContactar, use
             .then((data) => {
                 console.log(data.roles)
                 setRoles(data.roles)
+                setSelectedRoles(data.roles)
             })
             .catch((error) => console.error("Error fetching data:", error));
             setIsSkeleton(false);
@@ -35,7 +36,6 @@ export default function InfoWorker({ onClose, handleVolver, handleContactar, use
 
 
     const showModal = () => {
-        setSelectedRoles([]); // Desmarca todos los checkboxes al abrir el modal
         setIsModalVisible(true);
     };
 

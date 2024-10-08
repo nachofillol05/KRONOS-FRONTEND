@@ -124,7 +124,6 @@ function Horario() {
 
     useEffect(() => {
         const url = new URL('http://127.0.0.1:8000/api/viewschedule/');
-        console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa seeeeeeeeeeeeeeeeeeeeeeeee:", course)
         if (teacher) teacher.forEach(element => { url.searchParams.append('teachers', element) });
         if (course) course.forEach(element => { url.searchParams.append('courses', element) });
         if (date) url.searchParams.append('date', date);
