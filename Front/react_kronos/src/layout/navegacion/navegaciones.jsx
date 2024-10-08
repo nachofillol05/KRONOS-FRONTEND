@@ -145,7 +145,7 @@ const App = ({ children }) => {
         return dropdownItems
             .filter(item => item.key !== sessionStorage.getItem('actual_school'))
             .map(item => (
-                getItem(<a onClick={() => handleMenuItemClick(item.key)}>{item.key}</a>)
+                getItem(<a onClick={() => handleMenuItemClick(item.key)}>{item.label}</a>)
             ));
     };
 
