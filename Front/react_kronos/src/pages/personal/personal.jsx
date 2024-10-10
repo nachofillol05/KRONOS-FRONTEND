@@ -80,7 +80,7 @@ export default function Personal() {
 
   const showEspecificWorker = (id) => {
     showDrawer(
-      <EspecificWorker id={id} onClose={onClose} />, 'Información del trabajador'
+      <EspecificWorker id={id} onClose={onClose} rolSeleccionado={activeFilter} />, 'Información del trabajador'
     )
   }
 

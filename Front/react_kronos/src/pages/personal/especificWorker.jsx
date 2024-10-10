@@ -7,7 +7,8 @@ import {
 } from "@ant-design/icons";
 import "./personal.scss";
 
-export default function Especificworker({ handleVolverInfo, id, onClose }) {
+export default function Especificworker({ handleVolverInfo, id, onClose, rolSeleccionado }) {
+  console.log(rolSeleccionado)
   const [selectedCells, setSelectedCells] = useState([]);
   const [worker, setworker] = useState({});
   const [modulesData, setModulesData] = useState([]);
@@ -96,6 +97,8 @@ export default function Especificworker({ handleVolverInfo, id, onClose }) {
           <label>Codigo postal: {worker?.contactInfo?.postalCode}</label>
         </Flex>
       </Flex>
+      {rolSeleccionado === "Profesores" && (
+        <>
       <Divider orientation="left">Disponiblidad horaria</Divider>
       <Row>
   {days.map((day) => {
@@ -136,6 +139,7 @@ export default function Especificworker({ handleVolverInfo, id, onClose }) {
     );
   })}
 </Row>
+</>)}
 
       <br />
       <Flex justify="flex-end" gap={10}>
