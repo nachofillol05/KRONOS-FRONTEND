@@ -68,14 +68,14 @@ const App = ({ children }) => {
                 }
             } catch (error) {
                 console.error('Error fetching roles:', error);
-                navigate('/landing');
+                navigate('/');
             }
         };
 
         if (token && school) {
             fetchRolesAndSchools();
         } else {
-            navigate('/landing');
+            navigate('/');
         }
     }, [token, school, navigate]);
 
@@ -98,6 +98,7 @@ const App = ({ children }) => {
     }, []);
 
     const handleMenuItemClick = ({ key }) => {
+        console.log(key)
         sessionStorage.setItem('actual_school', key);
         setSchool(key);
         sessionStorage.setItem('rol', '');
@@ -117,7 +118,7 @@ const App = ({ children }) => {
             case '/perfil':
                 return '7';
             default:
-                return '3';
+                return '7';
         }
     };
 
@@ -130,7 +131,7 @@ const App = ({ children }) => {
     const cerrarSesion = () => {
         localStorage.clear();
         sessionStorage.clear();
-        navigate('/landing');
+        navigate('/');
     };
 
     const renderOptions = () => {
@@ -145,7 +146,11 @@ const App = ({ children }) => {
         return dropdownItems
             .filter(item => item.key !== sessionStorage.getItem('actual_school'))
             .map(item => (
-                getItem(<a onClick={() => handleMenuItemClick(item.key)}>{item.label}</a>)
+                getItem(<a onClick={() => {
+                    sessionStorage.setItem('actual_school', item.key);
+                    setSchool(item.key);
+                    sessionStorage.setItem('rol', '');
+                    window.location.reload();}}>{item.label}</a>)
             ));
     };
 
@@ -158,6 +163,7 @@ const App = ({ children }) => {
         currentSchool = firstSchool;
     }
 
+    //Ver aca que hacemos cuando hay 1 solo rol o escuela si mostramos sin select o que para mi si
     const items = [
         dropdownItems.length >= 2
             ? getItem(currentSchool.name, '1', <BankOutlined />, renderSchool())
@@ -197,7 +203,7 @@ const App = ({ children }) => {
                     }}
                 >
                     <div className={`logo ${collapsed ? 'collapsed' : ''}`}>
-                        <Dropdown
+                        {/*<Dropdown
                             overlay={
                                 <Menu
                                     onClick={handleMenuItemClick}
@@ -210,7 +216,7 @@ const App = ({ children }) => {
                                 
                             }
                             trigger={['click']}
-                        >
+                        >*/}
                             <div onClick={e => e.preventDefault()} className="logo-img">
                                 <img
                                     src={currentSchool.logo || 'https://via.placeholder.com/150'}
@@ -218,7 +224,7 @@ const App = ({ children }) => {
                                     style={{ width: '75%' }}
                                 />
                             </div>
-                        </Dropdown>
+                        {/*</Dropdown>*/}
                     </div>
                     
                     <Menu theme="dark" mode='vertical' defaultSelectedKeys={[getSelectedKey()]}  items={items} />

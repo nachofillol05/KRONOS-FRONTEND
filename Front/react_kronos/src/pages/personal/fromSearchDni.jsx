@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Form, Select, Input, Space, Upload, message, Spin, Flex } from 'antd';
+import { Button, Form, Select, Input, Space, Upload, message, Spin, Flex,Modal,Checkbox } from 'antd';
+import DropTable from '../../components/filterDropTable/FilterDropTable';
 import { SearchOutlined, UploadOutlined } from '@ant-design/icons';
 import { useRef } from 'react';
 
@@ -11,6 +12,10 @@ export default function FormSearchDni({ handleSearch }) {
     const [file, setFile] = useState(null);
     const [loading, setLoading] = useState(false);
     const fileRef = useRef(null); 
+    const [createdPersonals, setCreatedPersonals] = useState([]);
+    const [isModalVisible, setIsModalVisible] = useState(false);
+    const [selectedRoles, setSelectedRoles] = useState([]);
+    const [courses, setCourse] = useState([]);
 
     useEffect(() => {
         fetch('http://127.0.0.1:8000/api/documentTypes/', {
@@ -59,6 +64,30 @@ export default function FormSearchDni({ handleSearch }) {
         });
     };
 
+    useEffect(() => {
+        fetch("http://127.0.0.1:8000/api/years/", {
+            method: "GET",
+            headers: {
+                Authorization: "Token " + localStorage.getItem("token"),
+                "School-ID": sessionStorage.getItem("actual_school"),
+            },
+        })
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error("Network response was not ok");
+                }
+                return response.json();
+            })
+            .then((data) => {
+                const courses = data.map((curs) => ({
+                    value: curs.id,
+                    label: curs.name,
+                }));
+                setCourse(courses);
+            })
+            .catch((error) => console.error("Error fetching data:", error));
+    }, []);
+
     const handleFileChange = (info) => {
         const fileToUpload = info.fileList[0]?.originFileObj;
 
@@ -98,10 +127,13 @@ export default function FormSearchDni({ handleSearch }) {
         .then(data => {
             if (data?.results) {
                 console.log('Resultados de la subida:', data.results);
+                const createdPersonals = [];
                 data.results.forEach(result => {
                     if (Array.isArray(result.Response)) {
                         if (result.Response[0]) {
-                            message.success(`Se creó el personal con el documento: ${result.Documento}`);
+                            console.log('Personal creado:', result);
+                            //message.success(`Se creó el personal con el documento: ${result.Documento}`);
+                            createdPersonals.push(`${result.Documento} - ${result.Response[1].first_name} ${result.Response[1].last_name}`);
                         } else {
                             message.error(`No se creó el documento: ${result.Documento} por DNI o Mail repetido`);
                         }
@@ -109,6 +141,8 @@ export default function FormSearchDni({ handleSearch }) {
                         message.error(`Documento: ${result.Documento}, Error al intentar crear el personal`);
                     }
                 });
+                // Aquí puedes actualizar el estado con la lista de documentos creados
+                setCreatedPersonals(createdPersonals);
             } else {
                 console.error('Error en la respuesta:', data.error);
                 message.error('Error en el procesamiento del archivo.');
@@ -120,9 +154,12 @@ export default function FormSearchDni({ handleSearch }) {
             message.error('Error al subir el archivo, intente nuevamente.');
         });
     };
+    const handleCheckboxChange = (checkedValues) => {
+        setSelectedRoles(checkedValues); // Actualiza el estado cuando cambian los checkboxes
+    };
     
     
-
+    console.log(createdPersonals);
     return (
         <Spin spinning={loading} tip="Creando los personales...">
             <Form form={form} ref={formRef} layout="vertical" hideRequiredMark>
@@ -177,8 +214,64 @@ export default function FormSearchDni({ handleSearch }) {
                     
                 </div>
                 <a onClick={descargarExcel}>Descargar modelo</a>
-                
             </Form>
+            {createdPersonals.length > 0 && (
+                <div>
+                    <br />
+                    <h3>Personales creados:</h3>
+                    <ul>
+                        {createdPersonals.map((personal, index) => (
+                            <li key={index}>
+                                {personal}
+                                <Button 
+                                    style={{ marginLeft: '10px' }} 
+                                    type="primary"
+                                    onClick={() => setIsModalVisible(true)}
+                                >
+                                    Asignar rol
+                                </Button>
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+            )}
+            <Modal
+                visible={isModalVisible}
+                onCancel={() => setIsModalVisible(false)}
+                okText="Asignar"
+                //onOk={handleAgregar}
+                cancelText="Cancelar"
+                title='Asigna un rol al trabajador'
+                okButtonProps={{ disabled: selectedRoles.length === 0 }} // Deshabilita si no hay roles seleccionados
+            >
+                <p>
+                    Por favor seleccione el rol o los roles que se le asignarán
+                </p>
+
+                <Checkbox.Group
+                    style={{ width: '100%', paddingTop: 20 }}
+                    //value={selectedRoles} // Vincula el estado al grupo de checkboxes
+                    onChange={handleCheckboxChange} // Maneja los cambios en los checkboxes
+                >
+                    <Flex gap={30}>
+                        <Checkbox key={'Profesor'} /*checked={roles.includes('Profesor')}*/ value="Profesor">Profesor</Checkbox>{/*Esto no anda ver como aplicarlo*/}
+                        <Checkbox key={'Preceptor'} /*checked={roles.includes('Preceptor')}*/value="Preceptor">Preceptor</Checkbox>{/*Esto no anda ver como aplicarlo*/}
+                        <Checkbox key={'Directivo'} /*checked={roles.includes('Directivo')}*/ value="Directivo">Directivo</Checkbox>{/*Esto no anda ver como aplicarlo*/}
+                    </Flex>
+                </Checkbox.Group>
+
+                {selectedRoles.includes("Directivo") && (
+                    <div style={{ marginTop: '20px', width: '80%' }}>
+                        <p style={{ color: 'red' }}>Si le asignas el rol directivo, tendrá acceso a la lectura y modificación de toda la información del colegio.</p>
+                    </div>
+                )}
+
+                {selectedRoles.includes("Preceptor") && (
+                    <div style={{ marginTop: '20px', width: '80%' }}>
+                        <DropTable options={courses} placeholder='Curso del preceptor' />
+                    </div>
+                )}
+            </Modal>
         </Spin>
     );
 }

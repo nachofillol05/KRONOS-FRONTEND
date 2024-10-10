@@ -12,7 +12,7 @@ const PrivateRoute = ({ children }) => {
     const token = localStorage.getItem('token');
     if (!token) {
       console.log("Token is null or empty");
-      navigate('/landing');
+      navigate('/');
     }
   }, [navigate]);
 
@@ -52,12 +52,12 @@ const PrivateRoute = ({ children }) => {
             });
         } else {
           setIsAuthenticated(false);
-          return navigate('/landing');
+          return navigate('/');
         }
       } catch (error) {
         console.error('Error verifying token:', error);
         setIsAuthenticated(false);
-        return navigate('/landing');
+        return navigate('/');
       }
     };
 
@@ -73,7 +73,7 @@ const PrivateRoute = ({ children }) => {
   if (isAuthenticated && mailVerified) {
     return children;
   } else if (!isAuthenticated ) {
-    return navigate('/landing');
+    return navigate('/');
   } else {
     return navigate('/mailenviado');
   }

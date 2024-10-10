@@ -80,25 +80,24 @@ export default function Calendario({ tempSelectedKeys,setTempSelectedKeys,materi
         console.log(selectedSubjectId)
         if(selectedSubjectId === "null"){
             console.log("se elimino la materia")
-            fetch(`http://localhost:8000/api/subjectpermodule/`, {
+            const url = new URL('http://localhost:8000/api/subjectpermodule/');
+            url.searchParams.append('course_id', courseId);
+            url.searchParams.append('module_id', moduleId);
+
+            fetch(url, {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Token ${localStorage.getItem('token')}`,
                     'School-ID': sessionStorage.getItem('actual_school'),
                 },
-                body: JSON.stringify({
-                    "schedules":[{
-                        course_id: courseId,
-                        module_id: moduleId
-                    }]
-                }),
             })
             .then((response) => response.json())
             .then((data) => {
                 console.log('Data actualizada: ', data);
+                //AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACA FILTRAR LA MAT ELIMINADA Y MANDAR LO DEMAS
                 console.log(materias)
-                setMaterias((materiaAnt)=>[data,...materiaAnt]);
+                setMaterias((materiaAnt)=>materiaAnt);
             })
             .catch(error => {
                 console.error('Error fetching schedule data:', error);

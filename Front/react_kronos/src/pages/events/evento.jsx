@@ -103,6 +103,7 @@ export default function EventsPage() {
   };
 
   const showModalDesadherir = (evento, botonAdherido) => {
+    
     if (!botonAdherido) {
       Modal.info({
         title: 'cancelar adición',
@@ -117,6 +118,7 @@ export default function EventsPage() {
   };
 
   const handleOkDesadherir = async (evento) => {
+    console.log(evento.id)
     try {
       const data = await desaffiliateEvent(evento.id);
       showMessage("success", "Desadherido al evento correctamente");

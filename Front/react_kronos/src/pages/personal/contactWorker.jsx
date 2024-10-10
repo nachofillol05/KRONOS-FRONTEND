@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Button, Flex, Card, Form, Input, Tooltip, Spin } from 'antd';
+import { Button, Flex, Card, Form, Input, Tooltip, Spin, message } from 'antd';
 import { SendOutlined, RollbackOutlined } from '@ant-design/icons';
 const { TextArea } = Input;
 
@@ -31,6 +31,7 @@ export default function ContactWorker({ onClose,handleVolver, user }) {
                 .then(data => {
                     console.log(data);
                     setLoading(false);
+                    message.success('Mail enviado correctamente');
                     onClose();
                 })
                 .catch(error => {

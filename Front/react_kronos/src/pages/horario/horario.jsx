@@ -5,11 +5,14 @@ import CalendarioDirectivo from '../../components/calendario/CalendarioDirectivo
 import './horarios.scss';
 import FilterDropdownTable from '../../components/filterDropTable/FilterDropTable.jsx';
 import FilterDropdownPersonalizado from '../../components/filterDropTable/FilterDropPersonalizado.jsx';
+import moment from 'moment';
 
 const SelectTeacher = lazy(() => import('./selectTeacher.jsx'));
 const Historial = lazy(() => import('./historial.jsx'));
 const Horas = lazy(() => import('./infoHour.jsx'));
 const SelectCourse = lazy(() => import('./selectCourses.jsx'));
+
+
 
 const roles = [
     { value: '1', label: 'Profesor 1' },
@@ -47,6 +50,7 @@ function Horario() {
     const [tempDate, setTempDate] = useState(null);
     const [courses, setCourses] = useState([]);
     const [tempSelectedKeys, setTempSelectedKeys] = useState();
+    const [tempSelectedKeysCourse, setTempSelectedKeysCourse] = useState(null);
     const [mostrarAplicar, setMostrarAplicar] = useState(false);
 
     useEffect(() => {
@@ -233,11 +237,6 @@ function Horario() {
         setDrawerContent(null);
     }, []);
 
-    const memoizedSegmentedOptions = useMemo(() => [
-        { value: 'Visualizar', icon: <><EyeOutlined /> Visualizar</> },
-        { value: 'Editar', icon: <><EditOutlined /> Editar</> },
-    ], []);
-
 
     return (
         <>
@@ -269,38 +268,53 @@ function Horario() {
                         />
 
                     )}
-                    {!mostrarAceptar ? (
+                    {!mostrarAceptar && !editar ? (
                         <>
+                        
                             <FilterDropdownPersonalizado options={teachers} tempSelectedKeys={tempSelectedKeys} setTempSelectedKeys={setTempSelectedKeys} onChange={(value) => setTempTeacher(value)} placeholder={'Profesores: '} />
-                            <FilterDropdownTable options={courses} onChange={(value) => setTempCourse(value)} placeholder={'Cursos: '} />
+                            
+                            <FilterDropdownPersonalizado options={courses} tempSelectedKeys={tempSelectedKeysCourse} setTempSelectedKeys={setTempSelectedKeysCourse} onChange={(value) => setTempCourse(value)} placeholder={'Cursos: '} />
+                            {/*<FilterDropdownTable options={courses} onChange={(value) => setTempCourse(value)} placeholder={'Cursos: '} />*/}
                             <DatePicker
                                 size="large"
+                                disabledDate={(current) => current && current > moment().endOf('day')}
                                 placeholder="Fecha"
+                                value={tempDate ? moment(tempDate, 'YYYY-MM-DD') : null}
                                 style={{ width: 200 }}
-                                format={dateFormat}
+                                format="DD-MM-YYYY"
                                 allowClear
-                                onChange={(date, dateString) => setTempDate(dateString)}
+                                onChange={(date, dateString) => setTempDate(date ? date.format('YYYY-MM-DD') : '')}
                             />
-                            {mostrarAplicar ? (
+                            <Button type="primary" disabled={!mostrarAplicar} onClick={() => {
+                                    setTeacher(tempSelectedKeys);
+                                    setCourse(tempCourse);
+                                    setDate(tempDate);
+                                    setLoading(true);
+                                    setCargandoAuto(false);
+                                }}>Aplicar Filtros</Button>
+                            {/* Ver si lo hago asi o se muestra siempre{mostrarAplicar ? (
                                 <Button type="primary" onClick={() => {
                                     setTeacher(tempSelectedKeys);
                                     setCourse(tempCourse);
                                     setDate(tempDate);
                                     setLoading(true);
                                     setCargandoAuto(false);
-                                }}>Aplicar Filtros</Button>) : null}
+                                }}>Aplicar Filtros</Button>) : null}*/}
                             {(teacher || course || date) ? (
                                 <Button type="primary" onClick={() => {
                                     setTeacher(null);
                                     setTempCourse(null)
                                     setCourse(null);
                                     setDate(null);
+                                    setTempDate(null);
                                     setTempSelectedKeys(null);
+                                    setTempSelectedKeysCourse(null);
                                     setCargandoAuto(false);
                                     setLoading(true);
                                     setMostrarAplicar(false);
                                 }}>Limpiar Filtros</Button>
                             ) : null}
+
                         </>
                     ) : null}
                 </div>

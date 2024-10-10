@@ -63,7 +63,7 @@ export default function CalendarioProfesor({ subjects }) {
                                                 gap: '10px',
                                             }}
                                         >
-                                            <Avatar size={'small'} icon={<UserOutlined />} />
+                                            <Avatar size={'small'} icon={<UserOutlined />} src={subject.logo} />
                                             <>{subject.subject_abreviation}</>
                                             <> - </>
                                             <> {subject.course_name}</>
@@ -86,7 +86,7 @@ export default function CalendarioProfesor({ subjects }) {
                                         height: '100%', // Asegúrate de que esto tenga suficiente altura
                                     }}
                                 >
-                                    No hay clases
+                                    -
                                 </div>
                             </Col>
                         )}
