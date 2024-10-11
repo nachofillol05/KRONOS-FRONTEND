@@ -95,9 +95,14 @@ export default function Calendario({ tempSelectedKeys,setTempSelectedKeys,materi
             .then((response) => response.json())
             .then((data) => {
                 console.log('Data actualizada: ', data);
+                console.log('aaaaaaaaaaaaaaaaaca', courseId, moduleId)
                 //AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACA FILTRAR LA MAT ELIMINADA Y MANDAR LO DEMAS
                 console.log(materias)
-                setMaterias((materiaAnt)=>materiaAnt);
+                console.log(
+                    "Maaaaaaaaaaaaaaaaterias",
+                    materias.filter((materia) => !(materia.course_id === courseId && materia.module_id === moduleId))
+                  );
+                setMaterias((materiaAnt)=>materiaAnt.filter((materia) => !(materia.course_id === courseId && materia.module_id === moduleId)));
             })
             .catch(error => {
                 console.error('Error fetching schedule data:', error);
@@ -121,7 +126,6 @@ export default function Calendario({ tempSelectedKeys,setTempSelectedKeys,materi
             .then((response) => response.json())
             .then((data) => {
                 console.log('Data actualizada: ', data);
-                console.log(materias)
                 setMaterias((materiaAnt)=>[data,...materiaAnt]);
             })
             .catch(error => {

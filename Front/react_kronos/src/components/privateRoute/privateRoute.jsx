@@ -4,11 +4,13 @@ import { useNavigate } from 'react-router-dom';
 import './PrivateRoute.scss'; 
 
 const PrivateRoute = ({ children }) => {
+  console.log("PrivateRoute.jsxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
   const [isAuthenticated, setIsAuthenticated] = useState(null);
   const navigate = useNavigate();
   const [mailVerified, setMailVerified] = useState(null);
 
   useEffect(() => {
+    console.log("Token: ", localStorage.getItem('token'));
     const token = localStorage.getItem('token');
     if (!token) {
       console.log("Token is null or empty");

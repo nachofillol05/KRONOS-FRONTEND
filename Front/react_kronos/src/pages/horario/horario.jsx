@@ -81,7 +81,7 @@ function Horario() {
     }, []);
 
     useEffect(() => {
-        if (tempTeacher || tempCourse || tempDate || tempSelectedKeys) {
+        if (tempCourse || tempDate || tempSelectedKeys || tempDate) {
             setMostrarAplicar(true);
         } else {
             setMostrarAplicar(false);

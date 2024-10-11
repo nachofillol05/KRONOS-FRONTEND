@@ -40,6 +40,7 @@ const App = ({ children }) => {
     const [selectHabilitado, setSelectHabilitado] = useState(true);
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
+    
 
     useEffect(() => {
         const fetchRolesAndSchools = async () => {
@@ -96,6 +97,10 @@ const App = ({ children }) => {
             console.error('Error parsing school data:', error);
         }
     }, []);
+    if (!localStorage.getItem('token')) {
+        navigate('/');
+        return null;
+    }
 
     const handleMenuItemClick = ({ key }) => {
         console.log(key)
