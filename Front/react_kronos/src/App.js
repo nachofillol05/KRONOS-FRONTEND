@@ -12,18 +12,21 @@ export default function App() {
       colorPrimary: '#1DA57A', // Color principal
       colorBgBase: '#FaFaFa', // Color de fondo
       colorBgContainer: '#fcfcfc', // Color de fondo del contenedor
-
-
       colorText: '#333',
       colorTextSecondary: '#5a5a5a',
       colorTextTertiary: '#222',
       fontSize: 14,
       fontSizeSM: 10,
       fontSizeLG: 16,
-      fontFamily: 'Alata'    // Color del texto
-
+      fontFamily: 'Alata' ,   // Color del texto
+  },
+  components: {
+    Tooltip: {
+      arrow: false,  // Desactiva la flecha en todos los Tooltip
     },
-  };
+  },
+}
+  
   return (
     <ConfigProvider theme={themeTokens}>
       <Router>

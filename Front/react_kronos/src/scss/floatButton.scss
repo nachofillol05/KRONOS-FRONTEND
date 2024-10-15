@@ -1,3 +1,16 @@
+
+:where(.css-dev-only-do-not-override-1sd94qb).ant-float-btn-group-circle .ant-float-btn-circle:not(:last-child) .ant-float-btn-body{
+    width: 55px !important;
+    height: 55px !important;
+    border-radius: 50%;
+}
+
+:where(.css-dev-only-do-not-override-umlzlu).ant-float-btn-group-circle .ant-float-btn-circle:not(:last-child) .ant-float-btn-body {
+    width: 55px !important;
+    height: 55px !important;
+    border-radius: 50%;
+}
+
 :where(.css-dev-only-do-not-override-1bci7t8).ant-float-btn-group{
     width: 55px !important;
     right: 5%;

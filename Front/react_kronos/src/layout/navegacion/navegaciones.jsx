@@ -40,7 +40,7 @@ const App = ({ children }) => {
     const [selectHabilitado, setSelectHabilitado] = useState(true);
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
-    
+
 
     useEffect(() => {
         const fetchRolesAndSchools = async () => {
@@ -155,7 +155,8 @@ const App = ({ children }) => {
                     sessionStorage.setItem('actual_school', item.key);
                     setSchool(item.key);
                     sessionStorage.setItem('rol', '');
-                    window.location.reload();}}>{item.label}</a>)
+                    window.location.reload();
+                }}>{item.label}</a>)
             ));
     };
 
@@ -215,8 +216,8 @@ const App = ({ children }) => {
                         />
                     </div>
 
-                    <Menu mode='vertical' defaultSelectedKeys={[getSelectedKey()]} items={items} style={{ width: collapsed ? 50 : 175 }}/>
-                </Sider>
+                    <Menu theme='light' mode='vertical' defaultSelectedKeys={[getSelectedKey()]} items={items} style={{ width: collapsed ? 50 : 175 }} />             
+                    </Sider>
                 <Layout style={{ marginLeft: collapsed ? 50 : 200 }}>
                     <Content style={{ padding: '0 24px', minHeight: 280 }}>
                         {loading ? (
