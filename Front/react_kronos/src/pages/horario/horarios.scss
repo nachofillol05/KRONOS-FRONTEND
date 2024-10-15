@@ -1,7 +1,8 @@
 
 
 .contenedor-filtros-horario{
-  justify-content: space-around;
+  justify-content: flex-start;
+  gap: 30px;
   height: 10vh !important;
 }
 .table_horario {

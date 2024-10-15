@@ -10,7 +10,7 @@ export default function App() {
   const themeTokens = {
     token: {
       colorPrimary: '#1DA57A', // Color principal
-      colorBgBase: '#F5F5F5', // Color de fondo
+      colorBgBase: '#FaFaFa', // Color de fondo
       colorBgContainer: '#fcfcfc', // Color de fondo del contenedor
 
 

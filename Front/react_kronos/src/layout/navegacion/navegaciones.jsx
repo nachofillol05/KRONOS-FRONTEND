@@ -28,7 +28,7 @@ function getItem(label, key, icon, children) {
 export const Contexto = createContext();
 
 const App = ({ children }) => {
-    const [collapsed, setCollapsed] = useState(false);
+    const [collapsed, setCollapsed] = useState(true);
     const [dropdownItems, setDropdownItems] = useState([]);
     const location = useLocation();
     const [escuelaCompleta, setEscuelaCompleta] = useState(null);
@@ -60,7 +60,7 @@ const App = ({ children }) => {
                 localStorage.setItem('roles', JSON.stringify(data.roles));
                 setRoles(data.roles);
                 setSelectHabilitado(data.roles.length > 1);
-                
+
                 const savedRole = sessionStorage.getItem('rol');
                 if (!savedRole || !data.roles.includes(savedRole)) {
                     const defaultRole = data.roles[0];
@@ -191,12 +191,12 @@ const App = ({ children }) => {
 
             <Layout style={{ minHeight: '100vh' }}>
                 <Sider
+                    theme='light'
                     collapsible
                     collapsed={collapsed}
                     onCollapse={value => setCollapsed(value)}
                     width={175}
                     collapsedWidth={50}
-                    breakpoint="lg"
                     style={{
                         overflow: 'auto',
                         height: '100vh',
@@ -207,32 +207,15 @@ const App = ({ children }) => {
                         zIndex: 1,
                     }}
                 >
-                    <div className={`logo ${collapsed ? 'collapsed' : ''}`}>
-                        {/*<Dropdown
-                            overlay={
-                                <Menu
-                                    onClick={handleMenuItemClick}
-                                    items={dropdownItems.filter(role => role.key !== sessionStorage.getItem('actual_school')).map(item => ({
-                                        key: item.key,
-                                        label: item.label,
-                                    }))}
-                                    
-                                />
-                                
-                            }
-                            trigger={['click']}
-                        >*/}
-                            <div onClick={e => e.preventDefault()} className="logo-img">
-                                <img
-                                    src={currentSchool.logo || 'https://via.placeholder.com/150'}
-                                    alt="logo"
-                                    style={{ width: '75%' }}
-                                />
-                            </div>
-                        {/*</Dropdown>*/}
+                    <div onClick={e => e.preventDefault()} className={`logo-img ${collapsed && 'logo-img-collapsed'}`}>
+                        <img
+                            src={currentSchool.logo || 'https://via.placeholder.com/150'}
+                            alt="logo"
+                            style={{ width: '100%' }}
+                        />
                     </div>
-                    
-                    <Menu theme="dark" mode='vertical' defaultSelectedKeys={[getSelectedKey()]}  items={items} />
+
+                    <Menu mode='vertical' defaultSelectedKeys={[getSelectedKey()]} items={items} style={{ width: collapsed ? 50 : 175 }}/>
                 </Sider>
                 <Layout style={{ marginLeft: collapsed ? 50 : 200 }}>
                     <Content style={{ padding: '0 24px', minHeight: 280 }}>
