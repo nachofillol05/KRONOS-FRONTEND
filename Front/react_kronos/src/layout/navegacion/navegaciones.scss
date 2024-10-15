@@ -35,6 +35,13 @@
         }
     }
 }
-
-
-
+.ant-menu-inline-collapsed-tooltip .ant-tooltip-arrow{
+    display: none !important;
+}
+.ant-menu-inline-collapsed-tooltip .ant-tooltip-inner{
+    a{
+        color: #333 !important;
+    }
+    background-color: #fbfbfa !important;
+    margin-left: -5px;
+}
