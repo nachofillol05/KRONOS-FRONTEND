@@ -91,14 +91,14 @@ export default function FormCreateSubject({ handleSubmit, onClose, cursos, value
                         },
                     ]}
                 >
-                    {cursosSelect.length !== 0 ?(
+                    {cursosSelect.length !== 0?(
                     <Select
                         disabled={materiasSeleccionada == null}
                         size='large'
                         placeholder="Curso"
                         options={cursosSelect}
-                    />):(
-                        "tiene todos los cursos seleccionados")}
+                    />): materiasSeleccionada != null?(
+                        "Tiene todos los cursos seleccionados"): "Seleccione la materia"}
                 </Form.Item>
                 <Form.Item
                     style={{ width: '30%' }}

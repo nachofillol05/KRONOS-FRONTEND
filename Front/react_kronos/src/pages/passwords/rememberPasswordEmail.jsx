@@ -9,7 +9,7 @@ const { Title, Text } = Typography;
 export default function Login() {
 
     const handleBackToMenu = () => {
-        navigate('/'); // Asume que tienes una ruta al menú principal
+        navigate('/');
     };
 
 
