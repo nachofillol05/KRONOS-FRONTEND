@@ -19,7 +19,7 @@ export const affiliateEvent = async (event_id) => {
 }
 
 export const desaffiliateEvent = async (event_id) => {
-    return await deleteData("events/affiliated/", {event_id: event_id})
+    return await deleteData("events/affiliated", null, {event_id: event_id})
 }
 
 export const createEvent = async (data) => {

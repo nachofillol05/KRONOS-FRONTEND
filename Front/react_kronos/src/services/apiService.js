@@ -81,8 +81,12 @@ export const saveData = async (endpoint, data, method) => {
 };
 
 export const deleteData = async (endpoint, pk, data = null) => {
+  let url = `${API_BASE_URL}/${endpoint}/`
+  if (pk) {
+    url = url + `${pk}/`
+  }
   try {
-    const response = await fetch(`${API_BASE_URL}/${endpoint}/${pk}/`, {
+    const response = await fetch(url, {
       method: "DELETE",
       headers: {
         'Authorization': getToken(),

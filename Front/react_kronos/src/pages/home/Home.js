@@ -199,7 +199,7 @@ export default function Home() {
 
     function cerrarSesion() {
         localStorage.setItem('token', '');
-        navigate('/landing');
+        navigate('/');
     }
 
     function allowDrop(ev) {

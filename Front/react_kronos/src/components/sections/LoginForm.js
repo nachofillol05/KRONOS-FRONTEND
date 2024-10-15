@@ -50,6 +50,30 @@ export default function Login(props) {
 
     getRoles();
   }, [])
+  if (localStorage.getItem('token')) {
+    console.log('Token:', localStorage.getItem('token'));
+    const verifyToken = async () => {
+        try {
+            const tokenResponse = await fetch('http://localhost:8000/api/verifyToken/', {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    "token": localStorage.getItem('token'),
+                })
+            });
+            if (tokenResponse.ok) {
+                navigate('/');
+                return null;
+            }
+        } catch (error) {
+            console.error('Error verifying token:', error);
+        }
+    }
+    verifyToken();
+
+}
 
   async function handlerLogin (event) {
     event.preventDefault();

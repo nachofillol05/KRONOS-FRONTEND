@@ -1,9 +1,5 @@
-import React, { Suspense, lazy, useState, useEffect, useCallback, useMemo } from 'react';
-import { FloatButton, Drawer, Button, Segmented, DatePicker } from 'antd';
-import {
-    InsertRowAboveOutlined, DownOutlined, UpOutlined, DownloadOutlined, HistoryOutlined, CloseOutlined, AppstoreOutlined, UserSwitchOutlined,
-    EyeOutlined, EditOutlined, FilterOutlined
-} from '@ant-design/icons';
+import React, { useState, useEffect } from 'react';
+import { Spin } from 'antd';
 import CalendarioProfesor from '../../components/calendario/CalendarioProfesor.jsx';
 import './horarios.scss';
 const format = 'DD/MM/YYYY';
@@ -28,7 +24,8 @@ function HorarioProfesor() {
 
     console.log(subjects)
     return (
-        <>
+        <Spin
+            spinning={subjects.length==0}>
             {/*<div className="contenedor-filtros contenedor-filtros-horario">
                 <DatePicker size='large' format={format} />
                 <Button icon={<FilterOutlined />} size='large' type='primary'>
@@ -36,7 +33,7 @@ function HorarioProfesor() {
                 </Button>
             </div>*/}
             <CalendarioProfesor subjects={subjects} />
-        </>
+        </Spin>
     );
 }
 

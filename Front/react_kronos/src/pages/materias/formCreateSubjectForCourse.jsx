@@ -39,22 +39,21 @@ export default function FormCreateSubject({ handleSubmit, onClose, cursos, value
             if (materiaSeleccionadaCompleta && Array.isArray(materiaSeleccionadaCompleta.courses)) {
                 console.log('materia seleccionada', materiaSeleccionadaCompleta);
     
-                // Los IDs de los cursos asignados ya están en el array
-                const cursosAsignadosId = materiaSeleccionadaCompleta.courses;
+                // Obtener los idCourse de los cursos ya asignados a la materia seleccionada
+                const cursosAsignadosId = materiaSeleccionadaCompleta.courses.map(curso => curso.idCourse);
                 console.log('cursos asignados', cursosAsignadosId);
     
-                // Filtrar cursos que no están en el array de cursos asignados
-                const cursosNoAsignados = cursos
-                    .filter(curso => !cursosAsignadosId.includes(curso))
-                    .map(curso => ({ label: curso.name, value: curso.id }));
-    
-                setCursosSelect(cursosNoAsignados);
+                // Filtrar cursos que NO están en el array de cursos asignados
+                console.log('cursos', cursos);
+                const cursosNoAsignados = cursos.filter(curso => !cursosAsignadosId.includes(curso.id)).map(curso => ({label: curso.name, value: curso.id}));
                 console.log('cursos no asignados', cursosNoAsignados);
-            } else {
-                console.log('la materia seleccionada está asignada a todos los cursos');
+    
+                // Actualizar el estado de cursosSelect con los cursos no asignados
+                setCursosSelect(cursosNoAsignados);
             }
         }
-    }, [materiasSeleccionada, cursos, materiasCompleta]);
+    }, [materiasSeleccionada, materiasCompleta, cursos]);
+    
     
     
     
@@ -92,12 +91,14 @@ export default function FormCreateSubject({ handleSubmit, onClose, cursos, value
                         },
                     ]}
                 >
+                    {cursosSelect.length !== 0 ?(
                     <Select
                         disabled={materiasSeleccionada == null}
                         size='large'
                         placeholder="Curso"
                         options={cursosSelect}
-                    />
+                    />):(
+                        "tiene todos los cursos seleccionados")}
                 </Form.Item>
                 <Form.Item
                     style={{ width: '30%' }}
@@ -143,9 +144,11 @@ export default function FormCreateSubject({ handleSubmit, onClose, cursos, value
                     <Tooltip title="Volver">
                         <Button size='large' iconPosition='end' icon={<RollbackOutlined />} style={{ width: "100px" }} onClick={onClose} />
                     </Tooltip>
+                    {cursosSelect.length !== 0 ?
                     <Tooltip title="Agregar">
                         <Button type='primary' size='large' iconPosition='end' icon={<PlusOutlined />} style={{ width: "100px" }} onClick={() => handleSubmit(form)} />
                     </Tooltip>
+                    : null}
                 </Flex>
             </Form.Item>
 

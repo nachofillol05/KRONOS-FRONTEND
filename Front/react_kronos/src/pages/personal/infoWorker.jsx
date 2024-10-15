@@ -6,9 +6,9 @@ import DropTable from '../../components/filterDropTable/FilterDropTable';
 export default function InfoWorker({ onClose, handleVolver, handleContactar, user }) {
     const data = [...new Set(user.subjects.map(subject => subject.subject_name))];
     const [isModalVisible, setIsModalVisible] = useState(false);
-    const [selectedRoles, setSelectedRoles] = useState([]);
     const [courses, setCourse] = useState([]);
     const [roles, setRoles] = useState([]);
+    const [selectedRoles, setSelectedRoles] = useState([]);
     const [isSkeleton, setIsSkeleton] = useState(true);
 
     useEffect(() => {
@@ -28,6 +28,7 @@ export default function InfoWorker({ onClose, handleVolver, handleContactar, use
             .then((data) => {
                 console.log(data.roles)
                 setRoles(data.roles)
+                setSelectedRoles(data.roles)
             })
             .catch((error) => console.error("Error fetching data:", error));
             setIsSkeleton(false);
@@ -35,7 +36,6 @@ export default function InfoWorker({ onClose, handleVolver, handleContactar, use
 
 
     const showModal = () => {
-        setSelectedRoles([]); // Desmarca todos los checkboxes al abrir el modal
         setIsModalVisible(true);
     };
 
@@ -90,22 +90,26 @@ export default function InfoWorker({ onClose, handleVolver, handleContactar, use
                 </Flex>
                 <Flex gap={30}>
                     <label>Nombre: {user.first_name} {user.last_name}</label>
-                    <label>Documento: {user?.documentType?.name},  {user.document}</label>
+                    <label>{user?.documentType?.name}: {user.document}</label>
                 </Flex>
                 <Flex gap={30}>
                     <label>Telefono:  {user.phone}</label>
                     <label>Email: {user.email}</label>
                 </Flex>
                 <Flex gap={30}>
-                    <label>Roles: {roles}</label>
+                    <label>{roles.length!=0? `Roles: ${roles}`:'No pertenece a esta escuela'}</label>
                 </Flex>
-                <Divider orientation='left'>Asignaturas</Divider>
-                <List
-                    size="small"
-                    bordered
-                    dataSource={data}
-                    renderItem={(item) => <List.Item>{item}</List.Item>}
-                />
+                {roles.includes('Profesor') && (
+                    <>
+                        <Divider orientation='left'>Asignaturas</Divider>
+                        <List
+                            size="small"
+                            bordered
+                            dataSource={data}
+                            renderItem={(item) => <List.Item>{item}</List.Item>}
+                        />
+                    </>
+                )}
                 <Flex style={{ marginTop: '20px' }} gap={30} justify='flex-end'>
                     <Tooltip title="Volver">
                         <Button size='large' iconPosition='end' icon={<RollbackOutlined />} style={{ width: "100px" }} onClick={handleVolver} />

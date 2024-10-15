@@ -11,7 +11,7 @@ const DirectiveRoute = ({ children }) => {
     const [school, setSchool] = useState(sessionStorage.getItem('actual_school'));
 
     if (token === "" || token === null) {
-        navigate('/landing');
+        navigate('/');
     }
 
     useEffect(() => {
@@ -60,12 +60,12 @@ const DirectiveRoute = ({ children }) => {
                     }
                 } else {
                     setIsAuthenticated(false);
-                    navigate('/landing');
+                    navigate('/');
                 }
             } catch (error) {
                 console.error('Error verifying token:', error);
                 setIsAuthenticated(false);
-                navigate('/landing');
+                navigate('/');
             }
         };
 

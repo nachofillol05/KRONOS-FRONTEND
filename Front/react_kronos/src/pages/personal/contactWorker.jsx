@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Button, Flex, Card, Form, Input, Tooltip, Spin } from 'antd';
+import { Button, Flex, Card, Form, Input, Tooltip, Spin, message } from 'antd';
 import { SendOutlined, RollbackOutlined } from '@ant-design/icons';
 const { TextArea } = Input;
 
@@ -31,6 +31,7 @@ export default function ContactWorker({ onClose,handleVolver, user }) {
                 .then(data => {
                     console.log(data);
                     setLoading(false);
+                    message.success('Mail enviado correctamente');
                     onClose();
                 })
                 .catch(error => {
@@ -48,10 +49,11 @@ export default function ContactWorker({ onClose,handleVolver, user }) {
     return (
         <Flex style={{ flexGrow: 1 }} justify='center'>
             <Card style={{ width: '100%' }}
-                title={"Contactar con " + user}
+                title={"Contactar"}
                 type="inner"
             >
                 <Spin spinning={loading} tip="Mandando mail...">
+                    
                     <Form form={form} layout="vertical">
                         <Flex vertical>
                             <Form.Item
@@ -91,6 +93,15 @@ export default function ContactWorker({ onClose,handleVolver, user }) {
                             </Form.Item>
                         </Flex>
                     </Form>
+                    <h3>Destinatarios</h3>
+                    {Array.isArray(user) && user.length === 1 ?
+                        <p>{user[0]}</p>
+                    : 
+                    <ul style={{ maxHeight: Array.isArray(user) && user.length > 3 ? '100px' : 'auto', overflowY: Array.isArray(user) && user.length > 3 ? 'scroll' : 'visible' }}>
+                        {Array.isArray(user) ? user.map((email, index) => (
+                            <li key={index}>{email}</li>
+                        )) : <li>{user}</li>}
+                    </ul>}
                 </Spin>
             </Card>
         </Flex>

@@ -89,7 +89,6 @@ export default function FormDisponibilidad({ onClose }) {
     const days = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes'];
 
     console.log(selectedCells);
-    console.log(modulesData);
     return (
         <>
         <Row>

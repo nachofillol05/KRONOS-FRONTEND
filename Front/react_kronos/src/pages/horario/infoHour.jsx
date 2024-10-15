@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import { Button, Table, Tooltip, Flex } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 
 import FormCreateHour from './formCreateHour.jsx';
 
-const data = [
+/*const data = [
     {
         key: '1',
         hora: '1',
@@ -68,66 +68,60 @@ const data = [
         fin: '14:45',
         dia: 'Lunes',
     }
-];
+];*/
 
 const weekDaysOrder = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
 
 export default function Horas({ showDrawer }) {
     const [filteredInfo, setFilteredInfo] = useState({});
     const [sortedInfo, setSortedInfo] = useState({});
+    const [modulesData, setModulesData] = useState([]);
 
     const handleChange = (pagination, filters, sorter) => {
         console.log('Various parameters', pagination, filters, sorter);
         setFilteredInfo(filters);
         setSortedInfo(sorter);
     };
+    useEffect(() => {
+        fetch('http://localhost:8000/api/modules/', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Token ${localStorage.getItem('token')}`,
+                'School-ID': sessionStorage.getItem('actual_school'),
+            },
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                console.log(data);
+                setModulesData(data);
+            });
+    }, []);
 
-    const clearFilters = () => {
-        setFilteredInfo({});
-    };
-
-    const clearAll = () => {
-        setFilteredInfo({});
-        setSortedInfo({});
-    };
-
-    const setHourSort = () => {
-        setSortedInfo({
-            order: 'ascend',
-            columnKey: 'hora',
-        });
-    };
 
     const columns = [
         {
             title: 'Hora',
-            dataIndex: 'hora',
+            dataIndex: 'moduleNumber',
             key: 'hora',
-            sorter: (a, b) => a.hora - b.hora,
-            sortOrder: sortedInfo.columnKey === 'hora' ? sortedInfo.order : null,
             ellipsis: true,
         },
         {
             title: 'Comienzo',
-            dataIndex: 'comienzo',
+            dataIndex: 'startTime',
             key: 'comienzo',
             ellipsis: true,
         },
         {
             title: 'Fin',
-            dataIndex: 'fin',
+            dataIndex: 'endTime',
             key: 'fin',
             ellipsis: true,
         },
         {
             title: 'Día',
-            dataIndex: 'dia',
+            dataIndex: 'day',
             key: 'dia',
-            filters: weekDaysOrder.map(day => ({ text: day, value: day })),
-            filteredValue: filteredInfo.dia || null,
-            onFilter: (value, record) => record.dia.includes(value),
-            sorter: (a, b) => weekDaysOrder.indexOf(a.dia) - weekDaysOrder.indexOf(b.dia),
-            sortOrder: sortedInfo.columnKey === 'dia' ? sortedInfo.order : null,
             ellipsis: true,
         }
     ];
@@ -140,7 +134,7 @@ export default function Horas({ showDrawer }) {
                 showSorterTooltip={false}
                 filterMode={'menu'}
                 columns={columns}
-                dataSource={data}
+                dataSource={modulesData}
                 onChange={handleChange}
                 scroll={{
                     y: 450,

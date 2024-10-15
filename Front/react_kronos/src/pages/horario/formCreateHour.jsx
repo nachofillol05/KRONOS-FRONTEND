@@ -1,5 +1,6 @@
 import React from 'react';
-import { Form, Input, Button, Flex, Tooltip, Select, TimePicker } from 'antd';
+import { Form, Input,InputNumber, Button, Flex, Tooltip, Select, TimePicker } from 'antd';
+import FilterDropdownTable from '../../components/filterDropTable/FilterDropTable.jsx';
 import { RollbackOutlined, PlusOutlined } from '@ant-design/icons';
 import dayjs from 'dayjs';
 import Horas from './infoHour.jsx';
@@ -7,12 +8,34 @@ import Horas from './infoHour.jsx';
 const format = 'HH:mm';
 const { RangePicker } = TimePicker;
 
+const days = [
+    { value: 'Lunes', label: 'Lunes' },
+    { value: 'Martes', label: 'Martes' },
+    { value: 'Miercoles', label: 'Miercoles' },
+    { value: 'Jueves', label: 'Jueves' },
+    { value: 'Viernes', label: 'Viernes' }
+];
 
 export default function FormCreateWorker({showDrawer}) {
     const [form] = Form.useForm();
 
+    const onChange = (value) => {
+        console.log(`Seleccionado: ${value}`);
+    }
+
     const handleSubmit = () => {
-        console.log('Formulario enviado');
+        // Validar los campos del formulario
+        form.validateFields()
+            .then((values) => {
+                console.log('Datos del formulario enviados:', values);
+                console.log(`Formulario enviado. 
+                Número de hora: ${values.numero}, 
+                Día: ${values.dia}, 
+                Horas: ${values.horas ? `${values.horas[0].format(format)} - ${values.horas[1].format(format)}` : ''}`);
+            })
+            .catch((errorInfo) => {
+                console.error('Error al enviar el formulario:', errorInfo);
+            });
     };
 
     return (
@@ -29,7 +52,12 @@ export default function FormCreateWorker({showDrawer}) {
                         },
                     ]}
                 >
-                    <Input size='large' autoSize={true} placeholder="Ingrese el numero de hora" />
+                    <Input 
+                            size='large' 
+                            type="number" 
+                            autoSize={true} 
+                            placeholder="Ingrese el numero de modulo"
+                        />
                 </Form.Item>
                 <Form.Item
                     style={{ flexGrow: 1, width: '60%' }}
@@ -38,14 +66,11 @@ export default function FormCreateWorker({showDrawer}) {
                     rules={[
                         {
                             required: true,
-                            message: 'Por favor ingrese el dia de semana',
+                            message: 'Por favor ingrese el dias de semana',
                         },
                     ]}
                 >
-                    <Select
-                        size='large'
-                        placeholder="Dia de la semana"
-                    />
+                    <FilterDropdownTable options={days} placeholder="Días:" onChange={onChange} />
                 </Form.Item>
             </Flex>
             <Flex gap={10}>

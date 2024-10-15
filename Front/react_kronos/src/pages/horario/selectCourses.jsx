@@ -14,7 +14,8 @@ const SelectCourse = ({ showDrawer }) => {
     fetch("http://127.0.0.1:8000/api/courses/", {
       method: "GET",
       headers: {
-        "Content-Type": "application/json",
+        'Authorization': 'Token ' + localStorage.getItem('token'),
+        'School-ID': sessionStorage.getItem('actual_school'),
       },
     })
       .then((response) => response.json())
@@ -48,61 +49,29 @@ const SelectCourse = ({ showDrawer }) => {
 
   const columns = [
     {
-      title: "Año",
-      dataIndex: "year",
-      key: "year",
-      filters: [
-        { text: "1°", value: "1°" },
-        { text: "2°", value: "2°" },
-        { text: "3°", value: "3°" },
-        { text: "4°", value: "4°" },
-        { text: "5°", value: "5°" },
-        { text: "6°", value: "6°" },
-        { text: "7°", value: "7°" },
-        { text: "8°", value: "8°" },
-        { text: "9°", value: "9°" },
-        { text: "10°", value: "10°" },
-      ],
-      onFilter: (value, record) => record.year.includes(value),
+      title: "Curso",
+      dataIndex: "name",
+      key: "Course",
     },
     {
-      title: "División",
-      dataIndex: "division",
-      key: "division",
-      filters: [
-        { text: "A", value: "A" },
-        { text: "B", value: "B" },
-        { text: "C", value: "C" },
-        { text: "D", value: "D" },
-        { text: "E", value: "E" },
-        { text: "F", value: "F" },
-        { text: "G", value: "G" },
-        { text: "H", value: "H" },
-        { text: "I", value: "I" },
-        { text: "J", value: "J" },
-      ],
-      onFilter: (value, record) => record.division.includes(value),
-    },
+      title: "Descripción",
+      dataIndex: "description",
+      key: "Description",
+    }
   ];
 
   return (
     <div>
       <Table
         bordered
-        rowSelection={rowSelection}
         columns={columns}
         dataSource={cursos}
         pagination={false}
-        scroll={{ y: 450 }}
-        onRow={(record) => ({
-          onClick: () => handleRowClick(record),
-          onMouseEnter: () => handleMouseEnter(record),
-          onMouseLeave: handleMouseLeave,
-        })}
+        scroll={{ y: 450 }} 
       />
       <Row gutter={10} style={{ marginTop: 10 }}>
         <Col>
-          <Tooltip title="Agregar hora">
+          <Tooltip title="Agregar curso">
             <Button
               type="primary"
               size="large"
@@ -114,16 +83,6 @@ const SelectCourse = ({ showDrawer }) => {
                   "Agregar curso"
                 )
               }
-            />
-          </Tooltip>
-        </Col>
-        <Col>
-          <Tooltip title="Seleccionar curso">
-            <Button
-              type="primary"
-              size="large"
-              icon={<ArrowRightOutlined />}
-              style={{ width: "100px" }}
             />
           </Tooltip>
         </Col>

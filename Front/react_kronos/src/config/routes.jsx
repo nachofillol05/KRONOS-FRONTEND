@@ -41,15 +41,6 @@ const redirigirHorario = () => {
 }}
 export const routes = [
     {
-        path: "/",
-        exact: true,
-        private: true,
-        layout: Landig,
-        component: Home,
-
-    },
-
-    {
         path: "/prueba",
         exact: true,
         private: false,
@@ -93,7 +84,7 @@ export const routes = [
         component: EventsPage,
     },
     {
-        path: "/landing",
+        path: "/",
         exact: true,
         private: false,
         layout: LayoutDefault,
