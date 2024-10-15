@@ -283,7 +283,7 @@ function Horario() {
                                 onChange={(date, dateString) => setTempDate(dateString)}
                             />
                             {mostrarAplicar ? (
-                                <Button type="primary" onClick={() => {
+                                <Button size='large' type="primary" onClick={() => {
                                     setTeacher(tempSelectedKeys);
                                     setCourse(tempCourse);
                                     setDate(tempDate);
@@ -291,7 +291,7 @@ function Horario() {
                                     setCargandoAuto(false);
                                 }}>Aplicar Filtros</Button>) : null}
                             {(teacher || course || date) ? (
-                                <Button type="primary" onClick={() => {
+                                <Button  size='large' type="primary" onClick={() => {
                                     setTeacher(null);
                                     setTempCourse(null)
                                     setCourse(null);

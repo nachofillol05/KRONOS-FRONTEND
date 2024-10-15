@@ -51,7 +51,7 @@ export default function CalendarioProfesor({ subjects }) {
                                 : 'white';
                             const textColor = subject ? subject.subject_color : '#000';
                             return (
-                                <Col key={`${day}-${moduleNumber}`} className="casilla casillaProfesor">
+                                <Col key={`${day}-${module}`} className="casilla casillaProfesor">
                                         <div
                                             className="espacioProfesor"
                                             style={{
