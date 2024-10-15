@@ -69,14 +69,14 @@ const App = ({ children }) => {
                 }
             } catch (error) {
                 console.error('Error fetching roles:', error);
-                navigate('/');
+                navigate('/login');
             }
         };
 
         if (token && school) {
             fetchRolesAndSchools();
         } else {
-            navigate('/');
+            navigate('/login');
         }
     }, [token, school, navigate]);
 
@@ -98,7 +98,7 @@ const App = ({ children }) => {
         }
     }, []);
     if (!localStorage.getItem('token')) {
-        navigate('/');
+        navigate('/login');
         return null;
     }
 
@@ -136,7 +136,7 @@ const App = ({ children }) => {
     const cerrarSesion = () => {
         localStorage.clear();
         sessionStorage.clear();
-        navigate('/');
+        navigate('/login');
     };
 
     const renderOptions = () => {

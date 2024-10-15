@@ -53,6 +53,8 @@ function Horario() {
     const [tempSelectedKeysCourse, setTempSelectedKeysCourse] = useState(null);
     const [mostrarAplicar, setMostrarAplicar] = useState(false);
 
+    
+
     useEffect(() => {
         fetch('http://127.0.0.1:8000/api/courses/', {
             method: "GET",
@@ -162,6 +164,19 @@ function Horario() {
         setOpen(true);
     }, []);
 
+    const limpiarFiltros =()=>{
+        setTeacher(null);
+        setTempCourse(null)
+        setCourse(null);
+        setDate(null);
+        setTempDate(null);
+        setTempSelectedKeys(null);
+        setTempSelectedKeysCourse(null);
+        setCargandoAuto(false);
+        setLoading(true);
+        setMostrarAplicar(false);
+    }
+
     const openModal = () => {
         setShowModal(true);
     };
@@ -237,6 +252,12 @@ function Horario() {
         setDrawerContent(null);
     }, []);
 
+    useEffect(()=>{
+        if(editar){
+            limpiarFiltros();
+        }
+    },[editar])
+
 
     return (
         <>
@@ -301,18 +322,7 @@ function Horario() {
                                     setCargandoAuto(false);
                                 }}>Aplicar Filtros</Button>) : null}*/}
                             {(teacher || course || date) ? (
-                                <Button type="primary" onClick={() => {
-                                    setTeacher(null);
-                                    setTempCourse(null)
-                                    setCourse(null);
-                                    setDate(null);
-                                    setTempDate(null);
-                                    setTempSelectedKeys(null);
-                                    setTempSelectedKeysCourse(null);
-                                    setCargandoAuto(false);
-                                    setLoading(true);
-                                    setMostrarAplicar(false);
-                                }}>Limpiar Filtros</Button>
+                                <Button type="primary" onClick={limpiarFiltros}>Limpiar Filtros</Button>
                             ) : null}
 
                         </>
@@ -329,13 +339,10 @@ function Horario() {
                             <Button type="primary" onClick={cancelarHorario}>Cancelar horario</Button>
                         </>
                     ) :
-                        subjects?.length ? (
-                            <Button type="primary" onClick={generarHorario}>Completar automáticamente</Button>
-                        ) :
-                            null}
+                    null}
                 </div>
 
-                <FloatButton.Group
+                {/*<FloatButton.Group
                     visibilityHeight={1500}
                     trigger="click"
                     type="primary"
@@ -355,9 +362,9 @@ function Horario() {
                         onClick={() => showDrawer(
                             <Suspense fallback={<Spin />}><SelectCourse showDrawer={showDrawer} /></Suspense>, 'Cursos')}
                     />
-                </FloatButton.Group>
+                </FloatButton.Group>*/}
 
-                <Drawer
+                {/*<Drawer
                     destroyOnClose={false}
                     width={600}
                     title={drawerTitle}
@@ -371,7 +378,7 @@ function Horario() {
                     <div style={{ width: '100%', height: '100%' }}>
                         {drawerContent}
                     </div>
-                </Drawer>
+                </Drawer>*/}
 
                 {showModal ? (
                     <Modal

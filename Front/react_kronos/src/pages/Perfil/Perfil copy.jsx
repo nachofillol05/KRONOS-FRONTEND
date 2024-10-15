@@ -21,7 +21,6 @@ export default function Profile() {
   const [profilePicture, setProfilePicture] = useState(null);
   const [isLoading, setLoading] = useState(true)
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [actualizar,setActualizar] = useState(false)
 
   const showModal = () => {
     setIsModalVisible(true);
@@ -123,26 +122,23 @@ export default function Profile() {
         console.log(data);
         setProfileData(data);
         setProfilePicture(data.profile_picture);
+        form.setFieldsValue({
+          ...data,
+          documentType: isEditing ? data.documentType?.id || '' : data.documentType?.name || '',
+          document: data.document || '',
+          phone: data.phone || '',
+          nationality: isEditing ? data.nationality?.id || '' : data.nationality?.name || '',
+          city: data.contactInfo?.city || '',
+          postalCode: data.contactInfo?.postalCode || '',
+          province: data.contactInfo?.province || '',
+          street: data.contactInfo?.street || '',
+          streetNumber: data.contactInfo?.streetNumber || '',
+        });
+
         setLoading(false);
       })
       .catch((error) => console.error('Error fetching data:', error));
-  }, [actualizar]);
-  useEffect(() => {
-    const data = profileData;
-    form.setFieldsValue({
-      ...data,
-      gender: isEditing? data.gender :data.gender?.charAt(0).toUpperCase() + data.gender?.slice(1) || '',
-      documentType: data.documentType?.name || '',
-      document: data.document || '',
-      phone: data.phone || '',
-      nationality: isEditing ? data.nationality?.id || '' : data.nationality?.name || '',
-      city: data.contactInfo?.city || '',
-      postalCode: data.contactInfo?.postalCode || '',
-      province: data.contactInfo?.province || '',
-      street: data.contactInfo?.street || '',
-      streetNumber: data.contactInfo?.streetNumber || '',
-    });
-  }, [isEditing,profileData]);
+  }, [isEditing]);
 
   useEffect(() => {
     fetch('http://127.0.0.1:8000/api/documentTypes/', {
@@ -188,7 +184,7 @@ export default function Profile() {
   ];
 
   const handleFinishUser = async (values) => {
-    console.log(values)
+    console.log('Form values:', values);
     // Enviar los datos del perfil
     const profileData = {
       document: values.document,
@@ -201,13 +197,13 @@ export default function Profile() {
       phone: values.phone || "",
       contactInfo: {
         city: values.city,
-        postalCode: values.postalCode,
+        postalCode: values.postalcode,
         province: values.province,
         street: values.street,
         streetNumber: values.streetNumber,
       }
     };
-    console.log('Form values:', profileData);
+
     try {
       const profileResponse = await fetch('http://127.0.0.1:8000/api/profile/', {
         method: 'PUT',
@@ -223,7 +219,6 @@ export default function Profile() {
         throw new Error('NO se pudieron actualizar los campos');
       }
       const profileDataResponse = await profileResponse.json();
-      setActualizar(!actualizar)
       console.log('Profile updated successfully:', profileDataResponse);
 
       console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaa", file)
@@ -385,11 +380,14 @@ export default function Profile() {
                       name='documentType'
                       style={{ width: '125px' }}
                     >
+                      {isEditing ? (
+                        <Select style={{ height: '40px' }} options={tiposDocumentos} size='large' />
+                      ) : (
                         <Input
                           size='large'
                           style={customDisabledStyle}
                         />
-                      
+                      )}
                     </Form.Item>
                     <Form.Item
                       name='document'
@@ -398,7 +396,7 @@ export default function Profile() {
                     >
                       <Input
                         size='large'
-                        style={customDisabledStyle}
+                        style={!isEditing ? customDisabledStyle : { height: '40px' }}
                         disabled={!isEditing}
                       />
                     </Form.Item>

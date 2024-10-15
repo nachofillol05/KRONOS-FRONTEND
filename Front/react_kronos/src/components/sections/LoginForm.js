@@ -64,7 +64,7 @@ export default function Login(props) {
                 })
             });
             if (tokenResponse.ok) {
-                navigate('/');
+                navigate('/login');
                 return null;
             }
         } catch (error) {

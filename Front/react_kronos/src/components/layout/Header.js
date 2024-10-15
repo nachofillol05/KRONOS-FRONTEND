@@ -17,7 +17,7 @@ const defaultProps = {
   active: false,
   navPosition: '',
   hideNav: false,
-  hideSignin: false,
+  hideSignin: localStorage.getItem("token") !="",
   bottomOuterDivider: false,
   bottomDivider: false
 }
@@ -121,14 +121,21 @@ class Header extends React.Component {
                         navPosition && `header-nav-${navPosition}`
                       )}>
                     </ul>
-                    {!hideSignin &&
+                    {!hideSignin ?
                       <ul
                         className="list-reset header-nav-right"
                       >
                         <li>
                           <Link to="/login/" className="button button-primary button-wide-mobile button-sm" onClick={this.closeMenu}>Login</Link>
                         </li>
-                      </ul>}
+                      </ul>
+                      :<ul
+                      className="list-reset header-nav-right"
+                    >
+                      <li>
+                        <Link to="/perfil/" className="button button-primary button-wide-mobile button-sm" onClick={this.closeMenu}>Ingresar</Link>
+                      </li>
+                    </ul>}
                   </div>
                 </nav>
               </React.Fragment>}

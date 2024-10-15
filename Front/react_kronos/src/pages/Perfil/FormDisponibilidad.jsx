@@ -14,19 +14,22 @@ export default function FormDisponibilidad({ onClose }) {
             ),
             closable: true,
             okText: 'Confirmar',
-            onOk: () => onClose(),
+            onOk: () => actualizarAvailability(),
             cancelText: 'Cancelar',
         });
     };
     
+    
 
     const actualizarAvailability = () => {
         const jsonData = JSON.stringify({ module: selectedCells });
-        fetch('http://localhost:8000/api/contacting-staff/', {
-            method: 'PUT',
+        fetch('http://localhost:8000/api/teacheravailability/', {
+            method: 'POST',
             body: jsonData,
             headers: {
                 'Content-Type': 'application/json',
+                'Authorization': `Token ${localStorage.getItem('token')}`,
+                'School-ID': sessionStorage.getItem('actual_school'),
             },
         });
     };
