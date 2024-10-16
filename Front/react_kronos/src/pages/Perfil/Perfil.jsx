@@ -132,7 +132,7 @@ export default function Profile() {
     form.setFieldsValue({
       ...data,
       gender: isEditing? data.gender :data.gender?.charAt(0).toUpperCase() + data.gender?.slice(1) || '',
-      documentType: data.documentType?.name || '',
+      documentType: isEditing ? data.documentType?.id || '' : data.documentType?.name || '',
       document: data.document || '',
       phone: data.phone || '',
       nationality: isEditing ? data.nationality?.id || '' : data.nationality?.name || '',
@@ -189,7 +189,6 @@ export default function Profile() {
 
   const handleFinishUser = async (values) => {
     console.log(values)
-    // Enviar los datos del perfil
     const profileData = {
       document: values.document,
       documentType: values.documentType,
@@ -220,6 +219,7 @@ export default function Profile() {
       });
 
       if (!profileResponse.ok) {
+        console.log( await profileResponse.json())
         throw new Error('NO se pudieron actualizar los campos');
       }
       const profileDataResponse = await profileResponse.json();
@@ -385,11 +385,14 @@ export default function Profile() {
                       name='documentType'
                       style={{ width: '125px' }}
                     >
+                      {isEditing ? (
+                        <Select style={{ height: '40px' }} options={tiposDocumentos} size='large' />
+                      ) : (
                         <Input
                           size='large'
                           style={customDisabledStyle}
                         />
-                      
+                      )}
                     </Form.Item>
                     <Form.Item
                       name='document'
