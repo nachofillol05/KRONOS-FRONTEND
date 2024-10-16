@@ -36,34 +36,34 @@ export default function Personal() {
   const onSelectChange = (newSelectedRowKeys, selectedRows) => {
     console.log('selectedRowKeys changed: ', newSelectedRowKeys);
     let updatedSelectedKeys = [...persistentSelectedKeys];
-  
+
     newSelectedRowKeys.forEach((key) => {
       if (!updatedSelectedKeys.includes(key)) {
         updatedSelectedKeys.push(key);
       }
     });
-  
-    const currentVisibleKeys = teachers.map((teacher) => teacher.email); 
+
+    const currentVisibleKeys = teachers.map((teacher) => teacher.email);
     const newDeselections = persistentSelectedKeys.filter(
       (key) => !newSelectedRowKeys.includes(key) && currentVisibleKeys.includes(key)
     );
-  
+
     updatedSelectedKeys = updatedSelectedKeys.filter(
       (key) => !newDeselections.includes(key)
     );
-  
+
     setPersistentSelectedKeys(updatedSelectedKeys);
     setSelectedRowKeys(newSelectedRowKeys);
   };
-  
-  
-  
+
+
+
 
   const rowSelection = {
     selectedRowKeys: persistentSelectedKeys,  // Usa la lista persistente completa
     onChange: onSelectChange,
   };
-  
+
 
 
   const DescargarExcel = () => {
@@ -418,7 +418,7 @@ export default function Personal() {
                 setTeachers(data);
               })
           );
-        }else if (activeFilter === 'Todos') {
+        } else if (activeFilter === 'Todos') {
           const url = new URL('http://127.0.0.1:8000/api/staff');
           if (searchName) url.searchParams.append('search', searchName);
 
@@ -513,7 +513,7 @@ export default function Personal() {
     setCourse(value);
   };
 
-  console.log('iiiiiiiiiiiiiiiiiiiiiimmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmppppppppppppppppppppppppppppppppppppppp',persistentSelectedKeys);
+  console.log('iiiiiiiiiiiiiiiiiiiiiimmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmppppppppppppppppppppppppppppppppppppppp', persistentSelectedKeys);
   return (
     (isLoading ?
       <div className="spinner-container">
@@ -553,13 +553,13 @@ export default function Personal() {
               />
             )}
           <Input
-                      suffix={
-                        <SearchOutlined
-                          style={{
-                            color: 'rgba(0,0,0,.45)',
-                          }}
-                        />
-                      }
+            suffix={
+              <SearchOutlined
+                style={{
+                  color: 'rgba(0,0,0,.45)',
+                }}
+              />
+            }
             size="large"
             style={{
               width: 300,
@@ -569,27 +569,27 @@ export default function Personal() {
             allowClear
           />
         </div >
-          <Table
-            rowKey={'email'}
-            bordered
-            onRow={(user) => ({
-              onClick: () => showEspecificWorker(user.id),
-              onMouseEnter: () => {
-                  document.body.style.cursor = 'pointer';
-              },
-              onMouseLeave: () => {
-                  document.body.style.cursor = 'default';
-              },
+        <Table
+          rowKey={'email'}
+          bordered
+          onRow={(user) => ({
+            onClick: () => showEspecificWorker(user.id),
+            onMouseEnter: () => {
+              document.body.style.cursor = 'pointer';
+            },
+            onMouseLeave: () => {
+              document.body.style.cursor = 'default';
+            },
           })}
-            pagination={false}
-            y={500}
-            dataSource={teachers}
-            columns={columns}
-            tableLayout={'fixed'}
-            filterDropdownOpen={true}
-            filtered={true}
-            rowSelection={rowSelection}
-          />
+          pagination={false}
+          y={500}
+          dataSource={teachers}
+          columns={columns}
+          tableLayout={'fixed'}
+          filterDropdownOpen={true}
+          filtered={true}
+          rowSelection={rowSelection}
+        />
         {
           sessionStorage.getItem('rol') === 'Directivo' ? (
             <>
@@ -610,9 +610,14 @@ export default function Personal() {
               </FloatButton.Group>
 
               {persistentSelectedKeys.length != 0 ?
-                <FloatButton icon={<MailOutlined />}  tooltip="Mandar mail a seleccionados"
-                onClick={() => showDrawer(<ContacWorker onClose={onClose} handleVolver={handleVolver} user={persistentSelectedKeys}/>, 'Contactar con el personal')}
-                type='primary' style={{ right: '10%' }} />
+                <FloatButton.Group style={{ right: '12.5%' }}>
+                  <FloatButton icon={<CloseOutlined />} tooltip="Deseleccionar"
+                    onClick={() => showDrawer(<ContacWorker onClose={onClose} handleVolver={handleVolver} user={persistentSelectedKeys} />, 'Deseleccionar')} />
+
+                  <FloatButton icon={<MailOutlined />} tooltip="Mandar mail a seleccionados"
+                    onClick={() => showDrawer(<ContacWorker onClose={onClose} handleVolver={handleVolver} user={persistentSelectedKeys} />, 'Contactar con el personal')}
+                    type='primary' />
+                </FloatButton.Group>
                 :
                 null
               }
