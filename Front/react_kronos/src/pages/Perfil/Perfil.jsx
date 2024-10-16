@@ -25,14 +25,7 @@ export default function Profile() {
 
   const showModal = () => {
     setIsModalVisible(true);
-    console.log("aaaaaaaca cierra")
   };
-  useEffect(()=>{
-    console.log(open, "  open")
-    console.log(isModalVisible, "   ismodalvisible")
-    console.log(drawerContent, "    drawer content")
-    console.log(drawerTitle, "    drawerTitle")
-  },[open,isModalVisible, drawerContent, drawerTitle])
 
   const handleOk = async () => {
     try {
@@ -132,7 +125,7 @@ export default function Profile() {
     form.setFieldsValue({
       ...data,
       gender: isEditing? data.gender :data.gender?.charAt(0).toUpperCase() + data.gender?.slice(1) || '',
-      documentType: isEditing ? data.documentType?.id || '' : data.documentType?.name || '',
+      documentType: data.documentType?.name || '',
       document: data.document || '',
       phone: data.phone || '',
       nationality: isEditing ? data.nationality?.id || '' : data.nationality?.name || '',
@@ -189,9 +182,9 @@ export default function Profile() {
 
   const handleFinishUser = async (values) => {
     console.log(values)
-    const profileData = {
+    const body = {
       document: values.document,
-      documentType: values.documentType,
+      documentType: profileData.documentType.id,
       email: values.email,
       first_name: values.first_name,
       gender: values.gender,
@@ -206,7 +199,7 @@ export default function Profile() {
         streetNumber: values.streetNumber,
       }
     };
-    console.log('Form values:', profileData);
+    console.log('Form values:', body);
     try {
       const profileResponse = await fetch('http://127.0.0.1:8000/api/profile/', {
         method: 'PUT',
@@ -215,7 +208,7 @@ export default function Profile() {
           'Authorization': 'Token ' + localStorage.getItem('token'),
           'School-ID': sessionStorage.getItem('actual_school'),
         },
-        body: JSON.stringify(profileData),
+        body: JSON.stringify(body),
       });
 
       if (!profileResponse.ok) {
@@ -385,14 +378,12 @@ export default function Profile() {
                       name='documentType'
                       style={{ width: '125px' }}
                     >
-                      {isEditing ? (
-                        <Select style={{ height: '40px' }} options={tiposDocumentos} size='large' />
-                      ) : (
+                      
                         <Input
                           size='large'
                           style={customDisabledStyle}
                         />
-                      )}
+                      
                     </Form.Item>
                     <Form.Item
                       name='document'
