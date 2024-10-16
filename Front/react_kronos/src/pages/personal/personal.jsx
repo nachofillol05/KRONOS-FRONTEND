@@ -457,6 +457,9 @@ export default function Personal() {
   }, [activeFilter, searchName, subject, course, recargar]);
 
 
+  const limpiarSeleccion = ()=>{
+    setPersistentSelectedKeys([])
+  }
   const columns = [
     { title: "Apellido", dataIndex: "last_name", key: "Apellido", width: 150 },
     { title: "Nombre", dataIndex: "first_name", key: "Nombre", width: 150 },
@@ -524,9 +527,9 @@ export default function Personal() {
         {contextHolder}
         < div className="contenedor-filtros contenedor-filtros-personal">
           <Radio.Group size='large' defaultValue="Profesores" buttonStyle="solid" onChange={handleFilterChange}>
-            <Radio.Button value="Profesores" >Profesor</Radio.Button>
-            <Radio.Button value="Preceptores" >Preceptor</Radio.Button>
-            <Radio.Button value="Directivos">Directivo</Radio.Button>
+            <Radio.Button value="Profesores" >Profesores</Radio.Button>
+            <Radio.Button value="Preceptores" >Preceptores</Radio.Button>
+            <Radio.Button value="Directivos">Directivos</Radio.Button>
             <Radio.Button value="Todos">Todos</Radio.Button>
           </Radio.Group>
           {activeFilter === 'Profesores' && (
@@ -588,7 +591,7 @@ export default function Personal() {
           tableLayout={'fixed'}
           filterDropdownOpen={true}
           filtered={true}
-          rowSelection={rowSelection}
+          {... localStorage.getItem("rol")=== 'Directivo' ? rowSelection={rowSelection}:null}
         />
         {
           sessionStorage.getItem('rol') === 'Directivo' ? (
@@ -612,8 +615,7 @@ export default function Personal() {
               {persistentSelectedKeys.length != 0 ?
                 <FloatButton.Group style={{ right: '12.5%' }}>
                   <FloatButton icon={<CloseOutlined />} tooltip="Deseleccionar"
-                    onClick={() => showDrawer(<ContacWorker onClose={onClose} handleVolver={handleVolver} user={persistentSelectedKeys} />, 'Deseleccionar')} />
-
+                    onClick={limpiarSeleccion} />
                   <FloatButton icon={<MailOutlined />} tooltip="Mandar mail a seleccionados"
                     onClick={() => showDrawer(<ContacWorker onClose={onClose} handleVolver={handleVolver} user={persistentSelectedKeys} />, 'Contactar con el personal')}
                     type='primary' />
@@ -659,7 +661,7 @@ export default function Personal() {
               </Drawer>
 
             </>
-          ) : (<FloatButton icon={<DownloadOutlined />} tooltip="Descargar tabla" />)
+          ) : (<FloatButton icon={<DownloadOutlined />} onClick={DescargarExcel} tooltip="Descargar tabla" />)
         }
         {/*{showModal ? (
           <Modal

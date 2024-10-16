@@ -537,7 +537,7 @@ export default function Materias() {
                                 {drawerContent}
                             </div>
                         </Drawer>
-                    </>) : (<FloatButton icon={<DownloadOutlined />} tooltip="Descargar tabla" />)}
+                    </>) : (<FloatButton icon={<DownloadOutlined />} onClick={descargarExcel} tooltip="Descargar tabla" />)}
                 {sessionStorage.getItem('rol') === 'Directivo' && (
                     <ModalComponent
                         isModalOpen={isModalOpen}
