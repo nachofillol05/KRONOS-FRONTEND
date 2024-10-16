@@ -34,6 +34,10 @@ export default function InfoWorker({ onClose, handleVolver, handleContactar, use
             setIsSkeleton(false);
     }, []);
 
+    const onChangeCurso = (value) => {
+        console.log(`selected ${value}`);
+    }
+
 
     const showModal = () => {
         setIsModalVisible(true);
@@ -156,7 +160,7 @@ export default function InfoWorker({ onClose, handleVolver, handleContactar, use
 
                 {selectedRoles.includes("Preceptor") && (
                     <div style={{ marginTop: '20px', width: '80%' }}>
-                        <DropTable options={courses} placeholder='Curso del preceptor' />
+                        <DropTable onChange={onChangeCurso} options={courses} placeholder='Curso del preceptor' />
                     </div>
                 )}
             </Modal>

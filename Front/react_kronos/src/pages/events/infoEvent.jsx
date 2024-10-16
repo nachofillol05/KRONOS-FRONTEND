@@ -5,6 +5,7 @@ import FilterDropdownTable from '../../components/filterDropTable/FilterDropTabl
 import moment from 'moment';
 import './events.scss';
 import dayjs from 'dayjs';
+const { TextArea } = Input;
 
 const dateFormat = 'DD/MM-/YYYY';
 
@@ -194,10 +195,13 @@ export default function InfoWorker({ event, estado, closeDrawer, typeEvent, clos
                     )}
                 </Form.Item>
                 <Form.Item className="formInfoEventItem" label="Descripción" name="description" layout='horizontal'>
-                    <Input
-                        size='large'
-                        style={!isEditing ? customDisabledStyle : { height: '40px' }}
-                        disabled={!isEditing}
+                <TextArea
+                    style={!isEditing ? customDisabledStyle : { height: 'auto' }}
+                    autoSize={{ minRows: 1, maxRows: 3 }}
+                    disabled={!isEditing}
+                    size="large"
+                    allowClear
+                    maxLength={255}
                     />
                 </Form.Item>
                 <Form.Item className="formInfoEventItem" label="Fechas" name="dateRange" layout='horizontal'>
@@ -230,7 +234,7 @@ export default function InfoWorker({ event, estado, closeDrawer, typeEvent, clos
                         renderItem={(item) => (
                             <List.Item key={item.email}>
                                 <List.Item.Meta
-                                    avatar={<Avatar src={item.profile_picure || 'default-avatar.png'} />}
+                                    avatar={<Avatar src={item.profile_picture || 'default-avatar.png'} />}
                                     title={<h>{item.first_name} {item.last_name}</h>}
                                     description={item.email}
                                 />

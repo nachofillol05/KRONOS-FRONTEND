@@ -51,7 +51,7 @@ export default function Profile() {
       })
         .then((response) => {
           if (!response.ok) {
-            message.error('Contraseña incorrecta');
+            message.error('Contraseña actual incorrecta');
             return
           }
           return response.json();
