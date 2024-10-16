@@ -31,19 +31,39 @@ export default function Personal() {
   const [recargar, setRecargar] = useState(false);
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [isLoading, setLoading] = useState(true)
-  const [hasSelectedRows, setHasSelectedRows] = useState(false);
+  const [persistentSelectedKeys, setPersistentSelectedKeys] = useState([]);
 
-  const onSelectChange = (newSelectedRowKeys) => {
+  const onSelectChange = (newSelectedRowKeys, selectedRows) => {
     console.log('selectedRowKeys changed: ', newSelectedRowKeys);
+    let updatedSelectedKeys = [...persistentSelectedKeys];
+  
+    newSelectedRowKeys.forEach((key) => {
+      if (!updatedSelectedKeys.includes(key)) {
+        updatedSelectedKeys.push(key);
+      }
+    });
+  
+    const currentVisibleKeys = teachers.map((teacher) => teacher.email); 
+    const newDeselections = persistentSelectedKeys.filter(
+      (key) => !newSelectedRowKeys.includes(key) && currentVisibleKeys.includes(key)
+    );
+  
+    updatedSelectedKeys = updatedSelectedKeys.filter(
+      (key) => !newDeselections.includes(key)
+    );
+  
+    setPersistentSelectedKeys(updatedSelectedKeys);
     setSelectedRowKeys(newSelectedRowKeys);
-    setHasSelectedRows(newSelectedRowKeys.length > 0);
-    
   };
+  
+  
+  
 
   const rowSelection = {
-    selectedRowKeys,
+    selectedRowKeys: persistentSelectedKeys,  // Usa la lista persistente completa
     onChange: onSelectChange,
   };
+  
 
 
   const DescargarExcel = () => {
@@ -344,7 +364,6 @@ export default function Personal() {
                 return response.json();
               })
               .then((data) => {
-                setHasSelectedRows(false);
                 setTeachers(data);
               })
           );
@@ -371,7 +390,6 @@ export default function Personal() {
                 return response.json();
               })
               .then((data) => {
-                setHasSelectedRows(false);
                 setTeachers(data);
               })
           );
@@ -397,7 +415,6 @@ export default function Personal() {
                 return response.json();
               })
               .then((data) => {
-                setHasSelectedRows(false);
                 setTeachers(data);
               })
           );
@@ -422,7 +439,6 @@ export default function Personal() {
               })
               .then((data) => {
                 console.log(data);
-                setHasSelectedRows(false);
                 setTeachers(data);
               })
           );
@@ -497,6 +513,7 @@ export default function Personal() {
     setCourse(value);
   };
 
+  console.log('iiiiiiiiiiiiiiiiiiiiiimmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmppppppppppppppppppppppppppppppppppppppp',persistentSelectedKeys);
   return (
     (isLoading ?
       <div className="spinner-container">
@@ -572,7 +589,6 @@ export default function Personal() {
             filterDropdownOpen={true}
             filtered={true}
             rowSelection={rowSelection}
-            
           />
         {
           sessionStorage.getItem('rol') === 'Directivo' ? (
@@ -593,13 +609,30 @@ export default function Personal() {
                 />
               </FloatButton.Group>
 
-              {hasSelectedRows ?
+              {persistentSelectedKeys.length != 0 ?
                 <FloatButton icon={<MailOutlined />}  tooltip="Mandar mail a seleccionados"
-                onClick={() => showDrawer(<ContacWorker onClose={onClose} handleVolver={handleVolver} user={selectedRowKeys}/>, 'Contactar con el personal')}
+                onClick={() => showDrawer(<ContacWorker onClose={onClose} handleVolver={handleVolver} user={persistentSelectedKeys}/>, 'Contactar con el personal')}
                 type='primary' style={{ right: '10%' }} />
                 :
                 null
               }
+              {/*{persistentSelectedKeys.length != 0 ?
+                <FloatButton.Group
+                visibilityHeight={1500}
+                trigger="click"
+                type="primary"
+              >
+                <FloatButton icon={<MailOutlined />}  tooltip="Mandar mail a seleccionados"
+                onClick={() => showDrawer(<ContacWorker onClose={onClose} handleVolver={handleVolver} user={persistentSelectedKeys}/>, 'Contactar con el personal')}
+                type='primary' style={{ right: '10%' }} />
+
+                <FloatButton icon={<CloseOutlined />}  tooltip="Cancelar selección"
+                onClick={setPersistentSelectedKeys([])}
+                type='primary' style={{ right: '10%' }} />
+                </FloatButton.Group>
+                :
+                null
+              } */}
 
               <Drawer
                 destroyOnClose={false}

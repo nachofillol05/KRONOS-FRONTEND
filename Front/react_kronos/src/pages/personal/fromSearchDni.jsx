@@ -157,6 +157,9 @@ export default function FormSearchDni({ handleSearch }) {
     const handleCheckboxChange = (checkedValues) => {
         setSelectedRoles(checkedValues); // Actualiza el estado cuando cambian los checkboxes
     };
+    const onChangeCurso = () =>{
+        console.log("cambio")
+    }
     
     
     console.log(createdPersonals);
@@ -250,13 +253,12 @@ export default function FormSearchDni({ handleSearch }) {
 
                 <Checkbox.Group
                     style={{ width: '100%', paddingTop: 20 }}
-                    //value={selectedRoles} // Vincula el estado al grupo de checkboxes
-                    onChange={handleCheckboxChange} // Maneja los cambios en los checkboxes
+                    onChange={handleCheckboxChange}
                 >
                     <Flex gap={30}>
-                        <Checkbox key={'Profesor'} /*checked={roles.includes('Profesor')}*/ value="Profesor">Profesor</Checkbox>{/*Esto no anda ver como aplicarlo*/}
-                        <Checkbox key={'Preceptor'} /*checked={roles.includes('Preceptor')}*/value="Preceptor">Preceptor</Checkbox>{/*Esto no anda ver como aplicarlo*/}
-                        <Checkbox key={'Directivo'} /*checked={roles.includes('Directivo')}*/ value="Directivo">Directivo</Checkbox>{/*Esto no anda ver como aplicarlo*/}
+                        <Checkbox key={'Profesor'} value="Profesor">Profesor</Checkbox>{/*Esto no anda ver como aplicarlo*/}
+                        <Checkbox key={'Preceptor'} value="Preceptor">Preceptor</Checkbox>{/*Esto no anda ver como aplicarlo*/}
+                        <Checkbox key={'Directivo'} value="Directivo">Directivo</Checkbox>{/*Esto no anda ver como aplicarlo*/}
                     </Flex>
                 </Checkbox.Group>
 
@@ -268,7 +270,7 @@ export default function FormSearchDni({ handleSearch }) {
 
                 {selectedRoles.includes("Preceptor") && (
                     <div style={{ marginTop: '20px', width: '80%' }}>
-                        <DropTable options={courses} placeholder='Curso del preceptor' />
+                        <DropTable options={courses} onChange={onChangeCurso} placeholder='Curso del preceptor' />
                     </div>
                 )}
             </Modal>

@@ -26,7 +26,7 @@ function HorarioProfesor() {
     console.log(subjects)
     return (
         <Spin
-            spinning={subjects.length==0 && loading}>
+            spinning={subjects.length==0}>
             {/*<div className="contenedor-filtros contenedor-filtros-horario">
                 <DatePicker size='large' format={format} />
                 <Button icon={<FilterOutlined />} size='large' type='primary'>
