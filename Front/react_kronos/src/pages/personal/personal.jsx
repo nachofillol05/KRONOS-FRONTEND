@@ -364,6 +364,7 @@ export default function Personal() {
                 return response.json();
               })
               .then((data) => {
+                console.log(data)
                 setTeachers(data);
               })
           );
@@ -460,8 +461,13 @@ export default function Personal() {
   const columns = [
     { title: "Apellido", dataIndex: "last_name", key: "Apellido", width: 150 },
     { title: "Nombre", dataIndex: "first_name", key: "Nombre", width: 150 },
-    { title: "Documento", dataIndex: "document", key: "Documento", width: 150 },
-    { title: "Genero", dataIndex: "gender", key: "Genero", width: 100 },
+    { 
+      title: "Tipo de documento", 
+      dataIndex: "documentType", 
+      key: "Tipo de documento", 
+      width: 100,
+      render: (documentType) => (documentType ? documentType.name : 'N/A') // Muestra 'N/A' si documentType es null
+    },    { title: "Documento", dataIndex: "document", key: "Documento", width: 150 },
     { title: "Email", dataIndex: "email", key: "Email", width: 200 },
   ];
 
@@ -512,8 +518,6 @@ export default function Personal() {
     console.log(`selected ${value}`);
     setCourse(value);
   };
-
-  console.log('iiiiiiiiiiiiiiiiiiiiiimmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmppppppppppppppppppppppppppppppppppppppp', persistentSelectedKeys);
   return (
     (isLoading ?
       <div className="spinner-container">

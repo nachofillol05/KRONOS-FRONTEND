@@ -119,7 +119,7 @@ export default function FormCreateSubject({ handleSubmit, onClose, cursos, value
                         type='number'
                         placeholder="Horas catedras"
                         suffix={
-                            <Tooltip arrow={false} color='gray' title="Las horas catedras es el tiempo en la que se lleva a cabo la clase ">
+                            <Tooltip arrow={false} title="Cantidad de horas cátedra por semana, las cuales la materia se llevará a cabo en el curso seleccionado">
                                 <InfoCircleOutlined style={{ color: 'gray' }} />
                             </Tooltip>
                         }

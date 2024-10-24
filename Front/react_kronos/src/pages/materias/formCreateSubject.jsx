@@ -66,6 +66,10 @@ export default function FormCreateSubject({ handleSubmit, onClose, cursos, value
 
                                 message: '',
                             },
+                            {
+                                max: 5,
+                                message: '',
+                            }
                         ]}
                     >
                         <Input size='large' autoSize count={{ show: true, max: 5 }} />
@@ -81,6 +85,7 @@ export default function FormCreateSubject({ handleSubmit, onClose, cursos, value
                             required: true,
                             message: 'Por favor ingrese el color de la materia ',
                         },
+                        
                     ]}
                 >
                     <ColorPicker onChange={(e) => setColorSelected(e.toHexString())} size="large" showText style={{ width: '100%' }} />
