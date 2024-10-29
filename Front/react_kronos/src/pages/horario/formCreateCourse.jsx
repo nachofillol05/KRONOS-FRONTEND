@@ -19,15 +19,15 @@ export default function FormCreateCourse({showDrawer}) { // Nombre del component
                         style={{ width: '25%' }}
                         layout='vertical'
                         name="Anio"
-                        label="Anio"
+                        label="año"
                         rules={[
                             {
                                 required: true,
-                                message: 'Por favor, ingrese el anio',
+                                message: 'Por favor, ingrese el año',
                             },
                         ]}
                     >
-                        <Input size="large" placeholder="Ingrese el anio" />
+                        <Input size="large" placeholder="Ingrese el año" />
                     </Form.Item>
                     <Form.Item
                         style={{ width: '25%' }}

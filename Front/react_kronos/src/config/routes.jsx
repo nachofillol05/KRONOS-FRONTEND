@@ -7,9 +7,12 @@ import LayoutLogin from "../layouts/LayoutSignin";
 import Home from "../pages/home/Home";
 import Prueba from "../pages/prueba/prueba";
 import HomeTemplate from "../pages/HomeTemplate/Home.js";
+import aceptarDisponibilidad from "../pages/aceptarDisponibilidad/aceptarDisponibilidad.jsx"
 import LoginTemplate from "../pages/LoginTemplate/Login.js"; 
 import MailVerificado from "../pages/mailverificado/mailverificado.jsx"
+import Login from "../pages/passwords/rememberPasswordEmail.jsx"
 import MailEnviado from "../pages/mailenviado/mailenviado.jsx"
+import ChangePassword  from "../pages/passwords/changePassword.jsx"
 //import Login from "../pages/login/logins"
 import Page from "../pages/landingPage/landingPage";
 
@@ -84,6 +87,20 @@ export const routes = [
         component: EventsPage,
     },
     {
+        path: "/aceptarDisponibilidad",
+        exact: true,
+        directive: true,
+        layout: Navegacion,
+        component: aceptarDisponibilidad,
+    },
+    {
+        path: "/mailPassword",
+        exact: true,
+        private:false,
+        layout: LayoutLogin,
+        component: Login,
+    },
+    {
         path: "/",
         exact: true,
         private: false,
@@ -103,6 +120,13 @@ export const routes = [
         private: false,
         layout: Landig,
         component: MailVerificado,
+    },
+    {
+        path: "/recuperarContrasenia/:token",
+        exact: true,
+        private: false,
+        layout: LayoutLogin,
+        component: ChangePassword,
     },
     {
         path: "/mailenviado",

@@ -342,7 +342,7 @@ function Horario() {
                     null}
                 </div>
 
-                {/*<FloatButton.Group
+                <FloatButton.Group
                     visibilityHeight={1500}
                     trigger="click"
                     type="primary"
@@ -362,9 +362,9 @@ function Horario() {
                         onClick={() => showDrawer(
                             <Suspense fallback={<Spin />}><SelectCourse showDrawer={showDrawer} /></Suspense>, 'Cursos')}
                     />
-                </FloatButton.Group>*/}
+                </FloatButton.Group>
 
-                {/*<Drawer
+                <Drawer
                     destroyOnClose={false}
                     width={600}
                     title={drawerTitle}
@@ -378,7 +378,7 @@ function Horario() {
                     <div style={{ width: '100%', height: '100%' }}>
                         {drawerContent}
                     </div>
-                </Drawer>*/}
+                </Drawer>
 
                 {showModal ? (
                     <Modal

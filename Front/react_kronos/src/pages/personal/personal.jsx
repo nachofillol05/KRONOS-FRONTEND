@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef, useContext } from "react";
 import "./personal.scss";
-import { Table, Select, Spin, FloatButton, Drawer, Radio, Form, Space, Input, Button, Flex, message, Modal } from "antd";
-import { SearchOutlined, UsergroupAddOutlined, DownOutlined, UpOutlined, DownloadOutlined, MailOutlined, CloseOutlined } from '@ant-design/icons';
+import { Table, Select, Spin, FloatButton, Drawer, Radio, Form, Space, Input, Button, Flex, message, Modal, Badge } from "antd";
+import { SearchOutlined, UsergroupAddOutlined, DownOutlined, UpOutlined, DownloadOutlined, MailOutlined, CloseOutlined,FieldTimeOutlined } from '@ant-design/icons';
+import { useNavigate } from 'react-router-dom';
 import FormSearchDni from './fromSearchDni';
 import InfoWorker from './infoWorker';
 import FormCreateWorker from './formCreateWorker';
@@ -10,6 +11,7 @@ import EspecificWorker from './especificWorker';
 import { Contexto } from "../../layout/navegacion/navegaciones";
 
 export default function Personal() {
+  const navigate = useNavigate();
   const [teachers, setTeachers] = useState([]);
   const [subjects, setSubjects] = useState([]);
   const [activeButton, setActiveButton] = useState('Profesores');
@@ -521,6 +523,12 @@ export default function Personal() {
     console.log(`selected ${value}`);
     setCourse(value);
   };
+  
+  const irAdispinibilidades = () => {
+    navigate("/AceptarDisponibilidad");
+  }
+
+  console.log('iiiiiiiiiiiiiiiiiiiiiimmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmppppppppppppppppppppppppppppppppppppppp', persistentSelectedKeys);
   return (
     (isLoading ?
       <div className="spinner-container">
@@ -595,7 +603,7 @@ export default function Personal() {
           tableLayout={'fixed'}
           filterDropdownOpen={true}
           filtered={true}
-          {... localStorage.getItem("rol")=== 'Directivo' ? rowSelection={rowSelection}:null}
+          rowSelection={rowSelection}
         />
         {
           sessionStorage.getItem('rol') === 'Directivo' ? (
@@ -608,6 +616,7 @@ export default function Personal() {
                 icon={<UpOutlined />}
               >
                 <FloatButton icon={<DownloadOutlined />} onClick={DescargarExcel} tooltip="Descargar tabla" />
+                <FloatButton icon={<FieldTimeOutlined />} onClick={irAdispinibilidades} type='primary' tooltip="Confirmar cambio disponibilidad" />
                 <FloatButton icon={<UsergroupAddOutlined />} type='primary' tooltip="Agregar personal"
                   onClick={() => showDrawer(
                     <FormSearchDni handleSearch={handleSearch} />,
@@ -617,7 +626,7 @@ export default function Personal() {
               </FloatButton.Group>
 
               {persistentSelectedKeys.length != 0 ?
-                <FloatButton.Group style={{ right: '12.5%' }}>
+                <FloatButton.Group style={{ right: '180px' }}>
                   <FloatButton icon={<CloseOutlined />} tooltip="Deseleccionar"
                     onClick={limpiarSeleccion} />
                   <FloatButton icon={<MailOutlined />} tooltip="Mandar mail a seleccionados"
