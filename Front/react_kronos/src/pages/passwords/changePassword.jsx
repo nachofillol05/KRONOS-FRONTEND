@@ -1,16 +1,32 @@
 import React from 'react';
 import './passwords.scss';
 import { Form, Input, Button, Typography } from 'antd';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate,useParams } from 'react-router-dom';
 
 const { Title } = Typography;
 
-export default function Login() {
-
+export default function ChangePassword() {
     const navigate = useNavigate();
+    const { token } = useParams();
 
     const onFinish = (values) => {
+        
         console.log('Received values of form: ', values);
+        fetch(`http://localhost:8000/api/forgot-password/${token}/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                new_password: values.new_password,
+                confirm_password: values.confirm_password,
+            }),
+        })
+            .then((response) => {
+                if (response.status === 200) {
+                    navigate('/login');
+                }
+            });
     };
 
     const onFinishFailed = (errorInfo) => {
@@ -21,7 +37,6 @@ export default function Login() {
         <div style={{ height: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center', backgroundColor: '#f0f2f5', padding: '20px' }}>
             <div style={{ maxWidth: '420px', width: '100%', padding: '40px', backgroundColor: '#fff', borderRadius: '8px', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}>
                 <Title level={2} style={{ textAlign: 'center', marginBottom: '24px' }}>Cambia tu contraseña</Title>
-
                 <Form
                     name="change-password"
                     layout="vertical"
@@ -30,19 +45,6 @@ export default function Login() {
                     autoComplete="off"
                 >
                     <Form.Item
-                        label="Contraseña anterior"
-                        name="current_password"
-                        rules={[
-                            {
-                                required: true,
-                                message: 'Por favor, introduce tu contraseña anterior',
-                            },
-                        ]}
-                    >
-                        <Input.Password size='large' placeholder='Introduce tu contraseña anterior' />
-                    </Form.Item>
-
-                    <Form.Item
                         label="Nueva contraseña"
                         name="new_password"
                         rules={[
@@ -50,6 +52,10 @@ export default function Login() {
                                 required: true,
                             message: 'Por favor, introduce tu nueva contraseña',
                         },
+                        {
+                            min: 8,
+                        message: 'Formato incorrecto: Minimo 8 caracteres',
+                    },
                         ]}
                     >
                         <Input.Password size='large' placeholder='Introduce tu nueva contraseña' />
@@ -83,10 +89,6 @@ export default function Login() {
                             Cambiar contraseña
                         </Button>
                     </Form.Item>
-
-                    <Button type="link" onClick={() => navigate('/forgot-password')} style={{ width: '100%', textAlign: 'center', padding: 0 }}>
-                        Olvidé mi contraseña
-                    </Button>
                 </Form>
             </div>
         </div>
