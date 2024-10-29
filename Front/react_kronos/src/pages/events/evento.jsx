@@ -72,7 +72,6 @@ export default function EventsPage() {
         setEventos(data);
       } catch (error) {
         setEventos([]);
-        showMessage('error', 'No hay eventos que cumplan los requerimientos');
         console.error("Error fetching data:", error.data);
       } finally {
         setLoading(false);
@@ -230,49 +229,37 @@ export default function EventsPage() {
   }
 
   return (
-    (isLoading ?
+    isLoading ? (
       <div className="spinner-container">
         <Spin size="large" />
       </div>
-      :
+    ) : (
       <>
         {contextHolder}
         <div className="contenedor-filtros contenedor-filtros-eventos">
           <Select
             size="large"
-            style={{
-              width: 200,
-            }}
+            style={{ width: 200 }}
             options={tipos}
             onChange={onChange}
             showSearch
             placeholder="Tipo de evento"
             allowClear
           />
-
           <DatePicker
             size="large"
             placeholder="Fecha"
-            style={{
-              width: 200,
-            }}
+            style={{ width: 200 }}
             onChange={onChangeDate}
             format={dateFormat}
             allowClear
           />
-
           <Input
             suffix={
-              <SearchOutlined
-                style={{
-                  color: 'rgba(0,0,0,.45)',
-                }}
-              />
+              <SearchOutlined style={{ color: 'rgba(0,0,0,.45)' }} />
             }
             size="large"
-            style={{
-              width: 300,
-            }}
+            style={{ width: 300 }}
             placeholder="Buscar Evento"
             onChange={onChangeNombre}
             allowClear
@@ -290,113 +277,113 @@ export default function EventsPage() {
             boxShadow: "0 0 0 3px #dddcdc",
           }}
         >
-          {eventos.map((event) => {
-            const eventStatus = (() => {
-              const eventStartDate = moment(event.startDate).utc().format('YYYY-MM-DD');
-              const eventEndDate = moment(event.endDate).utc().format('YYYY-MM-DD');
-              const todayDate = moment(today).utc().format('YYYY-MM-DD');
-
-              if (eventEndDate < todayDate) {
-                return "Finalizado";
-              } else if (eventStartDate > todayDate) {
-                return "Pendiente";
-              } else {
-                return "En curso";
-              }
-            })();
-
-            let botonAdherido = false;
-            const isUserAffiliated = event.affiliated_teachers.some(teacher => teacher.id === profileData.id);
-            const roles = event.roles.map(role => role.name);
-            const rol = sessionStorage.getItem('rol');
-            const mostrar = (() => {
-              if (eventStatus === "Pendiente" && !isUserAffiliated && roles.includes(rol)) {
-                return "Adherirse al evento";
-              }
-              if (eventStatus === "Pendiente" && isUserAffiliated && roles.includes(rol)) {
-                return "Ya estás adherido";
-              }
-              if ((eventStatus === "Finalizado" || eventStatus === "En curso") && !isUserAffiliated) {
-                return "";
-              }
-              if ((eventStatus === "Finalizado" || eventStatus === "En curso") && isUserAffiliated) {
-                botonAdherido = true;
-                return "Ya estás adherido";
-              }
-            })();
-            const closeDrawer = () => {
-              setOpen(false);
-              showMessage("success", "Evento actualizado correctamente");
-              setDrawerContent(null);
-            }
-            const closeDrawerDelete = () => {
-              setOpen(false);
-              showMessage("success", "Evento borrado correctamente");
-              setDrawerContent(null);
-            }
-            const showError = () => {
-              showMessage("error", "Fallo la actualización");
-            }
-
-
-            return (
-              <Card
-                key={event.id}
-                style={{
-                  display: "flex",
-                  flexFlow: "column",
-                  justifyContent: "space-between",
-                  height: "fit-content",
-                  height: "250px",
-                  filter: eventStatus === "Finalizado" ? "grayscale(100%) brightness(0.8)" : "grayscale(0%)",
-                }}
-                bordered
-                hoverable={eventStatus !== "Finalizado"}
-
-                actions={[
-                  <Tooltip title="Detalles del evento" style={{
-                    opacity: eventStatus === "Finalizado" ? 0.9 : 1,
-                    backgroundColor: eventStatus === "Finalizado" ? "#f1f2f4" : "white"
-                  }}  >
-
-                    <InfoCircleOutlined
-                      key="details"
-                      onClick={() => showDrawer(<InfoEvent estado={eventStatus} event={event} typeEvent={tipos} closeDrawer={closeDrawer} closeDrawerDelete={closeDrawerDelete} showError={showError} />, "Detalles del evento")}
-                    />
-                  </Tooltip>,
-
-                  mostrar && (
-                    <Tooltip
-                      style={{
-                        opacity: eventStatus === "Finalizado" ? 0.9 : 1,
-                        backgroundColor: eventStatus === "Finalizado" ? "#f1f2f4" : "white"
-                      }}
-                      title={mostrar}
-                      key="action"
-                    >
-
-                      {mostrar === "Adherirse al evento" ? (
-                        <UserAddOutlined onClick={() => showModal(event)} />
-                      ) : (
-                        <CheckCircleOutlined style={{ color: "green" }} onClick={() => showModalDesadherir(event, botonAdherido)} />
-                      )}
-                    </Tooltip>
-                  ),
-                ]}
-              >
-                <div style={{ display: "flex", flexDirection: "column", gap: 15 }}>
-                  <h6 style={{ color: 333, margin: 0 }}>{event.name}</h6>
-                  <p style={{ margin: 0 }}>
-                    <p style={{ margin: 0 }}>{event.eventType.name}</p>
-                    {moment.utc(event.startDate).format('DD/MM/YYYY')} - {moment.utc(event.endDate).format('DD/MM/YYYY')}
-                    <p style={{ margin: 0 }}>{eventStatus}</p>
-                  </p>
-                </div>
-              </Card>
-            );
-          })}
+          {eventos.length === 0 ? (
+            <div>No hay eventos</div>
+          ) : (
+            eventos.map((event) => {
+              const eventStatus = (() => {
+                const eventStartDate = moment(event.startDate).utc().format('YYYY-MM-DD');
+                const eventEndDate = moment(event.endDate).utc().format('YYYY-MM-DD');
+                const todayDate = moment(today).utc().format('YYYY-MM-DD');
+  
+                if (eventEndDate < todayDate) {
+                  return "Finalizado";
+                } else if (eventStartDate > todayDate) {
+                  return "Pendiente";
+                } else {
+                  return "En curso";
+                }
+              })();
+  
+              let botonAdherido = false;
+              const isUserAffiliated = event.affiliated_teachers.some(teacher => teacher.id === profileData.id);
+              const roles = event.roles.map(role => role.name);
+              const rol = sessionStorage.getItem('rol');
+              const mostrar = (() => {
+                if (eventStatus === "Pendiente" && !isUserAffiliated && roles.includes(rol)) {
+                  return "Adherirse al evento";
+                }
+                if (eventStatus === "Pendiente" && isUserAffiliated && roles.includes(rol)) {
+                  return "Ya estás adherido";
+                }
+                if ((eventStatus === "Finalizado" || eventStatus === "En curso") && !isUserAffiliated) {
+                  return "";
+                }
+                if ((eventStatus === "Finalizado" || eventStatus === "En curso") && isUserAffiliated) {
+                  botonAdherido = true;
+                  return "Ya estás adherido";
+                }
+              })();
+  
+              const closeDrawer = () => {
+                setOpen(false);
+                showMessage("success", "Evento actualizado correctamente");
+                setDrawerContent(null);
+              };
+              const closeDrawerDelete = () => {
+                setOpen(false);
+                showMessage("success", "Evento borrado correctamente");
+                setDrawerContent(null);
+              };
+              const showError = () => {
+                showMessage("error", "Fallo la actualización");
+              };
+  
+              return (
+                <Card
+                  key={event.id}
+                  style={{
+                    display: "flex",
+                    flexFlow: "column",
+                    justifyContent: "space-between",
+                    height: "fit-content",
+                    height: "250px",
+                    filter: eventStatus === "Finalizado" ? "grayscale(100%) brightness(0.8)" : "grayscale(0%)",
+                  }}
+                  bordered
+                  hoverable={eventStatus !== "Finalizado"}
+                  actions={[
+                    <Tooltip title="Detalles del evento" style={{
+                      opacity: eventStatus === "Finalizado" ? 0.9 : 1,
+                      backgroundColor: eventStatus === "Finalizado" ? "#f1f2f4" : "white"
+                    }}>
+  
+                      <InfoCircleOutlined
+                        key="details"
+                        onClick={() => showDrawer(<InfoEvent estado={eventStatus} event={event} typeEvent={tipos} closeDrawer={closeDrawer} closeDrawerDelete={closeDrawerDelete} showError={showError} />, "Detalles del evento")}
+                      />
+                    </Tooltip>,
+                    mostrar && (
+                      <Tooltip
+                        style={{
+                          opacity: eventStatus === "Finalizado" ? 0.9 : 1,
+                          backgroundColor: eventStatus === "Finalizado" ? "#f1f2f4" : "white"
+                        }}
+                        title={mostrar}
+                        key="action"
+                      >
+                        {mostrar === "Adherirse al evento" ? (
+                          <UserAddOutlined onClick={() => showModal(event)} />
+                        ) : (
+                          <CheckCircleOutlined style={{ color: "green" }} onClick={() => showModalDesadherir(event, botonAdherido)} />
+                        )}
+                      </Tooltip>
+                    ),
+                  ]}
+                >
+                  <div style={{ display: "flex", flexDirection: "column", gap: 15 }}>
+                    <h6 style={{ color: 333, margin: 0 }}>{event.name}</h6>
+                    <p style={{ margin: 0 }}>
+                      <p style={{ margin: 0 }}>{event.eventType.name}</p>
+                      {moment.utc(event.startDate).format('DD/MM/YYYY')} - {moment.utc(event.endDate).format('DD/MM/YYYY')}
+                      <p style={{ margin: 0 }}>{eventStatus}</p>
+                    </p>
+                  </div>
+                </Card>
+              );
+            })
+          )}
         </div>
-
         {sessionStorage.getItem('rol') === 'Directivo' ? (
           <>
             <FloatButton
@@ -423,7 +410,7 @@ export default function EventsPage() {
         >
           <div style={{ width: "100%", height: "100%" }}>{drawerContent}</div>
         </Drawer>
-      </>
-    )
+      </> 
+          )
   );
 }

@@ -218,10 +218,7 @@ export default function Personal() {
     setDrawerContent(null);
     form.resetFields();
   };
-  const handleSubmit = (form) => {
-    form
-      .validateFields()
-      .then((values) => {
+  const handleSubmit = (values) => {
         const body = JSON.stringify({
           first_name: values.nombre,
           last_name: values.apellido,
@@ -247,17 +244,10 @@ export default function Personal() {
 
             return response.json();
           } else if (response.status === 400) {
-            showMessage("error", "Mail ya registrado");
+            console.log("respoooooooonse",response)
+            showMessage("error", response.text);
           }
         })
-
-      })
-      .catch((errorInfo) => {
-        setMessageConfig({
-          type: "error",
-          content: "Por favor, complete todos los campos.",
-        });
-      });
   };
 
   const showMessage = (type, content) => {
@@ -604,6 +594,9 @@ export default function Personal() {
           filterDropdownOpen={true}
           filtered={true}
           rowSelection={rowSelection}
+          locale={{
+            emptyText: 'No hay personales disponibles', 
+          }}
         />
         {
           sessionStorage.getItem('rol') === 'Directivo' ? (

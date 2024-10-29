@@ -273,6 +273,9 @@ export default function Materias() {
             columns={expandColumns}
             dataSource={record.anidadas}
             pagination={false}
+            locale={{
+                emptyText: 'No hay datos disponibles', 
+              }}
             onRow={(record) => {
                 const parent = materias.find(materia =>
                     materia.courses && materia.courses.some(child => child.id === record.id)
@@ -300,6 +303,7 @@ export default function Materias() {
                     },
                 };
             }}
+            
         />
     );
 
@@ -496,6 +500,9 @@ export default function Materias() {
                         expandedRowRender,
                         defaultExpandedRowKeys: ['0'],
                     }}
+                    locale={{
+                        emptyText: 'No hay materias disponibles', 
+                      }}
                 />
 
 
