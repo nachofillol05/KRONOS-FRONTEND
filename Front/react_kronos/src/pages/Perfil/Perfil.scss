@@ -16,7 +16,7 @@
   border-radius: 0;
 }
 
-.CardProfile:where(.css-dev-only-do-not-override-1bci7t8).ant-card .ant-card-body  {
+.CardProfile .ant-card-body  {
   padding: 0 !important;
 }
 
@@ -40,4 +40,8 @@
   .ant-upload-icon{
     width: 50px;
   }
+}
+
+.ant-form-item-label {
+  margin: auto;
 }

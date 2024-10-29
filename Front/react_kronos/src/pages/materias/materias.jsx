@@ -256,14 +256,14 @@ export default function Materias() {
                 <div style={{ width: '100%', height: '24px', backgroundColor: text, borderRadius: '4px' }} />
             )
         },
-        //{ title: 'Accion', render: () => <Button size='small' style={{ display: 'flex', justifyContent: 'center', margin: 'auto' }} type='link' icon={<EditOutlined />} />, key: 'action', width: '10%', }
+        { title: 'Accion', render: () => <Button size='default' style={{ display: 'flex', justifyContent: 'center', margin: 'auto' }} type='link' icon={<EditOutlined />} />, key: 'action', width: '10%', }
 
     ];
 
     const expandColumns = [
         { title: 'Curso', dataIndex: 'course', key: 'course', width: '10%', },
         { title: 'Profesores', dataIndex: 'teachers', key: 'teachers' },
-        //{ title: 'Accion', render: () => <Button size='small' style={{ display: 'flex', justifyContent: 'center', margin: 'auto' }} type='link' icon={<EditOutlined />} />, key: 'action', width: '15%', }
+        { title: 'Accion', render: () => <Button size='default' style={{ display: 'flex', justifyContent: 'center', margin: 'auto' }} type='link' icon={<EditOutlined />} />, key: 'action', width: '10%', }
     ]
 
     const expandedRowRender = (record) => (
