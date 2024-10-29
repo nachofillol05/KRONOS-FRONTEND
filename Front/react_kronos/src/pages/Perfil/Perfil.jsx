@@ -74,7 +74,6 @@ export default function Profile() {
 
 
   const handleFileChange = (e) => {
-    console.log("aaaaaaaaaaaaaaaaaaaaaaaaa ", URL.createObjectURL(e.file.originFileObj))
     setFile(e.file);
     setProfilePicture(URL.createObjectURL(e.file.originFileObj));
   };
@@ -128,7 +127,7 @@ export default function Profile() {
       .catch((error) => console.error('Error fetching data:', error));
   }, [actualizar]);
   useEffect(() => {
-    
+
     const data = profileData;
     setTipoDocumento(data.documentType?.name || 'Documento')
     form.setFieldsValue({
@@ -221,7 +220,7 @@ export default function Profile() {
       });
 
       if (!profileResponse.ok) {
-        console.log( await profileResponse.json())
+        console.log(await profileResponse.json())
         throw new Error('NO se pudieron actualizar los campos');
       }
       const profileDataResponse = await profileResponse.json();
@@ -363,8 +362,8 @@ export default function Profile() {
                         <Upload openFileDialogOnClick={false} className='upload-profile' accept=".jpg,.jpeg,.png,.webp" onChange={handleFileChange} maxCount={1}>
                           <Button
                             icon={<UploadOutlined />}>
-                              Click to Upload
-                            </Button>
+                            Subir imagen
+                          </Button>
                         </Upload> : null}
                     </Flex>
                   </Form.Item>
@@ -381,7 +380,7 @@ export default function Profile() {
                     }}
                   >
                     <Form.Item
-                      style={{width: '275xp'}}
+                      style={{ width: '275xp' }}
                       layout='vertical'
                       label="Nombre"
                       name="first_name"
@@ -395,7 +394,7 @@ export default function Profile() {
                     </Form.Item>
 
                     <Form.Item
-                    style={{width: '275xp'}}
+                      style={{ width: '275xp' }}
                       label="Apellido"
                       name="last_name"
                       layout='vertical'
@@ -409,7 +408,7 @@ export default function Profile() {
                     </Form.Item>
 
                     <Form.Item
-                    style={{width: '275xp'}}
+                      style={{ width: '275xp' }}
                       label="Teléfono"
                       name="phone"
                       layout='vertical'
@@ -424,7 +423,7 @@ export default function Profile() {
                     </Form.Item>
 
                     <Form.Item
-                    style={{width: '275xp'}}
+                      style={{ width: '275xp' }}
                       label="Email"
                       name="email"
                       layout='vertical'
@@ -439,26 +438,26 @@ export default function Profile() {
 
                     <Flex>
                       <Form.Item
-                      layout='vertical'
-                      label={tipoDocumento}
-                      style={{width: '275xp'}}
+                        layout='vertical'
+                        label={tipoDocumento}
+                        style={{ width: '275xp' }}
                         name='document'
                         className='formItemProfile'
                       >
-                      
+
                         <Input
                           size='large'
                           style={{ ...customDisabledStyle, paddingLeft: 0 }}
-                          disabled={!isEditing}
+                          disabled={true}
                         />
                       </Form.Item>
                     </Flex>
-                    <Form.Item 
-                    style={{width: '275xp'}}
-                    label="Género" 
-                    name="gender" 
-                    layout='vertical' 
-                    className="formItemProfile">
+                    <Form.Item
+                      style={{ width: '275xp' }}
+                      label="Género"
+                      name="gender"
+                      layout='vertical'
+                      className="formItemProfile">
                       {isEditing ? (
                         <Select style={{ height: '40px' }} options={generos} size='large' />
                       ) : (
@@ -470,40 +469,40 @@ export default function Profile() {
                       )}
                     </Form.Item>
                     <Form.Item
-                    style={{width: '275xp'}}
-                    label="Nacionalidad" 
-                    name="nationality" 
-                    layout='vertical' 
-                    className="formItemProfile">
+                      style={{ width: '275xp' }}
+                      label="Nacionalidad"
+                      name="nationality"
+                      layout='vertical'
+                      className="formItemProfile">
                       {isEditing ? (
-                        <Select style={{ height: '40px'}} options={nationalities} size='large' />
+                        <Select style={{ height: '40px' }} options={nationalities} size='large' />
                       ) : (
                         <Input
                           size='large'
-                          style={!isEditing ? customDisabledStyle : { height: '40px'}}
+                          style={!isEditing ? customDisabledStyle : { height: '40px' }}
                           disabled={!isEditing}
                         />
                       )}
                     </Form.Item>
 
-                    <Form.Item 
-                    style={{width: '275xp'}}
-                    label="Provincia" 
-                    name="province" 
-                    layout='vertical' 
-                    className="formItemProfile">
+                    <Form.Item
+                      style={{ width: '275xp' }}
+                      label="Provincia"
+                      name="province"
+                      layout='vertical'
+                      className="formItemProfile">
                       <Input
                         size='large'
                         style={!isEditing ? customDisabledStyle : { height: '40px' }}
                         disabled={!isEditing}
                       />
                     </Form.Item>
-                    <Form.Item 
-                    label="Ciudad" 
-                    name="city" 
-                    layout='vertical' 
-                    style={{width: '275xp'}}                    
-                    className="formItemProfile">
+                    <Form.Item
+                      label="Ciudad"
+                      name="city"
+                      layout='vertical'
+                      style={{ width: '275xp' }}
+                      className="formItemProfile">
                       <Input
                         size='large'
                         style={!isEditing ? customDisabledStyle : { height: '40px' }}
@@ -512,24 +511,24 @@ export default function Profile() {
                     </Form.Item>
 
                     <Space.Compact>
-                      <Form.Item 
-                      style={{width: '275xp'}} 
-                      label="Calle" 
-                      name="street" 
-                      layout='vertical' 
-                      className="formItemProfile">
+                      <Form.Item
+                        style={{ width: '275xp' }}
+                        label="Calle"
+                        name="street"
+                        layout='vertical'
+                        className="formItemProfile">
                         <Input
                           size='large'
                           style={!isEditing ? customDisabledStyle : {}}
                           disabled={!isEditing}
                         />
                       </Form.Item>
-                      <Form.Item 
-                      label=" "
-                      style={{ width: 100 }} 
-                      name="streetNumber" 
-                      layout='vertical' 
-                      className="formItemProfile">
+                      <Form.Item
+                        label=" "
+                        style={{ width: 100 }}
+                        name="streetNumber"
+                        layout='vertical'
+                        className="formItemProfile">
                         <Input
                           size='large'
                           type="number"
@@ -539,12 +538,12 @@ export default function Profile() {
                       </Form.Item>
 
                     </Space.Compact>
-                    <Form.Item 
-                    style={{width: '275xp'}}
-                    label="Código postal" 
-                    name="postalCode" 
-                    layout='vertical' 
-                    className="formItemProfile">
+                    <Form.Item
+                      style={{ width: '275xp' }}
+                      label="Código postal"
+                      name="postalCode"
+                      layout='vertical'
+                      className="formItemProfile">
                       <Input
                         size='large'
                         type="number"
@@ -568,7 +567,7 @@ export default function Profile() {
               </Form>
             </Card>
           </Tabs.TabPane>
-          <Tabs.TabPane style={{ width: 600 }} tab="Datos del colegio" key="2">
+          <Tabs.TabPane tab="Datos del colegio" key="2">
             <Card
               className='CardProfile'
               title='Información del Colegio'
@@ -579,73 +578,114 @@ export default function Profile() {
                 style={{ height: '60vh', overflowY: 'auto', padding: '25px' }}
 
               >
-                <Form.Item name="name">
-                  <Flex align='center' justify='space-between' style={{ width: '100%', height: '50px' }}>
-                    <label >Logo del colegio:</label>
-                    {isEditing ?
-                      <Upload className='upload-profile' accept=".jpg,.jpeg,.png" maxCount={1}>
-                        <Button
-                          icon={<UploadOutlined />}>Click to Upload</Button>
-                      </Upload> : null}
-                    <img
-                      width={50}
-                      height={50}
-                      src={escuelaCompleta || "https://via.placeholder.com/150"}
-                      style={{ borderRadius: '50%' }}
-                    />
-                  </Flex>
-                </Form.Item>
-                <Form.Item gap={25} style={{ width: '100%' }} layout='vertical' label="Nombre" name="name" className="formItemProfile" >
-                  <Input
-                    width={250}
-                    size='large'
-                    style={!isEditing ? customDisabledStyle : { flexGrow: 1, height: '40px' }}
-                    disabled={!isEditing}
-                  />
-                </Form.Item>
-                <Form.Item label="Abreviacion" style={{ width: '100%' }} name="abreviacion" layout='vertical' className="formItemProfile">
-                  <Input
-                    size='large'
-                    autoSize
-                    style={!isEditing ? customDisabledStyle : { flexGrow: 1, height: '40px' }}
-                    disabled={!isEditing}
-                  />
-                </Form.Item>
-                <Form.Item label="Email" name="email" layout='vertical' style={{ width: '100%' }} className="formItemProfile">
-                  <Input
-                    size='large'
-                    autoSize
-                    style={!isEditing ? customDisabledStyle : { height: '40px' }}
-                    disabled={!isEditing}
-                  />
-                </Form.Item>
+                <Flex align='center'>
+                  <Form.Item name="school_picture">
+                    <Flex vertical align='center' justify='space-between' style={{ height: "100%" }} gap={30}>
+                      <label >Logo del colegio:</label>
+                      <div style={{ borderRadius: '50%', width: 200, height: 200 }}>
+                        <img
+                          src={escuelaCompleta || "https://via.placeholder.com/150"}
+                          style={{ objectFit: 'cover', width: '100%', height: '100%', borderRadius: '50%' }}
+                        />
+                      </div>
+                      {isEditing ?
+                        <Upload openFileDialogOnClick={false} className='upload-profile' accept=".jpg,.jpeg,.png,.webp" onChange={handleFileChange} maxCount={1}>
+                          <Button
+                            icon={<UploadOutlined />}>
+                            Subir imagen
+                          </Button>
+                        </Upload> : null}
+                    </Flex>
+                  </Form.Item>
 
-                <Flex gap={25}>
-                  <Space.Compact style={{ width: '100%' }}>
-                    <Form.Item style={{ flexGrow: 1 }} label="Calle" name="street" layout='vertical' className="formItemProfile">
+                  <div
+                    style={{
+                      marginLeft: 50,
+                      width: "100%",
+                      display: "grid",
+                      gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
+                      gap: 30,
+                    }}
+                  >
+                  <Form.Item
+                    style={{ width: '275xp' }}
+                    layout='vertical'
+                    label="Nombre"
+                    name="name"
+                    className="formItemProfile" >
                       <Input
                         size='large'
-                        style={!isEditing ? customDisabledStyle : {}}
-                        disabled={!isEditing}
+                        style={!isEditing ? customDisabledStyle : { height: '40px' }}
+                        disabled={true}
                       />
-                    </Form.Item>
-                    <Form.Item style={{ width: 100 }} name="streetNumber" layout='vertical' className="formItemProfile">
-                      <Input
-                        size='large'
-                        type="number"
-                        style={!isEditing ? customDisabledStyle : {}}
-                        disabled={!isEditing}
-                      />
-                    </Form.Item>
-                  </Space.Compact>
-                  <Form.Item label="Código postal" name="postalCode" layout='vertical' className="formItemProfile">
+                  </Form.Item>
+                  <Form.Item 
+                  label="Abreviacion" 
+                  style={{ width: '275xp' }}
+                  name="abreviacion" 
+                  layout='vertical' 
+                  className="formItemProfile">
                     <Input
                       size='large'
-                      type="number"
-                      style={!isEditing ? customDisabledStyle : {}}
+                      autoSize
+                      style={!isEditing ? customDisabledStyle : { flexGrow: 1, height: '40px' }}
                       disabled={!isEditing}
                     />
                   </Form.Item>
+                  <Form.Item 
+                  label="Email" 
+                  name="email" 
+                  layout='vertical' 
+                  style={{ width: '275xp' }}
+                  className="formItemProfile">
+                    <Input
+                      size='large'
+                      autoSize
+                      style={!isEditing ? customDisabledStyle : { height: '40px' }}
+                      disabled={true}
+                    />
+                  </Form.Item>
+                  <Space.Compact>
+                      <Form.Item 
+                      style={{width: 'fit-content'}} 
+                      label="Calle" 
+                      name="street" 
+                      layout='vertical' 
+                      className="formItemProfile">
+                        <Input
+                          size='large'
+                          style={!isEditing ? customDisabledStyle : {}}
+                          disabled={!isEditing}
+                        />
+                      </Form.Item>
+                      <Form.Item 
+                      label="Numero"
+                      style={{ width: 100 }} 
+                      name="streetNumber" 
+                      layout='vertical' 
+                      className="formItemProfile">
+                        <Input
+                          size='large'
+                          type="number"
+                          style={!isEditing ? customDisabledStyle : {}}
+                          disabled={!isEditing}
+                        />
+                      </Form.Item>
+
+                  </Space.Compact>
+                    <Form.Item 
+                    style={{ width: '275xp' }}
+                    label="Código postal" 
+                    name="postalCode" 
+                    layout='vertical' 
+                    className="formItemProfile">
+                      <Input
+                        size='large'
+                        style={!isEditing ? customDisabledStyle : {}}
+                        disabled={!isEditing}
+                      />
+                    </Form.Item>
+                  </div>
                 </Flex>
               </Form>
             </Card>
