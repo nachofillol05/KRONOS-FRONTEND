@@ -26,7 +26,6 @@ export default function Profile() {
 
   const showModal = () => {
     setIsModalVisible(true);
-    console.log("aaaaaaaca cierra")
   };
   useEffect(() => {
     console.log(open, "  open")
@@ -52,7 +51,7 @@ export default function Profile() {
       })
         .then((response) => {
           if (!response.ok) {
-            message.error('Contraseña incorrecta');
+            message.error('Contraseña actual incorrecta');
             return
           }
           return response.json();
@@ -192,10 +191,9 @@ export default function Profile() {
 
   const handleFinishUser = async (values) => {
     console.log(values)
-    // Enviar los datos del perfil
-    const profileData = {
+    const body = {
       document: values.document,
-      documentType: values.documentType,
+      documentType: profileData.documentType.id,
       email: values.email,
       first_name: values.first_name,
       gender: values.gender,
@@ -210,7 +208,7 @@ export default function Profile() {
         streetNumber: values.streetNumber,
       }
     };
-    console.log('Form values:', profileData);
+    console.log('Form values:', body);
     try {
       const profileResponse = await fetch('http://127.0.0.1:8000/api/profile/', {
         method: 'PUT',
@@ -219,10 +217,11 @@ export default function Profile() {
           'Authorization': 'Token ' + localStorage.getItem('token'),
           'School-ID': sessionStorage.getItem('actual_school'),
         },
-        body: JSON.stringify(profileData),
+        body: JSON.stringify(body),
       });
 
       if (!profileResponse.ok) {
+        console.log( await profileResponse.json())
         throw new Error('NO se pudieron actualizar los campos');
       }
       const profileDataResponse = await profileResponse.json();
@@ -446,6 +445,7 @@ export default function Profile() {
                         name='document'
                         className='formItemProfile'
                       >
+                      
                         <Input
                           size='large'
                           style={{ ...customDisabledStyle, paddingLeft: 0 }}

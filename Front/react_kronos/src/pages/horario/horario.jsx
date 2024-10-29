@@ -253,7 +253,7 @@ function Horario() {
     }, []);
 
     useEffect(()=>{
-        if(editar){
+        if(editar && (tempCourse || tempDate || tempSelectedKeys || tempDate)){
             limpiarFiltros();
         }
     },[editar])
