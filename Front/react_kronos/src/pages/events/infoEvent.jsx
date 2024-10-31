@@ -158,17 +158,17 @@ export default function InfoWorker({ event, estado, closeDrawer, typeEvent, clos
 
     return (
         <Form
+        layout='vertical'
             form={form}
         >
-            <Flex vertical style={{ width: '100%' }}>
-                <Form.Item className="formInfoEventItem" label="Nombre" name="name" layout='horizontal'>
+                <Form.Item className="formInfoEventItem" label="Nombre" name="name" layout='vertical'>
                     <Input
                         size='large'
                         style={!isEditing ? customDisabledStyle : { height: '40px' }}
                         disabled={!isEditing}
                     />
                 </Form.Item>
-                <Form.Item className="formInfoEventItem" layout="horizontal" label="Tipo de evento" name="eventType" style={{ width: '100%' }}>
+                <Form.Item className="formInfoEventItem" layout="vertical" label="Tipo de evento" name="eventType" style={{ width: '100%' }}>
                     {isEditing ? (
                         <Select
                             style={{ width: '100%', height: '40px' }}
@@ -183,7 +183,7 @@ export default function InfoWorker({ event, estado, closeDrawer, typeEvent, clos
                         />
                     )}
                 </Form.Item>
-                <Form.Item className="formInfoEventItem" layout="horizontal" label="Roles dirigido" name="Rolesdirigido" style={{ width: '100%' }}>
+                <Form.Item className="formInfoEventItem" layout="vertical" label="Roles dirigido" name="Rolesdirigido" style={{ width: '100%' }}>
                     {isEditing ? (
                         <FilterDropdownTable options={rolesList} tempSelectedKeys={rolesList} setTempSelectedKeys={setRolesList}  placeholder={'Roles: '} />
                     ) : (
@@ -194,24 +194,23 @@ export default function InfoWorker({ event, estado, closeDrawer, typeEvent, clos
                         />
                     )}
                 </Form.Item>
-                <Form.Item className="formInfoEventItem" label="Descripción" name="description" layout='horizontal'>
+                <Form.Item className="formInfoEventItem" label="Descripción" name="description" layout='vertical'>
                 <TextArea
-                    style={!isEditing ? customDisabledStyle : { height: 'auto' }}
+                    style={!isEditing ? customDisabledStyle : { height: '100px' }}
                     autoSize={{ minRows: 1, maxRows: 3 }}
                     disabled={!isEditing}
                     size="large"
-                    allowClear
                     maxLength={255}
                     />
                 </Form.Item>
-                <Form.Item className="formInfoEventItem" label="Fechas" name="dateRange" layout='horizontal'>
+                <Form.Item className="formInfoEventItem" label="Fechas" name="dateRange" layout='vertical'>
                     <Input
                         size='large'
                         style={customDisabledStyle}
                         disabled={true}
                     />
                 </Form.Item>
-                <Form.Item className="formInfoEventItem" label="Duracion" name="duration" layout='horizontal'>
+                <Form.Item className="formInfoEventItem" label="Duracion" name="duration" layout='vertical'>
                     <Input
                         size='large'
                         style={customDisabledStyle}
@@ -242,7 +241,6 @@ export default function InfoWorker({ event, estado, closeDrawer, typeEvent, clos
                         )}
                     />
                 </div>
-            </Flex>
             {sessionStorage.getItem('rol') === 'Directivo' ? (
                 <Flex gap={'10px'} justify='end' style={{ marginBlock: '20px' }}>
                     <Button

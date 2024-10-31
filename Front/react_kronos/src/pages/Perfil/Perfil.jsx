@@ -344,9 +344,6 @@ export default function Profile() {
                 onFinish={handleFinishUser}
                 style={{ height: '60vh', overflowY: 'auto', padding: '25px' }}
               >
-
-
-
                 <Flex>
                   <Form.Item name="profile_picture">
                     <Flex vertical align='center' justify='space-between' style={{ height: "100%" }} gap={30}>
@@ -359,12 +356,10 @@ export default function Profile() {
                         />
                       </div>
                       {isEditing ?
-                        <Upload openFileDialogOnClick={false} className='upload-profile' accept=".jpg,.jpeg,.png,.webp" onChange={handleFileChange} maxCount={1}>
-                          <Button
-                            icon={<UploadOutlined />}>
-                            Subir imagen
-                          </Button>
-                        </Upload> : null}
+                        <Upload className='upload-profile' accept=".jpg,.jpeg,.png,.webp" onChange={handleFileChange} maxCount={1}>
+                          <Button icon={<UploadOutlined />}>Subir imagen</Button>
+                        </Upload>
+                        : null}
                     </Flex>
                   </Form.Item>
 
@@ -607,63 +602,63 @@ export default function Profile() {
                       gap: 30,
                     }}
                   >
-                  <Form.Item
-                    style={{ width: '275xp' }}
-                    layout='vertical'
-                    label="Nombre"
-                    name="name"
-                    className="formItemProfile" >
+                    <Form.Item
+                      style={{ width: '275xp' }}
+                      layout='vertical'
+                      label="Nombre"
+                      name="name"
+                      className="formItemProfile" >
                       <Input
                         size='large'
                         style={!isEditing ? customDisabledStyle : { height: '40px' }}
                         disabled={true}
                       />
-                  </Form.Item>
-                  <Form.Item 
-                  label="Abreviacion" 
-                  style={{ width: '275xp' }}
-                  name="abreviacion" 
-                  layout='vertical' 
-                  className="formItemProfile">
-                    <Input
-                      size='large'
-                      autoSize
-                      style={!isEditing ? customDisabledStyle : { flexGrow: 1, height: '40px' }}
-                      disabled={!isEditing}
-                    />
-                  </Form.Item>
-                  <Form.Item 
-                  label="Email" 
-                  name="email" 
-                  layout='vertical' 
-                  style={{ width: '275xp' }}
-                  className="formItemProfile">
-                    <Input
-                      size='large'
-                      autoSize
-                      style={!isEditing ? customDisabledStyle : { height: '40px' }}
-                      disabled={true}
-                    />
-                  </Form.Item>
-                  <Space.Compact>
-                      <Form.Item 
-                      style={{width: 'fit-content'}} 
-                      label="Calle" 
-                      name="street" 
-                      layout='vertical' 
+                    </Form.Item>
+                    <Form.Item
+                      label="Abreviacion"
+                      style={{ width: '275xp' }}
+                      name="abreviacion"
+                      layout='vertical'
                       className="formItemProfile">
+                      <Input
+                        size='large'
+                        autoSize
+                        style={!isEditing ? customDisabledStyle : { flexGrow: 1, height: '40px' }}
+                        disabled={!isEditing}
+                      />
+                    </Form.Item>
+                    <Form.Item
+                      label="Email"
+                      name="email"
+                      layout='vertical'
+                      style={{ width: '275xp' }}
+                      className="formItemProfile">
+                      <Input
+                        size='large'
+                        autoSize
+                        style={!isEditing ? customDisabledStyle : { height: '40px' }}
+                        disabled={true}
+                      />
+                    </Form.Item>
+                    <Space.Compact>
+                      <Form.Item
+                        style={{ width: 'fit-content' }}
+                        label="Calle"
+                        name="street"
+                        layout='vertical'
+                        className="formItemProfile">
                         <Input
                           size='large'
                           style={!isEditing ? customDisabledStyle : {}}
                           disabled={!isEditing}
                         />
                       </Form.Item>
-                      <Form.Item 
-                      label="Numero"
-                      style={{ width: 100 }} 
-                      name="streetNumber" 
-                      layout='vertical' 
-                      className="formItemProfile">
+                      <Form.Item
+                        label="Numero"
+                        style={{ width: 100 }}
+                        name="streetNumber"
+                        layout='vertical'
+                        className="formItemProfile">
                         <Input
                           size='large'
                           type="number"
@@ -672,13 +667,13 @@ export default function Profile() {
                         />
                       </Form.Item>
 
-                  </Space.Compact>
-                    <Form.Item 
-                    style={{ width: '275xp' }}
-                    label="Código postal" 
-                    name="postalCode" 
-                    layout='vertical' 
-                    className="formItemProfile">
+                    </Space.Compact>
+                    <Form.Item
+                      style={{ width: '275xp' }}
+                      label="Código postal"
+                      name="postalCode"
+                      layout='vertical'
+                      className="formItemProfile">
                       <Input
                         size='large'
                         style={!isEditing ? customDisabledStyle : {}}
@@ -770,6 +765,8 @@ export default function Profile() {
             </Form.Item>
           </Form>
         </Modal>
+
+
       </>
     )
   );

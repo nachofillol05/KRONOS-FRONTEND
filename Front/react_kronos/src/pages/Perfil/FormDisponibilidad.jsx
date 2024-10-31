@@ -151,7 +151,7 @@ export default function FormDisponibilidad({ onClose }) {
                 style={{ position: 'absolute', bottom: '50px', marginInline: '25px' }}
                 message="Atención!"
                 description="Esta información es de carácter legal, asegúrese de que sea correcta, aunque podrá ser modificada en el momento que lo desee"
-                type="warning"
+                type="info"
             />
             <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px' }}>
                 <Tooltip title="Volver">

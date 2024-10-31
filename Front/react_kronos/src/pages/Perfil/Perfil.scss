@@ -30,11 +30,6 @@
   flex-direction: column;
   width: 60%;
   flex-grow: 1;
-  .ant-upload-list{
-    padding-inline: 20px;
-    width:80%;
-    flex-grow: 1;
-  }
   .ant-upload-icon{
     width: 50px;
   }
@@ -42,4 +37,12 @@
 
 .ant-form-item-label {
   margin: auto;
+}
+
+.ant-upload-list .ant-upload-list-text{
+  display: none !important;
+}
+
+:where(.css-dev-only-do-not-override-1sd94qb).ant-upload-wrapper .ant-upload-list .ant-upload-list-item-container{
+  display: none !important;
 }

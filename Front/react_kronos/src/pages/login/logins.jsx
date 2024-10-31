@@ -68,7 +68,7 @@ export default function Login() {
     }
     return (
         <div className="login-container">
-            <h1>Iniciar Sesión</h1>
+            <h1 style={{ color: 'gray' }}>Iniciar Sesión</h1>
             <form onSubmit={handlerLogin}>
                 <div>
                     <Input label="Usuario" placeholder="pepegonzales@kronos.com" type="email" inputRef={inputUserRef} />

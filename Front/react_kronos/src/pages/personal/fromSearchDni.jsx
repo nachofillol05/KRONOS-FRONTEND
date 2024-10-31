@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Form, Select, Input, Space, Upload, message, Spin, Flex,Modal,Checkbox } from 'antd';
+import { Button, Form, Select, Input, Space, Upload, message, Spin, Flex, Modal, Checkbox, Alert, Tooltip } from 'antd';
 import DropTable from '../../components/filterDropTable/FilterDropTable';
-import { SearchOutlined, UploadOutlined } from '@ant-design/icons';
+import { SearchOutlined, UploadOutlined, InfoCircleOutlined } from '@ant-design/icons';
 import { useRef } from 'react';
 
 export default function FormSearchDni({ handleSearch }) {
@@ -11,7 +11,7 @@ export default function FormSearchDni({ handleSearch }) {
     const [defaultTipoDocumento, setDefaultTipoDocumento] = useState(1);
     const [file, setFile] = useState(null);
     const [loading, setLoading] = useState(false);
-    const fileRef = useRef(null); 
+    const fileRef = useRef(null);
     const [createdPersonals, setCreatedPersonals] = useState([]);
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [selectedRoles, setSelectedRoles] = useState([]);
@@ -22,7 +22,8 @@ export default function FormSearchDni({ handleSearch }) {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
-            }})
+            }
+        })
             .then(response => response.json())
             .then(data => {
                 const datos = data.map((tipo) => ({
@@ -37,31 +38,31 @@ export default function FormSearchDni({ handleSearch }) {
 
     const descargarExcel = () => {
         fetch('http://127.0.0.1:8000/api/teacher_word/', {
-          method: 'GET',
-          headers: {
-            'Authorization': 'Token ' + localStorage.getItem('token'),
-            'School-ID': sessionStorage.getItem('actual_school'),
-          }
+            method: 'GET',
+            headers: {
+                'Authorization': 'Token ' + localStorage.getItem('token'),
+                'School-ID': sessionStorage.getItem('actual_school'),
+            }
         })
-        .then((response) => {
-          if (!response.ok) {
-            throw new Error("Error al descargar el archivo: " + response.statusText);
-          }
-          return response.blob();
-        })
-        .then((blob) => {
-          const url = window.URL.createObjectURL(blob);
-          const link = document.createElement('a');
-          link.href = url;
-          link.setAttribute('download', 'Personal_plantilla.xlsx'); 
-          document.body.appendChild(link);
-          link.click();
-          link.remove();
-          window.URL.revokeObjectURL(url);
-        })
-        .catch((error) => {
-          console.error("Error al descargar el archivo:", error);
-        });
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error("Error al descargar el archivo: " + response.statusText);
+                }
+                return response.blob();
+            })
+            .then((blob) => {
+                const url = window.URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.setAttribute('download', 'Personal_plantilla.xlsx');
+                document.body.appendChild(link);
+                link.click();
+                link.remove();
+                window.URL.revokeObjectURL(url);
+            })
+            .catch((error) => {
+                console.error("Error al descargar el archivo:", error);
+            });
     };
 
     useEffect(() => {
@@ -116,52 +117,52 @@ export default function FormSearchDni({ handleSearch }) {
             },
             body: formData
         })
-        .then(response => {
-            setLoading(false);  // Desactivar loading tras la respuesta
-            if (response.status === 400) {
-                message.error('Error al subir el archivo');
-                return;  // Detener si hubo error
-            }
-            return response.json();
-        })
-        .then(data => {
-            if (data?.results) {
-                console.log('Resultados de la subida:', data.results);
-                const createdPersonals = [];
-                data.results.forEach(result => {
-                    if (Array.isArray(result.Response)) {
-                        if (result.Response[0]) {
-                            console.log('Personal creado:', result);
-                            //message.success(`Se creó el personal con el documento: ${result.Documento}`);
-                            createdPersonals.push(`${result.Documento} - ${result.Response[1].first_name} ${result.Response[1].last_name}`);
+            .then(response => {
+                setLoading(false);  // Desactivar loading tras la respuesta
+                if (response.status === 400) {
+                    message.error('Error al subir el archivo');
+                    return;  // Detener si hubo error
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data?.results) {
+                    console.log('Resultados de la subida:', data.results);
+                    const createdPersonals = [];
+                    data.results.forEach(result => {
+                        if (Array.isArray(result.Response)) {
+                            if (result.Response[0]) {
+                                console.log('Personal creado:', result);
+                                //message.success(`Se creó el personal con el documento: ${result.Documento}`);
+                                createdPersonals.push(`${result.Documento} - ${result.Response[1].first_name} ${result.Response[1].last_name}`);
+                            } else {
+                                message.error(`No se creó el documento: ${result.Documento} por DNI o Mail repetido`);
+                            }
                         } else {
-                            message.error(`No se creó el documento: ${result.Documento} por DNI o Mail repetido`);
+                            message.error(`Documento: ${result.Documento}, Error al intentar crear el personal`);
                         }
-                    } else {
-                        message.error(`Documento: ${result.Documento}, Error al intentar crear el personal`);
-                    }
-                });
-                // Aquí puedes actualizar el estado con la lista de documentos creados
-                setCreatedPersonals(createdPersonals);
-            } else {
-                console.error('Error en la respuesta:', data.error);
-                message.error('Error en el procesamiento del archivo.');
-            }
-        })
-        .catch(error => {
-            setLoading(false);  // Asegurarse de desactivar loading si hay error
-            console.error('Error al subir el archivo:', error);
-            message.error('Error al subir el archivo, intente nuevamente.');
-        });
+                    });
+                    // Aquí puedes actualizar el estado con la lista de documentos creados
+                    setCreatedPersonals(createdPersonals);
+                } else {
+                    console.error('Error en la respuesta:', data.error);
+                    message.error('Error en el procesamiento del archivo.');
+                }
+            })
+            .catch(error => {
+                setLoading(false);  // Asegurarse de desactivar loading si hay error
+                console.error('Error al subir el archivo:', error);
+                message.error('Error al subir el archivo, intente nuevamente.');
+            });
     };
     const handleCheckboxChange = (checkedValues) => {
         setSelectedRoles(checkedValues); // Actualiza el estado cuando cambian los checkboxes
     };
-    const onChangeCurso = () =>{
+    const onChangeCurso = () => {
         console.log("cambio")
     }
-    
-    
+
+
     console.log(createdPersonals);
     return (
         <Spin spinning={loading} tip="Creando los personales...">
@@ -174,7 +175,7 @@ export default function FormSearchDni({ handleSearch }) {
                     >
                         <Select
                             size="large"
-                            value={defaultTipoDocumento} 
+                            value={defaultTipoDocumento}
                             options={tipoDocumentos}
                         />
                     </Form.Item>
@@ -183,14 +184,19 @@ export default function FormSearchDni({ handleSearch }) {
                         style={{ width: '60%' }}
                         name="documento"
                         rules={[
-                            {required: true, message: 'Ingrese un documento válido.',min: 8},
+                            { required: true, message: 'Ingrese un documento válido.', min: 8 },
                         ]}
                     >
-                        <Input 
-                            size='large' 
-                            type="number" 
-                            autoSize={true} 
+                        <Input
+                            size='large'
+                            type="number"
+                            autoSize={true}
                             placeholder="Documento"
+                            suffix={
+                                <Tooltip arrow={false} title="Si se ingresa un documento nuevo, se creará un nuevo personal">
+                                    <InfoCircleOutlined style={{ color: 'gray' }} />
+                                </Tooltip>
+                            }
                         />
                     </Form.Item>
 
@@ -202,22 +208,30 @@ export default function FormSearchDni({ handleSearch }) {
                         icon={<SearchOutlined />}
                     />
                 </Space.Compact>
-                <div>
-                    <Space.Compact>
-                        <h3>Necesita cargar muchos personales?</h3>
-                        <Upload 
-                        className='upload-profile' 
-                        accept=".xlsx, .csv" 
-                        onChange={handleFileChange} 
-                        maxCount={1}
-                        >
-                            <Button icon={<UploadOutlined />}>Subir excel</Button>
-                        </Upload>
-                    </Space.Compact>
-                    
-                </div>
-                <a onClick={descargarExcel}>Descargar modelo</a>
             </Form>
+            <br />
+            <Alert
+                message="Tiene un personal muy extenso"
+                description={
+                    <Flex>
+                        <p>
+                            Descarga
+                            {<Button type='link' onClick={descargarExcel}>esta plantilla,</Button>}
+                            completela y subala
+                            para el cargado automatico del personal
+                        </p>
+                        <Upload
+                            className='upload-profile'
+                            accept=".xlsx, .csv"
+                            onChange={handleFileChange}
+                            maxCount={1}
+                        >
+                            <Button type='default' icon={<UploadOutlined />}>Subir Aqui</Button>
+                        </Upload>
+                    </Flex>
+                }
+                type="info"
+            />
             {createdPersonals.length > 0 && (
                 <div>
                     <br />
@@ -226,8 +240,8 @@ export default function FormSearchDni({ handleSearch }) {
                         {createdPersonals.map((personal, index) => (
                             <li key={index}>
                                 {personal}
-                                <Button 
-                                    style={{ marginLeft: '10px' }} 
+                                <Button
+                                    style={{ marginLeft: '10px' }}
                                     type="primary"
                                     onClick={() => setIsModalVisible(true)}
                                 >
@@ -274,6 +288,7 @@ export default function FormSearchDni({ handleSearch }) {
                     </div>
                 )}
             </Modal>
+
         </Spin>
     );
 }
