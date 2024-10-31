@@ -7,6 +7,9 @@ import FormCreateSubject from './formCreateSubject.jsx';
 import FormCreateSubjectForCourse from './formCreateSubjectForCourse.jsx';
 import ModalComponent from './ModalAsignacion.jsx';
 import AsignarProfesor from './asignacionProfesorDrawer.jsx'
+import { fetchSubjects, fetchFileSubjects, postSubject, postSubjectInCourse } from '../../services/materias.js';
+import { fetchTeachers, deleteTeacher, postTeacher } from '../../services/personal.js';
+import { fetchCourses } from '../../services/courses.js';
 
 
 export default function Materias() {
@@ -36,38 +39,28 @@ export default function Materias() {
     const removeTeacher = async (teacherToRemove) => {
         if (teacherToRemove) {
             try {
-                await fetch('http://127.0.0.1:8000/api/teachersubjectschool/' + teacherToRemove + '/', {
-                    method: 'DELETE',
-                    headers: {
-                        'Authorization': 'Token ' + localStorage.getItem('token'),
-                        'School-ID': sessionStorage.getItem('actual_school'),
-                        'Content-Type': 'application/json'
-                    },
-                });
+                await deleteTeacher(teacherToRemove);
                 setRecargar(!recargar);
             } catch (error) {
-                console.error('Error removing teacher:', error);
+                console.error('Error remove teacher: ', error);
             }
         }
     };
 
-    const asignarMateria = (coursesubject_id, idTeacher) => {
+    const asignarMateria = async (coursesubject_id, idTeacher) => {
         const body = {
             teacher: idTeacher,
             coursesubjects: coursesubject_id,
         }
         setRecargar(!recargar);
-        fetch('http://127.0.0.1:8000/api/teachersubjectschool/', {
-            method: 'POST',
-            headers: {
-                'Authorization': 'Token ' + localStorage.getItem('token'),
-                'School-ID': sessionStorage.getItem('actual_school'),
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(body),
-        })
+        try {
+            await postTeacher(body)
+        } catch (error) {
+            console.error('Error: ', error)
+        }
         setRecargar(!recargar);
     }
+
     useEffect(() => {
         setRecargar(!recargar)
     }, [isModalOpen])
@@ -103,6 +96,7 @@ export default function Materias() {
             .then(values => {
                 const MateriaEncontrada = materias.find(materia => materia.name === values.materia);
                 const AbreviacionEncontrada = materias.find(materia => materia.abbreviation === values.abreviacion);
+
                 if (MateriaEncontrada) {
                     showMessage('error', 'Ya existe una materia con ese nombre.');
                     return;
@@ -119,18 +113,15 @@ export default function Materias() {
                     description: values.descripcion,
                     courses: []
                 };
-                console.log('Formulario completado:', body);
-                fetch('http://127.0.0.1:8000/api/subjects/', {
-                    method: 'POST',
-                    headers: {
-                        'Authorization': 'Token ' + localStorage.getItem('token'),
-                        'School-ID': sessionStorage.getItem('actual_school'),
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(body),
-                })
-                setRecargar(!recargar);
-                onClose();
+
+                postSubject(body)
+                    .then(() => {
+                        setRecargar(!recargar);
+                        onClose();
+                    })
+                    .catch(() => {
+                        showMessage('error', 'Hubo un problema al crear la materia.')
+                    })
             })
             .catch(errorInfo => {
                 showMessage('error', 'Por favor, complete todos los campos.');
@@ -140,31 +131,24 @@ export default function Materias() {
     const handleSubmitConectarCurso = (form) => {
         form.validateFields()
             .then(values => {
-                console.log('entro')
-                console.log('aaaaaaaaaaaa', values)
                 const body = {
                     subject: values.materia,
                     course: values.curso,
                     weeklyHours: values.horasCatedras,
                     studyPlan: values.planEstudio,
                 };
-                console.log('Formulario completado:', body);
-                fetch('http://127.0.0.1:8000/api/coursesubjects/', {
-                    method: 'POST',
-                    headers: {
-                        'Authorization': 'Token ' + localStorage.getItem('token'),
-                        'School-ID': sessionStorage.getItem('actual_school'),
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(body),
 
-                })
-                setRecargar(!recargar);
-                onClose();
+                postSubjectInCourse(body)
+                    .then(() => {
+                        setRecargar(!recargar);
+                        onClose();
+                    })
+                    .catch(() => {
+                        showMessage('error', 'Hubo un problema al asignar una materia al curso.')
+                    })
             })
             .catch(errorInfo => {
                 showMessage('error', 'Por favor, complete todos los campos.');
-
                 setMessageConfig({ type: 'error', content: 'Por favor, complete todos los campos.' });
             });
     };
@@ -192,34 +176,7 @@ export default function Materias() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const url = new URL('http://127.0.0.1:8000/api/subjects/');
-                if (end_time && start_time) {
-                    url.searchParams.append('start_time', start_time);
-                    url.searchParams.append('end_time', end_time);
-                }
-                if (teacher) {
-                    url.searchParams.append('teacher', teacher);
-                }
-                if (Subjectname) {
-                    url.searchParams.append('name', Subjectname);
-                }
-                console.log(url.toString());
-                console.log(sessionStorage.getItem('actual_school'));
-
-                const response = await fetch(url.toString(), {
-                    method: "GET",
-                    headers: {
-                        'Authorization': 'Token ' + localStorage.getItem('token'),
-                        'School-ID': sessionStorage.getItem('actual_school'),
-                    },
-                });
-
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-
-                const data = await response.json();
-
+                const data = await fetchSubjects(start_time, end_time, teacher, Subjectname)
                 setMaterias(data.map(materia => ({
                     ...materia,
                     key: materia.id,
@@ -233,10 +190,10 @@ export default function Materias() {
                         course_name: course.name
                     }))
                 })));
-            } catch (error) {
+            } catch(error) {
                 console.error('Error fetching data:', error);
             } finally {
-                setLoading(false); // Esto se ejecutará siempre, tanto si hay un error como si no
+                setLoading(false);
             }
         };
 
@@ -308,79 +265,35 @@ export default function Materias() {
     );
 
     useEffect(() => {
-        fetch('http://127.0.0.1:8000/api/courses/', {
-            method: "GET",
-            headers: {
-                'Authorization': 'Token ' + localStorage.getItem('token'),
-                'School-ID': sessionStorage.getItem('actual_school'),
-            },
-        })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
-            .then(data => {
+        const getCourses = async () => {
+            try {
+                const data = await fetchCourses();
                 const courses = data.map(curs => ({
                     value: curs.id,
                     label: curs.year.name + ' ' + curs.name,
                 }));
-                SetCursoCompleto(data);
                 setCursos(courses);
-            })
-            .catch(error => console.error('Error fetching data:', error));
-    }, []);
+            } catch (error) {
+                console.error('Error fetching data:', error)
+            }
+        }
 
-    useEffect(() => {
-        fetch('http://127.0.0.1:8000/api/courses/', {
-            method: "GET",
-            headers: {
-                'Authorization': 'Token ' + localStorage.getItem('token'),
-                'School-ID': sessionStorage.getItem('actual_school'),
-            },
-        })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
-            .then(data => {
-                const courses = data.map(curs => ({
-                    value: curs.id,
-                    label: curs.year.name + ' ' + curs.name,
-                }));
-
-                setCursos(courses);
-            })
-            .catch(error => console.error('Error fetching data:', error));
-    }, []);
-
-    useEffect(() => {
-        fetch('http://127.0.0.1:8000/api/teachers/', {
-            method: "GET",
-            headers: {
-                'Authorization': 'Token ' + localStorage.getItem('token'),
-                'School-ID': sessionStorage.getItem('actual_school'),
-            },
-        })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
-            .then(data => {
+        const getTeachers = async () => {
+            try {
+                const data = await fetchTeachers();
                 const teacherNames = data.map(teacher => ({
                     value: teacher.id,
                     label: teacher.first_name + ' ' + teacher.last_name,
                 }));
                 setTeachers(teacherNames);
-            })
-            .catch(error => console.error('Error fetching data:', error));
-    }, []);
+            } catch(error) {
+                console.error('Error fetching data:', error);
+            }
+        }
 
+        getCourses();
+        getTeachers();
+    }, []);
 
     const handleSelectTeacher = (value) => {
         setTeacher(value);
@@ -399,33 +312,20 @@ export default function Materias() {
         setSubjectname(value);
     }
 
-    const descargarExcel = () => {
-        fetch('http://127.0.0.1:8000/api/subjects/?export=excel', {
-            method: "GET",
-            headers: {
-                Authorization: "Token " + localStorage.getItem("token"),
-                "School-ID": sessionStorage.getItem("actual_school"),
-            },
-        })
-            .then((response) => {
-                if (!response.ok) {
-                    throw new Error("Network response was not ok");
-                }
-                return response.blob();
-            })
-            .then((blob) => {
-                const url = window.URL.createObjectURL(blob);
-                const link = document.createElement('a');
-                link.href = url;
-                link.setAttribute('download', 'Materias.xlsx');
-                document.body.appendChild(link);
-                link.click();
-                link.remove();
-                window.URL.revokeObjectURL(url);
-            })
-            .catch((error) => {
-                console.error("Error al descargar el archivo:", error);
-            });
+    const descargarExcel = async () => {
+        try {
+            const data = await fetchFileSubjects({export: 'excel'})
+            const url = window.URL.createObjectURL(data);
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', 'Materias.xlsx');
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+            window.URL.revokeObjectURL(url);
+        } catch (error) {
+            console.error("Error al descargar el archivo:", error);
+        }
     }
 
     const showModal = (record) => {

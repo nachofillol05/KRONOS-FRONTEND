@@ -23,12 +23,15 @@ const handleResponse = async (response) => {
   }
 
   // verifica si tiene contenido
-  const contentType = response.headers.get("Content-Type");
+  const contentType = response.headers.get("Content-Type"); 
   if (!contentType) {
     return null
   } 
 
-  return response.json();
+  if (!contentType.includes('application/json')) {
+    return response.blob();
+  } 
+  return response.json()
 };
 
 export const fetchData = async (endpoint, params={}) => {
@@ -65,7 +68,7 @@ export const putData = async (endpoint, data) => {
 
 export const saveData = async (endpoint, data, method) => {
   try {
-    const response = await fetch(`${API_BASE_URL}/${endpoint}`, {
+    const response = await fetch(`${API_BASE_URL}/${endpoint}/`, {
       method: method,
       headers: {
         "Content-Type": "application/json",

@@ -15,7 +15,7 @@ export const fetchEvents = async (role, date, eventType, name) => {
 }
 
 export const affiliateEvent = async (event_id) => {
-    return await postData("events/affiliated/", {event_id: event_id})
+    return await postData("events/affiliated", {event_id: event_id})
 }
 
 export const desaffiliateEvent = async (event_id) => {
@@ -23,11 +23,11 @@ export const desaffiliateEvent = async (event_id) => {
 }
 
 export const createEvent = async (data) => {
-    return await postData('events/', data)
+    return await postData('events', data)
 }
 
 export const updateEvent = async (pk, data) => {
-    return await putData(`events/${pk}/`, data)
+    return await putData(`events/${pk}`, data)
 }
 
 export const deleteEvent = async (pk, data = null) => {
