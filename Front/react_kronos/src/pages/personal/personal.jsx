@@ -228,6 +228,7 @@ export default function Personal() {
           phone: values.telefono,
           password: values.documento,
         });
+        console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa ",body)
         fetch("http://localhost:8000/api/Register/", {
           method: "POST",
           headers: {
@@ -244,8 +245,11 @@ export default function Personal() {
 
             return response.json();
           } else if (response.status === 400) {
-            console.log("respoooooooonse",response)
-            showMessage("error", response.text);
+            return response.json().then((errorData) => {
+              console.log("Errores de respuesta: ", errorData);
+              const errorMessages = Object.values(errorData).flat();
+              showMessage("error", errorMessages.join(" "));
+            });
           }
         })
   };

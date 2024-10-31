@@ -31,9 +31,7 @@ export default function FormCreateWorker({ handleSubmit, handleVolver, tipoDocum
                 await handleSubmit(values); // Llama a handleSubmit solo si la validación es exitosa
             } catch (errorInfo) {
                 console.error('Failed to save form:', errorInfo);
-            } finally {
-                setLoading(false); // Detén el spinner independientemente de si hubo errores
-            }
+            } 
         };
 
     return (
