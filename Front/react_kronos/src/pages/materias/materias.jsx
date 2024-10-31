@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import './materias.scss';
 import RangeSlider from "../../components/timerangeslider/timerange.jsx";
 import { Spin, Table, Select, Input, FloatButton, Drawer, Form, Button, message, Modal, Flex } from "antd";
-import { SearchOutlined, EditOutlined, FileAddOutlined, DownOutlined, UpOutlined, DownloadOutlined, CloseOutlined, FileSearchOutlined } from '@ant-design/icons';
+import { SearchOutlined, EditOutlined, FileAddOutlined, DownOutlined, UpOutlined, DownloadOutlined, CloseOutlined, FileSearchOutlined, UserAddOutlined } from '@ant-design/icons';
 import FormCreateSubject from './formCreateSubject.jsx';
 import FormCreateSubjectForCourse from './formCreateSubjectForCourse.jsx';
 import ModalComponent from './ModalAsignacion.jsx';
@@ -112,6 +112,7 @@ export default function Materias() {
                     return;
                 }
                 const hexColor = values.color.toHexString();
+                console.log('hexColor:', hexColor);
                 const body = {
                     name: values.materia,
                     abbreviation: values.abreviacion,
@@ -261,10 +262,53 @@ export default function Materias() {
     ];
 
     const expandColumns = [
-        { title: 'Curso', dataIndex: 'course', key: 'course', width: '10%', },
+        { title: 'Curso', dataIndex: 'course', key: 'course', width: '10%' },
         { title: 'Profesores', dataIndex: 'teachers', key: 'teachers' },
-        { title: 'Accion', render: () => <Button size='default' style={{ display: 'flex', justifyContent: 'center', margin: 'auto' }} type='link' icon={<EditOutlined />} />, key: 'action', width: '10%', }
-    ]
+        { 
+            title: 'Asignar profesor', 
+            render: (text, record) => (
+                <Button 
+                    onClick={() => {
+                        console.log('boton');
+                        showDrawer(
+                            <AsignarProfesor
+                                onClose={onClose}
+                                record={record}
+                                parentRecord={materias.find(materia =>
+                                    materia.courses && materia.courses.some(child => child.id === record.id)
+                                )} // Obtén el parentRecord correspondiente
+                                teachers={teachers}
+                                setSelectedTeacher={setSelectedTeacher}
+                                asignarMateria={asignarMateria}
+                                removeTeacher={removeTeacher}
+                            />,
+                            'Asigna profesor a la materia'
+                        );
+                    }}
+                    size="default" 
+                    style={{ display: 'flex', justifyContent: 'center', margin: 'auto' }} 
+                    type="link" 
+                    icon={<UserAddOutlined />} 
+                />
+            ),
+            
+            key: 'asignar_profesor', 
+            width: '10%', 
+        },
+        { 
+            title: 'Editar', 
+            render: () => (
+                <Button 
+                    size="default" 
+                    style={{ display: 'flex', justifyContent: 'center', margin: 'auto' }} 
+                    type="link" 
+                    icon={<EditOutlined />} 
+                />
+            ), 
+            key: 'action', 
+            width: '10%', 
+        }
+    ];
 
     const expandedRowRender = (record) => (
         <Table
@@ -275,33 +319,6 @@ export default function Materias() {
             pagination={false}
             locale={{
                 emptyText: 'No hay datos disponibles', 
-              }}
-            onRow={(record) => {
-                const parent = materias.find(materia =>
-                    materia.courses && materia.courses.some(child => child.id === record.id)
-                );
-                setParentRecord(parent); // Actualiza el estado de parentRecord
-
-                return {
-                    onClick: () => showDrawer(
-                        <AsignarProfesor
-                            onClose={onClose}
-                            record={record}
-                            parentRecord={parent} // Asegúrate de pasar el objeto parent aquí
-                            teachers={teachers}
-                            setSelectedTeacher={setSelectedTeacher}
-                            asignarMateria={asignarMateria}
-                            removeTeacher={removeTeacher}
-                        />,
-                        'Asigna profesor a la materia'
-                    ),
-                    onMouseEnter: () => {
-                        document.body.style.cursor = 'pointer';
-                    },
-                    onMouseLeave: () => {
-                        document.body.style.cursor = 'default';
-                    },
-                };
             }}
             
         />
@@ -502,7 +519,7 @@ export default function Materias() {
                     }}
                     locale={{
                         emptyText: 'No hay materias disponibles', 
-                      }}
+                    }}
                 />
 
 
