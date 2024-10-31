@@ -113,12 +113,19 @@ export default function Especificworker({ handleVolverInfo, id, onClose, rolSele
         </Row>
         <React.Fragment key={day}>
           {moduleData.map((module) => {
+            console.log(worker.teacher_availability)
             // Verificar si el módulo está en la disponibilidad del profesor
             const isAvailable = worker?.teacher_availability?.some(
               (availability) =>
                 availability.module.moduleNumber === module.moduleNumber &&
                 availability.module.day.toLowerCase() === day.toLowerCase()
             );
+            /*const isOcupied = worker?.teacher_availability?.some(
+              (availability) =>
+                availability.module.moduleNumber === module.moduleNumber &&
+                availability.module.day.toLowerCase() === day.toLowerCase()
+            );*/
+            
 
             return (
               <Col

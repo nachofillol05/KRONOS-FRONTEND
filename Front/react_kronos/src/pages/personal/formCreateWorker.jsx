@@ -26,12 +26,16 @@ export default function FormCreateWorker({ handleSubmit, handleVolver, tipoDocum
 
         const onFinish = async () => {
             try {
-                const values = await form.validateFields(); // Espera a que se validen los campos
-                setLoading(true);
-                await handleSubmit(values); // Llama a handleSubmit solo si la validación es exitosa
+                const values = await form.validateFields();
+                setLoading(true); 
+                console.log("empieza")
+                await handleSubmit(values);
             } catch (errorInfo) {
                 console.error('Failed to save form:', errorInfo);
-            } 
+            } finally {
+                console.log("se frena")
+                setLoading(false);
+            }
         };
 
     return (
