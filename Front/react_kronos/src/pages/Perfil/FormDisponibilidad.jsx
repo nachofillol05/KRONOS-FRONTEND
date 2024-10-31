@@ -71,6 +71,32 @@ export default function FormDisponibilidad({ onClose }) {
         });
     }, []);
 
+    const handleCellClick = (event, module) => {
+        const key = module;
+        const button = event.target;
+
+        if (button.classList.contains('selected')) {
+            button.classList.remove('selected');
+            button.classList.add('NotSelected');
+        } else {
+            button.classList.remove('NotSelected');
+            button.classList.add('selected');
+        }
+
+        setSelectedCells((prevSelectedCells) => {
+            if (prevSelectedCells.includes(key)) {
+                return prevSelectedCells.filter((cell) => cell !== key);
+            } else {
+                return [...prevSelectedCells, key];
+            }
+        });
+    };
+
+    const maxModulesCount = Math.max(
+        ...days.map((day) => 
+            modulesData.filter((data) => data.day.toLowerCase() === day.toLowerCase()).length
+        )
+    );
 
     console.log(selectedCells);
     return (
