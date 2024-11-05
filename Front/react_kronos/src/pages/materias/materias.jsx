@@ -98,17 +98,27 @@ export default function Materias() {
         console.log('search:', value);
     };
 
+    const rgbToHex = ({ r, g, b }) => {
+        const toHex = (component) => Math.round(component).toString(16).padStart(2, '0');
+        return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
+    };
+
     const handleSubmit = (form) => {
         form.validateFields()
             .then(values => {
                 const MateriaEncontrada = materias.find(materia => materia.name === values.materia);
                 const AbreviacionEncontrada = materias.find(materia => materia.abbreviation === values.abreviacion);
+                const ColorEncontrado = materias.find(materia => materia.color.toLowerCase() === rgbToHex(values.color.metaColor).toLowerCase());
                 if (MateriaEncontrada) {
                     showMessage('error', 'Ya existe una materia con ese nombre.');
                     return;
                 }
                 if (AbreviacionEncontrada) {
                     showMessage('error', 'Ya existe una materia con esa abreviacion.');
+                    return;
+                }
+                if (ColorEncontrado) {
+                    showMessage('error', 'Ya existe una materia con ese color.');
                     return;
                 }
                 const hexColor = values.color.toHexString();
@@ -244,6 +254,54 @@ export default function Materias() {
         fetchData();
     }, [start_time, end_time, Subjectname, teacher, recargar]);
 
+    const handleSubmitEditar = (form) => {
+        console.log("aaaaaaaaaaaaaa: ",form.getFieldsValue())
+        form.validateFields()
+            .then(values => {
+                console.log(values, materias)   
+                const MateriaEncontrada = materias.find(materia => materia.name === values.materia && materia.id !== values.id);
+                const AbreviacionEncontrada = materias.find(materia => materia.abbreviation === values.abreviacion && materia.id !== values.id);
+                const ColorEncontrado = materias.find(materia => materia.color.toLowerCase() === rgbToHex(values.color.metaColor).toLowerCase() && materia.id !== values.id);
+                if (MateriaEncontrada) {
+                    showMessage('error', 'Ya existe una materia con ese nombre.');
+                    return;
+                }
+                if (AbreviacionEncontrada) {
+                    showMessage('error', 'Ya existe una materia con esa abreviacion.');
+                    return;
+                }
+                if (ColorEncontrado) {
+                    showMessage('error', 'Ya existe una materia con ese color.');
+                    return;
+                }
+                const hexColor = values.color.toHexString();
+                console.log('hexColor:', hexColor);
+                const body = {
+                    name: values.materia,
+                    abbreviation: values.abreviacion,
+                    color: hexColor,
+                    description: values.descripcion,
+                    courses: []
+                };
+                console.log('Formulario completado:', body);
+                fetch('http://127.0.0.1:8000/api/subjects/'+values.id+'/', {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': 'Token ' + localStorage.getItem('token'),
+                        'School-ID': sessionStorage.getItem('actual_school'),
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(body),
+                })
+                setRecargar(!recargar);
+                onClose();
+            })
+            .catch(errorInfo => {
+                showMessage('error', 'Por favor, complete todos los campos.');
+            });
+    };
+
+
     const columns = [
         { title: 'Nombre', dataIndex: 'name', key: 'name', width: '20%', },
         { title: 'Abreviacion', dataIndex: 'abbreviation', key: 'abbreviation', width: '15%', },
@@ -257,8 +315,29 @@ export default function Materias() {
                 <div style={{ width: '100%', height: '24px', backgroundColor: text, borderRadius: '4px' }} />
             )
         },
-        { title: 'Accion', render: () => <Button size='default' style={{ display: 'flex', justifyContent: 'center', margin: 'auto' }} type='link' icon={<EditOutlined />} />, key: 'action', width: '10%', }
-
+        { 
+            title: 'Editar', 
+            render: (text, record) => (
+                <Button 
+                    onClick={() => showDrawer(
+                        <FormCreateSubject
+                            handleSubmit={handleSubmitEditar}
+                            onClose={onClose}
+                            cursos={cursos}
+                            value={record}
+                            setValue={setValue}
+                        />,
+                        'Editar materia'
+                    )}
+                    size="default" 
+                    style={{ display: 'flex', justifyContent: 'center', margin: 'auto' }} 
+                    type="link" 
+                    icon={<EditOutlined />} 
+                />
+            ), 
+            key: 'action', 
+            width: '10%', 
+        }
     ];
 
     const expandColumns = [
@@ -295,10 +374,21 @@ export default function Materias() {
             key: 'asignar_profesor', 
             width: '10%', 
         },
+        //Cambiar ESTOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO  AL EDITAR AGREGAR AÑO A MATERIA
         { 
             title: 'Editar', 
-            render: () => (
+            render: (text, record) => (
                 <Button 
+                    onClick={() => showDrawer(
+                        <FormCreateSubject
+                            handleSubmit={handleSubmit}
+                            onClose={onClose}
+                            cursos={cursos}
+                            value={record}
+                            setValue={setValue}
+                        />,
+                        'Editar materia'
+                    )}
                     size="default" 
                     style={{ display: 'flex', justifyContent: 'center', margin: 'auto' }} 
                     type="link" 

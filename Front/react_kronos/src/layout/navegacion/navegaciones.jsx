@@ -72,7 +72,6 @@ const App = ({ children }) => {
                 navigate('/login');
             }
         };
-
         if (token && school) {
             fetchRolesAndSchools();
         } else {
@@ -151,18 +150,35 @@ const App = ({ children }) => {
         return dropdownItems
             .filter(item => item.key !== sessionStorage.getItem('actual_school'))
             .map(item => (
-                getItem(<a onClick={() => {
-                    sessionStorage.setItem('actual_school', item.key);
-                    setSchool(item.key);
-                    sessionStorage.setItem('rol', '');
-                    window.location.reload();
-                }}>{item.label}</a>)
+                getItem(<a
+                    onClick={async () => {
+                        console.log("Actualizando escuela a:", item.key);
+                        sessionStorage.setItem('actual_school', item.key);
+                        setSchool(item.key);
+                        sessionStorage.setItem('rol', '');
+
+                        await new Promise(resolve => {
+                            setTimeout(() => {
+                                console.log("Escuela y rol asignados.");
+                                window.location.reload();
+                                resolve();
+                            }, 100);
+                        });
+                    //Ver si puedo actualizar solo lo de adentro y no todo coom hago con los navigate
+                    //Ver como hacer para que cuando se cambie de colegio o se cambie ese valor en el localstorage se vuelva a enviar el fetch
+                    //Parece que esta mandando las request antes de que se cargue el school entonces detecta que esta vacio y vuelve a antes
+                    //HACER QUE EL FETCH ESCUCHE AL SESSIONSTORAGE Y QUE SU ROL SELECCIONADO ES PROF Y ESTA AHI QUE SE ACTUALICE,VER
+                        }}
+                    >
+                        {item.label}
+                    </a>)
             ));
     };
 
     const defaultRol = rol || (roles.length > 0 ? roles[0] : undefined);
 
     let currentSchool = JSON.parse(localStorage.getItem('schools') || '[]').find(school => school.pk === Number(sessionStorage.getItem('actual_school')));
+    console.log("que onda con el cambio schooooooooooooooooooooooooool", currentSchool)
     if (!currentSchool) {
         const firstSchool = JSON.parse(localStorage.getItem('schools'))[0];
         sessionStorage.setItem('actual_school', firstSchool.pk);

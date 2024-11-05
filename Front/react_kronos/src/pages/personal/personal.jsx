@@ -453,6 +453,12 @@ export default function Personal() {
     fetchData();
   }, [activeFilter, searchName, subject, course, recargar]);
 
+  //VEEEEEEEEEEEEEEEEEEEEEEEEEEEEEER COMO HACER ESTO
+  useEffect(()=>{
+    console.log(sessionStorage.getItem('actual_school'))
+  },[sessionStorage.getItem('actual_school')])
+
+
 
   const limpiarSeleccion = ()=>{
     setPersistentSelectedKeys([])

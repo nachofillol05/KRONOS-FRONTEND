@@ -47,7 +47,10 @@ export default function Login() {
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ "token": localStorage.getItem('token') })
                 });
-                if (response.ok) {
+                console.log("eeeeeeeeeeeeeeeeeeeeeeeeerroooooooooooooooooooooooooooor:",response)
+                if (!response.ok) {
+                    console.log("response no ta biennnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn?????????????????'")
+                    //VER DE CAMBIAR ESTOOOOOOOOOOOOOOOOOOOOO
                     navigate('/login');
                 }
             } catch (error) {

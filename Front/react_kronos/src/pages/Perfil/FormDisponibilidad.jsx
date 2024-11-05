@@ -67,7 +67,11 @@ export default function FormDisponibilidad({ onClose }) {
             const preselectedCells = data.filter(
                 (module) => module.availabilityState.name === 'Disponible'
             ).map((module) => module.module.id);
+            const asignadoCells = data.filter(
+                (module) => module.availabilityState.name === 'Asignado'
+            ).map((module) => module.module.id);
             setSelectedCells(preselectedCells); 
+            setAsignadoCells(asignadoCells)
         });
     }, []);
 
@@ -97,6 +101,14 @@ export default function FormDisponibilidad({ onClose }) {
             modulesData.filter((data) => data.day.toLowerCase() === day.toLowerCase()).length
         )
     );
+    const customDisabledStyle = {
+        backgroundColor: '#e40d0fc5',
+        color: 'white',
+        border: '#e40d0fff 1px solid',
+        borderRadius: '0',
+        cursor: 'default',
+        width:'100%'
+    };
 
     console.log(selectedCells);
     return (
@@ -135,15 +147,17 @@ export default function FormDisponibilidad({ onClose }) {
                                     <Button
                                         disabled={asignadoCells.includes(module.id)}
                                         type="primary"
-                                        style={{ width: '100%' }}
+                                        style={asignadoCells.includes(module.id)? customDisabledStyle : { width: '100%' }}
                                         className={
                                             selectedCells.includes(module.id)
                                                 ? 'selected'
-                                                : 'NotSelected'
+                                                : asignadoCells.includes(module.id)?
+                                                'Ocupied'
+                                                :'NotSelected'
                                         }
                                         onClick={(event) => handleCellClick(event, module.id)}
                                     >
-                                        {module.moduleNumber}
+                                        {/*{module.moduleNumber}Ver si dejamos oooooo no capaz poner las horas al costado nose*/}
                                     </Button>
                                 </Col>
                             ))}
