@@ -108,7 +108,7 @@ export default function Materias() {
             .then(values => {
                 const MateriaEncontrada = materias.find(materia => materia.name === values.materia);
                 const AbreviacionEncontrada = materias.find(materia => materia.abbreviation === values.abreviacion);
-                const ColorEncontrado = materias.find(materia => materia.color.toLowerCase() === rgbToHex(values.color.metaColor).toLowerCase());
+                const ColorEncontrado = materias.find(materia => materia.color.toLowerCase() === values.color.toLowerCase());
                 if (MateriaEncontrada) {
                     showMessage('error', 'Ya existe una materia con ese nombre.');
                     return;
@@ -121,7 +121,7 @@ export default function Materias() {
                     showMessage('error', 'Ya existe una materia con ese color.');
                     return;
                 }
-                const hexColor = values.color.toHexString();
+                const hexColor = values.color;
                 console.log('hexColor:', hexColor);
                 const body = {
                     name: values.materia,
@@ -144,6 +144,7 @@ export default function Materias() {
                 onClose();
             })
             .catch(errorInfo => {
+                console.log(errorInfo);
                 showMessage('error', 'Por favor, complete todos los campos.');
             });
     };
@@ -261,7 +262,7 @@ export default function Materias() {
                 console.log(values, materias)   
                 const MateriaEncontrada = materias.find(materia => materia.name === values.materia && materia.id !== values.id);
                 const AbreviacionEncontrada = materias.find(materia => materia.abbreviation === values.abreviacion && materia.id !== values.id);
-                const ColorEncontrado = materias.find(materia => materia.color.toLowerCase() === rgbToHex(values.color.metaColor).toLowerCase() && materia.id !== values.id);
+                const ColorEncontrado = materias.find(materia => materia.color.toLowerCase() === values.color.toLowerCase() && materia.id !== values.id);
                 if (MateriaEncontrada) {
                     showMessage('error', 'Ya existe una materia con ese nombre.');
                     return;
@@ -274,7 +275,7 @@ export default function Materias() {
                     showMessage('error', 'Ya existe una materia con ese color.');
                     return;
                 }
-                const hexColor = values.color.toHexString();
+                const hexColor = values.color;
                 console.log('hexColor:', hexColor);
                 const body = {
                     name: values.materia,
@@ -297,6 +298,7 @@ export default function Materias() {
                 onClose();
             })
             .catch(errorInfo => {
+                console.log("aaaaaaaaaaaaaa",errorInfo);
                 showMessage('error', 'Por favor, complete todos los campos.');
             });
     };

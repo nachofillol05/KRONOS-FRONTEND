@@ -93,7 +93,8 @@ export default function FormCreateSubject({ handleSubmit, onClose, cursos, value
                     style={{ width: '40%' }}
                 >
                     <ColorPicker 
-                        value={colorSelected} // Set the current color as the value
+                        value={colorSelected}
+                        format='hex'
                         onChange={(e) => {
                             const newColor = e.toHexString();
                             setColorSelected(newColor);
@@ -147,7 +148,7 @@ export default function FormCreateSubject({ handleSubmit, onClose, cursos, value
                         </Tooltip>
                         :
                         <Tooltip title="Agregar">
-                            <Button type='primary' size='large' iconPosition='end' icon={<EditOutlined />} style={{ width: "100px" }} onClick={() => handleSubmit(form)} />
+                            <Button type='primary' size='large' iconPosition='end' icon={<EditOutlined />} style={{ width: "100px" }} onClick={() => handleSubmit(form) /*form.setValue(color selected color) */} />
                         </Tooltip>
                     }
                 </Flex>
