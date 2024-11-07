@@ -1,18 +1,16 @@
-import React, { useCallback } from 'react';
-import { Form, Input, Button, Tooltip, Space, Select, ColorPicker, Flex, theme, Avatar } from 'antd';
-import { InfoCircleOutlined, RollbackOutlined, PlusOutlined, UserOutlined } from '@ant-design/icons';
+import React, { useCallback, useEffect } from 'react';
+import { Form, Input, Button, Tooltip, Space, ColorPicker, Flex, theme, Avatar } from 'antd';
+import { RollbackOutlined, PlusOutlined, UserOutlined, EditOutlined } from '@ant-design/icons';
+
 const { TextArea } = Input;
-
-
-
-
 
 export default function FormCreateSubject({ handleSubmit, onClose, cursos, value, setValue }) {
     const [form] = Form.useForm();
     const { token } = theme.useToken();
     const colorPrimary = token.colorPrimary;
-    const [colorSelected, setColorSelected] = React.useState(token.colorPrimary);
-    const [AbreviacionSelected, setAbreviacionSelected] = React.useState(value.abreviacion);
+    const [colorSelected, setColorSelected] = React.useState(value?.color || colorPrimary);
+    const [AbreviacionSelected, setAbreviacionSelected] = React.useState(value?.abbreviation || "");
+    const [edit, setEdit] = React.useState(false);
 
     const makeColorTransparent = useCallback((color, alpha) => {
         alpha = Math.max(0, Math.min(1, alpha));
@@ -30,16 +28,31 @@ export default function FormCreateSubject({ handleSubmit, onClose, cursos, value
             return `rgba(${r},${g},${b},${alpha})`;
         };
 
-        if (/^#[0-9A-Fa-f]{3,6}$/.test(color)) {
-            return hexToRgba(color);
-        } else {
-            return color;
-        }
+        return /^#[0-9A-Fa-f]{3,6}$/.test(color) ? hexToRgba(color) : color;
     }, []);
 
-    console.log(colorSelected);
+    useEffect(() => {
+        if (value) {
+            form.setFieldsValue({
+                id: value.id,
+                materia: value.name,
+                abreviacion: value.abbreviation,
+                color: value.color, // Set the initial color here
+                descripcion: value.description,
+            });
+            setColorSelected(value.color);
+            setEdit(true);
+        }
+    }, [value, form]);
+
+    // Update form value when color changes
+    useEffect(() => {
+        form.setFieldsValue({ color: colorSelected });
+    }, [colorSelected, form]);
+
     return (
-        <Form form={form} layout="vertical" hideRequiredMark >
+        <Form form={form} layout="vertical" hideRequiredMark>
+            <Form.Item name="id" hidden={true} />
             <Flex gap={10}>
                 <Space.Compact>
                     <Form.Item
@@ -63,7 +76,6 @@ export default function FormCreateSubject({ handleSubmit, onClose, cursos, value
                         rules={[
                             {
                                 required: true,
-
                                 message: '',
                             },
                             {
@@ -72,23 +84,25 @@ export default function FormCreateSubject({ handleSubmit, onClose, cursos, value
                             }
                         ]}
                     >
-                        <Input size='large' autoSize count={{ show: true, max: 5 }} />
+                        <Input size='large' autoSize maxLength={5} />
                     </Form.Item>
                 </Space.Compact>
                 <Form.Item
-                    initialValue={colorPrimary}
-                    style={{ width: '40%' }}
                     name="color"
                     label="Color de la materia"
-                    rules={[
-                        {
-                            required: true,
-                            message: 'Por favor ingrese el color de la materia ',
-                        },
-                        
-                    ]}
+                    style={{ width: '40%' }}
                 >
-                    <ColorPicker onChange={(e) => setColorSelected(e.toHexString())} size="large" showText style={{ width: '100%' }} />
+                    <ColorPicker 
+                        value={colorSelected}
+                        format='hex'
+                        onChange={(e) => {
+                            const newColor = e.toHexString();
+                            setColorSelected(newColor);
+                        }} 
+                        size="large" 
+                        showText 
+                        style={{ width: '100%' }} 
+                    />
                 </Form.Item>
             </Flex>
             <Form.Item
@@ -107,24 +121,36 @@ export default function FormCreateSubject({ handleSubmit, onClose, cursos, value
                 className='previewContainer'
                 justify='center'
                 align='center'
-                onMouseEnter={(e) => e.currentTarget.style.borderColor = colorPrimary} // Cambia el color al hacer hover
-                onMouseLeave={(e) => e.currentTarget.style.borderColor = '#cfcfcf'} // Vuelve al color original cuando quitas el hover
+                style={{ cursor: 'default' }}
             >
-                <Flex className="preview" align='center' gap={5}
-                    style={{ color: colorSelected, backgroundColor: makeColorTransparent(colorSelected, 0.22) }}>
+                <Flex
+                    className="preview"
+                    align='center'
+                    gap={5}
+                    style={{
+                        color: colorSelected,
+                        backgroundColor: makeColorTransparent(colorSelected, 0.22),
+                        cursor: 'default'
+                    }}
+                >
                     <Avatar size={'small'} icon={<UserOutlined />} />
                     {AbreviacionSelected}
                 </Flex>
-
             </Flex>
             <Form.Item style={{ marginTop: '25px' }}>
                 <Flex justify='flex-end' gap={10}>
                     <Tooltip title="Volver">
                         <Button size='large' iconPosition='end' icon={<RollbackOutlined />} style={{ width: "100px" }} onClick={onClose} />
                     </Tooltip>
-                    <Tooltip title="Agregar">
-                        <Button type='primary' size='large' iconPosition='end' icon={<PlusOutlined />} style={{ width: "100px" }} onClick={() => handleSubmit(form)} />
-                    </Tooltip>
+                    {!edit ?
+                        <Tooltip title="Agregar">
+                            <Button type='primary' size='large' iconPosition='end' icon={<PlusOutlined />} style={{ width: "100px" }} onClick={() => handleSubmit(form)} />
+                        </Tooltip>
+                        :
+                        <Tooltip title="Agregar">
+                            <Button type='primary' size='large' iconPosition='end' icon={<EditOutlined />} style={{ width: "100px" }} onClick={() => handleSubmit(form) /*form.setValue(color selected color) */} />
+                        </Tooltip>
+                    }
                 </Flex>
             </Form.Item>
         </Form>

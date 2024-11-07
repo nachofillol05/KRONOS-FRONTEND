@@ -98,11 +98,17 @@ export default function Materias() {
         console.log('search:', value);
     };
 
+    const rgbToHex = ({ r, g, b }) => {
+        const toHex = (component) => Math.round(component).toString(16).padStart(2, '0');
+        return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
+    };
+
     const handleSubmit = (form) => {
         form.validateFields()
             .then(values => {
                 const MateriaEncontrada = materias.find(materia => materia.name === values.materia);
                 const AbreviacionEncontrada = materias.find(materia => materia.abbreviation === values.abreviacion);
+                const ColorEncontrado = materias.find(materia => materia.color.toLowerCase() === values.color.toLowerCase());
                 if (MateriaEncontrada) {
                     showMessage('error', 'Ya existe una materia con ese nombre.');
                     return;
@@ -111,7 +117,11 @@ export default function Materias() {
                     showMessage('error', 'Ya existe una materia con esa abreviacion.');
                     return;
                 }
-                const hexColor = values.color.toHexString();
+                if (ColorEncontrado) {
+                    showMessage('error', 'Ya existe una materia con ese color.');
+                    return;
+                }
+                const hexColor = values.color;
                 console.log('hexColor:', hexColor);
                 const body = {
                     name: values.materia,
@@ -134,6 +144,7 @@ export default function Materias() {
                 onClose();
             })
             .catch(errorInfo => {
+                console.log(errorInfo);
                 showMessage('error', 'Por favor, complete todos los campos.');
             });
     };
@@ -244,6 +255,55 @@ export default function Materias() {
         fetchData();
     }, [start_time, end_time, Subjectname, teacher, recargar]);
 
+    const handleSubmitEditar = (form) => {
+        console.log("aaaaaaaaaaaaaa: ",form.getFieldsValue())
+        form.validateFields()
+            .then(values => {
+                console.log(values, materias)   
+                const MateriaEncontrada = materias.find(materia => materia.name === values.materia && materia.id !== values.id);
+                const AbreviacionEncontrada = materias.find(materia => materia.abbreviation === values.abreviacion && materia.id !== values.id);
+                const ColorEncontrado = materias.find(materia => materia.color.toLowerCase() === values.color.toLowerCase() && materia.id !== values.id);
+                if (MateriaEncontrada) {
+                    showMessage('error', 'Ya existe una materia con ese nombre.');
+                    return;
+                }
+                if (AbreviacionEncontrada) {
+                    showMessage('error', 'Ya existe una materia con esa abreviacion.');
+                    return;
+                }
+                if (ColorEncontrado) {
+                    showMessage('error', 'Ya existe una materia con ese color.');
+                    return;
+                }
+                const hexColor = values.color;
+                console.log('hexColor:', hexColor);
+                const body = {
+                    name: values.materia,
+                    abbreviation: values.abreviacion,
+                    color: hexColor,
+                    description: values.descripcion,
+                    courses: []
+                };
+                console.log('Formulario completado:', body);
+                fetch('http://127.0.0.1:8000/api/subjects/'+values.id+'/', {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': 'Token ' + localStorage.getItem('token'),
+                        'School-ID': sessionStorage.getItem('actual_school'),
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(body),
+                })
+                setRecargar(!recargar);
+                onClose();
+            })
+            .catch(errorInfo => {
+                console.log("aaaaaaaaaaaaaa",errorInfo);
+                showMessage('error', 'Por favor, complete todos los campos.');
+            });
+    };
+
+
     const columns = [
         { title: 'Nombre', dataIndex: 'name', key: 'name', width: '20%', },
         { title: 'Abreviacion', dataIndex: 'abbreviation', key: 'abbreviation', width: '15%', },
@@ -257,30 +317,36 @@ export default function Materias() {
                 <div style={{ width: '100%', height: '24px', backgroundColor: text, borderRadius: '4px' }} />
             )
         },
-        {
-            title: 'Editar',
+        { 
+            title: 'Editar', 
             render: (text, record) => (
-            <Button
-                size='default'
-                style={{ display: 'flex', justifyContent: 'center', margin: 'auto' }}
-                type='link'
-                icon={<EditOutlined />}
-                onClick={(event) => {
-                console.log('Editando registro:', record);
-                }} // Cierra correctamente la función aquí
-            />
-            ),
-            key: 'action',
-            width: '10%',
+                <Button 
+                    onClick={() => showDrawer(
+                        <FormCreateSubject
+                            handleSubmit={handleSubmitEditar}
+                            onClose={onClose}
+                            cursos={cursos}
+                            value={record}
+                            setValue={setValue}
+                        />,
+                        'Editar materia'
+                    )}
+                    size="default" 
+                    style={{ display: 'flex', justifyContent: 'center', margin: 'auto' }} 
+                    type="link" 
+                    icon={<EditOutlined />} 
+                />
+            ), 
+            key: 'action', 
+            width: '10%', 
         }
-
     ];
 
     const expandColumns = [
         { title: 'Curso', dataIndex: 'course', key: 'course', width: '10%' },
         { title: 'Profesores', dataIndex: 'teachers', key: 'teachers' },
         { 
-            title: 'Asignar profesor', 
+            title: ' ', 
             render: (text, record) => (
                 <Button 
                     onClick={() => {
@@ -308,12 +374,23 @@ export default function Materias() {
             ),
             
             key: 'asignar_profesor', 
-            width: '10%', 
+            width: '5%', 
         },
+        //Cambiar ESTOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO  AL EDITAR AGREGAR AÑO A MATERIA
         { 
-            title: 'Editar', 
-            render: () => (
+            title: ' ', 
+            render: (text, record) => (
                 <Button 
+                    onClick={() => showDrawer(
+                        <FormCreateSubject
+                            handleSubmit={handleSubmit}
+                            onClose={onClose}
+                            cursos={cursos}
+                            value={record}
+                            setValue={setValue}
+                        />,
+                        'Editar materia'
+                    )}
                     size="default" 
                     style={{ display: 'flex', justifyContent: 'center', margin: 'auto' }} 
                     type="link" 
@@ -321,10 +398,10 @@ export default function Materias() {
                 />
             ), 
             key: 'action', 
-            width: '7.5%', 
+            width: '5%', 
         },
         { 
-            title: 'Eliminar', 
+            title: ' ', 
             render: () => (
                 <Button 
                     size="default" 
@@ -335,7 +412,7 @@ export default function Materias() {
                 />
             ), 
             key: 'delete', 
-            width: '7.5%', 
+            width: '5%', 
         }
     ];
 
