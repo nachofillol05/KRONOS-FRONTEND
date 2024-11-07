@@ -76,7 +76,7 @@ export default function Profile() {
   const handleFileChange = (e) => {
     const file = e.file.originFileObj;
     const allowedTypes = ['image/jpeg', 'image/png', 'image/webp'];
-  
+
     if (file) {
       // Verificar si el tipo de archivo es permitido
       if (!allowedTypes.includes(file.type)) {
@@ -91,8 +91,8 @@ export default function Profile() {
       }
     }
   };
-  
-  
+
+
 
 
   /*const generos ={
@@ -356,7 +356,7 @@ export default function Profile() {
 
             >
               <Form
-                    requiredMark={false}
+                requiredMark={false}
                 form={form}
                 onFinish={handleFinishUser}
                 style={{ height: '60vh', overflowY: 'auto', padding: '25px' }}
@@ -383,224 +383,220 @@ export default function Profile() {
 
 
                   <div
-  style={{
-    marginLeft: 50,
-    width: "100%",
-    display: "grid",
-    gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
-    gap: 30,
-  }}
->
-  <Form.Item
-    style={{ width: '275px' }}
-    layout="vertical"
-    label="Nombre"
-    name="first_name"
-    className="formItemProfile"
-    rules={[
-      {
-        pattern: /^[a-zA-Z\s]+$/g,
-        message: 'Solo se permiten letras.',
-      },
-      {
-        required: true,
-        message: 'Este campo es obligatorio.',
-      },
-    ]}
-  >
-    <Input
-      size="large"
-      style={!isEditing ? customDisabledStyle : { height: '40px' }}
-      disabled={!isEditing}
-    />
-  </Form.Item>
+                    style={{
+                      marginLeft: 50,
+                      width: "100%",
+                      display: "grid",
+                      gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
+                      gap: 30,
+                    }}
+                  >
+                    <Form.Item
+                      style={{ width: '275px' }}
+                      layout="vertical"
+                      label="Nombre"
+                      name="first_name"
+                      className="formItemProfile"
+                      rules={[
+                        {
+                          pattern: /^[a-zA-Z\s]+$/g,
+                          message: 'Solo se permiten letras.',
+                        },
+                        {
+                          required: true,
+                          message: 'Este campo es obligatorio.',
+                        },
+                      ]}
+                    >
+                      <Input
+                        size="large"
+                        style={!isEditing ? customDisabledStyle : { height: '40px' }}
+                        disabled={!isEditing}
+                      />
+                    </Form.Item>
 
-  <Form.Item
-    style={{ width: '275px' }}
-    label="Apellido"
-    name="last_name"
-    layout="vertical"
-    className="formItemProfile"
-    rules={[
-      {
-        pattern: /^[a-zA-Z\s]+$/g,
-        message: 'Solo se permiten letras.',
-      },
-      {
-        required: true,
-        message: 'Este campo es obligatorio.',
-      },
-    ]}
-  >
-    <Input
-      size="large"
-      style={!isEditing ? customDisabledStyle : { height: '40px' }}
-      disabled={!isEditing}
-    />
-  </Form.Item>
+                    <Form.Item
+                      style={{ width: '275px' }}
+                      label="Apellido"
+                      name="last_name"
+                      layout="vertical"
+                      className="formItemProfile"
+                      rules={[
+                        {
+                          pattern: /^[a-zA-Z\s]+$/g,
+                          message: 'Solo se permiten letras.',
+                        },
+                        {
+                          required: true,
+                          message: 'Este campo es obligatorio.',
+                        },
+                      ]}
+                    >
+                      <Input
+                        size="large"
+                        style={!isEditing ? customDisabledStyle : { height: '40px' }}
+                        disabled={!isEditing}
+                      />
+                    </Form.Item>
 
-  <Form.Item
-    style={{ width: '275px' }}
-    label="Teléfono"
-    name="phone"
-    layout="vertical"
-    className="formItemProfile"
-    rules={[
-      {
-        pattern: /^[0-9]+$/g,
-        message: 'Solo se permiten números.',
-      },
-      {
-        required: true,
-        message: 'Este campo es obligatorio.',
-      },
-    ]}
-  >
-    <Input
-      size="large"
-      type="number"
-      style={!isEditing ? customDisabledStyle : { height: '40px' }}
-      disabled={!isEditing}
-    />
-  </Form.Item>
-  <Form.Item
-                        layout='vertical'
-                        label={tipoDocumento}
-                        style={{ width: '275xp' }}
-                        name='document'
-                        className='formItemProfile'
-                      >
+                    <Form.Item
+                      style={{ width: '275px' }}
+                      label="Teléfono"
+                      name="phone"
+                      layout="vertical"
+                      className="formItemProfile"
+                      rules={[
+                        {
+                          pattern: /^[0-9]+$/g,
+                          message: 'Solo se permiten números.',
+                        },
+                        {
+                          required: true,
+                          message: 'Este campo es obligatorio.',
+                        },
+                      ]}
+                    >
+                      <Input
+                        size="large"
+                        type="number"
+                        style={!isEditing ? customDisabledStyle : { height: '40px' }}
+                        disabled={!isEditing}
+                      />
+                    </Form.Item>
+                    <Form.Item
+                      layout='vertical'
+                      label={tipoDocumento}
+                      style={{ width: '275xp' }}
+                      name='document'
+                      className='formItemProfile'
+                    >
 
+                      <Input
+                        size='large'
+                        style={{ ...customDisabledStyle, }}
+                        disabled={true}
+                      />
+                    </Form.Item>
+                    <Form.Item
+                      style={{ width: '275px' }}
+                      label="Email"
+                      name="email"
+                      layout="vertical"
+                      className="formItemProfile"
+                      rules={[
+                        {
+                          type: 'email',
+                          message: 'Ingrese un correo electrónico válido.',
+                        },
+                        {
+                          required: true,
+                          message: 'Este campo es obligatorio.',
+                        },
+                      ]}
+                    >
+                      <Input
+                        size="large"
+                        style={{ ...customDisabledStyle }}
+                        disabled
+                      />
+                    </Form.Item>
+
+                    <Form.Item
+                      style={{ width: '275px' }}
+                      label="Género"
+                      name="gender"
+                      layout="vertical"
+                      className="formItemProfile"
+                      rules={[
+                        {
+                          required: true,
+                          message: 'Este campo es obligatorio.',
+                        },
+                      ]}
+                    >
+                      {isEditing ? (
+                        <Select style={{ height: '40px' }} options={generos} size="large" />
+                      ) : (
                         <Input
-                          size='large'
-                          style={{ ...customDisabledStyle,}}
-                          disabled={true}
+                          size="large"
+                          style={!isEditing ? customDisabledStyle : { height: '40px' }}
+                          disabled={!isEditing}
                         />
-                      </Form.Item>
-  <Form.Item
-    style={{ width: '275px' }}
-    label="Email"
-    name="email"
-    layout="vertical"
-    className="formItemProfile"
-    rules={[
-      {
-        type: 'email',
-        message: 'Ingrese un correo electrónico válido.',
-      },
-      {
-        required: true,
-        message: 'Este campo es obligatorio.',
-      },
-    ]}
-  >
-    <Input
-      size="large"
-      style={{ ...customDisabledStyle }}
-      disabled
-    />
-  </Form.Item>
+                      )}
+                    </Form.Item>
 
-  <Form.Item
-    style={{ width: '275px' }}
-    label="Género"
-    name="gender"
-    layout="vertical"
-    className="formItemProfile"
-    rules={[
-      {
-        required: true,
-        message: 'Este campo es obligatorio.',
-      },
-    ]}
-  >
-    {isEditing ? (
-      <Select style={{ height: '40px' }} options={generos} size="large" />
-    ) : (
-      <Input
-        size="large"
-        style={!isEditing ? customDisabledStyle : { height: '40px' }}
-        disabled={!isEditing}
-      />
-    )}
-  </Form.Item>
+                    <Form.Item
+                      style={{ width: '275px' }}
+                      label="Nacionalidad"
+                      name="nationality"
+                      layout="vertical"
+                      className="formItemProfile"
+                      rules={[
+                        {
+                          required: true,
+                          message: 'Este campo es obligatorio.',
+                        },
+                      ]}
+                    >
+                      {isEditing ? (
+                        <Select style={{ height: '40px' }} options={nationalities} size="large" />
+                      ) : (
+                        <Input
+                          size="large"
+                          style={!isEditing ? customDisabledStyle : { height: '40px' }}
+                          disabled={!isEditing}
+                        />
+                      )}
+                    </Form.Item>
 
-  <Form.Item
-    style={{ width: '275px' }}
-    label="Nacionalidad"
-    name="nationality"
-    layout="vertical"
-    className="formItemProfile"
-    rules={[
-      {
-        pattern: /^[a-zA-Z\s]+$/g,
-        message: 'Solo se permiten letras.',
-      },
-      {
-        required: true,
-        message: 'Este campo es obligatorio.',
-      },
-    ]}
-  >
-    {isEditing ? (
-      <Select style={{ height: '40px' }} options={nationalities} size="large" />
-    ) : (
-      <Input
-        size="large"
-        style={!isEditing ? customDisabledStyle : { height: '40px' }}
-        disabled={!isEditing}
-      />
-    )}
-  </Form.Item>
+                    <Form.Item
+                      style={{ width: '275px' }}
+                      label="Provincia"
+                      name="province"
+                      layout="vertical"
+                      className="formItemProfile"
+                      rules={[
+                        {
+                          pattern: /^[a-zA-Z\s]+$/g,
+                          message: 'Solo se permiten letras.',
+                        },
+                        {
+                          required: true,
+                          message: 'Este campo es obligatorio.',
+                        },
+                      ]}
+                    >
+                      <Input
+                        size="large"
+                        style={!isEditing ? customDisabledStyle : { height: '40px' }}
+                        disabled={!isEditing}
+                      />
+                    </Form.Item>
 
-  <Form.Item
-    style={{ width: '275px' }}
-    label="Provincia"
-    name="province"
-    layout="vertical"
-    className="formItemProfile"
-    rules={[
-      {
-        pattern: /^[a-zA-Z\s]+$/g,
-        message: 'Solo se permiten letras.',
-      },
-      {
-        required: true,
-        message: 'Este campo es obligatorio.',
-      },
-    ]}
-  >
-    <Input
-      size="large"
-      style={!isEditing ? customDisabledStyle : { height: '40px' }}
-      disabled={!isEditing}
-    />
-  </Form.Item>
-
-  <Form.Item
-    style={{ width: '275px' }}
-    label="Ciudad"
-    name="city"
-    layout="vertical"
-    className="formItemProfile"
-    rules={[
-      {
-        pattern: /^[a-zA-Z\s]+$/g,
-        message: 'Solo se permiten letras.',
-      },
-      {
-        required: true,
-        message: 'Este campo es obligatorio.',
-      },
-    ]}
-  >
-    <Input
-      size="large"
-      style={!isEditing ? customDisabledStyle : { height: '40px' }}
-      disabled={!isEditing}
-    />
-  </Form.Item>
-  <Space.Compact>
+                    <Form.Item
+                      style={{ width: '275px' }}
+                      label="Ciudad"
+                      name="city"
+                      layout="vertical"
+                      className="formItemProfile"
+                      rules={[
+                        {
+                          pattern: /^[a-zA-Z\s]+$/g,
+                          message: 'Solo se permiten letras.',
+                        },
+                        {
+                          required: true,
+                          message: 'Este campo es obligatorio.',
+                        },
+                      ]}
+                    >
+                      <Input
+                        size="large"
+                        style={!isEditing ? customDisabledStyle : { height: '40px' }}
+                        disabled={!isEditing}
+                      />
+                    </Form.Item>
+                    <Space.Compact>
                       <Form.Item
                         style={{ width: '275xp' }}
                         label="Calle"
@@ -617,7 +613,7 @@ export default function Profile() {
                             message: 'Este campo es obligatorio.',
                           },
                         ]}
-                        >
+                      >
                         <Input
                           size='large'
                           style={!isEditing ? customDisabledStyle : {}}
@@ -632,15 +628,11 @@ export default function Profile() {
                         className="formItemProfile"
                         rules={[
                           {
-                            pattern: /^[a-zA-Z\s]+$/g,
-                            message: 'Solo se permiten letras.',
-                          },
-                          {
                             required: true,
                             message: 'Este campo es obligatorio.',
                           },
                         ]}
-                        >
+                      >
                         <Input
                           size='large'
                           type="number"
@@ -651,31 +643,31 @@ export default function Profile() {
 
                     </Space.Compact>
 
-  <Form.Item
-    style={{ width: '275px' }}
-    label="Código postal"
-    name="postalCode"
-    layout="vertical"
-    className="formItemProfile"
-    rules={[
-      {
-        pattern: /^[0-9]+$/g,
-        message: 'Solo se permiten números.',
-      },
-      {
-        required: true,
-        message: 'Este campo es obligatorio.',
-      },
-    ]}
-  >
-    <Input
-      size="large"
-      type="number"
-      style={!isEditing ? customDisabledStyle : {}}
-      disabled={!isEditing}
-    />
-  </Form.Item>
-</div>
+                    <Form.Item
+                      style={{ width: '275px' }}
+                      label="Código postal"
+                      name="postalCode"
+                      layout="vertical"
+                      className="formItemProfile"
+                      rules={[
+                        {
+                          pattern: /^[0-9]+$/g,
+                          message: 'Solo se permiten números.',
+                        },
+                        {
+                          required: true,
+                          message: 'Este campo es obligatorio.',
+                        },
+                      ]}
+                    >
+                      <Input
+                        size="large"
+                        type="number"
+                        style={!isEditing ? customDisabledStyle : {}}
+                        disabled={!isEditing}
+                      />
+                    </Form.Item>
+                  </div>
 
                 </Flex>
 

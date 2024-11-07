@@ -16,6 +16,8 @@ export default function FormSearchDni({ handleSearch }) {
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [selectedRoles, setSelectedRoles] = useState([]);
     const [courses, setCourse] = useState([]);
+    const [inputType, setInputType] = useState('number'); // Estado para el tipo del campo
+
 
     useEffect(() => {
         fetch('http://127.0.0.1:8000/api/documentTypes/', {
@@ -162,6 +164,21 @@ export default function FormSearchDni({ handleSearch }) {
         console.log("cambio")
     }
 
+    const handleTipoDocumentoChange = (value) => {
+        console.log("aaaaaaaaaaa");
+        if (value === 8) {
+            setInputType('text');
+            console.log(inputType);
+
+        } else {
+            setInputType('number');
+            console.log(inputType);
+        }
+        form.setFieldsValue({ tipoDocumento: value });
+    };
+
+    
+    
 
     console.log(createdPersonals);
     return (
@@ -173,11 +190,14 @@ export default function FormSearchDni({ handleSearch }) {
                         style={{ width: '30%' }}
                         name="tipoDocumento"
                     >
-                        <Select
-                            size="large"
-                            value={defaultTipoDocumento}
-                            options={tipoDocumentos}
-                        />
+<Select
+    size="large"
+    value={defaultTipoDocumento}
+    options={tipoDocumentos}
+    onChange={handleTipoDocumentoChange} // Llama a la función en cada cambio
+/>
+
+
                     </Form.Item>
 
                     <Form.Item // Input field documento
@@ -187,17 +207,18 @@ export default function FormSearchDni({ handleSearch }) {
                             { required: true, message: 'Ingrese un documento válido.', min: 8 },
                         ]}
                     >
-                        <Input
-                            size='large'
-                            type="number"
-                            autoSize={true}
-                            placeholder="Documento"
-                            suffix={
-                                <Tooltip arrow={false} title="Si se ingresa un documento nuevo, se creará un nuevo personal">
-                                    <InfoCircleOutlined style={{ color: 'gray' }} />
-                                </Tooltip>
-                            }
-                        />
+<Input
+    size='large'
+    type={inputType} // Usa el estado inputType para el tipo de campo
+    autoSize={true}
+    placeholder="Documento"
+    suffix={
+        <Tooltip arrow={false} title="Si se ingresa un documento nuevo, se creará un nuevo personal">
+            <InfoCircleOutlined style={{ color: 'gray' }} />
+        </Tooltip>
+    }
+/>
+
                     </Form.Item>
 
                     <Button // Submit button
