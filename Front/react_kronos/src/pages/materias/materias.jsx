@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import './materias.scss';
 import RangeSlider from "../../components/timerangeslider/timerange.jsx";
 import { Spin, Table, Select, Input, FloatButton, Drawer, Form, Button, message, Modal, Flex } from "antd";
-import { SearchOutlined, EditOutlined, FileAddOutlined, DownOutlined, UpOutlined, DownloadOutlined, CloseOutlined, FileSearchOutlined, UserAddOutlined } from '@ant-design/icons';
+import { SearchOutlined, EditOutlined, FileAddOutlined, DownOutlined, UpOutlined, DeleteOutlined, DownloadOutlined, CloseOutlined, FileSearchOutlined, UserAddOutlined } from '@ant-design/icons';
 import FormCreateSubject from './formCreateSubject.jsx';
 import FormCreateSubjectForCourse from './formCreateSubjectForCourse.jsx';
 import EditSubjectForCourse from './EditSubjectForCourse.jsx';
@@ -348,7 +348,7 @@ export default function Materias() {
         { title: 'Curso', dataIndex: 'course', key: 'course', width: '10%' },
         { title: 'Profesores', dataIndex: 'teachers', key: 'teachers' },
         { 
-            title: 'Asignar profesor', 
+            title: ' ', 
             render: (text, record) => (
                 <Button 
                     onClick={() => {
@@ -376,11 +376,11 @@ export default function Materias() {
             ),
             
             key: 'asignar_profesor', 
-            width: '10%', 
+            width: '5%', 
         },
         //Cambiar ESTOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO  AL EDITAR AGREGAR AÑO A MATERIA QUe se muestre la materia y el curso arriba y se pueda cambiar la hora catedra y el plan
         { 
-            title: 'Editar', 
+            title: ' ', 
             render: (text, record) => (
                 <Button 
                     onClick={() => showDrawer(
@@ -394,7 +394,21 @@ export default function Materias() {
                 />
             ), 
             key: 'action', 
-            width: '10%', 
+            width: '5%', 
+        },
+        { 
+            title: ' ', 
+            render: () => (
+                <Button 
+                    size="default" 
+                    style={{ display: 'flex', justifyContent: 'center', margin: 'auto' }} 
+                    type="link" 
+                    danger
+                    icon={<DeleteOutlined />} 
+                />
+            ), 
+            key: 'delete', 
+            width: '5%', 
         }
     ];
 
