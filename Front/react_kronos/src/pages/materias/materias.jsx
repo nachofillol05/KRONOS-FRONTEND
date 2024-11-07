@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import './materias.scss';
 import RangeSlider from "../../components/timerangeslider/timerange.jsx";
 import { Spin, Table, Select, Input, FloatButton, Drawer, Form, Button, message, Modal, Flex } from "antd";
-import { SearchOutlined, EditOutlined, FileAddOutlined, DownOutlined, UpOutlined, DownloadOutlined, CloseOutlined, FileSearchOutlined, UserAddOutlined } from '@ant-design/icons';
+import { SearchOutlined, EditOutlined, FileAddOutlined, DownOutlined, UpOutlined, DeleteOutlined, DownloadOutlined, CloseOutlined, FileSearchOutlined, UserAddOutlined } from '@ant-design/icons';
 import FormCreateSubject from './formCreateSubject.jsx';
 import FormCreateSubjectForCourse from './formCreateSubjectForCourse.jsx';
 import ModalComponent from './ModalAsignacion.jsx';
@@ -257,7 +257,22 @@ export default function Materias() {
                 <div style={{ width: '100%', height: '24px', backgroundColor: text, borderRadius: '4px' }} />
             )
         },
-        { title: 'Accion', render: () => <Button size='default' style={{ display: 'flex', justifyContent: 'center', margin: 'auto' }} type='link' icon={<EditOutlined />} />, key: 'action', width: '10%', }
+        {
+            title: 'Editar',
+            render: (text, record) => (
+            <Button
+                size='default'
+                style={{ display: 'flex', justifyContent: 'center', margin: 'auto' }}
+                type='link'
+                icon={<EditOutlined />}
+                onClick={(event) => {
+                console.log('Editando registro:', record);
+                }} // Cierra correctamente la función aquí
+            />
+            ),
+            key: 'action',
+            width: '10%',
+        }
 
     ];
 
@@ -306,7 +321,21 @@ export default function Materias() {
                 />
             ), 
             key: 'action', 
-            width: '10%', 
+            width: '7.5%', 
+        },
+        { 
+            title: 'Eliminar', 
+            render: () => (
+                <Button 
+                    size="default" 
+                    style={{ display: 'flex', justifyContent: 'center', margin: 'auto' }} 
+                    type="link" 
+                    danger
+                    icon={<DeleteOutlined />} 
+                />
+            ), 
+            key: 'delete', 
+            width: '7.5%', 
         }
     ];
 
