@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react';
-import { Form, Input, Button, Flex, Tooltip, Select, Spin } from 'antd';
+import { Form, Input, Button, Flex, Tooltip, Select, Spin, message } from 'antd';
 import { RollbackOutlined, PlusOutlined } from '@ant-design/icons';
 
-export default function FormCreateWorker({ handleSubmit, handleVolver, tipoDocumento, tipoDocumentoId, documento }) {
+export default function FormCreateWorker({ handleSubmit, handleVolver, tipoDocumento, tipoDocumentoId, documento,onClose }) {
     const [form] = Form.useForm();
     const [loading, setLoading] = React.useState(false);
 
@@ -35,6 +35,7 @@ export default function FormCreateWorker({ handleSubmit, handleVolver, tipoDocum
             } finally {
                 console.log("se frena")
                 setLoading(false);
+                onClose();
             }
         };
 

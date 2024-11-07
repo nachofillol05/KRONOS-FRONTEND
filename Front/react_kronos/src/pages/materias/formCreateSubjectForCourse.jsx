@@ -3,7 +3,7 @@ import { Form, Input, Button, Tooltip, Select, Flex } from 'antd';
 import { InfoCircleOutlined, RollbackOutlined, PlusOutlined } from '@ant-design/icons';
 const { TextArea } = Input;
 
-export default function FormCreateSubject({ handleSubmit, onClose, cursos, value, setValue}) {
+export default function FormCreateSubject({ handleSubmit, onClose, cursos, value, setValue, values}) {
     const [materiasSelect, setMateriasSelect] = useState([]);
     const [materiasSeleccionada, setMateriasSeleccionada] = useState(null);
     const [materiasCompleta, setMateriasCompleta] = useState([]);
@@ -144,11 +144,9 @@ export default function FormCreateSubject({ handleSubmit, onClose, cursos, value
                     <Tooltip title="Volver">
                         <Button size='large' iconPosition='end' icon={<RollbackOutlined />} style={{ width: "100px" }} onClick={onClose} />
                     </Tooltip>
-                    {cursosSelect.length !== 0 ?
                     <Tooltip title="Agregar">
-                        <Button type='primary' size='large' iconPosition='end' icon={<PlusOutlined />} style={{ width: "100px" }} onClick={() => handleSubmit(form)} />
+                        <Button type='primary' size='large' disabled={cursosSelect.length == 0 } iconPosition='end' icon={<PlusOutlined />} style={{ width: "100px" }} onClick={() => handleSubmit(form)} />
                     </Tooltip>
-                    : null}
                 </Flex>
             </Form.Item>
 

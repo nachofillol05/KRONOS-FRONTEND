@@ -6,7 +6,7 @@ const format = 'DD/MM/YYYY';
 
 function HorarioProfesor() {
     const [subjects, setSubjects] = useState([]);
-    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(false);
     useEffect(() => {
         fetch("http://127.0.0.1:8000/api/ViewTeacherSchedule/", {
             method: "GET",
@@ -16,17 +16,20 @@ function HorarioProfesor() {
             },
         })
             .then(response => {
-                if (!response.ok) throw new Error("Network response was not ok");
+                if (!response.ok){
+                    setError(true);
+                    throw new Error("Network response was not ok");
+                }
                 return response.json();
             })
-            .then(data => setSubjects(data), setLoading(false))
+            .then(data => setSubjects(data))
             .catch(error => console.error("Error fetching data:", error));
     }, []);
 
     console.log(subjects)
     return (
         <Spin
-            spinning={subjects.length==0}>
+            spinning={subjects.length==0 && !error}>
             {/*<div className="contenedor-filtros contenedor-filtros-horario">
                 <DatePicker size='large' format={format} />
                 <Button icon={<FilterOutlined />} size='large' type='primary'>

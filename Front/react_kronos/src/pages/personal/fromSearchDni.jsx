@@ -211,7 +211,7 @@ export default function FormSearchDni({ handleSearch }) {
             </Form>
             <br />
             <Alert
-                message="Tiene un personal muy extenso"
+                message="¿Tiene un personal muy extenso?"
                 description={
                     <Flex>
                         <p>

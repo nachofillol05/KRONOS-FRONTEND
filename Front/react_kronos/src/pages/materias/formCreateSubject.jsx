@@ -71,7 +71,7 @@ export default function FormCreateSubject({ handleSubmit, onClose, cursos, value
                     <Form.Item
                         style={{ width: '40%' }}
                         name="abreviacion"
-                        label="Abreviacion"
+                        label="Abreviación"
                         onChange={(e) => setAbreviacionSelected(e.target.value)}
                         rules={[
                             {
@@ -84,7 +84,7 @@ export default function FormCreateSubject({ handleSubmit, onClose, cursos, value
                             }
                         ]}
                     >
-                        <Input size='large' autoSize maxLength={5} />
+                        <Input size='large' autoSize placeholder="Ingrese abreviacion" maxLength={5} />
                     </Form.Item>
                 </Space.Compact>
                 <Form.Item
