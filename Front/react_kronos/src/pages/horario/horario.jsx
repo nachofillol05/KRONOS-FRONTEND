@@ -349,7 +349,7 @@ function Horario() {
                     closeIcon={<DownOutlined />}
                     icon={<UpOutlined />}
                 >
-                    <FloatButton icon={<DownloadOutlined />} tooltip="Descargar tabla" />
+                    {/*<FloatButton icon={<DownloadOutlined />} tooltip="Descargar tabla" />*/}
                     <FloatButton icon={<HistoryOutlined />} type='primary' tooltip="Historial de cambios"
                         onClick={() => showDrawer(
                             <Suspense fallback={<Spin />}><Historial /></Suspense>, 'Historial de cambios')}
@@ -358,10 +358,7 @@ function Horario() {
                         onClick={() => showDrawer(
                             <Suspense fallback={<Spin />}><Horas showDrawer={showDrawer} /></Suspense>, 'Horas catedra')}
                     />
-                    <FloatButton icon={<AppstoreOutlined />} type='primary' tooltip='Cursos'
-                        onClick={() => showDrawer(
-                            <Suspense fallback={<Spin />}><SelectCourse showDrawer={showDrawer} /></Suspense>, 'Cursos')}
-                    />
+                    
                 </FloatButton.Group>
 
                 <Drawer

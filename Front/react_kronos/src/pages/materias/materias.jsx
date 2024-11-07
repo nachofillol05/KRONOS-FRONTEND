@@ -5,6 +5,7 @@ import { Spin, Table, Select, Input, FloatButton, Drawer, Form, Button, message,
 import { SearchOutlined, EditOutlined, FileAddOutlined, DownOutlined, UpOutlined, DeleteOutlined, DownloadOutlined, CloseOutlined, FileSearchOutlined, UserAddOutlined } from '@ant-design/icons';
 import FormCreateSubject from './formCreateSubject.jsx';
 import FormCreateSubjectForCourse from './formCreateSubjectForCourse.jsx';
+import EditSubjectForCourse from './EditSubjectForCourse.jsx';
 import ModalComponent from './ModalAsignacion.jsx';
 import AsignarProfesor from './asignacionProfesorDrawer.jsx'
 
@@ -170,8 +171,6 @@ export default function Materias() {
     const handleSubmitConectarCurso = (form) => {
         form.validateFields()
             .then(values => {
-                console.log('entro')
-                console.log('aaaaaaaaaaaa', values)
                 const body = {
                     subject: values.materia,
                     course: values.curso,
@@ -339,16 +338,19 @@ export default function Materias() {
             title: 'Editar', 
             render: (text, record) => (
                 <Button 
-                    onClick={() => showDrawer(
-                        <FormCreateSubject
-                            handleSubmit={handleSubmitEditar}
-                            onClose={onClose}
-                            cursos={cursos}
-                            value={record}
-                            setValue={setValue}
-                        />,
-                        'Editar materia'
-                    )}
+                    onClick={(event) => {
+                        event.stopPropagation();
+                        showDrawer(
+                            <FormCreateSubject
+                                handleSubmit={handleSubmitEditar}
+                                onClose={onClose}
+                                cursos={cursos}
+                                value={record}
+                                setValue={setValue}
+                            />,
+                            'Editar materia'
+                        );
+                    }}
                     size="default" 
                     style={{ display: 'flex', justifyContent: 'center', margin: 'auto' }} 
                     type="link" 
@@ -398,14 +400,8 @@ export default function Materias() {
             render: (text, record) => (
                 <Button 
                     onClick={() => showDrawer(
-                        <FormCreateSubject
-                            handleSubmit={handleSubmit}
-                            onClose={onClose}
-                            cursos={cursos}
-                            value={record}
-                            setValue={setValue}
-                        />,
-                        'Editar materia'
+                        <EditSubjectForCourse onClose={onClose} values={record} />,
+                        'Editar materia por curso'
                     )}
                     size="default" 
                     style={{ display: 'flex', justifyContent: 'center', margin: 'auto' }} 

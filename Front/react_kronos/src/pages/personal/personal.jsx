@@ -135,6 +135,7 @@ export default function Personal() {
         documento={values.documento}
         handleSubmit={handleSubmit}
         handleVolver={handleVolver}
+        onClose={onClose}
       />,
       "Agregar Personal"
     );
