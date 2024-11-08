@@ -74,6 +74,7 @@ export default function Profile() {
   };
 
   const handleFileChange = (e) => {
+    
     const file = e.file.originFileObj;
     const allowedTypes = ['image/jpeg', 'image/png', 'image/webp'];
   
@@ -86,8 +87,10 @@ export default function Profile() {
         }
       } else {
         setFile(e.file);
+        console.log(profilePicture);
         setProfilePicture(URL.createObjectURL(file));
-        setIsErrorShown(false); // Resetear si el archivo es válido
+        console.log(URL.createObjectURL(file))
+        setIsErrorShown(false); 
       }
     }
   };
@@ -158,6 +161,8 @@ export default function Profile() {
       province: data.contactInfo?.province || '',
       street: data.contactInfo?.street || '',
       streetNumber: data.contactInfo?.streetNumber || '',
+      //Porner aca ek profile oicuuuuuuuuuuuuuuuuuureeeeeee
+      //profilePicture: isEditing?
     });
   }, [isEditing, profileData]);
 
@@ -197,6 +202,10 @@ export default function Profile() {
 
   const toggleEditMode = () => {
     setIsEditing(!isEditing);
+  };
+  const CancelarEdit = () => {
+    setActualizar(!actualizar)
+    setIsEditing(false);
   };
   const generos = [
     { value: 'masculino', label: 'Masculino' },
@@ -300,6 +309,7 @@ export default function Profile() {
     console.log("gandle cancel")
     setIsModalVisible(false);
     formCambio.resetFields();
+    
   };
 
   // Validar que la nueva contraseña y la confirmación coincidan
@@ -330,7 +340,7 @@ export default function Profile() {
                     <>
                       <Button
                         style={{ width: '100px', marginInline: '10px' }}
-                        onClick={toggleEditMode}
+                        onClick={CancelarEdit}
                         danger
                       >
                         Cancelar
@@ -399,8 +409,7 @@ export default function Profile() {
     className="formItemProfile"
     rules={[
       {
-        pattern: /^[a-zA-Z\s]+$/g,
-        message: 'Solo se permiten letras.',
+      pattern: /^[a-zA-ZÀ-ÿ\s]+$/g,        message: 'Solo se permiten letras.',
       },
       {
         required: true,
@@ -423,8 +432,7 @@ export default function Profile() {
     className="formItemProfile"
     rules={[
       {
-        pattern: /^[a-zA-Z\s]+$/g,
-        message: 'Solo se permiten letras.',
+      pattern: /^[a-zA-ZÀ-ÿ\s]+$/g,        message: 'Solo se permiten letras.',
       },
       {
         required: true,
@@ -533,10 +541,6 @@ export default function Profile() {
     className="formItemProfile"
     rules={[
       {
-        pattern: /^[a-zA-Z\s]+$/g,
-        message: 'Solo se permiten letras.',
-      },
-      {
         required: true,
         message: 'Este campo es obligatorio.',
       },
@@ -561,8 +565,7 @@ export default function Profile() {
     className="formItemProfile"
     rules={[
       {
-        pattern: /^[a-zA-Z\s]+$/g,
-        message: 'Solo se permiten letras.',
+      pattern: /^[a-zA-ZÀ-ÿ\s]+$/g,        message: 'Solo se permiten letras.',
       },
       {
         required: true,
@@ -585,8 +588,7 @@ export default function Profile() {
     className="formItemProfile"
     rules={[
       {
-        pattern: /^[a-zA-Z\s]+$/g,
-        message: 'Solo se permiten letras.',
+      pattern: /^[a-zA-ZÀ-ÿ\s]+$/g,        message: 'Solo se permiten letras.',
       },
       {
         required: true,
@@ -609,8 +611,7 @@ export default function Profile() {
                         className="formItemProfile"
                         rules={[
                           {
-                            pattern: /^[a-zA-Z\s]+$/g,
-                            message: 'Solo se permiten letras.',
+                          pattern: /^[a-zA-ZÀ-ÿ\s]+$/g,                            message: 'Solo se permiten letras.',
                           },
                           {
                             required: true,
@@ -631,10 +632,6 @@ export default function Profile() {
                         layout='vertical'
                         className="formItemProfile"
                         rules={[
-                          {
-                            pattern: /^[a-zA-Z\s]+$/g,
-                            message: 'Solo se permiten letras.',
-                          },
                           {
                             required: true,
                             message: 'Este campo es obligatorio.',

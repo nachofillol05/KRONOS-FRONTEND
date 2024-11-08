@@ -24,6 +24,28 @@ export default function Login() {
     const inputUserRef = useRef(null);
     const inputPasswordRef = useRef(null);
 
+    useEffect(()=>{
+        if (localStorage.getItem('token')) {
+            const verifyToken = async () => {
+                try {
+                    const response = await fetch('http://localhost:8000/api/verifyToken/', {
+                        method: "POST",
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ "token": localStorage.getItem('token') })
+                    });
+                    if (!response.ok) {
+                        navigate('/login');
+                    }else{
+                        navigate('/')
+                    }
+                } catch (error) {
+                    console.error('Error verifying token:', error);
+                }
+            };
+            verifyToken();
+        }
+    },[])
+
     useEffect(() => {
         const token = localStorage.getItem('token');
         if (!token) {
@@ -39,26 +61,7 @@ export default function Login() {
         getRoles();
     }, []);
 
-    if (localStorage.getItem('token')) {
-        const verifyToken = async () => {
-            try {
-                const response = await fetch('http://localhost:8000/api/verifyToken/', {
-                    method: "POST",
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ "token": localStorage.getItem('token') })
-                });
-                console.log("eeeeeeeeeeeeeeeeeeeeeeeeerroooooooooooooooooooooooooooor:",response)
-                if (!response.ok) {
-                    console.log("response no ta biennnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn?????????????????'")
-                    //VER DE CAMBIAR ESTOOOOOOOOOOOOOOOOOOOOO
-                    navigate('/login');
-                }
-            } catch (error) {
-                console.error('Error verifying token:', error);
-            }
-        };
-        verifyToken();
-    }
+    
 
     async function handleLogin(values) {
         setLoading(true);
