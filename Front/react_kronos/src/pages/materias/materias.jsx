@@ -69,6 +69,7 @@ export default function Materias() {
         })
         setRecargar(!recargar);
     }
+
     useEffect(() => {
         setRecargar(!recargar)
     }, [isModalOpen])
@@ -149,6 +150,23 @@ export default function Materias() {
                 showMessage('error', 'Por favor, complete todos los campos.');
             });
     };
+
+    const deleteCourseSubject = (record) => {
+        console.log(record.id);
+        fetch(`http://127.0.0.1:8000/api/coursesubjects/${record.id}/`, {  // Use backticks for interpolation
+            method: 'DELETE',
+            headers: {
+                'Authorization': 'Token ' + localStorage.getItem('token'),
+                'School-ID': sessionStorage.getItem('actual_school'),
+                'Content-Type': 'application/json'
+            },
+        })
+        .then(response => response.json())  // Optionally handle the response
+        .then(data => console.log(data))
+        .catch(error => console.error('Error:', error));
+        setRecargar(!recargar)
+    }
+    
 
     const handleSubmitConectarCurso = (form) => {
         form.validateFields()
@@ -352,7 +370,6 @@ export default function Materias() {
             render: (text, record) => (
                 <Button 
                     onClick={() => {
-                        console.log('boton');
                         showDrawer(
                             <AsignarProfesor
                                 onClose={onClose}
@@ -378,7 +395,6 @@ export default function Materias() {
             key: 'asignar_profesor', 
             width: '5%', 
         },
-        //Cambiar ESTOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO  AL EDITAR AGREGAR AÑO A MATERIA QUe se muestre la materia y el curso arriba y se pueda cambiar la hora catedra y el plan
         { 
             title: ' ', 
             render: (text, record) => (
@@ -398,8 +414,9 @@ export default function Materias() {
         },
         { 
             title: ' ', 
-            render: () => (
+            render: (text, record) => (
                 <Button 
+                    onClick={()=>deleteCourseSubject(record)}
                     size="default" 
                     style={{ display: 'flex', justifyContent: 'center', margin: 'auto' }} 
                     type="link" 
@@ -555,6 +572,8 @@ export default function Materias() {
         setParentRecord(parent);
 
     };
+
+    
 
     return (
         (isLoading ?
