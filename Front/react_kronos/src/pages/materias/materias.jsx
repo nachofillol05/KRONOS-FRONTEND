@@ -616,6 +616,7 @@ export default function Materias() {
                         allowClear
                     />
                 </div>
+                <div className="table-container">  
                 <Table
                     bordered
                     onRow={() => ({
@@ -642,6 +643,7 @@ export default function Materias() {
                         emptyText: 'No hay materias disponibles', 
                     }}
                 />
+                </div>
 
 
                 {sessionStorage.getItem('rol') === 'Directivo' ? (
