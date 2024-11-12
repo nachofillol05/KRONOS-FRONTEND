@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Button, Flex, Divider, Col, Row, Tooltip, Image, Skeleton } from "antd";
+import { Button, Flex, Divider, Col, Row, Tooltip, Image, Skeleton,List } from "antd";
 import {
   RollbackOutlined,
   PlusOutlined,
@@ -7,17 +7,17 @@ import {
 } from "@ant-design/icons";
 import "./personal.scss";
 
-export default function Especificworker({ handleVolverInfo, id, onClose, rolSeleccionado }) {
-  console.log("aaaaaaaaaaaaaacaaaaajskjdfik9ejljkfosajdos: ",id)
+export default function Especificworker({ handleVolverInfo, user, onClose, rolSeleccionado }) {
+  console.log(user);
   console.log(rolSeleccionado)
   const [selectedCells, setSelectedCells] = useState([]);
-  const [worker, setworker] = useState({});
+  const [worker, setworker] = useState(user);
   const [modulesData, setModulesData] = useState([]);
   const [isSkeleton, setIsSkeleton] = useState(true);
 
   const days = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"];
 
-  useEffect(() => {
+  /*useEffect(() => {
     fetch("http://127.0.0.1:8000/api/staff/", {
       method: "GET",
       headers: {
@@ -32,7 +32,7 @@ export default function Especificworker({ handleVolverInfo, id, onClose, rolSele
         return response.json();
       })
       .then((data) => {
-        const filteredworker = data.find((worker) => worker.id === id);
+        const filteredworker = data.find((worker) => worker.id === user.id);
         if (filteredworker) {
           setworker(filteredworker);
           console.log(filteredworker);
@@ -43,7 +43,7 @@ export default function Especificworker({ handleVolverInfo, id, onClose, rolSele
         setIsSkeleton(false);
       })
       .catch((error) => console.error("Error fetching data:", error));
-  }, [id]);
+  }, [user.id]);*/
   useEffect(() => {
     fetch("http://localhost:8000/api/modules/", {
       method: "GET",
@@ -61,7 +61,7 @@ export default function Especificworker({ handleVolverInfo, id, onClose, rolSele
   }, []);
 
   return (
-    <Skeleton loading={isSkeleton} active>
+    <Skeleton loading={false} active>
       <Flex vertical gap={10}>
         <Flex align="center" gap={30} style={{ width: "70%", height: "50px" }}>
           <label>Foto de perfil:</label>
@@ -114,19 +114,20 @@ export default function Especificworker({ handleVolverInfo, id, onClose, rolSele
         </Row>
         <React.Fragment key={day}>
           {moduleData.map((module) => {
-            console.log(worker.teacher_availability)
+            console.log(worker.availability  )
+            console.log(module)
+            console.log(day)
             // Verificar si el módulo está en la disponibilidad del profesor
-            const isAvailable = worker?.teacher_availability?.some(
-              (availability) =>
-                availability.module.moduleNumber === module.moduleNumber &&
-                availability.module.day.toLowerCase() === day.toLowerCase()
+            const isAvailable = worker?.availability?.some(
+              (availabilityItem) =>
+                availabilityItem.module === module.id &&
+                availabilityItem.state === "Disponible"
             );
-            /*const isOcupied = worker?.teacher_availability?.some(
-              (availability) =>
-                availability.module.moduleNumber === module.moduleNumber &&
-                availability.module.day.toLowerCase() === day.toLowerCase()
-            );*/
-            
+            const isOcupied = worker?.availability?.some(
+              (availabilityItem) =>
+                availabilityItem.module === module.id &&
+                availabilityItem.state === "Asignado"
+            );
 
             return (
               <Col
@@ -134,7 +135,7 @@ export default function Especificworker({ handleVolverInfo, id, onClose, rolSele
                   width: "95%",
                   paddingInline: 3,
                   marginInline: 'auto',
-                  backgroundColor: isAvailable ? "green" : "transparent", // Pintar de verde si está disponible
+                  backgroundColor: isAvailable ? "green" : isOcupied? "red" : "transparent", // Pintar de verde si está disponible
                 }}
                 key={`${day}-${module.id}`}
                 className="especificWorkerCasilla"
@@ -147,7 +148,30 @@ export default function Especificworker({ handleVolverInfo, id, onClose, rolSele
     );
   })}
 </Row>
+{worker.subjects?.length > 0 && (
+          <>
+            <Divider orientation="left">Materias</Divider>
+                <List
+                size="small"
+                bordered
+                dataSource={worker.subjects}
+                renderItem={(item) => <List.Item>{item.subject_name}</List.Item>}
+            />
+          </>
+            )}
 </>)}
+{worker.years?.length > 0 && rolSeleccionado === "Preceptores" && (
+          <>
+            <Divider orientation="left">Años</Divider>
+                <List
+                size="small"
+                bordered
+                dataSource={worker.years}
+                renderItem={(item) => <List.Item>{item.name}</List.Item>}
+            />
+          </>
+            )}
+
 
       <br />
       <Flex justify="flex-end" gap={10}>
