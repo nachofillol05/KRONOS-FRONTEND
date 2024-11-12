@@ -293,7 +293,7 @@ export default function FormSearchDni({ handleSearch }) {
                     <Flex gap={30}>
                         <Checkbox key={'Profesor'} value="Profesor">Profesor</Checkbox>{/*Esto no anda ver como aplicarlo*/}
                         <Checkbox key={'Preceptor'} value="Preceptor">Preceptor</Checkbox>{/*Esto no anda ver como aplicarlo*/}
-                        <Checkbox key={'Directivo'} value="Directivo">Directivo</Checkbox>{/*Esto no anda ver como aplicarlo*/}
+                        <Checkbox key={'Directivo'} value="Directivo">Directivo</Checkbox>
                     </Flex>
                 </Checkbox.Group>
 
