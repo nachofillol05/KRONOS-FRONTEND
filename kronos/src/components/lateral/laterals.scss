@@ -1,0 +1,38 @@
+@import '../../scss/index.scss';
+
+.lateral-container{
+    display: flex;
+    border: 1px solid $color-secundario;
+    width: fit-content;
+    border-radius: 50px 0 0 50px;
+    border-right: none;
+    .boton{
+        border-radius: 50%;
+        width: 35px;
+        height: 35px;
+        background-color: red;
+        margin: 5px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+    }
+    .solid{
+        background-color: $color2;
+        svg{
+            width: 25px;
+            height: 25px;
+            fill: $color-principal;
+
+        }
+    }
+    .transparent{
+        background-color: transparent;
+        border: 1px solid $color-secundario;
+        svg{
+            width: 25px;
+            height: 25px;
+            fill: $color-secundario;
+        }
+    }
+}

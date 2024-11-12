@@ -1,0 +1,50 @@
+
+
+$color1: #0E4942; // Azul oscuro
+$color2: #006D62; // Azul medio
+$color3: #006D58; // Azul claro
+$color-secundario: #333;
+$color-principal: #f8f8f8;
+
+$fuente-titulo: 'Alata';
+$fuente-general: 'LatoRegular';
+$fuente-general-light: 'LatoLigth';
+$fuente-general-thin: 'LatoThin';
+
+$proporcion-aurea-cuadrado: 2.618;
+$proporcion-aurea: 1.618;
+$proporcion-aurea-inversa: 0.618;
+$proporcion-aurea-inversa-cuadrado: 0.382;
+
+
+@font-face {
+    font-family: 'Alata';
+    src: url('../../public/fonts/Alata-Regular.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'LatoThin' ;
+    src: url('../../public/fonts/Lato-Thin.ttf') format('truetype');
+}
+
+
+@font-face {
+    font-family: 'LatoLigth';
+    src: url('../../public/fonts/Lato-Light.ttf') format('truetype');
+}
+
+/* Lato Regular */
+@font-face {
+    font-family: 'LatoRegular';
+    src: url('../../public/fonts/Lato-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+/* Lato Bold */
+@font-face {
+    font-family: 'LatoBold';
+    src: url('../../public/fonts/Lato-Bold.ttf') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+}
