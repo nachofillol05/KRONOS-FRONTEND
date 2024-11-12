@@ -216,6 +216,9 @@ export default function SelectTeacher() {
                 onRow={(record) => ({
                     onClick: () => handleRowClick(record),
                 })}
+                locale={{
+                    emptyText: 'No hay datos disponibles', 
+                  }}
             />
             <Tooltip title="Seleccionar profesor">
                 <Button type='primary' size='large' icon={<ArrowRightOutlined />} style={{ width: "100px" }} />

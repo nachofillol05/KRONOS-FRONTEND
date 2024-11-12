@@ -24,7 +24,7 @@ export default function FormDisponibilidad({ onClose }) {
     };
 
     const actualizarAvailability = () => {
-        const jsonData = JSON.stringify({ module: selectedCells });
+        const jsonData = JSON.stringify({ teacher_availability: selectedCells });
         fetch('http://localhost:8000/api/teacheravailability/', {
             method: 'POST',
             body: jsonData,

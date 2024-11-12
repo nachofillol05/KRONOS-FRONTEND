@@ -273,8 +273,7 @@ export default function EventsPage() {
             padding: 15,
             height: "86.5vh",
             overflowY: "scroll",
-            backgroundColor: "#f1f2f4",
-            boxShadow: "0 0 0 3px #dddcdc",
+
           }}
         >
           {eventos.length === 0 ? (

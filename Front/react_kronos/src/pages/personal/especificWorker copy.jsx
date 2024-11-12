@@ -7,17 +7,17 @@ import {
 } from "@ant-design/icons";
 import "./personal.scss";
 
-export default function Especificworker({ handleVolverInfo, id, onClose, rolSeleccionado }) {
-  console.log("aaaaaaaaaaaaaacaaaaajskjdfik9ejljkfosajdos: ",id)
+export default function Especificworker({ handleVolverInfo, user, onClose, rolSeleccionado }) {
+  console.log(user);
   console.log(rolSeleccionado)
   const [selectedCells, setSelectedCells] = useState([]);
-  const [worker, setworker] = useState({});
+  const [worker, setworker] = useState(user);
   const [modulesData, setModulesData] = useState([]);
   const [isSkeleton, setIsSkeleton] = useState(true);
 
   const days = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"];
 
-  useEffect(() => {
+  /*useEffect(() => {
     fetch("http://127.0.0.1:8000/api/staff/", {
       method: "GET",
       headers: {
@@ -32,7 +32,7 @@ export default function Especificworker({ handleVolverInfo, id, onClose, rolSele
         return response.json();
       })
       .then((data) => {
-        const filteredworker = data.find((worker) => worker.id === id);
+        const filteredworker = data.find((worker) => worker.id === user.id);
         if (filteredworker) {
           setworker(filteredworker);
           console.log(filteredworker);
@@ -43,7 +43,7 @@ export default function Especificworker({ handleVolverInfo, id, onClose, rolSele
         setIsSkeleton(false);
       })
       .catch((error) => console.error("Error fetching data:", error));
-  }, [id]);
+  }, [user.id]);*/
   useEffect(() => {
     fetch("http://localhost:8000/api/modules/", {
       method: "GET",

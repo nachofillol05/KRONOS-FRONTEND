@@ -93,7 +93,7 @@ export default function Horas({ showDrawer }) {
         })
             .then((response) => response.json())
             .then((data) => {
-                console.log(data);
+                console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa ",data);
                 setModulesData(data);
             });
     }, []);
@@ -139,6 +139,9 @@ export default function Horas({ showDrawer }) {
                 scroll={{
                     y: 450,
                 }} />
+                locale={{
+                    emptyText: 'No hay datos disponibles', 
+                  }}
             <Tooltip title="Agregar hora">
                 <Button type='primary' size='large' iconPosition='end' icon={<PlusOutlined />} style={{ width: "100px" }}
                     onClick={() => showDrawer(

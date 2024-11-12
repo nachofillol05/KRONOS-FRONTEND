@@ -10,6 +10,10 @@ export default function InfoWorker({ onClose, handleVolver, handleContactar, use
     const [roles, setRoles] = useState([]);
     const [selectedRoles, setSelectedRoles] = useState([]);
     const [isSkeleton, setIsSkeleton] = useState(true);
+    const [addedRoles, setAddedRoles] = useState([]); // Roles añadidos
+    const [removedRoles, setRemovedRoles] = useState([]); // Roles eliminados
+    const [selectedYear, setSelectedYear] = useState(null);
+    console.log(user)
 
     useEffect(() => {
         fetch(`http://127.0.0.1:8000/api/rolesUser/${user.id}/`, {
@@ -26,34 +30,93 @@ export default function InfoWorker({ onClose, handleVolver, handleContactar, use
                 return response.json();
             })
             .then((data) => {
-                console.log(data.roles)
-                setRoles(data.roles)
-                setSelectedRoles(data.roles)
+                setRoles(data.roles);
+                setSelectedRoles(data.roles);
+                setIsSkeleton(false);
             })
             .catch((error) => console.error("Error fetching data:", error));
-            setIsSkeleton(false);
     }, []);
 
     const onChangeCurso = (value) => {
         console.log(`selected ${value}`);
-    }
+        setSelectedYear(value);
 
+    };
 
     const showModal = () => {
         setIsModalVisible(true);
     };
 
     const handleCheckboxChange = (checkedValues) => {
-        setSelectedRoles(checkedValues); // Actualiza el estado cuando cambian los checkboxes
+        setSelectedRoles(checkedValues);
+
+        // Calcular los roles añadidos y eliminados
+        const newAddedRoles = checkedValues.filter(role => !roles.includes(role));
+        const newRemovedRoles = roles.filter(role => !checkedValues.includes(role));
+        
+        setAddedRoles(newAddedRoles);
+        setRemovedRoles(newRemovedRoles);
     };
 
-    // Función para agregar como directivo, preceptor o profesor
     const handleAgregar = () => {
-        selectedRoles.forEach(role => {
-            console.log(`Asignado como: ${role}`);
-        });
-        setIsModalVisible(false);
-        onClose();
+            console.log("Roles añadidos: ", addedRoles);
+            console.log("Roles eliminados: ", removedRoles);
+        
+            // Procesar roles añadidos
+            addedRoles.forEach(role => {
+                const data = { "role":role, "user_id": user.id };
+                
+                if (role === "Preceptor") {
+                    // Agregar el ID del curso seleccionado para el rol de Preceptor
+                    data.year_id = selectedYear; // Asigna el ID del curso seleccionado
+                }
+        
+                fetch("http://127.0.0.1:8000/api/addrole/", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: "Token " + localStorage.getItem("token"),
+                        "School-ID": sessionStorage.getItem("actual_school"),
+                    },
+                    body: JSON.stringify(data),
+                })
+                .then(response => {
+                    if (!response.ok) throw new Error(`Error asignando rol: ${role}`);
+                    return response.json();
+                })
+                .then(data => console.log(`Rol ${role} asignado exitosamente`, data))
+                .catch(error => console.error("Error:", error));
+            });
+        
+            // Procesar roles eliminados
+            removedRoles.forEach(role => {
+                const data = { role:role, user_id: user.id };
+                
+        
+                if (role === "Preceptor") {
+                    data.year_id = selectedYear; // Asigna el ID del curso correspondiente
+                }
+        
+                fetch("http://127.0.0.1:8000/api/addrole/", {
+                    method: "DELETE",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: "Token " + localStorage.getItem("token"),
+                        "School-ID": sessionStorage.getItem("actual_school"),
+                    },
+                    body: JSON.stringify(data),
+                })
+                .then(response => {
+                    if (!response.ok) throw new Error(`Error eliminando rol: ${role}`);
+                    return response.json();
+                })
+                .then(data => console.log(`Rol ${role} eliminado exitosamente`, data))
+                .catch(error => console.error("Error:", error));
+            });
+        
+            setIsModalVisible(false);
+            onClose();
+        
     };
 
     useEffect(() => {
@@ -85,11 +148,11 @@ export default function InfoWorker({ onClose, handleVolver, handleContactar, use
             <Flex vertical gap={10}>
                 <Flex align='center' gap={30} style={{ width: '70%', height: '50px' }}>
                     <label>Foto de perfil:</label>
-                    <div style={{ borderRadius: '50%', width:50, height: 50}}>
-                      <img
-                      src={user.profile_picture? user.profile_picture : "https://via.placeholder.com/150"}
-                      style={{ objectFit: 'cover', width: '100%', height: '100%', borderRadius: '50%' }}
-                    />
+                    <div style={{ borderRadius: '50%', width: 50, height: 50 }}>
+                        <img
+                            src={user.profile_picture ? user.profile_picture : "https://via.placeholder.com/150"}
+                            style={{ objectFit: 'cover', width: '100%', height: '100%', borderRadius: '50%' }}
+                        />
                     </div>
                 </Flex>
                 <Flex gap={30}>
@@ -97,11 +160,11 @@ export default function InfoWorker({ onClose, handleVolver, handleContactar, use
                     <label>{user?.documentType?.name}: {user.document}</label>
                 </Flex>
                 <Flex gap={30}>
-                    <label>Telefono:  {user.phone}</label>
+                    <label>Telefono: {user.phone}</label>
                     <label>Email: {user.email}</label>
                 </Flex>
                 <Flex gap={30}>
-                    <label>{roles.length!=0? `Roles: ${roles}`:'No pertenece a esta escuela'}</label>
+                    <label>{roles.length !== 0 ? `Roles: ${roles.join(', ')}` : 'No pertenece a esta escuela'}</label>
                 </Flex>
                 {roles.includes('Profesor') && (
                     <>
@@ -134,21 +197,19 @@ export default function InfoWorker({ onClose, handleVolver, handleContactar, use
                 onOk={handleAgregar}
                 cancelText="Cancelar"
                 title='Asigna un rol al trabajador'
-                okButtonProps={{ disabled: selectedRoles.length === 0 }} // Deshabilita si no hay roles seleccionados
+                okButtonProps={{ disabled: removedRoles.length === 0 && addedRoles.length === 0 }}
             >
-                <p>
-                    Por favor seleccione el rol o los roles que se le asignará a {user.first_name + " " + user.last_name}
-                </p>
+                <p>Por favor seleccione el rol o los roles que se le asignará a {user.first_name + " " + user.last_name}</p>
 
                 <Checkbox.Group
                     style={{ width: '100%', paddingTop: 20 }}
-                    value={selectedRoles} // Vincula el estado al grupo de checkboxes
-                    onChange={handleCheckboxChange} // Maneja los cambios en los checkboxes
+                    value={selectedRoles}
+                    onChange={handleCheckboxChange}
                 >
                     <Flex gap={30}>
-                        <Checkbox key={'Profesor'} checked={roles.includes('Profesor')} value="Profesor">Profesor</Checkbox>{/*Esto no anda ver como aplicarlo*/}
-                        <Checkbox key={'Preceptor'} checked={roles.includes('Preceptor')} value="Preceptor">Preceptor</Checkbox>{/*Esto no anda ver como aplicarlo*/}
-                        <Checkbox key={'Directivo'} checked={roles.includes('Directivo')} value="Directivo">Directivo</Checkbox>{/*Esto no anda ver como aplicarlo*/}
+                        <Checkbox key={'Profesor'} checked={roles.includes('Profesor')} value="Profesor">Profesor</Checkbox>
+                        <Checkbox key={'Preceptor'} checked={roles.includes('Preceptor')} value="Preceptor">Preceptor</Checkbox>
+                        <Checkbox key={'Directivo'} checked={roles.includes('Directivo')} value="Directivo">Directivo</Checkbox>
                     </Flex>
                 </Checkbox.Group>
 

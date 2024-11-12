@@ -68,6 +68,9 @@ const SelectCourse = ({ showDrawer }) => {
         dataSource={cursos}
         pagination={false}
         scroll={{ y: 450 }} 
+        locale={{
+          emptyText: 'No hay datos disponibles', 
+        }}
       />
       <Row gutter={10} style={{ marginTop: 10 }}>
         <Col>
