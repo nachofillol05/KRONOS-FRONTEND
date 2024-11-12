@@ -1,0 +1,47 @@
+@import "../../scss/index.scss";
+
+
+.logo-img {
+    margin: 10px auto;
+    width: 50%;
+    transition:  0.2s ;
+    border-radius: 50%;
+    box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.2);
+    img{
+        border-radius: 50%;
+    }
+}
+
+.logo-img-collapsed{
+    width: 75%;
+}
+
+.logo-select{
+    display: flex;
+    margin-inline: auto;
+}
+
+
+.ant-layout-sider {
+    .ant-layout-sider-trigger {
+        display: none;
+    }
+}
+
+@media (min-width: 992px) {
+    .ant-layout-sider {
+        .ant-layout-sider-trigger {
+            display: block; 
+        }
+    }
+}
+.ant-menu-inline-collapsed-tooltip .ant-tooltip-arrow{
+    display: none !important;
+}
+.ant-menu-inline-collapsed-tooltip .ant-tooltip-inner{
+    a{
+        color: #333 !important;
+    }
+    background-color: #fbfbfa !important;
+    margin-left: -5px;
+}
