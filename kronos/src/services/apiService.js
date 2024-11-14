@@ -2,7 +2,7 @@
 
 const STATUS_NO_CONTENT = 201
 
-const API_BASE_URL = "http://127.0.0.1:8000/api";
+const API_BASE_URL = "https://kronos-backend.onrender.com/api";
 
 const getToken = () => {
     return 'Token ' + localStorage.getItem('token');
