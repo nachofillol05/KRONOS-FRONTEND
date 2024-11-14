@@ -4,6 +4,7 @@ import { RollbackOutlined, PlusOutlined } from '@ant-design/icons';
 
 export default function FormCreateWorker({ handleSubmit, handleVolver, tipoDocumento, tipoDocumentoId, documento,onClose }) {
     const [form] = Form.useForm();
+    const [error,setError]=React.useState(false);
     const [loading, setLoading] = React.useState(false);
 
     useEffect(() => {
@@ -25,17 +26,26 @@ export default function FormCreateWorker({ handleSubmit, handleVolver, tipoDocum
         
 
         const onFinish = async () => {
+            console.log("entreaaaaaaaaaaaaaaaaaaa")
             try {
                 const values = await form.validateFields();
                 setLoading(true); 
                 console.log("empieza")
-                await handleSubmit(values);
+                await handleSubmit(values,setError);
+                console.log("eeeeeeeeeeeeeerror pre",error)
             } catch (errorInfo) {
+                console.log("eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeerrooooooooooooooooooooooooooooor")
+                setError(true)
                 console.error('Failed to save form:', errorInfo);
+                
             } finally {
                 console.log("se frena")
                 setLoading(false);
-                onClose();
+                console.log("eeeeeeeeeeeeeerror pos",error)
+                if(!error){
+                    onClose();
+                }
+                
             }
         };
 

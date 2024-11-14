@@ -220,7 +220,7 @@ export default function Personal() {
     setDrawerContent(null);
     form.resetFields();
   };
-  const handleSubmit = (values) => {
+  const handleSubmit = (values,setError) => {
         const body = JSON.stringify({
           first_name: values.nombre,
           last_name: values.apellido,
@@ -242,6 +242,7 @@ export default function Personal() {
         }).then((response) => {
           if (response.status === 201) {
             onClose();
+            setError(false);
             showMessage("success", "Usuario creado con éxito");
             setRecargar(!recargar);
 
@@ -251,6 +252,7 @@ export default function Personal() {
               console.log("Errores de respuesta: ", errorData);
               const errorMessages = Object.values(errorData).flat();
               showMessage("error", errorMessages.join(" "));
+              setError(true);
             });
           }
         })

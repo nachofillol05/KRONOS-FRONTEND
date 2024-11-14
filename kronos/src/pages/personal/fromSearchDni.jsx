@@ -166,11 +166,12 @@ export default function FormSearchDni({ handleSearch }) {
 
     const handleTipoDocumentoChange = (value) => {
         console.log("aaaaaaaaaaa");
-        if (value === 9) {
-            setInputType('number');
-            console.log(inputType);
-        } else {
+        if (value === 8) {
             setInputType('text');
+            console.log(inputType);
+
+        } else {
+            setInputType('number');
             console.log(inputType);
         }
         form.setFieldsValue({ tipoDocumento: value });

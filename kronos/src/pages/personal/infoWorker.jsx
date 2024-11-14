@@ -12,8 +12,9 @@ export default function InfoWorker({ onClose, handleVolver, handleContactar, use
     const [isSkeleton, setIsSkeleton] = useState(true);
     const [addedRoles, setAddedRoles] = useState([]); // Roles añadidos
     const [removedRoles, setRemovedRoles] = useState([]); // Roles eliminados
-    const [selectedYear, setSelectedYear] = useState(null);
-    console.log(user)
+    const [selectedYear, setSelectedYear] = useState(user.years.map((year) => year.id));
+    console.log("aaaaaaaaaaaaaaaaaaaaaaaaca bro",user.years.map((year) => year.id))
+    console.log(user.years.map((year) => year.id))
 
     useEffect(() => {
         fetch(`http://127.0.0.1:8000/api/rolesUser/${user.id}/`, {
@@ -39,7 +40,7 @@ export default function InfoWorker({ onClose, handleVolver, handleContactar, use
 
     const onChangeCurso = (value) => {
         console.log(`selected ${value}`);
-        setSelectedYear(value);
+        
 
     };
 
@@ -222,6 +223,7 @@ export default function InfoWorker({ onClose, handleVolver, handleContactar, use
                 {selectedRoles.includes("Preceptor") && (
                     <div style={{ marginTop: '20px', width: '80%' }}>
                         <DropTable onChange={onChangeCurso} options={courses} placeholder='Curso del preceptor' />
+                        <FilterDropdownPersonalizado options={courses} tempSelectedKeys={selectedYear} setTempSelectedKeys={setSelectedYear} onChange={(value) => setSelectedYear(value)} placeholder={'Años del preceptor'} />
                     </div>
                 )}
             </Modal>
