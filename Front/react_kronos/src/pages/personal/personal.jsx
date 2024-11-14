@@ -100,9 +100,9 @@ export default function Personal() {
   };
 
 
-  const showEspecificWorker = (id) => {
+  const showEspecificWorker = (user) => {
     showDrawer(
-      <EspecificWorker id={id} onClose={onClose} rolSeleccionado={activeFilter} />, 'Información del trabajador'
+      <EspecificWorker user={user} onClose={onClose} rolSeleccionado={activeFilter} />, 'Información del trabajador'
     )
   }
 
@@ -164,6 +164,7 @@ export default function Personal() {
           headers: {
             "Content-Type": "application/json",
             "School-ID": sessionStorage.getItem("actual_school"),
+            Authorization: `Token ${localStorage.getItem("token")}`
           },
           body: JSON.stringify({
             documentType: values.tipoDocumento,
