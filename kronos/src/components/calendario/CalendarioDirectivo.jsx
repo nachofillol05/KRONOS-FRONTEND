@@ -20,7 +20,7 @@ export default function Calendario({ tempSelectedKeys,setTempSelectedKeys,materi
     // Función para crear el menú dinámicamente al hacer clic
     const handleDropdownClick = (moduleId, courseId, key,matchingMateria) => {
         setMenu(null); // Resetea el menú
-        const url = new URL('"https://kronos-backend.onrender.com/api/subjectpermodule/');
+        const url = new URL('https://kronos-backend.onrender.com/api/subjectpermodule/');
         const params = { module_id: moduleId, course_id: courseId };
         Object.keys(params).forEach(paramKey => url.searchParams.append(paramKey, params[paramKey]));
 
@@ -80,7 +80,7 @@ export default function Calendario({ tempSelectedKeys,setTempSelectedKeys,materi
         console.log(selectedSubjectId)
         if(selectedSubjectId === "null"){
             console.log("se elimino la materia")
-            const url = new URL('"https://kronos-backend.onrender.com/api/subjectpermodule/');
+            const url = new URL('https://kronos-backend.onrender.com/api/subjectpermodule/');
             url.searchParams.append('course_id', courseId);
             url.searchParams.append('module_id', moduleId);
 
@@ -144,7 +144,7 @@ export default function Calendario({ tempSelectedKeys,setTempSelectedKeys,materi
 
 
     useEffect(() => {
-        fetch('"https://kronos-backend.onrender.com/api/modules/', {
+        fetch('https://kronos-backend.onrender.com/api/modules/', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',

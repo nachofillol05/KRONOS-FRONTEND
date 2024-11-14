@@ -25,7 +25,7 @@ export default function FormDisponibilidad({ onClose }) {
 
     const actualizarAvailability = () => {
         const jsonData = JSON.stringify({ teacher_availability: selectedCells });
-        fetch('"https://kronos-backend.onrender.com/api/teacheravailability/', {
+        fetch('https://kronos-backend.onrender.com/api/teacheravailability/', {
             method: 'POST',
             body: jsonData,
             headers: {
@@ -39,7 +39,7 @@ export default function FormDisponibilidad({ onClose }) {
     const days = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes'];
 
     useEffect(() => {
-        fetch('"https://kronos-backend.onrender.com/api/modules/', {
+        fetch('https://kronos-backend.onrender.com/api/modules/', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -54,7 +54,7 @@ export default function FormDisponibilidad({ onClose }) {
     }, []);
 
     useEffect(() => {
-        fetch('"https://kronos-backend.onrender.com/api/teacheravailability/', {
+        fetch('https://kronos-backend.onrender.com/api/teacheravailability/', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',

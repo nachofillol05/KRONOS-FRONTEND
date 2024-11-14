@@ -28,7 +28,7 @@ export default function Login() {
         if (localStorage.getItem('token')) {
             const verifyToken = async () => {
                 try {
-                    const response = await fetch('"https://kronos-backend.onrender.comapi/verifyToken/', {
+                    const response = await fetch('https://kronos-backend.onrender.comapi/verifyToken/', {
                         method: "POST",
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ "token": localStorage.getItem('token') })

@@ -17,7 +17,7 @@ const DirectiveRoute = ({ children }) => {
     useEffect(() => {
         const verifyToken = async () => {
             try {
-                const tokenResponse = await fetch('"https://kronos-backend.onrender.com/api/verifyToken/', {
+                const tokenResponse = await fetch('https://kronos-backend.onrender.com/api/verifyToken/', {
                     method: "POST",
                     headers: {
                         'Content-Type': 'application/json'
