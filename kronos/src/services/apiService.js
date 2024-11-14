@@ -102,6 +102,7 @@ export const deleteData = async (endpoint, pk, data = null) => {
 };
 
 export const fetchLogin = async (data) => {
+  console.log(API_BASE_URL)
   try {
     const response = await fetch(`${API_BASE_URL}/login/`, {
       method: "POST",
