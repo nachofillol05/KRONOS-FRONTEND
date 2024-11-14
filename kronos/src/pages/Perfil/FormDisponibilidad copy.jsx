@@ -1,15 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Tooltip, Row, Col, Alert, Modal } from 'antd';
-import { RollbackOutlined,ScheduleOutlined } from '@ant-design/icons';
+import { ScheduleOutlined, RollbackOutlined } from '@ant-design/icons';
 import { theme } from 'antd';
 
 export default function FormDisponibilidad({ onClose }) {
     const [selectedCells, setSelectedCells] = useState([]);
     const [modulesData, setModulesData] = useState([]);
     const [asignadoCells, setAsignadoCells] = useState([]);
-    const [initialSelectedCells, setInitialSelectedCells] = useState([]); // Estado para celdas seleccionadas iniciales
-    const [addedCells, setAddedCells] = useState([]);
-    const [removedCells, setRemovedCells] = useState([]);
     const { token } = theme.useToken();
     const primaryColor = token.colorPrimary;
 
@@ -21,44 +18,13 @@ export default function FormDisponibilidad({ onClose }) {
             ),
             closable: true,
             okText: 'Confirmar',
-            onOk: () => confirmarCambios(),
+            onOk: () => actualizarAvailability(),
             cancelText: 'Cancelar',
         });
     };
 
-    const confirmarCambios = () => {
-        const nuevasCeldas = selectedCells.filter((cell) => !initialSelectedCells.includes(cell));
-        const celdasRemovidas = initialSelectedCells.filter((cell) => !selectedCells.includes(cell));
-        
-        setAddedCells(nuevasCeldas);
-        setRemovedCells(celdasRemovidas);
-
+    const actualizarAvailability = () => {
         const jsonData = JSON.stringify({ teacher_availability: selectedCells });
-        /*addedRoles.forEach(role => {
-            const data = { "role":role, "user_id": user.id };
-            
-            if (role === "Preceptor") {
-                // Agregar el ID del curso seleccionado para el rol de Preceptor
-                data.year_id = selectedYear; // Asigna el ID del curso seleccionado
-            }
-    
-            fetch("http://127.0.0.1:8000/api/addrole/", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: "Token " + localStorage.getItem("token"),
-                    "School-ID": sessionStorage.getItem("actual_school"),
-                },
-                body: JSON.stringify(data),
-            })
-            .then(response => {
-                if (!response.ok) throw new Error(`Error asignando rol: ${role}`);
-                return response.json();
-            })
-            .then(data => console.log(`Rol ${role} asignado exitosamente`, data))
-            .catch(error => console.error("Error:", error));
-        });*/
-        //PASAR EL ESTADOOOOOOOOOOOOOOOOOOOO
         fetch('http://localhost:8000/api/teacheravailability/', {
             method: 'POST',
             body: jsonData,
@@ -69,11 +35,7 @@ export default function FormDisponibilidad({ onClose }) {
             },
         });
     };
-
-    const actualizarAvailability = () => {
-        
-    };
-
+    
     const days = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes'];
 
     useEffect(() => {
@@ -100,19 +62,18 @@ export default function FormDisponibilidad({ onClose }) {
                 'School-ID': sessionStorage.getItem('actual_school'),
             },
         })
-            .then((response) => response.json())
-            .then((data) => {
-                const preselectedCells = data
-                    .filter((module) => module.availabilityState.name === 'Disponible')
-                    .map((module) => module.module.id);
-                const asignadoCells = data
-                    .filter((module) => module.availabilityState.name === 'Asignado')
-                    .map((module) => module.module.id);
-                
-                setSelectedCells(preselectedCells);
-                setInitialSelectedCells(preselectedCells); // Guarda el estado inicial
-                setAsignadoCells(asignadoCells);
-            });
+        .then((response) => response.json())
+        .then((data) => {
+            console.log(data)
+            const preselectedCells = data.filter(
+                (module) => module.availabilityState.name === 'Disponible'
+            ).map((module) => module.module.id);
+            const asignadoCells = data.filter(
+                (module) => module.availabilityState.name === 'Asignado'
+            ).map((module) => module.module.id);
+            setSelectedCells(preselectedCells); 
+            setAsignadoCells(asignadoCells)
+        });
     }, []);
 
     const handleCellClick = (event, module) => {
@@ -137,7 +98,7 @@ export default function FormDisponibilidad({ onClose }) {
     };
 
     const maxModulesCount = Math.max(
-        ...days.map((day) =>
+        ...days.map((day) => 
             modulesData.filter((data) => data.day.toLowerCase() === day.toLowerCase()).length
         )
     );
@@ -150,6 +111,7 @@ export default function FormDisponibilidad({ onClose }) {
         width:'100%'
     };
 
+    console.log(selectedCells);
     return (
         <>
             <Row>
