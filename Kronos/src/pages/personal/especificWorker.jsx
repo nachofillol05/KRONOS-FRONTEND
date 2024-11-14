@@ -8,6 +8,11 @@ import {
 import "./personal.scss";
 
 export default function Especificworker({ handleVolverInfo, user, onClose, rolSeleccionado }) {
+  const data = user?.subjects?[...new Set(user.subjects
+    .map(subject => subject.subject_name)
+    .filter(subjectName => subjectName.trim() !== "")
+  )]:[];
+  console.log(data)
   console.log(user);
   console.log(rolSeleccionado)
   const [selectedCells, setSelectedCells] = useState([]);
@@ -101,7 +106,8 @@ export default function Especificworker({ handleVolverInfo, user, onClose, rolSe
       {rolSeleccionado === "Profesores" && (
         <>
       <Divider orientation="left">Disponiblidad horaria</Divider>
-      <Row>
+      <div>
+      <Row className="especificWorkerCasilla">
   {days.map((day) => {
     const moduleData = modulesData.filter(
       (data) => data.day.toLowerCase() === day.toLowerCase()
@@ -148,14 +154,15 @@ export default function Especificworker({ handleVolverInfo, user, onClose, rolSe
     );
   })}
 </Row>
+</div>
 {worker.subjects?.length > 0 && (
           <>
             <Divider orientation="left">Materias</Divider>
                 <List
                 size="small"
                 bordered
-                dataSource={worker.subjects}
-                renderItem={(item) => <List.Item>{item.subject_name}</List.Item>}
+                dataSource={data}
+                renderItem={(item) => <List.Item>{item}</List.Item>}
             />
           </>
             )}

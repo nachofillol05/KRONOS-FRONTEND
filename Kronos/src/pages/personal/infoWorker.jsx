@@ -4,7 +4,11 @@ import { RollbackOutlined, PlusOutlined, MailOutlined } from '@ant-design/icons'
 import FilterDropdownPersonalizado from '../../components/filterDropTable/FilterDropPersonalizado';
 
 export default function InfoWorker({ onClose, handleVolver, handleContactar, user }) {
-    const data = [...new Set(user.subjects.map(subject => subject.subject_name))];
+    console.log(user);
+    const data = user?.subjects?[...new Set(user.subjects
+        .map(subject => subject.subject_name)
+        .filter(subjectName => subjectName.trim() !== "")
+      )]:[];
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [courses, setCourse] = useState([]);
     const [roles, setRoles] = useState([]);
@@ -169,7 +173,7 @@ export default function InfoWorker({ onClose, handleVolver, handleContactar, use
                 <Flex gap={30}>
                     <label>{roles.length !== 0 ? `Roles: ${roles.join(', ')}` : 'No pertenece a esta escuela'}</label>
                 </Flex>
-                {roles.includes('Profesor') && (
+                {roles.includes('Profesor') && data.length!== 0 && (
                     <>
                         <Divider orientation='left'>Asignaturas</Divider>
                         <List
@@ -180,6 +184,18 @@ export default function InfoWorker({ onClose, handleVolver, handleContactar, use
                         />
                     </>
                 )}
+                {roles.includes('Preceptor') && user.years.length!== 0 &&(
+                    <>
+                        <Divider orientation='left'>Asignaturas</Divider>
+                        <List
+                            size="small"
+                            bordered
+                            dataSource={user.years}
+                            renderItem={(item) => <List.Item>{item.name}</List.Item>}
+                        />
+                    </>
+                )}
+                
                 <Flex style={{ marginTop: '20px' }} gap={30} justify='flex-end'>
                     <Tooltip title="Volver">
                         <Button size='large' iconPosition='end' icon={<RollbackOutlined />} style={{ width: "100px" }} onClick={handleVolver} />

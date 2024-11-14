@@ -133,7 +133,9 @@ export default function Personal() {
         tipoDocumento={selectedItem.label}
         tipoDocumentoId={selectedItem.value}
         documento={values.documento}
-        handleSubmit={handleSubmit}
+        //handleSubmit={handleSubmit}
+        setRecargar={setRecargar}
+        recargar={recargar}
         handleVolver={handleVolver}
         onClose={onClose}
       />,
@@ -220,7 +222,7 @@ export default function Personal() {
     setDrawerContent(null);
     form.resetFields();
   };
-  const handleSubmit = (values) => {
+  /*const handleSubmit = (values) => {
         const body = JSON.stringify({
           first_name: values.nombre,
           last_name: values.apellido,
@@ -254,7 +256,7 @@ export default function Personal() {
             });
           }
         })
-  };
+  };*/
 
   const showMessage = (type, content) => {
     switch (type) {
@@ -597,7 +599,7 @@ export default function Personal() {
             rowKey={'email'}
             bordered
             onRow={(user) => ({
-              onClick: () => showEspecificWorker(user.id),
+              onClick: () => showEspecificWorker(user),
               onMouseEnter: () => {
                 document.body.style.cursor = 'pointer';
               },

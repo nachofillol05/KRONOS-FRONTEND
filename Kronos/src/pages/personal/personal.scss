@@ -122,3 +122,12 @@
 .ant-float-button-group {
   z-index: 100;
 }
+.especificWorkerCasilla {
+  padding: 5px; /* Añade padding a las celdas */
+  margin: 5px 0;
+  border: 1px solid #d9d9d9; /* Borde gris claro */
+  border-radius: 4px; /* Esquinas ligeramente redondeadas */
+  background-color: transparent; /* Asegura que no haya fondo predeterminado */
+  margin: 4px 0; /* Espaciado entre celdas */
+  padding: 8px; /* Espaciado interno para contenido */
+}

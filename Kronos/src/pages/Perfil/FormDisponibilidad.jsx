@@ -33,41 +33,33 @@ export default function FormDisponibilidad({ onClose }) {
         setAddedCells(nuevasCeldas);
         setRemovedCells(celdasRemovidas);
 
-        const jsonData = JSON.stringify({ teacher_availability: selectedCells });
-        /*addedRoles.forEach(role => {
-            const data = { "role":role, "user_id": user.id };
-            
-            if (role === "Preceptor") {
-                // Agregar el ID del curso seleccionado para el rol de Preceptor
-                data.year_id = selectedYear; // Asigna el ID del curso seleccionado
-            }
-    
-            fetch("http://127.0.0.1:8000/api/addrole/", {
-                method: "POST",
+        const AgregarCeldas = JSON.stringify({ teacher_availability: nuevasCeldas });
+        const BorrarCeldas = JSON.stringify({ teacher_availability: celdasRemovidas });
+        if(AgregarCeldas){
+            fetch('http://localhost:8000/api/teacheravailability/', {
+                method: 'POST',
+                body: AgregarCeldas,
                 headers: {
-                    "Content-Type": "application/json",
-                    Authorization: "Token " + localStorage.getItem("token"),
-                    "School-ID": sessionStorage.getItem("actual_school"),
+                    'Content-Type': 'application/json',
+                    'Authorization': `Token ${localStorage.getItem('token')}`,
+                    'School-ID': sessionStorage.getItem('actual_school'),
                 },
-                body: JSON.stringify(data),
-            })
-            .then(response => {
-                if (!response.ok) throw new Error(`Error asignando rol: ${role}`);
-                return response.json();
-            })
-            .then(data => console.log(`Rol ${role} asignado exitosamente`, data))
-            .catch(error => console.error("Error:", error));
-        });*/
-        //PASAR EL ESTADOOOOOOOOOOOOOOOOOOOO
-        fetch('http://localhost:8000/api/teacheravailability/', {
-            method: 'POST',
-            body: jsonData,
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Token ${localStorage.getItem('token')}`,
-                'School-ID': sessionStorage.getItem('actual_school'),
-            },
-        });
+            });
+        }
+        if(BorrarCeldas){
+            fetch('http://localhost:8000/api/teacheravailability/', {
+                method: 'DELETE',
+                body: BorrarCeldas,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Token ${localStorage.getItem('token')}`,
+                    'School-ID': sessionStorage.getItem('actual_school'),
+                },
+            });
+        }
+        setInitialSelectedCells(selectedCells);
+        
+
     };
 
     const actualizarAvailability = () => {

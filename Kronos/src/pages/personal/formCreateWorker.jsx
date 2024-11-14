@@ -2,9 +2,11 @@ import React, { useEffect } from 'react';
 import { Form, Input, Button, Flex, Tooltip, Select, Spin, message } from 'antd';
 import { RollbackOutlined, PlusOutlined } from '@ant-design/icons';
 
-export default function FormCreateWorker({ handleSubmit, handleVolver, tipoDocumento, tipoDocumentoId, documento,onClose }) {
+export default function FormCreateWorker({  recargar,setRecargar,handleVolver, tipoDocumento, tipoDocumentoId, documento,onClose }) {
     const [form] = Form.useForm();
     const [loading, setLoading] = React.useState(false);
+    const [messageApi, contextHolder] = message.useMessage();
+
 
     useEffect(() => {
         form.setFieldsValue({
@@ -22,25 +24,59 @@ export default function FormCreateWorker({ handleSubmit, handleVolver, tipoDocum
             console.error('Failed to save form:', errorInfo);
         });
     }*/
-        
+ 
 
         const onFinish = async () => {
             try {
                 const values = await form.validateFields();
                 setLoading(true); 
-                console.log("empieza")
-                await handleSubmit(values);
-            } catch (errorInfo) {
-                console.error('Failed to save form:', errorInfo);
-            } finally {
-                console.log("se frena")
+                console.log("empieza");
+        
+                const body = JSON.stringify({
+                    first_name: values.nombre,
+                    last_name: values.apellido,
+                    document: values.documento,
+                    documentType: values.tipoDocumento,
+                    email: values.email,
+                    phone: values.telefono,
+                    password: values.documento,
+                });
+        
+                console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa ", body);
+        
+                const response = await fetch("http://localhost:8000/api/Register/", {
+                    method: "POST",
+                    headers: {
+                        Authorization: "Token " + localStorage.getItem("token"),
+                        "School-ID": sessionStorage.getItem("actual_school"),
+                        "Content-Type": "application/json",
+                    },
+                    body: body,
+                });
+        
+                if (response.status === 201) {
+                    onClose();
+                    messageApi.success("Usuario creado con éxito");
+                    setRecargar(!recargar);
+                    setLoading(false);
+                } else if (response.status === 400) {
+                    const errorData = await response.json();
+                    console.log("Errores de respuesta: ", errorData);
+                    const errorMessages = Object.values(errorData).flat();
+                    setLoading(false);
+                    messageApi.error(errorMessages.join(" "));
+                }
+            } catch (error) {
+                console.error('Error al enviar el formulario:', error);
                 setLoading(false);
-                onClose();
             }
         };
+        
+
 
     return (
         <Spin spinning={loading} tip="Mandando mail de verificación...">
+            {contextHolder}
             <Form form={form} layout="vertical">
                 <Flex gap={25} vertical>
                     <Flex gap={10}>
