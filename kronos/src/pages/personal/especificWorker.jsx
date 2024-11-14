@@ -18,7 +18,7 @@ export default function Especificworker({ handleVolverInfo, user, onClose, rolSe
   const days = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"];
 
   /*useEffect(() => {
-    fetch("http://127.0.0.1:8000/api/staff/", {
+    fetch("https://kronos-backend.onrender.com/api/staff/", {
       method: "GET",
       headers: {
         Authorization: "Token " + localStorage.getItem("token"),
@@ -45,7 +45,7 @@ export default function Especificworker({ handleVolverInfo, user, onClose, rolSe
       .catch((error) => console.error("Error fetching data:", error));
   }, [user.id]);*/
   useEffect(() => {
-    fetch("http://localhost:8000/api/modules/", {
+    fetch("https://kronos-backend.onrender.com/api/modules/", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

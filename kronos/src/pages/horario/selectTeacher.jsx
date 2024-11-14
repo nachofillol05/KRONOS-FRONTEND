@@ -65,7 +65,7 @@ export default function SelectTeacher() {
     const [teachers, setTeachers] = useState([]);
     const searchInput = useRef(null);
     useEffect(() => {
-        fetch('http://127.0.0.1:8000/api/teachers/', {
+        fetch('https://kronos-backend.onrender.com/api/teachers/', {
             method: "GET",
             headers: {
                 'Authorization': 'Token ' + localStorage.getItem('token'),

@@ -16,7 +16,7 @@ export default function InfoWorker({ onClose, handleVolver, handleContactar, use
     console.log(user)
 
     useEffect(() => {
-        fetch(`http://127.0.0.1:8000/api/rolesUser/${user.id}/`, {
+        fetch(`https://kronos-backend.onrender.com/api/rolesUser/${user.id}/`, {
             method: "GET",
             headers: {
                 Authorization: "Token " + localStorage.getItem("token"),
@@ -71,7 +71,7 @@ export default function InfoWorker({ onClose, handleVolver, handleContactar, use
                     data.year_id = selectedYear; // Asigna el ID del curso seleccionado
                 }
         
-                fetch("http://127.0.0.1:8000/api/addrole/", {
+                fetch("https://kronos-backend.onrender.com/api/addrole/", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
@@ -97,7 +97,7 @@ export default function InfoWorker({ onClose, handleVolver, handleContactar, use
                     data.year_id = selectedYear; // Asigna el ID del curso correspondiente
                 }
         
-                fetch("http://127.0.0.1:8000/api/addrole/", {
+                fetch("https://kronos-backend.onrender.com/api/addrole/", {
                     method: "DELETE",
                     headers: {
                         "Content-Type": "application/json",
@@ -120,7 +120,7 @@ export default function InfoWorker({ onClose, handleVolver, handleContactar, use
     };
 
     useEffect(() => {
-        fetch("http://127.0.0.1:8000/api/years/", {
+        fetch("https://kronos-backend.onrender.com/api/years/", {
             method: "GET",
             headers: {
                 Authorization: "Token " + localStorage.getItem("token"),

@@ -15,7 +15,7 @@ export default function EditSubjectForCourse({ onClose, values}) {
                     weeklyHours: value.horasCatedras,
                 }
                 
-                fetch('http://127.0.0.1:8000/api/subjects/'+values.id+'/', {
+                fetch('https://kronos-backend.onrender.com/api/subjects/'+values.id+'/', {
                     method: 'PUT',
                     headers: {
                         'Authorization': 'Token ' + localStorage.getItem('token'),

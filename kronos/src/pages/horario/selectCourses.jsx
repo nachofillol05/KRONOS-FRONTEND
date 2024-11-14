@@ -11,7 +11,7 @@ const SelectCourse = ({ showDrawer }) => {
   const [hoveredInfo, setHoveredInfo] = useState('');
 
   useEffect(() => {
-    fetch("http://127.0.0.1:8000/api/courses/", {
+    fetch("https://kronos-backend.onrender.com/api/courses/", {
       method: "GET",
       headers: {
         'Authorization': 'Token ' + localStorage.getItem('token'),

@@ -39,7 +39,7 @@ export default function Profile() {
   const handleOk = async () => {
     try {
       const values = await formCambio.validateFields();
-      fetch('http://127.0.0.1:8000/api/changePassword/', {
+      fetch('https://kronos-backend.onrender.com/api/changePassword/', {
         method: "POST",
         headers: {
           'Authorization': 'Token ' + localStorage.getItem('token'),
@@ -124,7 +124,7 @@ export default function Profile() {
 
 
   useEffect(() => {
-    fetch('http://127.0.0.1:8000/api/profile/', {
+    fetch('https://kronos-backend.onrender.com/api/profile/', {
       method: "GET",
       headers: {
         'Authorization': 'Token ' + localStorage.getItem('token'),
@@ -167,7 +167,7 @@ export default function Profile() {
   }, [isEditing, profileData]);
 
   useEffect(() => {
-    fetch('http://127.0.0.1:8000/api/documentTypes/', {
+    fetch('https://kronos-backend.onrender.com/api/documentTypes/', {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -184,7 +184,7 @@ export default function Profile() {
   }, []);
 
   useEffect(() => {
-    fetch('http://127.0.0.1:8000/api/nationality/', {
+    fetch('https://kronos-backend.onrender.com/api/nationality/', {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -234,7 +234,7 @@ export default function Profile() {
     };
     console.log('Form values:', body);
     try {
-      const profileResponse = await fetch('http://127.0.0.1:8000/api/profile/', {
+      const profileResponse = await fetch('https://kronos-backend.onrender.com/api/profile/', {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -258,7 +258,7 @@ export default function Profile() {
         const formData = new FormData();
         formData.append('profile_picture', file.originFileObj); // Usar originFileObj
 
-        const pictureResponse = await fetch('http://127.0.0.1:8000/api/profilePicture/', {
+        const pictureResponse = await fetch('https://kronos-backend.onrender.com/api/profilePicture/', {
           method: 'PUT',
           headers: {
             'Authorization': 'Token ' + localStorage.getItem('token'),
