@@ -2,6 +2,9 @@
   .css-dev-only-do-not-override-m4timi {
     align-items: center;
   }
+  label {
+    height: 40px;
+  }
 }
 
 .selected {
@@ -16,28 +19,65 @@
   border-radius: 0;
 }
 
+.CardProfile {
+  .ant-card-body {
+    padding: 0 !important;
+  }
 
+  .ant-form {
+    padding: 25px;
 
+    .ant-flex {
+      @media (max-width: 768px) {
+        flex-direction: column;
+        align-items: center;
 
+        .ant-form-item:first-child {
+          margin-bottom: 30px;
+          width: 100%;
+          max-width: 300px;
+        }
 
-.CardProfile .ant-card-body  {
-  padding: 0 !important;
-}
+        & > div:last-child {
+          margin-left: 0 !important;
+          width: 100%;
+          grid-template-columns: 1fr !important;
 
-.formItemProfile{
-  label{
-    height: 40px;
+          .ant-form-item {
+            width: 100% !important;
+          }
+
+          .ant-space-compact {
+            width: 100%;
+
+            .ant-form-item:first-child {
+              flex: 1;
+            }
+
+            .ant-form-item:last-child {
+              width: 100px !important;
+            }
+          }
+        }
+      }
+    }
   }
 }
 
-.upload-profile{
+.upload-profile {
   display: flex;
   align-items: center;
   flex-direction: column;
   width: 60%;
   flex-grow: 1;
-  .ant-upload-icon{
+
+  .ant-upload-icon {
     width: 50px;
+  }
+
+  @media (max-width: 768px) {
+    width: 100%;
+    max-width: 200px;
   }
 }
 
@@ -45,10 +85,40 @@
   margin: auto;
 }
 
-.ant-upload-list .ant-upload-list-text{
+.ant-upload-list .ant-upload-list-text,
+:where(.css-dev-only-do-not-override-1sd94qb).ant-upload-wrapper .ant-upload-list .ant-upload-list-item-container {
   display: none !important;
 }
 
-:where(.css-dev-only-do-not-override-1sd94qb).ant-upload-wrapper .ant-upload-list .ant-upload-list-item-container{
-  display: none !important;
+@media (max-width: 768px) {
+  .CardProfile {
+    .ant-card-head-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      margin-top: 16px; // Reducción del margen superior
+    }
+
+    .ant-card-head-title {
+      width: 100%;
+      margin: 0 0 8px;
+    }
+
+    .ant-card-extra {
+      display: flex;
+      justify-content: center;
+      width: 100%;
+      margin: 8px 0 16px;
+    }
+  }
+
+  .formItemProfile {
+    margin-bottom: 16px !important;
+
+    .ant-input,
+    .ant-select {
+      width: 100%;
+    }
+  }
 }

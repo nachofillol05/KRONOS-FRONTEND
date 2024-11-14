@@ -531,178 +531,175 @@ export default function Personal() {
 
   console.log('iiiiiiiiiiiiiiiiiiiiiimmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmppppppppppppppppppppppppppppppppppppppp', persistentSelectedKeys);
   return (
-    (isLoading ?
+    isLoading ? (
       <div className="spinner-container">
         <Spin size="large" />
       </div>
-      :
-      <>
+    ) : (
+      <div className="personal-view-container">
         {contextHolder}
-        < div className="contenedor-filtros contenedor-filtros-personal">
-          <Radio.Group size='large' defaultValue="Profesores" buttonStyle="solid" onChange={handleFilterChange}>
-            <Radio.Button value="Profesores" >Profesores</Radio.Button>
-            <Radio.Button value="Preceptores" >Preceptores</Radio.Button>
-            <Radio.Button value="Directivos">Directivos</Radio.Button>
-            <Radio.Button value="Todos">Todos</Radio.Button>
-          </Radio.Group>
-          {activeFilter === 'Profesores' && (
-
-            <Select
-              style={{ width: 250 }}
-              value={subject ? subject : null}
-              size='large'
-              showSearch
-              placeholder="Seleccione una materia"
-              onChange={onChange}
-              options={subjects}
-              allowClear
-            />) || activeFilter === 'Preceptores' && (
-              <Select
-                style={{ width: 250 }}
-                value={course}
-                size='large'
-                showSearch
-                placeholder="Seleccione un curso"
-                onChange={onChangeCourse}
-                options={courses}
-                allowClear
-              />
-            )}
-          <Input
-            suffix={
-              <SearchOutlined
-                style={{
-                  color: 'rgba(0,0,0,.45)',
-                }}
-              />
-            }
-            size="large"
-            style={{
-              width: 300,
-            }}
-            placeholder="Buscar Personal"
-            onChange={onChangePersonal} //VEEEEEEEEEEEER DE CAMBIAR POR UN ONCHANGE O SI EXISTE UN ONFINALCHANGE
-            allowClear
-          />
-        </div >
-        <Table
-          rowKey={'email'}
-          bordered
-          onRow={(user) => ({
-            onClick: () => showEspecificWorker(user.id),
-            onMouseEnter: () => {
-              document.body.style.cursor = 'pointer';
-            },
-            onMouseLeave: () => {
-              document.body.style.cursor = 'default';
-            },
-          })}
-          pagination={false}
-          y={500}
-          dataSource={teachers}
-          columns={columns}
-          tableLayout={'fixed'}
-          filterDropdownOpen={true}
-          filtered={true}
-          rowSelection={rowSelection}
-          locale={{
-            emptyText: 'No hay personales disponibles', 
+        <div className="contenedor-filtros contenedor-filtros-personal">
+  <Radio.Group 
+    size='large' 
+    defaultValue="Profesores" 
+    buttonStyle="solid" 
+    onChange={handleFilterChange}
+  >
+    <Radio.Button value="Profesores">Profesores</Radio.Button>
+    <Radio.Button value="Preceptores">Preceptores</Radio.Button>
+    <Radio.Button value="Directivos">Directivos</Radio.Button>
+    <Radio.Button value="Todos">Todos</Radio.Button>
+  </Radio.Group>
+  
+  <div className="filters-group">
+    {activeFilter === 'Profesores' ? (
+      <Select
+        size='large'
+        value={subject ? subject : null}
+        showSearch
+        placeholder="Seleccione una materia"
+        onChange={onChange}
+        options={subjects}
+        allowClear
+      />
+    ) : activeFilter === 'Preceptores' ? (
+      <Select
+        size='large'
+        value={course}
+        showSearch
+        placeholder="Seleccione un curso"
+        onChange={onChangeCourse}
+        options={courses}
+        allowClear
+      />
+    ) : null}
+    
+    <Input
+      size="large"
+      placeholder="Buscar Personal"
+      onChange={onChangePersonal}
+      allowClear
+      suffix={
+        <SearchOutlined
+          style={{
+            color: 'rgba(0,0,0,.45)',
           }}
         />
-        {
-          sessionStorage.getItem('rol') === 'Directivo' ? (
-            <>
-              <FloatButton.Group
-                visibilityHeight={1500}
-                trigger="click"
-                type="primary"
-                closeIcon={<DownOutlined />}
-                icon={<UpOutlined />}
-              >
-                <FloatButton icon={<DownloadOutlined />} onClick={DescargarExcel} tooltip="Descargar tabla" />
-                <FloatButton icon={<FieldTimeOutlined />} onClick={irAdispinibilidades} type='primary' tooltip="Confirmar cambio disponibilidad" />
-                <FloatButton icon={<UsergroupAddOutlined />} type='primary' tooltip="Agregar personal"
+      }
+    />
+  </div>
+</div>
+
+        
+        <div className="table-container">
+          <Table
+            rowKey={'email'}
+            bordered
+            onRow={(user) => ({
+              onClick: () => showEspecificWorker(user.id),
+              onMouseEnter: () => {
+                document.body.style.cursor = 'pointer';
+              },
+              onMouseLeave: () => {
+                document.body.style.cursor = 'default';
+              },
+            })}
+            pagination={false}
+            scroll={{ x: true, y: 500 }}
+            dataSource={teachers}
+            columns={columns}
+            tableLayout={'fixed'}
+            filterDropdownOpen={true}
+            filtered={true}
+            rowSelection={rowSelection}
+            locale={{
+              emptyText: 'No hay personales disponibles',
+            }}
+          />
+        </div>
+  
+        {sessionStorage.getItem('rol') === 'Directivo' ? (
+          <>
+            <FloatButton.Group
+              visibilityHeight={1500}
+              trigger="click"
+              type="primary"
+              closeIcon={<DownOutlined />}
+              icon={<UpOutlined />}
+            >
+              <FloatButton 
+                icon={<DownloadOutlined />} 
+                onClick={DescargarExcel} 
+                tooltip="Descargar tabla" 
+              />
+              <FloatButton 
+                icon={<FieldTimeOutlined />} 
+                onClick={irAdispinibilidades} 
+                type='primary' 
+                tooltip="Confirmar cambio disponibilidad" 
+              />
+              <FloatButton 
+                icon={<UsergroupAddOutlined />} 
+                type='primary' 
+                tooltip="Agregar personal"
+                onClick={() => showDrawer(
+                  <FormSearchDni handleSearch={handleSearch} />,
+                  'Buscar personal'
+                )}
+              />
+            </FloatButton.Group>
+  
+            {persistentSelectedKeys.length !== 0 && (
+              <FloatButton.Group style={{ right: '180px' }}>
+                <FloatButton 
+                  icon={<CloseOutlined />} 
+                  tooltip="Deseleccionar"
+                  onClick={limpiarSeleccion} 
+                />
+                <FloatButton 
+                  icon={<MailOutlined />} 
+                  tooltip="Mandar mail a seleccionados"
                   onClick={() => showDrawer(
-                    <FormSearchDni handleSearch={handleSearch} />,
-                    'Buscar personal'
+                    <ContacWorker 
+                      onClose={onClose} 
+                      handleVolver={handleVolver} 
+                      user={persistentSelectedKeys} 
+                    />, 
+                    'Contactar con el personal'
                   )}
+                  type='primary' 
                 />
               </FloatButton.Group>
-
-              {persistentSelectedKeys.length != 0 ?
-                <FloatButton.Group style={{ right: '180px' }}>
-                  <FloatButton icon={<CloseOutlined />} tooltip="Deseleccionar"
-                    onClick={limpiarSeleccion} />
-                  <FloatButton icon={<MailOutlined />} tooltip="Mandar mail a seleccionados"
-                    onClick={() => showDrawer(<ContacWorker onClose={onClose} handleVolver={handleVolver} user={persistentSelectedKeys} />, 'Contactar con el personal')}
-                    type='primary' />
-                </FloatButton.Group>
-                :
-                null
+            )}
+  
+            <Drawer
+              destroyOnClose={false}
+              width={600}
+              title={drawerTitle}
+              onClose={onClose}
+              open={open}
+              closeIcon={false}
+              extra={
+                <Button
+                  onClick={onClose}
+                  size="large"
+                  type="tertiary"
+                  icon={<CloseOutlined />}
+                />
               }
-              {/*{persistentSelectedKeys.length != 0 ?
-                <FloatButton.Group
-                visibilityHeight={1500}
-                trigger="click"
-                type="primary"
-              >
-                <FloatButton icon={<MailOutlined />}  tooltip="Mandar mail a seleccionados"
-                onClick={() => showDrawer(<ContacWorker onClose={onClose} handleVolver={handleVolver} user={persistentSelectedKeys}/>, 'Contactar con el personal')}
-                type='primary' style={{ right: '10%' }} />
-
-                <FloatButton icon={<CloseOutlined />}  tooltip="Cancelar selección"
-                onClick={setPersistentSelectedKeys([])}
-                type='primary' style={{ right: '10%' }} />
-                </FloatButton.Group>
-                :
-                null
-              } */}
-
-              <Drawer
-                destroyOnClose={false}
-                width={600}
-                title={drawerTitle}
-                onClose={onClose}
-                open={open}
-                closeIcon={false}
-                extra={
-                  <Button
-                    onClick={onClose}
-                    size="large"
-                    type="tertiary"
-                    icon={<CloseOutlined />}
-                  />
-                }
-              >
-                <div style={{ width: "100%", height: "100%" }}>{drawerContent}</div>
-              </Drawer>
-
-            </>
-          ) : (<FloatButton icon={<DownloadOutlined />} onClick={DescargarExcel} tooltip="Descargar tabla" />)
-        }
-        {/*{showModal ? (
-          <Modal
-              title="Reporte de creación"
-              visible={showModal}
-              onCancel={closeModal}
-              footer={[
-                  <Button key="ok" onClick={closeModal}>
-                      Cerrar
-                  </Button>
-              ]}
-          >
-              <div>
-                  <h2>Horario incompleto</h2>
-                  <p>El horario no se ha completado, faltan las siguientes materias:</p>
-                  <ul>
-                      {incomplete.map((materia, index) => (
-                          <li key={index}>{materia}</li>
-                      ))}
-                  </ul>
-              </div>
-          </Modal>
-        ) : null}*/}
-      </>
+            >
+              <div style={{ width: "100%", height: "100%" }}>{drawerContent}</div>
+            </Drawer>
+          </>
+        ) : (
+          <FloatButton 
+            icon={<DownloadOutlined />} 
+            onClick={DescargarExcel} 
+            tooltip="Descargar tabla" 
+          />
+        )}
+      </div>
     )
   );
+
 }

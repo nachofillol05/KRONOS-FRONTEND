@@ -236,49 +236,40 @@ export default function EventsPage() {
     ) : (
       <>
         {contextHolder}
-        <div className="contenedor-filtros contenedor-filtros-eventos">
-          <Select
-            size="large"
-            style={{ width: 200 }}
-            options={tipos}
-            onChange={onChange}
-            showSearch
-            placeholder="Tipo de evento"
-            allowClear
-          />
-          <DatePicker
-            size="large"
-            placeholder="Fecha"
-            style={{ width: 200 }}
-            onChange={onChangeDate}
-            format={dateFormat}
-            allowClear
-          />
-          <Input
-            suffix={
-              <SearchOutlined style={{ color: 'rgba(0,0,0,.45)' }} />
-            }
-            size="large"
-            style={{ width: 300 }}
-            placeholder="Buscar Evento"
-            onChange={onChangeNombre}
-            allowClear
-          />
+        <div className="contenedor-filtros-eventos">
+          <div className="filters-container">
+            <Select
+              size="large"
+              style={{ width: 200 }}
+              options={tipos}
+              onChange={onChange}
+              showSearch
+              placeholder="Tipo de evento"
+              allowClear
+            />
+            <DatePicker
+              size="large"
+              placeholder="Fecha"
+              style={{ width: 200 }}
+              onChange={onChangeDate}
+              format={dateFormat}
+              allowClear
+            />
+            <Input
+              suffix={
+                <SearchOutlined style={{ color: 'rgba(0,0,0,.45)' }} />
+              }
+              size="large"
+              style={{ width: 300 }}
+              placeholder="Buscar Evento"
+              onChange={onChangeNombre}
+              allowClear
+            />
+          </div>
         </div>
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
-            gap: 15,
-            padding: 15,
-            height: "86.5vh",
-            overflowY: "scroll",
-            backgroundColor: "#f1f2f4",
-            boxShadow: "0 0 0 3px #dddcdc",
-          }}
-        >
+        <div className="eventos-grid">
           {eventos.length === 0 ? (
-            <div>No hay eventos</div>
+            <div className="no-eventos">No hay eventos</div>
           ) : (
             eventos.map((event) => {
               const eventStatus = (() => {
@@ -332,22 +323,17 @@ export default function EventsPage() {
               return (
                 <Card
                   key={event.id}
-                  style={{
-                    display: "flex",
-                    flexFlow: "column",
-                    justifyContent: "space-between",
-                    height: "fit-content",
-                    height: "250px",
-                    filter: eventStatus === "Finalizado" ? "grayscale(100%) brightness(0.8)" : "grayscale(0%)",
-                  }}
+                  className="evento-card"
                   bordered
                   hoverable={eventStatus !== "Finalizado"}
+                  style={{
+                    filter: eventStatus === "Finalizado" ? "grayscale(100%) brightness(0.8)" : "grayscale(0%)",
+                  }}
                   actions={[
                     <Tooltip title="Detalles del evento" style={{
                       opacity: eventStatus === "Finalizado" ? 0.9 : 1,
                       backgroundColor: eventStatus === "Finalizado" ? "#f1f2f4" : "white"
                     }}>
-  
                       <InfoCircleOutlined
                         key="details"
                         onClick={() => showDrawer(<InfoEvent estado={eventStatus} event={event} typeEvent={tipos} closeDrawer={closeDrawer} closeDrawerDelete={closeDrawerDelete} showError={showError} />, "Detalles del evento")}
@@ -371,13 +357,13 @@ export default function EventsPage() {
                     ),
                   ]}
                 >
-                  <div style={{ display: "flex", flexDirection: "column", gap: 15 }}>
-                    <h6 style={{ color: 333, margin: 0 }}>{event.name}</h6>
-                    <p style={{ margin: 0 }}>
-                      <p style={{ margin: 0 }}>{event.eventType.name}</p>
-                      {moment.utc(event.startDate).format('DD/MM/YYYY')} - {moment.utc(event.endDate).format('DD/MM/YYYY')}
-                      <p style={{ margin: 0 }}>{eventStatus}</p>
-                    </p>
+                  <div className="evento-content">
+                    <h6>{event.name}</h6>
+                    <div className="evento-details">
+                      <p>{event.eventType.name}</p>
+                      <p>{moment.utc(event.startDate).format('DD/MM/YYYY')} - {moment.utc(event.endDate).format('DD/MM/YYYY')}</p>
+                      <p>{eventStatus}</p>
+                    </div>
                   </div>
                 </Card>
               );
@@ -410,7 +396,7 @@ export default function EventsPage() {
         >
           <div style={{ width: "100%", height: "100%" }}>{drawerContent}</div>
         </Drawer>
-      </> 
-          )
-  );
+      </>
+    )
+);
 }

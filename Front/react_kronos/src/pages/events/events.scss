@@ -1,13 +1,96 @@
-@import "../../scss/index.scss";
-
-
-.formInfoEventItem {
-    .css-dev-only-do-not-override-m4timi {
-        align-items: center;
+.contenedor-filtros-eventos {
+  width: 100%;
+  padding: 16px;
+  margin-bottom: 20px;
+  
+  .filters-container {
+    display: flex;
+    gap: 30px;
+    overflow-x: auto;
+    white-space: nowrap;
+    padding-bottom: 10px;
+    
+    // Hide scrollbar but keep functionality
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    &::-webkit-scrollbar {
+      display: none;
     }
+    
+    & > * {
+      flex: 0 0 auto;
+      min-width: max-content;
+    }
+  }
 }
 
-.contenedor-filtros-eventos {
-    justify-content: flex-start;
-    gap:30px
+.eventos-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 15px;
+  padding: 15px;
+  height: 86.5vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  background-color: #f1f2f4;
+  box-shadow: 0 0 0 3px #dddcdc;
+
+  .evento-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 250px;
+    width: 100%;
+    
+    .evento-content {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      
+      h6 {
+        color: #333;
+        margin: 0;
+      }
+      
+      .evento-details {
+        p {
+          margin: 0;
+        }
+      }
+    }
+  }
+
+  .no-eventos {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 20px;
+  }
+}
+
+@media (max-width: 768px) {
+  .contenedor-filtros-eventos {
+    padding: 12px;
+    
+    .filters-container {
+      margin: 0 -12px;
+      padding: 0 12px;
+      -webkit-overflow-scrolling: touch;
+    }
+  }
+
+  .eventos-grid {
+    grid-template-columns: 1fr;
+    padding: 12px;
+    
+    .evento-card {
+      width: 100%;
+      margin: 0 auto;
+    }
+  }
+}
+
+.formInfoEventItem {
+  .css-dev-only-do-not-override-m4timi {
+    align-items: center;
+  }
 }

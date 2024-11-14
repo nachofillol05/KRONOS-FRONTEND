@@ -94,26 +94,27 @@ class FeaturesTabs extends React.Component {
                 </Tab>
               </TabList>
               <TabPanel id="tab-a">
-                <div style={{ width: 800, height: 500, margin: 'auto' }}>
+                <div style={{ width: '100%', height: 'auto', maxWidth: '800px', maxHeight: '500px', margin: 'auto' }}>
                   <Image
                     className="has-shadow"
                     src={require('../../assets/images/villadafrente.jpeg')}
                     alt="Features tabs image 01"
-                    style={{ width: '100%', height: '100%', objectFit: 'cover', backgroundSize: 'cover' }}
-                  />
-                </div>
-              </TabPanel>
+                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                />
+              </div>
+            </TabPanel>
 
-              <TabPanel id="tab-b">
-              <div style={{ width: 800, height: 500, margin: 'auto' }}>
-                  <Image
-                    className="has-shadow"
-                    src={require('../../assets/images/jesusmariaimg.png')}
-                    alt="Features tabs image 01"
-                    style={{ width: '100%', height: '100%', objectFit: 'cover', backgroundSize: 'cover' }}
-                  />
-                </div>
-              </TabPanel>
+            <TabPanel id="tab-b">
+              <div style={{ width: '100%', height: 'auto', maxWidth: '800px', maxHeight: '500px', margin: 'auto' }}>
+                <Image
+                  className="has-shadow"
+                  src={require('../../assets/images/jesusmariaimg.png')}
+                  alt="Features tabs image 01"
+                  style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                />
+              </div>
+            </TabPanel>
+
             </Tabs>
           </div>
         </div>

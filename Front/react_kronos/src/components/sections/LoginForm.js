@@ -92,7 +92,14 @@ export default function Login() {
 
     return (
         <div style={{ height: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center', backgroundColor: '#f0f2f5' }}>
-            <div style={{ padding: '40px', backgroundColor: '#fff', borderRadius: '8px', boxShadow: '0 4px 12px rgba(0,0,0,0.1)', maxWidth: '420px', width: '100%' }}>
+            <div style={{
+                padding: '40px',
+                backgroundColor: window.innerWidth > 768 ? '#fff' : 'transparent',  // Quita el fondo en resoluciones pequeñas
+                borderRadius: '8px',
+                boxShadow: window.innerWidth > 768 ? '0 4px 12px rgba(0,0,0,0.1)' : 'none',  // Quita el sombreado en resoluciones pequeñas
+                maxWidth: '420px',
+                width: '100%'
+            }}>
                 <Title level={2} style={{ textAlign: 'center', marginBottom: '24px' }}>Iniciar sesión</Title>
                 <Form onFinish={handleLogin}>
                     <Form.Item

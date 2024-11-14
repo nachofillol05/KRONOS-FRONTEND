@@ -1,60 +1,124 @@
 @import '../../scss/index.scss';
+.personal-view-container {
+  width: 100%;
+  padding: 16px;
+  background: transparent;
+  @media (max-width: 768px) {
+    padding: 16px 8px;
+  }
+}
 
-.contactar{
-    background-color: transparent;
+.contenedor-filtros-personal {
+  display: flex;
+  padding: 0 0 16px 0;
+  background: transparent;
+  width: 100%;
+  gap: 20px;
+
+  // Estilos del scrollbar
+  &::-webkit-scrollbar {
+    height: 6px;
+    width: 6px;
+  }
+  &::-webkit-scrollbar-track {
+    background: #f1f1f1;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 3px;
+  }
+
+  // Radio group container
+  .ant-radio-group {
     display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: left;
-    width: 80%;
-    height: 90%;
-    background-color: $color-principal;
-    border: $color1 5px solid;
-    border-radius: 15px;
-
-    .identidad{
-        background-color: $color1;
-        padding: 25px 50px;
-        border-radius: 5px 5px 0 0;
-
-        h1, h2{
-            font-family: $fuente-titulo;
-            color: $color-principal;
-            font-size: 1.5rem;
-        }
-        h2{
-            font-size: 1.25rem;
-            font-weight: lighter;
-        }
-        }
-    .email{
-        align-items: center;
-        display: flex;
-        flex-direction: column;
-        overflow-y: scroll;
-        padding: 25px 0;
-        padding-inline: auto;
-        gap: 25px;
-        label{
-            text-align: left;
-            font-family: $fuente-general;
-            font-size: 1.25rem;
-            color: $color1;
-        }
-        Button{
-            align-self: center;
-        }
+    gap: 4px;
+    flex-shrink: 0;
+    .ant-radio-button-wrapper {
+      flex: 1;
+      text-align: center;
+      white-space: nowrap;
     }
-}
-.especificWorkerCasilla{
-    cursor: default !important;
-    width: 100%;
-    height: 30px;
-    border: .5px solid black;
-    margin: 5px;
-}
-.contenedor-filtros-personal{
-    justify-content: flex-start;
-    gap: 30px
+  }
+
+  // Filters group container
+  .filters-group {
+    display: flex;
+    gap: 10px;
+    flex-grow: 1;
+    min-width: 0;
+
+    .ant-select,
+    .ant-input-affix-wrapper {
+      min-width: 150px;  // Reducido de 200px
+      max-width: 300px;
+      flex: 1;  // Permite que se ajuste al espacio disponible
+    }
+  }
+
+  // Responsive adjustments
+  @media (max-width: 768px) {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;  // Mejor scroll en iOS
+
+    &::after {
+      content: '';
+      padding-right: 16px;  // Espacio extra al final para scroll
+    }
+
+    .ant-radio-group {
+      display: flex;
+      flex-wrap: nowrap;
+      gap: 8px;
+      flex-shrink: 0;
+      .ant-radio-button-wrapper {
+        white-space: nowrap;
+        flex-shrink: 0;
+      }
+    }
+
+    .filters-group {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: nowrap;
+      gap: 10px;
+      flex-shrink: 0;
+      width: auto;
+
+      .ant-select,
+      .ant-input-affix-wrapper {
+        min-width: 150px;  // Reducido de 200px
+        width: 150px;  // Ancho fijo para móvil
+        flex-shrink: 0;
+      }
+    }
+  }
 }
 
+.table-container {
+  width: 100%;
+  background: transparent;
+  overflow-x: auto;
+  
+  .ant-table-wrapper {
+    width: 100%;
+    .ant-table {
+      min-width: 800px;
+    }
+  }
+
+  &::-webkit-scrollbar {
+    height: 8px;
+  }
+  &::-webkit-scrollbar-track {
+    background: #f1f1f1;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+  }
+}
+
+.ant-float-button-group {
+  z-index: 100;
+}
