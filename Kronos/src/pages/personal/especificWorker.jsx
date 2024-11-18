@@ -79,20 +79,21 @@ export default function Especificworker({
       .then((response) => response.json())
       .then((data) => {
         console.log(data);
-        setLoading(false);
         messageApi.success("Mail enviado correctamente");
+        setLoading(false);
         onClose();
       })
       .catch((error) => {
         console.error("Error:", error);
-        setLoading(false); // Para detener el spinner en caso de error
+        setLoading(false);
+        onclose();
       });
   };
 
   console.log(loading);
 
   return (
-  <div>
+    <Spin spinning={loading} tip="Mandando mail de verificación...">
       {contextHolder}
       <Flex vertical gap={10}>
         <Flex align="center" gap={30} style={{ width: "70%", height: "50px" }}>
@@ -210,7 +211,7 @@ export default function Especificworker({
             </Row>
           </div>
           <Divider orientation="left">Materias</Divider>
-          {data > 0 ? (
+          {data.length > 0 ? (
             <>
               <List
                 size="small"
@@ -249,6 +250,6 @@ export default function Especificworker({
         </Tooltip>
       </Flex>
       <br />
-  </div>
+      </Spin>
   );
 }

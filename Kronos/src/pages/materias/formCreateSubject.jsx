@@ -94,7 +94,6 @@ export default function FormCreateSubject({ handleSubmit, onClose, cursos, value
                 >
                     <ColorPicker 
                         value={colorSelected}
-                        format='hex'
                         onChange={(e) => {
                             const newColor = e.toHexString();
                             setColorSelected(newColor);

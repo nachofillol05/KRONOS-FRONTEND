@@ -100,10 +100,7 @@ export default function Materias() {
         console.log('search:', value);
     };
 
-    const rgbToHex = ({ r, g, b }) => {
-        const toHex = (component) => Math.round(component).toString(16).padStart(2, '0');
-        return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
-    };
+    
 
     const handleSubmit = (form) => {
         form.validateFields()
@@ -279,6 +276,7 @@ export default function Materias() {
                 console.log(values, materias)   
                 const MateriaEncontrada = materias.find(materia => materia.name === values.materia && materia.id !== values.id);
                 const AbreviacionEncontrada = materias.find(materia => materia.abbreviation === values.abreviacion && materia.id !== values.id);
+                console.log("Va estooo",values.color)
                 const ColorEncontrado = materias.find(materia => materia.color.toLowerCase() === values.color.toLowerCase() && materia.id !== values.id);
                 if (MateriaEncontrada) {
                     showMessage('error', 'Ya existe una materia con ese nombre.');

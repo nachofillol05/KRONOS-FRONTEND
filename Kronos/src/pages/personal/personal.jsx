@@ -186,6 +186,8 @@ export default function Personal() {
                   handleVolver={handleVolver}
                   handleContactar={() => showDrawer(<ContacWorker onClose={onClose} handleVolver={handleVolver} user={body.user.email} />, 'Contacata con el trabajador')}
                   onClose={onClose}
+                  recargar={recargar}
+                  setRecargar={setRecargar}
                 />,
                 "Información del Trabajador"
               );

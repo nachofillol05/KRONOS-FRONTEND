@@ -3,7 +3,7 @@ import { Button, Flex, List, Divider, Tooltip, Modal, Checkbox, Skeleton } from 
 import { RollbackOutlined, PlusOutlined, MailOutlined } from '@ant-design/icons';
 import FilterDropdownPersonalizado from '../../components/filterDropTable/FilterDropPersonalizado';
 
-export default function InfoWorker({ onClose, handleVolver, handleContactar, user }) {
+export default function InfoWorker({ onClose, handleVolver, handleContactar, user, recargar, setRecargar }) {
     console.log(user);
     const data = user?.subjects?[...new Set(user.subjects
         .map(subject => subject.subject_name)
@@ -121,6 +121,7 @@ export default function InfoWorker({ onClose, handleVolver, handleContactar, use
                 .catch(error => console.error("Error:", error));
             });
         
+            setRecargar(!recargar);
             setIsModalVisible(false);
             onClose();
         

@@ -25,6 +25,7 @@ export default function Profile() {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [actualizar, setActualizar] = useState(false);
   const [tipoDocumento, setTipoDocumento] = useState(null);
+  const [fileChanged, setFileChanged] = useState(false);
 
   const showModal = () => {
     setIsModalVisible(true);
@@ -74,6 +75,7 @@ export default function Profile() {
   };
 
   const handleFileChange = (e) => {
+
     
     const file = e.file.originFileObj;
     const allowedTypes = ['image/jpeg', 'image/png', 'image/webp'];
@@ -89,6 +91,7 @@ export default function Profile() {
         setFile(e.file);
         console.log(profilePicture);
         setProfilePicture(URL.createObjectURL(file));
+        setFileChanged(true);
         console.log(URL.createObjectURL(file))
         setIsErrorShown(false); 
       }
@@ -204,6 +207,9 @@ export default function Profile() {
     setIsEditing(!isEditing);
   };
   const CancelarEdit = () => {
+    //setProfilePicture(profileData.profile_picture); acaaaa
+    //setProfilePicture(null)
+    setFileChanged(false);
     setActualizar(!actualizar)
     setIsEditing(false);
   };
@@ -254,7 +260,7 @@ export default function Profile() {
 
       console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaa", file)
 
-      if (values.profile_picture && file) {
+      if (values.profile_picture && file&&fileChanged) {
         const formData = new FormData();
         formData.append('profile_picture', file.originFileObj); // Usar originFileObj
 
