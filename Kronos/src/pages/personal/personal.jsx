@@ -530,9 +530,6 @@ export default function Personal() {
     setCourse(value);
   };
   
-  const irAdispinibilidades = () => {
-    navigate("/AceptarDisponibilidad");
-  }
 
   console.log('iiiiiiiiiiiiiiiiiiiiiimmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmppppppppppppppppppppppppppppppppppppppp', persistentSelectedKeys);
   return (
@@ -610,7 +607,7 @@ export default function Personal() {
               },
             })}
             pagination={false}
-            scroll={{ x: true, y: 500 }}
+            scroll={{ x: true, y: 700 }}
             dataSource={teachers}
             columns={columns}
             tableLayout={'fixed'}
@@ -636,12 +633,6 @@ export default function Personal() {
                 icon={<DownloadOutlined />} 
                 onClick={DescargarExcel} 
                 tooltip="Descargar tabla" 
-              />
-              <FloatButton 
-                icon={<FieldTimeOutlined />} 
-                onClick={irAdispinibilidades} 
-                type='primary' 
-                tooltip="Confirmar cambio disponibilidad" 
               />
               <FloatButton 
                 icon={<UsergroupAddOutlined />} 
