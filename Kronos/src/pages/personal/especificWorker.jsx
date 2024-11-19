@@ -25,7 +25,6 @@ export default function Especificworker({
   rolSeleccionado,
 }) {
   const [loading, setLoading] = useState(false);
-  const [messageApi, contextHolder] = message.useMessage();
   const data = user?.subjects
     ? [
         ...new Set(
@@ -79,7 +78,7 @@ export default function Especificworker({
       .then((response) => response.json())
       .then((data) => {
         console.log(data);
-        messageApi.success("Mail enviado correctamente");
+        message.success("Mail enviado correctamente");
         setLoading(false);
         onClose();
       })
@@ -93,8 +92,7 @@ export default function Especificworker({
   console.log(loading);
 
   return (
-    <Spin spinning={loading} tip="Mandando mail de verificación...">
-      {contextHolder}
+    <Spin spinning={loading} tip="Mandando mail de recordatorio...">
       <Flex vertical gap={10}>
         <Flex align="center" gap={30} style={{ width: "70%", height: "50px" }}>
           <label>Foto de perfil:</label>

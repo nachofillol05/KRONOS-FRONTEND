@@ -77,7 +77,6 @@ export default function Historial() {
         },
         render: (text) => (searchedColumn === dataIndex ? <span>{text}</span> : text),
     });
-
     const columns = [
         {
             title: 'Acción',
@@ -85,7 +84,7 @@ export default function Historial() {
             key: 'action',
             width: 150,
             render: (action) => (
-                <span style={{ color: action.isEnabled ? 'green' : 'red' }}>
+                <span style={{ color: action?.isEnabled ? 'green' : 'red' }}>
                     {action.name}
                 </span>
             ),

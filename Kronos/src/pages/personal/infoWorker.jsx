@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Flex, List, Divider, Tooltip, Modal, Checkbox, Skeleton } from 'antd';
+import { Button, Flex, List, Divider, Tooltip, Modal, Checkbox, Skeleton,message } from 'antd';
 import { RollbackOutlined, PlusOutlined, MailOutlined } from '@ant-design/icons';
 import FilterDropdownPersonalizado from '../../components/filterDropTable/FilterDropPersonalizado';
 
@@ -16,9 +16,10 @@ export default function InfoWorker({ onClose, handleVolver, handleContactar, use
     const [isSkeleton, setIsSkeleton] = useState(true);
     const [addedRoles, setAddedRoles] = useState([]); // Roles añadidos
     const [removedRoles, setRemovedRoles] = useState([]); // Roles eliminados
-    const [selectedYear, setSelectedYear] = useState(user.years.map((year) => year.id));
-    const [yearsPrincipio,setYearsPrincipio]=useState(user.years.map((year) => year.id));
-    console.log(user.years.map((year) => year.id))
+    const [selectedYear, setSelectedYear] = useState(user?.years?.map((year) => year.id)|| []);
+    const [yearsPrincipio,setYearsPrincipio]=useState(user?.years?.map((year) => year.id) || []);
+    const [addedYears,setAddedYears]=useState([]);
+    const [removedYears,setRemovedYears]=useState([]);
 
     useEffect(() => {
         fetch(`http://127.0.0.1:8000/api/rolesUser/${user.id}/`, {
@@ -35,28 +36,46 @@ export default function InfoWorker({ onClose, handleVolver, handleContactar, use
                 return response.json();
             })
             .then((data) => {
+                console.log(data.roles)
                 setRoles(data.roles);
                 setSelectedRoles(data.roles);
                 setIsSkeleton(false);
             })
             .catch((error) => console.error("Error fetching data:", error));
     }, []);
+    /*
+    PRUEBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAS
     useEffect(() => {
         // Verifica si `selectedYear` ha cambiado respecto a `yearsPrincipio` o si hay cambios en roles
         const hasChanges = 
-            !(removedRoles.length === 0 && addedRoles.length === 0) ||
-            JSON.stringify(yearsPrincipio) !== JSON.stringify(selectedYear); // Compara los años iniciales con los seleccionados
+        (removedRoles?.length === 0 || addedRoles?.length === 0) &&
+        (JSON.stringify(yearsPrincipio) !== JSON.stringify(selectedYear)) &&
+        (addedRoles?.includes('Preceptor') && addedYears?.length !== 0);
+        console.log(hasChanges)
+        console.log((removedRoles?.length === 0 || addedRoles?.length === 0))
+        console.log(yearsPrincipio,selectedYear)
+        console.log((JSON.stringify(yearsPrincipio) !== JSON.stringify(selectedYear)))
+        console.log((addedRoles?.includes('Preceptor') && addedYears?.length !== 0))
     
-    
-        console.log("selectedYear:", selectedYear);
-        console.log("yearsPrincipio:", yearsPrincipio);
-        console.log("Roles removed/added:", removedRoles, addedRoles);
-        console.log("Button disabled:", !hasChanges);
-    }, [selectedYear, removedRoles, addedRoles, yearsPrincipio]);
-
+    }, [selectedYear, removedRoles, addedRoles, yearsPrincipio,addedYears,removedYears]);
+    PRUEBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAS
+    */
     const showModal = () => {
         setIsModalVisible(true);
     };
+
+    useEffect(() => {
+        console.log(addedRoles, removedRoles);
+        console.log((removedRoles?.length === 0 && addedRoles?.length === 0) && (JSON.stringify(yearsPrincipio) === JSON.stringify(selectedYear)))
+    }, [addedRoles, removedRoles]);
+
+    useEffect(() => {
+        const newAddedYears = selectedYear?.filter(year => !yearsPrincipio?.includes(year));
+        const newRemovedYears = yearsPrincipio?.filter(year => !selectedYear?.includes(year));
+        
+        setAddedYears(newAddedYears); // O el estado correspondiente si manejas años separados
+        setRemovedYears(newRemovedYears);
+    }, [selectedYear]);
 
     const handleCheckboxChange = (checkedValues) => {
         setSelectedRoles(checkedValues);
@@ -68,18 +87,14 @@ export default function InfoWorker({ onClose, handleVolver, handleContactar, use
         setAddedRoles(newAddedRoles);
         setRemovedRoles(newRemovedRoles);
     };
+    
 
     const handleAgregar = () => {
-            console.log("Roles añadidos: ", addedRoles);
-            console.log("Roles eliminados: ", removedRoles);
-        
-            // Procesar roles añadidos
             addedRoles.forEach(role => {
                 const data = { "role":role, "user_id": user.id };
                 
                 if (role === "Preceptor") {
-                    // Agregar el ID del curso seleccionado para el rol de Preceptor
-                    data.year_id = selectedYear; // Asigna el ID del curso seleccionado
+                    data.years_id = addedYears;
                 }
         
                 fetch("http://127.0.0.1:8000/api/addrole/", {
@@ -98,12 +113,54 @@ export default function InfoWorker({ onClose, handleVolver, handleContactar, use
                 .then(data => console.log(`Rol ${role} asignado exitosamente`, data))
                 .catch(error => console.error("Error:", error));
             });
+
+            if(addedYears?.length!==0){
+                const data = { "role":"Preceptor", "user_id": user.id, "years_id": addedYears };
+                fetch("http://127.0.0.1:8000/api/addrole/", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: "Token " + localStorage.getItem("token"),
+                        "School-ID": sessionStorage.getItem("actual_school"),
+                    },
+                    body: JSON.stringify(data),
+                })
+                .then(response => {
+                    if (!response.ok) throw new Error(`Error eliminando rol: ${addedYears}`);
+                    return response.json();
+                })
+                .then(data => console.log(`Rol ${addedYears} eliminado exitosamente`, data))
+                .catch(error => console.error("Error:", error));
+            }
+
+            if(removedYears?.length!==0){
+                const data = { "role":"Preceptor", "user_id": user.id, "years_id": removedYears };
+                fetch("http://127.0.0.1:8000/api/addrole/", {
+                    method: "DELETE",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: "Token " + localStorage.getItem("token"),
+                        "School-ID": sessionStorage.getItem("actual_school"),
+                    },
+                    body: JSON.stringify(data),
+                })
+                .then(response => {
+                    if (!response.ok) throw new Error(`Error eliminando rol: ${removedYears}`);
+                    return response.json();
+                })
+                .then(data => console.log(`Rol ${removedYears} eliminado exitosamente`, data))
+                .catch(error => console.error("Error:", error));
+            }
         
             // Procesar roles eliminados
             removedRoles.forEach(role => {
                 const data = { role:role, user_id: user.id };
                 
-        
+                if (role === "Preceptor") {
+                    setAddedYears([]);
+                    setRemovedYears([])
+                }
+
                 fetch("http://127.0.0.1:8000/api/addrole/", {
                     method: "DELETE",
                     headers: {
@@ -121,6 +178,7 @@ export default function InfoWorker({ onClose, handleVolver, handleContactar, use
                 .catch(error => console.error("Error:", error));
             });
         
+            message.success('Roles asignados correctamente');
             setRecargar(!recargar);
             setIsModalVisible(false);
             onClose();
@@ -185,7 +243,7 @@ export default function InfoWorker({ onClose, handleVolver, handleContactar, use
                         />
                     </>
                 )}
-                {roles.includes('Preceptor') && user.years.length!== 0 &&(
+                {roles.includes('Preceptor') && user?.years?.length!== 0 &&(
                     <>
                         <Divider orientation='left'>Asignaturas</Divider>
                         <List
@@ -217,7 +275,9 @@ export default function InfoWorker({ onClose, handleVolver, handleContactar, use
                 onOk={handleAgregar}
                 cancelText="Cancelar"
                 title='Asigna un rol al trabajador'
-                okButtonProps={{ disabled: (removedRoles.length === 0 && addedRoles.length === 0) && !(JSON.stringify(yearsPrincipio) !== JSON.stringify(selectedYear))}}// VEEEEEEEEEEEEEEEEEEEEEEEEER SI ESTO ANDA
+                okButtonProps={{
+                    disabled: (removedRoles?.length === 0 && addedRoles?.length === 0) && (JSON.stringify(yearsPrincipio) === JSON.stringify(selectedYear))
+                  }}// VEEEEEEEEEEEEEEEEEEEEEEEEER SI ESTO ANDA
             >
                 <p>Por favor seleccione el rol o los roles que se le asignará a {user.first_name + " " + user.last_name}</p>
 
@@ -241,7 +301,7 @@ export default function InfoWorker({ onClose, handleVolver, handleContactar, use
 
                 {selectedRoles.includes("Preceptor") && (
                     <div style={{ marginTop: '20px', width: '80%' }}>
-                        <FilterDropdownPersonalizado options={courses} tempSelectedKeys={selectedYear} setTempSelectedKeys={setSelectedYear} onChange={(value) => setSelectedYear(value)} placeholder={'Años del preceptor'} />
+                        <FilterDropdownPersonalizado options={courses} tempSelectedKeys={selectedYear} setTempSelectedKeys={setSelectedYear} onChange={(checkedValues)=>{setSelectedYear(checkedValues);}} placeholder={'Años del preceptor'} />
                     </div>
                 )}
             </Modal>

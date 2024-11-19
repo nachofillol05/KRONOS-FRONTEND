@@ -158,11 +158,24 @@ export default function Materias() {
                 'Content-Type': 'application/json'
             },
         })
-        .then(response => response.json())  // Optionally handle the response
+        .then(response => response.json())
         .then(data => console.log(data))
         .catch(error => console.error('Error:', error));
         setRecargar(!recargar)
     }
+
+    const showModalConfirmacion = (record) => {
+        Modal.confirm({
+          title: 'Creacion de personal',
+          content: (
+            <p>Este documento no le pertenece a ningun personal.¿Quiere crear uno?</p>
+          ),
+          closable: true,
+          okText: 'Confirmar',
+          onOk: () => deleteCourseSubject(record),
+          cancelText: 'Cancelar',
+        });
+      };
     
 
     const handleSubmitConectarCurso = (form) => {
@@ -308,8 +321,12 @@ export default function Materias() {
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify(body),
-                })
-                setRecargar(!recargar);
+                }).then(response => {
+                    setRecargar(!recargar);
+                    return response.json();
+                }
+                )
+                
                 onClose();
             })
             .catch(errorInfo => {
@@ -317,6 +334,7 @@ export default function Materias() {
                 showMessage('error', 'Por favor, complete todos los campos.');
             });
     };
+
 
 
     const columns = [
@@ -398,7 +416,7 @@ export default function Materias() {
             render: (text, record) => (
                 <Button 
                     onClick={() => showDrawer(
-                        <EditSubjectForCourse onClose={onClose} values={record} />,
+                        <EditSubjectForCourse recargar={recargar} setRecargar={setRecargar} onClose={onClose} values={record} />,
                         'Editar materia por curso'
                     )}
                     size="default" 
@@ -414,7 +432,7 @@ export default function Materias() {
             title: ' ', 
             render: (text, record) => (
                 <Button 
-                    onClick={()=>deleteCourseSubject(record)}
+                    onClick={()=>showModalConfirmacion(record)}
                     size="default" 
                     style={{ display: 'flex', justifyContent: 'center', margin: 'auto' }} 
                     type="link" 

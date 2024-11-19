@@ -341,42 +341,6 @@ function Horario() {
                     ) :
                     null}
                 </div>
-
-                <FloatButton.Group
-                    visibilityHeight={1500}
-                    trigger="click"
-                    type="primary"
-                    closeIcon={<DownOutlined />}
-                    icon={<UpOutlined />}
-                >
-                    {/*<FloatButton icon={<DownloadOutlined />} tooltip="Descargar tabla" />*/}
-                    <FloatButton icon={<HistoryOutlined />} type='primary' tooltip="Historial de cambios"
-                        onClick={() => showDrawer(
-                            <Suspense fallback={<Spin />}><Historial /></Suspense>, 'Historial de cambios')}
-                    />
-                    <FloatButton icon={<InsertRowAboveOutlined />} type='primary' tooltip="Horas catedra"
-                        onClick={() => showDrawer(
-                            <Suspense fallback={<Spin />}><Horas showDrawer={showDrawer} /></Suspense>, 'Horas catedra')}
-                    />
-                    
-                </FloatButton.Group>
-
-                <Drawer
-                    destroyOnClose={false}
-                    width={600}
-                    title={drawerTitle}
-                    onClose={onClose}
-                    open={open}
-                    closeIcon={false}
-                    extra={
-                        <Button onClick={onClose} size='large' type='tertiary' icon={<CloseOutlined />} />
-                    }
-                >
-                    <div style={{ width: '100%', height: '100%' }}>
-                        {drawerContent}
-                    </div>
-                </Drawer>
-
                 {showModal ? (
                     <Modal
                         title="Error al generar horario"
@@ -403,5 +367,39 @@ function Horario() {
         </>
     );
 }
+
+/*<FloatButton.Group
+                    visibilityHeight={1500}
+                    trigger="click"
+                    type="primary"
+                    closeIcon={<DownOutlined />}
+                    icon={<UpOutlined />}
+                >
+                    <FloatButton icon={<HistoryOutlined />} type='primary' tooltip="Historial de cambios"
+                        onClick={() => showDrawer(
+                            <Suspense fallback={<Spin />}><Historial /></Suspense>, 'Historial de cambios')}
+                    />
+                    <FloatButton icon={<InsertRowAboveOutlined />} type='primary' tooltip="Horas catedra"
+                        onClick={() => showDrawer(
+                            <Suspense fallback={<Spin />}><Horas showDrawer={showDrawer} /></Suspense>, 'Horas catedra')}
+                    />
+                    
+                </FloatButton.Group>
+
+                <Drawer
+                    destroyOnClose={false}
+                    width={600}
+                    title={drawerTitle}
+                    onClose={onClose}
+                    open={open}
+                    closeIcon={false}
+                    extra={
+                        <Button onClick={onClose} size='large' type='tertiary' icon={<CloseOutlined />} />
+                    }
+                >
+                    <div style={{ width: '100%', height: '100%' }}>
+                        {drawerContent}
+                    </div>
+                </Drawer>*/
 
 export default Horario;

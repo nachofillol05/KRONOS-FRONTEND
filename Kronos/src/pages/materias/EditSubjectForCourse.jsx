@@ -3,7 +3,7 @@ import { Form, Input, Button, Tooltip, Select, Flex } from 'antd';
 import { InfoCircleOutlined, RollbackOutlined, EditOutlined } from '@ant-design/icons';
 const { TextArea } = Input;
 
-export default function EditSubjectForCourse({ onClose, values}) {
+export default function EditSubjectForCourse({ recargar,setRecargar,onClose, values}) {
     console.log(values);
     const [form] = Form.useForm();
 
@@ -15,7 +15,7 @@ export default function EditSubjectForCourse({ onClose, values}) {
                     weeklyHours: value.horasCatedras,
                 }
                 
-                fetch('http://127.0.0.1:8000/api/subjects/'+values.id+'/', {
+                fetch('http://127.0.0.1:8000/api/coursesubjects/'+values.id+'/', {
                     method: 'PUT',
                     headers: {
                         'Authorization': 'Token ' + localStorage.getItem('token'),
@@ -23,7 +23,19 @@ export default function EditSubjectForCourse({ onClose, values}) {
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify(body),
-                })
+                }).then(response => {
+                    if (response.ok) {
+                        setRecargar(!recargar);
+                        onClose();
+                    } else {
+                        response.json().then(data => {
+                            console.log(data);
+                        });
+                    }
+                }
+                ).catch(error => {
+                    console.log(error);
+                });
         })
     }
 
