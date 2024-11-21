@@ -57,13 +57,31 @@
 
 @media (max-width: 600px) { 
     .contenedor-filtros-materias {
-        flex-direction: row;
-        flex-wrap: wrap;
+        flex-direction: column;
+        flex-wrap: nowrap;
         gap: 10px;
         justify-content: center;
+        align-items: center; 
+        margin-top: 20px;
 
         .ant-select, .ant-input-affix-wrapper {
             width: 100%;
+            max-width: 300px;
+        }
+    }
+
+    @media (orientation: landscape) {
+        .contenedor-filtros-materias {
+            flex-direction: row;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+
+            .ant-select, .ant-input-affix-wrapper {
+                width: calc(50% - 5px); // Divide en dos columnas con un pequeño espacio entre ellas
+                max-width: 250px;
+            }
         }
     }
 

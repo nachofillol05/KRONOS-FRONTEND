@@ -1,0 +1,29 @@
+.hero-title {
+    font-size: 6rem; /* Tamaño para pantallas grandes */
+    line-height: 1.1;
+    margin-bottom: 1rem;
+  
+    @media (max-width: 768px) {
+      font-size: 3rem; /* Tamaño reducido para pantallas pequeñas */
+    }
+  }
+  
+  /* Estilo general para el subtítulo */
+  .hero-subtitle {
+    font-size: 2rem; /* Tamaño para pantallas grandes */
+    line-height: 1.4;
+  
+    @media (max-width: 768px) {
+      font-size: 1.5rem; /* Tamaño reducido para pantallas pequeñas */
+    }
+  }
+
+
+  .hero-title,
+.hero-subtitle {
+  text-align: left; /* Alineación predeterminada para pantallas grandes */
+
+  @media (max-width: 768px) {
+    text-align: center; /* Centramos el texto en dispositivos pequeños */
+  }
+}

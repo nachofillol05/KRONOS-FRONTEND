@@ -5,6 +5,8 @@ import ButtonGroup from '../elements/ButtonGroup';
 import Button from '../elements/Button';
 import Image from '../elements/Image';
 import Modal from '../elements/Modal';
+import './HeroSplit.scss'; 
+
 
 const propTypes = {
   ...SectionSplitProps.types
@@ -15,7 +17,6 @@ const defaultProps = {
 }
 
 class HeroSplit extends React.Component {
-
   state = {
     videoModalActive: false
   }
@@ -31,7 +32,6 @@ class HeroSplit extends React.Component {
   }
 
   render() {
-
     const {
       className,
       topOuterDivider,
@@ -74,23 +74,28 @@ class HeroSplit extends React.Component {
         {...props}
         className={outerClasses}
       >
-        <div className="container">
+        <div className="container mx-auto px-4">
           <div className={innerClasses}>
             <div className={splitClasses}>
-              <div className="split-item">
-                <div className="hero-content split-item-content center-content-mobile reveal-from-top">
-                  <h1 className="mt-0 mb-16" style={{fontSize:100, marginBlock: 50}}>
-                    Kronos
-                  </h1>
-                  <p className="mt-0 mb-32" style={{fontSize:30}}>
-                    Tu gestor de horarios escolares.
-                  </p>
+              <div className="split-item flex flex-col md:flex-row items-center justify-between">
+                <div className="hero-content split-item-content w-full text-center md:text-left">
+                <h1 
+  className="hero-title mt-0 mb-4 font-bold text-center md:text-left"
+>
+  Kronos
+</h1>
+<p 
+  className="hero-subtitle mt-0 mb-8 text-center md:text-left"
+>
+  Tu gestor de horarios escolares.
+</p>
                 </div>
-                <div className="split-item-image split-item-image-fill illustration-element-01 ">
-                    <img
-                      src={require('../../assets/images/img1Kronos.png')}
-                      alt="Hero"
-                      style={{width:350, height:350, margin: 'auto'}} />
+                <div className="split-item-image w-full md:w-1/2 flex justify-center md:justify-end">
+                  <img
+                    src={require('../../assets/images/img1Kronos.png')}
+                    alt="Hero"
+                    className="max-w-full h-auto object-contain md:max-w-[350px] lg:max-w-[400px]"
+                  />
                 </div>
               </div>
             </div>

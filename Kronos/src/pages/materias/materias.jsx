@@ -605,7 +605,6 @@ export default function Materias() {
 */}
                     <Select
                         size='large'
-                        style={{ width: 250 }}
                         showSearch
                         placeholder="Seleccione un Profesor"
                         onChange={onChange}
@@ -624,9 +623,7 @@ export default function Materias() {
                             />
                         }
                         size="large"
-                        style={{
-                            width: 300,
-                        }}
+                        
                         placeholder="Buscar Materia"
                         onChange={onChangeMateria}
                         allowClear
