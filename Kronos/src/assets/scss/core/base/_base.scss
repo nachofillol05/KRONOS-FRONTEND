@@ -82,7 +82,6 @@ figcaption {
 table {
 	@include font-size(table);
 	border-collapse: collapse;
-	margin-bottom: $spacing--shared-v;
 	width: 100%;
 }
 

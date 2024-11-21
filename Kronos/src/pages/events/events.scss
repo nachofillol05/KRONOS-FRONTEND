@@ -1,22 +1,34 @@
 .contenedor-filtros-eventos {
   width: 100%;
   padding: 16px;
-  margin-bottom: 20px;
-  
+  margin-bottom: 5px;
+
   .filters-container {
     display: flex;
     gap: 30px;
     overflow-x: auto;
     white-space: nowrap;
-    padding-bottom: 10px;
-    
-    // Hide scrollbar but keep functionality
-    scrollbar-width: none;
-    -ms-overflow-style: none;
+    padding-bottom: 20px; // Incrementa el espacio para despegar la scrollbar
+
+    // Mostrar scrollbar
+    scrollbar-width: thin; // Estilo para navegadores compatibles
+    -ms-overflow-style: auto; // Compatibilidad con IE
+
     &::-webkit-scrollbar {
-      display: none;
+      display: block; // Asegura que sea visible
+      height: 6px; // Altura de la barra de desplazamiento
     }
-    
+
+    &::-webkit-scrollbar-thumb {
+      background: #ccc; // Color de la barra
+      border-radius: 10px; // Esquinas redondeadas
+    }
+
+    &::-webkit-scrollbar-track {
+      background: #f1f1f1; // Color del fondo de la pista
+      margin-top: 5px; // Separa la barra de desplazamiento
+    }
+
     & > * {
       flex: 0 0 auto;
       min-width: max-content;
@@ -41,17 +53,17 @@
     justify-content: space-between;
     height: 250px;
     width: 100%;
-    
+
     .evento-content {
       display: flex;
       flex-direction: column;
       gap: 15px;
-      
+
       h6 {
         color: #333;
         margin: 0;
       }
-      
+
       .evento-details {
         p {
           margin: 0;
@@ -70,10 +82,10 @@
 @media (max-width: 768px) {
   .contenedor-filtros-eventos {
     padding: 12px;
-    
+
     .filters-container {
       margin: 0 -12px;
-      padding: 0 12px;
+      padding: 0 12px 20px; // Asegura que la separación también exista en móviles
       -webkit-overflow-scrolling: touch;
     }
   }
@@ -81,7 +93,7 @@
   .eventos-grid {
     grid-template-columns: 1fr;
     padding: 12px;
-    
+
     .evento-card {
       width: 100%;
       margin: 0 auto;
