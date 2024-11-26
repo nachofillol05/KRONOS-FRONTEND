@@ -22,7 +22,7 @@ export default function InfoWorker({ onClose, handleVolver, handleContactar, use
     const [removedYears,setRemovedYears]=useState([]);
 
     useEffect(() => {
-        fetch(`http://127.0.0.1:8000/api/rolesUser/${user.id}/`, {
+        fetch(`https://kronos-backend.onrender.com/api/rolesUser/${user.id}/`, {
             method: "GET",
             headers: {
                 Authorization: "Token " + localStorage.getItem("token"),
@@ -97,7 +97,7 @@ export default function InfoWorker({ onClose, handleVolver, handleContactar, use
                     data.years_id = addedYears;
                 }
         
-                fetch("http://127.0.0.1:8000/api/addrole/", {
+                fetch("https://kronos-backend.onrender.com/api/addrole/", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
@@ -116,7 +116,7 @@ export default function InfoWorker({ onClose, handleVolver, handleContactar, use
 
             if(addedYears?.length!==0){
                 const data = { "role":"Preceptor", "user_id": user.id, "years_id": addedYears };
-                fetch("http://127.0.0.1:8000/api/addrole/", {
+                fetch("https://kronos-backend.onrender.com/api/addrole/", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
@@ -135,7 +135,7 @@ export default function InfoWorker({ onClose, handleVolver, handleContactar, use
 
             if(removedYears?.length!==0){
                 const data = { "role":"Preceptor", "user_id": user.id, "years_id": removedYears };
-                fetch("http://127.0.0.1:8000/api/addrole/", {
+                fetch("https://kronos-backend.onrender.com/api/addrole/", {
                     method: "DELETE",
                     headers: {
                         "Content-Type": "application/json",
@@ -161,7 +161,7 @@ export default function InfoWorker({ onClose, handleVolver, handleContactar, use
                     setRemovedYears([])
                 }
 
-                fetch("http://127.0.0.1:8000/api/addrole/", {
+                fetch("https://kronos-backend.onrender.com/api/addrole/", {
                     method: "DELETE",
                     headers: {
                         "Content-Type": "application/json",
@@ -186,7 +186,7 @@ export default function InfoWorker({ onClose, handleVolver, handleContactar, use
     };
 
     useEffect(() => {
-        fetch("http://127.0.0.1:8000/api/years/", {
+        fetch("https://kronos-backend.onrender.com/api/years/", {
             method: "GET",
             headers: {
                 Authorization: "Token " + localStorage.getItem("token"),

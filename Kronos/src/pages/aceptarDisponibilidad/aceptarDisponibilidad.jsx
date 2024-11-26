@@ -19,7 +19,7 @@ export default function AceptarDisponibilidad() {
 
     useEffect(() => {
         // Fetch de módulos
-        fetch('http://localhost:8000/api/modules/', {
+        fetch('https://kronos-backend.onrender.com/api/modules/', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -34,7 +34,7 @@ export default function AceptarDisponibilidad() {
         });
 
         // Fetch de profesores
-        fetch('http://localhost:8000/api/professors/', {
+        fetch('https://kronos-backend.onrender.com/api/professors/', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',

@@ -28,7 +28,7 @@ export default function FormSearchDni({ handleSearch }) {
   const [inputType, setInputType] = useState("number");
 
   const descargarExcel = () => {
-    fetch('http://127.0.0.1:8000/api/teacher_word/', {
+    fetch('https://kronos-backend.onrender.com/api/teacher_word/', {
         method: 'GET',
         headers: {
             'Authorization': 'Token ' + localStorage.getItem('token'),
@@ -57,7 +57,7 @@ export default function FormSearchDni({ handleSearch }) {
 };
 
   useEffect(() => {
-    fetch("http://127.0.0.1:8000/api/documentTypes/")
+    fetch("https://kronos-backend.onrender.com/api/documentTypes/")
       .then((response) => response.json())
       .then((data) => {
         const datos = data.map((tipo) => ({
@@ -90,7 +90,7 @@ export default function FormSearchDni({ handleSearch }) {
     const formData = new FormData();
     formData.append("archivo", fileToUpload);
 
-    fetch("http://127.0.0.1:8000/api/teacher_word/", {
+    fetch("https://kronos-backend.onrender.com/api/teacher_word/", {
       method: "POST",
       headers: {
         Authorization: `Token ${localStorage.getItem("token")}`,

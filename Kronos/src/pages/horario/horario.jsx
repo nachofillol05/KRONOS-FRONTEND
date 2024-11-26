@@ -56,7 +56,7 @@ function Horario() {
     
 
     useEffect(() => {
-        fetch('http://127.0.0.1:8000/api/courses/', {
+        fetch('https://kronos-backend.onrender.com/api/courses/', {
             method: "GET",
             headers: {
                 'Authorization': 'Token ' + localStorage.getItem('token'),
@@ -91,7 +91,7 @@ function Horario() {
     }, [tempTeacher, tempCourse, tempDate, tempSelectedKeys]);
 
     useEffect(() => {
-        fetch('http://127.0.0.1:8000/api/teachers/', {
+        fetch('https://kronos-backend.onrender.com/api/teachers/', {
             method: "GET",
             headers: {
                 'Authorization': 'Token ' + localStorage.getItem('token'),
@@ -129,7 +129,7 @@ function Horario() {
     }, [messages.length]);
 
     useEffect(() => {
-        const url = new URL('http://127.0.0.1:8000/api/viewschedule/');
+        const url = new URL('https://kronos-backend.onrender.com/api/viewschedule/');
         if (teacher) teacher.forEach(element => { url.searchParams.append('teachers', element) });
         if (course) course.forEach(element => { url.searchParams.append('courses', element) });
         if (date) url.searchParams.append('date', date);
@@ -195,7 +195,7 @@ function Horario() {
     const generarHorario = () => {
         setCargandoAuto(true);
         setLoading(true);
-        fetch('http://127.0.0.1:8000/api/new_schedule/', {
+        fetch('https://kronos-backend.onrender.com/api/new_schedule/', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -216,7 +216,7 @@ function Horario() {
     }
 
     const aceptarHorario = () => {
-        fetch('http://127.0.0.1:8000/api/create_schedule/', {
+        fetch('https://kronos-backend.onrender.com/api/create_schedule/', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

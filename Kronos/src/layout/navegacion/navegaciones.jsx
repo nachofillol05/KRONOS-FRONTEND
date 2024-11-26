@@ -45,7 +45,7 @@ const App = ({ children }) => {
     useEffect(() => {
         const fetchRolesAndSchools = async () => {
             try {
-                const response = await fetch('http://127.0.0.1:8000/api/school/myroles/', {
+                const response = await fetch('https://kronos-backend.onrender.com/api/school/myroles/', {
                     method: 'GET',
                     headers: {
                         'Authorization': 'Token ' + token,

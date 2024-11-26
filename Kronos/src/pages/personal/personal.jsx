@@ -71,7 +71,7 @@ export default function Personal() {
   const DescargarExcel = () => {
     console.log('Descargando...');
 
-    fetch("http://127.0.0.1:8000/api/staff/export", {
+    fetch("https://kronos-backend.onrender.com/api/staff/export", {
       method: "GET",
       headers: {
         Authorization: "Token " + localStorage.getItem("token"),
@@ -161,7 +161,7 @@ export default function Personal() {
       .validateFields()
       .then((values) => {
         console.log(values, "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
-        fetch("http://localhost:8000/api/create_teacher/", {
+        fetch("https://kronos-backend.onrender.com/api/create_teacher/", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -235,7 +235,7 @@ export default function Personal() {
           password: values.documento,
         });
         console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa ",body)
-        fetch("http://localhost:8000/api/Register/", {
+        fetch("https://kronos-backend.onrender.com/api/Register/", {
           method: "POST",
           headers: {
             Authorization: "Token " + localStorage.getItem("token"),
@@ -280,7 +280,7 @@ export default function Personal() {
     }
   };
   useEffect(() => {
-    fetch("http://127.0.0.1:8000/api/years/", {
+    fetch("https://kronos-backend.onrender.com/api/years/", {
       method: "GET",
       headers: {
         Authorization: "Token " + localStorage.getItem("token"),
@@ -314,7 +314,7 @@ export default function Personal() {
       const jsonData = JSON.stringify({ email, asunto, contenido });
       console.log("JSON:", jsonData);
 
-      fetch("http://localhost:8000/api/contacting-staff/", {
+      fetch("https://kronos-backend.onrender.com/api/contacting-staff/", {
         method: "POST",
         body: jsonData,
         headers: {
@@ -346,7 +346,7 @@ export default function Personal() {
         let fetchPromises = [];
 
         if (activeFilter === 'Profesores') {
-          const url = new URL('http://127.0.0.1:8000/api/teachers/');
+          const url = new URL('https://kronos-backend.onrender.com/api/teachers/');
           if (searchName) url.searchParams.append('search_name', searchName);
           if (subject) url.searchParams.append('subject_id', subject);
 
@@ -373,7 +373,7 @@ export default function Personal() {
         }
 
         else if (activeFilter === 'Preceptores') {
-          const url = new URL('http://127.0.0.1:8000/api/preceptors');
+          const url = new URL('https://kronos-backend.onrender.com/api/preceptors');
           if (searchName) url.searchParams.append('search', searchName);
           if (course) url.searchParams.append('year_id', course);
 
@@ -399,7 +399,7 @@ export default function Personal() {
         }
 
         else if (activeFilter === 'Directivos') {
-          const url = new URL('http://127.0.0.1:8000/api/directives');
+          const url = new URL('https://kronos-backend.onrender.com/api/directives');
           if (searchName) url.searchParams.append('search', searchName);
 
           fetchPromises.push(
@@ -422,7 +422,7 @@ export default function Personal() {
               })
           );
         } else if (activeFilter === 'Todos') {
-          const url = new URL('http://127.0.0.1:8000/api/staff');
+          const url = new URL('https://kronos-backend.onrender.com/api/staff');
           if (searchName) url.searchParams.append('search', searchName);
 
           fetchPromises.push(
@@ -485,7 +485,7 @@ export default function Personal() {
 
   useEffect(() => {
 
-    fetch("http://127.0.0.1:8000/api/subjects/", {
+    fetch("https://kronos-backend.onrender.com/api/subjects/", {
       method: "GET",
       headers: {
         Authorization: "Token " + localStorage.getItem("token"),

@@ -13,7 +13,7 @@ const AssignmentModal = ({ visible, onClose, user, setCreatedPersonals,personal}
     const [courses, setCourse] = useState([]);
 
     useEffect(() => {
-        fetch("http://127.0.0.1:8000/api/years/", {
+        fetch("https://kronos-backend.onrender.com/api/years/", {
             method: "GET",
             headers: {
                 Authorization: "Token " + localStorage.getItem("token"),
@@ -62,7 +62,7 @@ const AssignmentModal = ({ visible, onClose, user, setCreatedPersonals,personal}
                 data.years_id = selectedYear;
             }
 
-            fetch('http://127.0.0.1:8000/api/addrole/', {
+            fetch('https://kronos-backend.onrender.com/api/addrole/', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -79,7 +79,7 @@ const AssignmentModal = ({ visible, onClose, user, setCreatedPersonals,personal}
         removedRoles?.forEach(role => {
             const data = { role, user_id: user.pk };
 
-            fetch('http://127.0.0.1:8000/api/addrole/', {
+            fetch('https://kronos-backend.onrender.com/api/addrole/', {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',

@@ -26,7 +26,7 @@ export default function Calendario({ materias, mibooleano }) {
 
     /*useEffect(() => {
     
-        fetch("http://127.0.0.1:8000/api/subjects/", {
+        fetch("https://kronos-backend.onrender.com/api/subjects/", {
           method: "GET",
           headers: {
             Authorization: "Token " + localStorage.getItem("token"),
@@ -55,7 +55,7 @@ export default function Calendario({ materias, mibooleano }) {
     }, []);
     const obtenerMateriasModule = (moduleId, courseId) => {
         // Construir la URL con los parámetros
-        const url = new URL('http://localhost:8000/api/subjectpermodule/');
+        const url = new URL('https://kronos-backend.onrender.com/api/subjectpermodule/');
         const params = { module_id: moduleId, course_id: courseId };
 
         // Agregar los parámetros a la URL
@@ -80,7 +80,7 @@ export default function Calendario({ materias, mibooleano }) {
 
 
     /*useEffect(() => {
-        fetch('http://localhost:8000/api/subjects/', {
+        fetch('https://kronos-backend.onrender.com/api/subjects/', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -97,7 +97,7 @@ export default function Calendario({ materias, mibooleano }) {
 */
 
     useEffect(() => {
-        fetch('http://localhost:8000/api/modules/', {
+        fetch('https://kronos-backend.onrender.com/api/modules/', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -113,7 +113,7 @@ export default function Calendario({ materias, mibooleano }) {
     }, []);
 
     useEffect(() => {
-        fetch('http://127.0.0.1:8000/api/courses/', {
+        fetch('https://kronos-backend.onrender.com/api/courses/', {
             method: "GET",
             headers: {
                 'Authorization': 'Token ' + localStorage.getItem('token'),

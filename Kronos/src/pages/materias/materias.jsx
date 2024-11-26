@@ -37,7 +37,7 @@ export default function Materias() {
     const removeTeacher = async (teacherToRemove) => {
         if (teacherToRemove) {
             try {
-                await fetch('http://127.0.0.1:8000/api/teachersubjectschool/' + teacherToRemove + '/', {
+                await fetch('https://kronos-backend.onrender.com/api/teachersubjectschool/' + teacherToRemove + '/', {
                     method: 'DELETE',
                     headers: {
                         'Authorization': 'Token ' + localStorage.getItem('token'),
@@ -58,7 +58,7 @@ export default function Materias() {
             coursesubjects: coursesubject_id,
         }
         setRecargar(!recargar);
-        fetch('http://127.0.0.1:8000/api/teachersubjectschool/', {
+        fetch('https://kronos-backend.onrender.com/api/teachersubjectschool/', {
             method: 'POST',
             headers: {
                 'Authorization': 'Token ' + localStorage.getItem('token'),
@@ -130,7 +130,7 @@ export default function Materias() {
                     courses: []
                 };
                 console.log('Formulario completado:', body);
-                fetch('http://127.0.0.1:8000/api/subjects/', {
+                fetch('https://kronos-backend.onrender.com/api/subjects/', {
                     method: 'POST',
                     headers: {
                         'Authorization': 'Token ' + localStorage.getItem('token'),
@@ -150,7 +150,7 @@ export default function Materias() {
 
     const deleteCourseSubject = (record) => {
         console.log(record.id);
-        fetch(`http://127.0.0.1:8000/api/coursesubjects/${record.id}/`, {  // Use backticks for interpolation
+        fetch(`https://kronos-backend.onrender.com/api/coursesubjects/${record.id}/`, {  // Use backticks for interpolation
             method: 'DELETE',
             headers: {
                 'Authorization': 'Token ' + localStorage.getItem('token'),
@@ -188,7 +188,7 @@ export default function Materias() {
                     studyPlan: values.planEstudio,
                 };
                 console.log('Formulario completado:', body);
-                fetch('http://127.0.0.1:8000/api/coursesubjects/', {
+                fetch('https://kronos-backend.onrender.com/api/coursesubjects/', {
                     method: 'POST',
                     headers: {
                         'Authorization': 'Token ' + localStorage.getItem('token'),
@@ -231,7 +231,7 @@ export default function Materias() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const url = new URL('http://127.0.0.1:8000/api/subjects/');
+                const url = new URL('https://kronos-backend.onrender.com/api/subjects/');
                 if (end_time && start_time) {
                     url.searchParams.append('start_time', start_time);
                     url.searchParams.append('end_time', end_time);
@@ -313,7 +313,7 @@ export default function Materias() {
                     courses: []
                 };
                 console.log('Formulario completado:', body);
-                fetch('http://127.0.0.1:8000/api/subjects/'+values.id+'/', {
+                fetch('https://kronos-backend.onrender.com/api/subjects/'+values.id+'/', {
                     method: 'PUT',
                     headers: {
                         'Authorization': 'Token ' + localStorage.getItem('token'),
@@ -460,7 +460,7 @@ export default function Materias() {
     );
 
     useEffect(() => {
-        fetch('http://127.0.0.1:8000/api/courses/', {
+        fetch('https://kronos-backend.onrender.com/api/courses/', {
             method: "GET",
             headers: {
                 'Authorization': 'Token ' + localStorage.getItem('token'),
@@ -485,7 +485,7 @@ export default function Materias() {
     }, []);
 
     useEffect(() => {
-        fetch('http://127.0.0.1:8000/api/courses/', {
+        fetch('https://kronos-backend.onrender.com/api/courses/', {
             method: "GET",
             headers: {
                 'Authorization': 'Token ' + localStorage.getItem('token'),
@@ -510,7 +510,7 @@ export default function Materias() {
     }, []);
 
     useEffect(() => {
-        fetch('http://127.0.0.1:8000/api/teachers/', {
+        fetch('https://kronos-backend.onrender.com/api/teachers/', {
             method: "GET",
             headers: {
                 'Authorization': 'Token ' + localStorage.getItem('token'),
@@ -552,7 +552,7 @@ export default function Materias() {
     }
 
     const descargarExcel = () => {
-        fetch('http://127.0.0.1:8000/api/subjects/?export=excel', {
+        fetch('https://kronos-backend.onrender.com/api/subjects/?export=excel', {
             method: "GET",
             headers: {
                 Authorization: "Token " + localStorage.getItem("token"),

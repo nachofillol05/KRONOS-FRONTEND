@@ -44,7 +44,7 @@ export default function Especificworker({
   const days = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"];
 
   useEffect(() => {
-    fetch("http://localhost:8000/api/modules/", {
+    fetch("https://kronos-backend.onrender.com/api/modules/", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -68,7 +68,7 @@ export default function Especificworker({
     };
 
 
-    fetch("http://127.0.0.1:8000/api/contacting-staff/", {
+    fetch("https://kronos-backend.onrender.com/api/contacting-staff/", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

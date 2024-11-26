@@ -37,7 +37,7 @@ export default function FormDisponibilidad({ onClose }) {
         const AgregarCeldas = JSON.stringify({ teacher_availability: nuevasCeldas });
         const BorrarCeldas = JSON.stringify({ teacher_availability: celdasRemovidas });
         if (AgregarCeldas) {
-            fetch('http://localhost:8000/api/teacheravailability/', {
+            fetch('https://kronos-backend.onrender.com/api/teacheravailability/', {
                 method: 'POST',
                 body: AgregarCeldas,
                 headers: {
@@ -48,7 +48,7 @@ export default function FormDisponibilidad({ onClose }) {
             });
         }
         if (BorrarCeldas) {
-            fetch('http://localhost:8000/api/teacheravailability/', {
+            fetch('https://kronos-backend.onrender.com/api/teacheravailability/', {
                 method: 'DELETE',
                 body: BorrarCeldas,
                 headers: {
@@ -70,7 +70,7 @@ export default function FormDisponibilidad({ onClose }) {
     const days = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes'];
 
     useEffect(() => {
-        fetch('http://localhost:8000/api/modules/', {
+        fetch('https://kronos-backend.onrender.com/api/modules/', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -86,7 +86,7 @@ export default function FormDisponibilidad({ onClose }) {
     }, []);
 
     useEffect(() => {
-        fetch('http://localhost:8000/api/teacheravailability/', {
+        fetch('https://kronos-backend.onrender.com/api/teacheravailability/', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',

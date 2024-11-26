@@ -21,7 +21,7 @@ const PrivateRoute = ({ children }) => {
   useEffect(() => {
     const verifyToken = async () => {
       try {
-        const response = await fetch('http://localhost:8000/api/verifyToken/', {
+        const response = await fetch('https://kronos-backend.onrender.com/api/verifyToken/', {
           method: "POST",
           headers: {
             'Content-Type': 'application/json'
@@ -31,7 +31,7 @@ const PrivateRoute = ({ children }) => {
           })
         });
         if (response.ok) {
-        fetch('http://127.0.0.1:8000/api/isVerified/', {
+        fetch('https://kronos-backend.onrender.com/api/isVerified/', {
             method: "GET",
             headers: {
                 'Authorization': 'Token ' + localStorage.getItem('token'),

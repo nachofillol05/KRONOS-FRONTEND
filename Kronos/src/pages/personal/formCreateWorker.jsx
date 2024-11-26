@@ -44,7 +44,7 @@ export default function FormCreateWorker({  recargar,setRecargar,handleVolver, t
         
                 console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa ", body);
         
-                const response = await fetch("http://localhost:8000/api/Register/", {
+                const response = await fetch("https://kronos-backend.onrender.com/api/Register/", {
                     method: "POST",
                     headers: {
                         Authorization: "Token " + localStorage.getItem("token"),

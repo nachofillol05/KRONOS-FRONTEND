@@ -17,7 +17,7 @@ const ModalComponent = ({ isModalOpen, setIsModalOpen, record, parentRecord, tea
 
     const removeTeacher = () => {
         if (teacherToRemove) {
-            fetch('http://127.0.0.1:8000/api/teachersubjectschool/' + teacherToRemove + '/', {
+            fetch('https://kronos-backend.onrender.com/api/teachersubjectschool/' + teacherToRemove + '/', {
                 method: 'DELETE',
                 headers: {
                     'Authorization': 'Token ' + localStorage.getItem('token'),

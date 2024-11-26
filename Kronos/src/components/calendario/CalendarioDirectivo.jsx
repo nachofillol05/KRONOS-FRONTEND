@@ -20,7 +20,7 @@ export default function Calendario({ tempSelectedKeys, setTempSelectedKeys, mate
     // Función para crear el menú dinámicamente al hacer clic
     const handleDropdownClick = (moduleId, courseId, key, matchingMateria) => {
         setMenu(null); // Resetea el menú
-        const url = new URL('http://localhost:8000/api/subjectpermodule/');
+        const url = new URL('https://kronos-backend.onrender.com/api/subjectpermodule/');
         const params = { module_id: moduleId, course_id: courseId };
         Object.keys(params).forEach(paramKey => url.searchParams.append(paramKey, params[paramKey]));
 
@@ -80,7 +80,7 @@ export default function Calendario({ tempSelectedKeys, setTempSelectedKeys, mate
         console.log(selectedSubjectId)
         if (selectedSubjectId === "null") {
             console.log("se elimino la materia")
-            const url = new URL('http://localhost:8000/api/subjectpermodule/');
+            const url = new URL('https://kronos-backend.onrender.com/api/subjectpermodule/');
             url.searchParams.append('course_id', courseId);
             url.searchParams.append('module_id', moduleId);
 
@@ -108,7 +108,7 @@ export default function Calendario({ tempSelectedKeys, setTempSelectedKeys, mate
                     console.error('Error fetching schedule data:', error);
                 });
         } else {
-            fetch(`http://localhost:8000/api/subjectpermodule/`, {
+            fetch(`https://kronos-backend.onrender.com/api/subjectpermodule/`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -144,7 +144,7 @@ export default function Calendario({ tempSelectedKeys, setTempSelectedKeys, mate
 
 
     useEffect(() => {
-        fetch('http://localhost:8000/api/modules/', {
+        fetch('https://kronos-backend.onrender.com/api/modules/', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -159,7 +159,7 @@ export default function Calendario({ tempSelectedKeys, setTempSelectedKeys, mate
     }, []);
 
     useEffect(() => {
-        fetch('http://127.0.0.1:8000/api/courses/', {
+        fetch('https://kronos-backend.onrender.com/api/courses/', {
             method: "GET",
             headers: {
                 'Authorization': 'Token ' + localStorage.getItem('token'),

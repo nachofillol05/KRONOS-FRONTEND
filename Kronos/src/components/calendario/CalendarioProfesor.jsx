@@ -9,8 +9,11 @@ export default function CalendarioProfesor({ subjects }) {
     const [modulesData, setModulesData] = useState([]);
     const [maxDay, setMaxDay] = useState(null);
 
+    subjects = subjects.filter(subject => subject.school === Number(sessionStorage.getItem('actual_school')));
+
+
     useEffect(() => {
-        fetch('http://localhost:8000/api/modules/', {
+        fetch('https://kronos-backend.onrender.com/api/modules/', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -77,7 +80,6 @@ export default function CalendarioProfesor({ subjects }) {
 
 
 
-    console.log("modulesData:", modulesData);
 
     return (
         <div className="Calendario" style={{ margin: 'auto' }}>

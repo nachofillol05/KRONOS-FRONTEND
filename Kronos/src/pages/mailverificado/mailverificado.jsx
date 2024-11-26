@@ -11,7 +11,7 @@ const MailVerificado = () => {
   useEffect(() => {
     const verifyEmail = async () => {
       try {
-          const response = await fetch(`http://localhost:8000/api/verify-email/${token}`, {
+          const response = await fetch(`https://kronos-backend.onrender.com/api/verify-email/${token}`, {
               method: 'GET',
           });
           if (response.ok) {

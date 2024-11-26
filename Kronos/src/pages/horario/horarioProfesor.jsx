@@ -7,8 +7,10 @@ const format = 'DD/MM/YYYY';
 function HorarioProfesor() {
     const [subjects, setSubjects] = useState([]);
     const [error, setError] = useState(false);
+
+    
     useEffect(() => {
-        fetch("http://127.0.0.1:8000/api/ViewTeacherSchedule/", {
+        fetch("https://kronos-backend.onrender.com/api/ViewTeacherSchedule/", {
             method: "GET",
             headers: {
                 Authorization: `Token ${localStorage.getItem("token")}`,

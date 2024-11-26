@@ -83,7 +83,7 @@ export default function Horas({ showDrawer }) {
         setSortedInfo(sorter);
     };
     useEffect(() => {
-        fetch('http://localhost:8000/api/modules/', {
+        fetch('https://kronos-backend.onrender.com/api/modules/', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',

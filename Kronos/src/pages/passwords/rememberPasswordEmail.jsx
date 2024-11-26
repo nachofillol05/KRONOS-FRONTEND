@@ -19,7 +19,7 @@ export default function Login() {
     };
     const EnviarMail = () => {
         setConfirmModalOpen(false)
-        fetch("http://localhost:8000/api/forgotPassword/", {
+        fetch("https://kronos-backend.onrender.com/api/forgotPassword/", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -42,7 +42,7 @@ export default function Login() {
     };
 
     useEffect(() => {
-        fetch('http://127.0.0.1:8000/api/documentTypes/', {
+        fetch('https://kronos-backend.onrender.com/api/documentTypes/', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -71,7 +71,7 @@ export default function Login() {
 
     const onFinish = (values) => {
         console.log('Received values of form: ', values);
-        fetch("http://localhost:8000/api/create_teacher/", {
+        fetch("https://kronos-backend.onrender.com/api/create_teacher/", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
