@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Tooltip, Row, Col, Alert, Modal } from 'antd';
-import { RollbackOutlined,ScheduleOutlined } from '@ant-design/icons';
+import { RollbackOutlined, ScheduleOutlined } from '@ant-design/icons';
 import { theme } from 'antd';
 
 export default function FormDisponibilidad({ onClose }) {
@@ -10,6 +10,7 @@ export default function FormDisponibilidad({ onClose }) {
     const [initialSelectedCells, setInitialSelectedCells] = useState([]); // Estado para celdas seleccionadas iniciales
     const [addedCells, setAddedCells] = useState([]);
     const [removedCells, setRemovedCells] = useState([]);
+    const [maxDay, setMaxDay] = useState(null);
     const { token } = theme.useToken();
     const primaryColor = token.colorPrimary;
 
@@ -29,13 +30,13 @@ export default function FormDisponibilidad({ onClose }) {
     const confirmarCambios = () => {
         const nuevasCeldas = selectedCells.filter((cell) => !initialSelectedCells.includes(cell));
         const celdasRemovidas = initialSelectedCells.filter((cell) => !selectedCells.includes(cell));
-        
+
         setAddedCells(nuevasCeldas);
         setRemovedCells(celdasRemovidas);
 
         const AgregarCeldas = JSON.stringify({ teacher_availability: nuevasCeldas });
         const BorrarCeldas = JSON.stringify({ teacher_availability: celdasRemovidas });
-        if(AgregarCeldas){
+        if (AgregarCeldas) {
             fetch('http://localhost:8000/api/teacheravailability/', {
                 method: 'POST',
                 body: AgregarCeldas,
@@ -46,7 +47,7 @@ export default function FormDisponibilidad({ onClose }) {
                 },
             });
         }
-        if(BorrarCeldas){
+        if (BorrarCeldas) {
             fetch('http://localhost:8000/api/teacheravailability/', {
                 method: 'DELETE',
                 body: BorrarCeldas,
@@ -58,12 +59,12 @@ export default function FormDisponibilidad({ onClose }) {
             });
         }
         setInitialSelectedCells(selectedCells);
-        
+
 
     };
 
     const actualizarAvailability = () => {
-        
+
     };
 
     const days = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes'];
@@ -80,6 +81,7 @@ export default function FormDisponibilidad({ onClose }) {
             .then((response) => response.json())
             .then((data) => {
                 setModulesData(Object.values(data));
+                console.log(data);
             });
     }, []);
 
@@ -100,7 +102,7 @@ export default function FormDisponibilidad({ onClose }) {
                 const asignadoCells = data
                     .filter((module) => module.availabilityState.name === 'Asignado')
                     .map((module) => module.module.id);
-                
+
                 setSelectedCells(preselectedCells);
                 setInitialSelectedCells(preselectedCells); // Guarda el estado inicial
                 setAsignadoCells(asignadoCells);
@@ -133,13 +135,34 @@ export default function FormDisponibilidad({ onClose }) {
             modulesData.filter((data) => data.day.toLowerCase() === day.toLowerCase()).length
         )
     );
+
+
+
+    // Función para calcular el día con más módulos
+    useEffect(() => {
+        if (modulesData.length > 0) {
+            const dayCounts = modulesData.reduce((acc, module) => {
+                acc[module.day] = (acc[module.day] || 0) + 1;
+                return acc;
+            }, {});
+    
+            const aux = Object.keys(dayCounts).reduce((max, day) =>
+                dayCounts[day] > dayCounts[max] ? day : max
+            );
+    
+            setMaxDay(aux);
+        }
+    }, [modulesData]); // Dependencia en modulesData
+    
+    
+
     const customDisabledStyle = {
         backgroundColor: '#e40d0fc5',
         color: 'white',
         border: '#e40d0fff 1px solid',
         borderRadius: '0',
         cursor: 'default',
-        width:'100%'
+        width: '100%'
     };
 
     return (
@@ -148,20 +171,29 @@ export default function FormDisponibilidad({ onClose }) {
                 {/* Columna para los números basados en la máxima cantidad de módulos */}
                 <Col style={{ flexGrow: 1 }}>
                     <Row style={{ display: 'flex', justifyContent: 'center' }}>Módulo</Row>
-                    {Array.from({ length: maxModulesCount }, (_, i) => (
-                        <Col key={i} style={{ width: '100%', paddingInline: 3 }}>
-                            <div
-                                style={{
-                                    display: 'flex',
-                                    justifyContent: 'center',
-                                    alignItems: 'center',
-                                    height: 32,
-                                }}
-                            >
-                                {i + 1} {/* Muestra números del 1 al máximo de módulos */}
-                            </div>
-                        </Col>
-                    ))}
+                    {console.log("ASd")}
+                    {console.log(maxDay)}
+                    {modulesData
+                        .filter((module) => module.day === maxDay)
+                        .map((module, i) => (
+                            console.log(module.moduleNumber),
+                            console.log(module.end_time),
+                            <Col  key={module.id || i} style={{ width: '100%', paddingInline: 3 }}>
+                                <div
+
+                                    style={{
+                                        display: 'flex',
+                                        justifyContent: 'center',
+                                        alignItems: 'center',
+                                        height: 37,
+                                        
+                                    }}
+                                >
+                                    {module.startTime} - {module.endTime} {/* Muestra la hora de inicio y fin */}
+                                </div>
+                            </Col>
+                        ))}
+
                 </Col>
 
                 {/* Renderización de los días con sus módulos */}
@@ -178,13 +210,13 @@ export default function FormDisponibilidad({ onClose }) {
                                     <Button
                                         disabled={asignadoCells.includes(module.id)}
                                         type="primary"
-                                        style={asignadoCells.includes(module.id)? customDisabledStyle : { width: '100%' }}
+                                        style={asignadoCells.includes(module.id) ? customDisabledStyle : { width: '100%' }}
                                         className={
                                             selectedCells.includes(module.id)
                                                 ? 'selected'
-                                                : asignadoCells.includes(module.id)?
-                                                'Ocupied'
-                                                :'NotSelected'
+                                                : asignadoCells.includes(module.id) ?
+                                                    'Ocupied'
+                                                    : 'NotSelected'
                                         }
                                         onClick={(event) => handleCellClick(event, module.id)}
                                     >
@@ -197,7 +229,7 @@ export default function FormDisponibilidad({ onClose }) {
                 })}
             </Row>
 
-            <br/><br />
+            <br /><br />
             <Alert
                 style={{ position: 'absolute', bottom: '50px', marginInline: '25px' }}
                 message="Atención!"

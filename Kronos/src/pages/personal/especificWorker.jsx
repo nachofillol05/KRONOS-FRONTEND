@@ -189,6 +189,7 @@ export default function Especificworker({
                           <Col
                             style={{
                               width: "95%",
+                              height: 25,
                               paddingInline: 3,
                               marginInline: "auto",
                               backgroundColor: isAvailable

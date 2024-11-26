@@ -99,6 +99,8 @@ export default function FormCreateSubject({ handleSubmit, onClose, cursos, value
                             setColorSelected(newColor);
                         }} 
                         size="large" 
+                        defaultFormat='hex'
+                        format="hex"
                         showText 
                         style={{ width: '100%' }} 
                     />

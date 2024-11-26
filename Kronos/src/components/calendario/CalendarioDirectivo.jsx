@@ -8,8 +8,8 @@ const days = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes'];
 
 
 
-export default function Calendario({ tempSelectedKeys,setTempSelectedKeys,materias, mibooleano, setMaterias,setTeacher,CursosMostrar }) {
-    console.log("CursosMostrar",CursosMostrar)
+export default function Calendario({ tempSelectedKeys, setTempSelectedKeys, materias, mibooleano, setMaterias, setTeacher, CursosMostrar }) {
+    console.log("CursosMostrar", CursosMostrar)
     const [selectedItems, setSelectedItems] = useState({});
     const [coursesDinamic, setCoursesDinamic] = useState([]);
     const [modulesData, setModulesData] = useState([]);
@@ -18,7 +18,7 @@ export default function Calendario({ tempSelectedKeys,setTempSelectedKeys,materi
     const [menu, setMenu] = useState(null); // Estado para guardar el menú
 
     // Función para crear el menú dinámicamente al hacer clic
-    const handleDropdownClick = (moduleId, courseId, key,matchingMateria) => {
+    const handleDropdownClick = (moduleId, courseId, key, matchingMateria) => {
         setMenu(null); // Resetea el menú
         const url = new URL('http://localhost:8000/api/subjectpermodule/');
         const params = { module_id: moduleId, course_id: courseId };
@@ -32,53 +32,53 @@ export default function Calendario({ tempSelectedKeys,setTempSelectedKeys,materi
                 'School-ID': sessionStorage.getItem('actual_school'),
             },
         })
-        .then((response) => response.json())
-        .then((data) => {
-            if(matchingMateria&&data){
-                data = data.filter((subject) => subject.id !== matchingMateria.subject_id);
-            }
-            if (data && Array.isArray(data) && data.length > 0) {
-                const generatedMenu = (
-                    <Menu onClick={(e) => handleMenuClick(moduleId, courseId, e)}>
-                         {matchingMateria && (
-                            <Menu.Item key="null" value="null" style={{ color: 'red' }}>
-                                Eliminar
-                            </Menu.Item>
-                        )}
-                        {data.map((subject) => (
-                            <Menu.Item key={subject.id} value={subject.id}>
-                                {subject.name}
-                            </Menu.Item>
-                        ))}
-                    </Menu>
-                );
-                setMenu(generatedMenu);
-            } else {
+            .then((response) => response.json())
+            .then((data) => {
+                if (matchingMateria && data) {
+                    data = data.filter((subject) => subject.id !== matchingMateria.subject_id);
+                }
+                if (data && Array.isArray(data) && data.length > 0) {
+                    const generatedMenu = (
+                        <Menu onClick={(e) => handleMenuClick(moduleId, courseId, e)}>
+                            {matchingMateria && (
+                                <Menu.Item key="null" value="null" style={{ color: 'red' }}>
+                                    Eliminar
+                                </Menu.Item>
+                            )}
+                            {data.map((subject) => (
+                                <Menu.Item key={subject.id} value={subject.id}>
+                                    {subject.name}
+                                </Menu.Item>
+                            ))}
+                        </Menu>
+                    );
+                    setMenu(generatedMenu);
+                } else {
+                    setMenu(
+                        <Menu onClick={(e) => handleMenuClick(moduleId, courseId, e)}>
+                            {matchingMateria && (
+                                <Menu.Item key="null" value="null" style={{ color: 'red' }}>
+                                    Eliminar
+                                </Menu.Item>
+                            )}
+                            <Menu.Item disabled key="no-data">No hay materias disponibles</Menu.Item>
+                        </Menu>
+                    );
+                }
+            })
+            .catch(error => {
                 setMenu(
-                    <Menu onClick={(e) => handleMenuClick(moduleId, courseId, e)}>
-                         {matchingMateria && (
-                            <Menu.Item key="null" value="null" style={{ color: 'red' }}>
-                                Eliminar
-                            </Menu.Item>
-                        )}
-                        <Menu.Item disabled key="no-data">No hay materias disponibles</Menu.Item>
+                    <Menu>
+                        <Menu.Item disabled key="error">Error al traer las materias</Menu.Item>
                     </Menu>
                 );
-            }
-        })
-        .catch(error => {
-            setMenu(
-                <Menu>
-                    <Menu.Item disabled key="error">Error al traer las materias</Menu.Item>
-                </Menu>
-            );
-        });
+            });
     };
 
     const handleMenuClick = useCallback((moduleId, courseId, e) => {
         const selectedSubjectId = e.key;
         console.log(selectedSubjectId)
-        if(selectedSubjectId === "null"){
+        if (selectedSubjectId === "null") {
             console.log("se elimino la materia")
             const url = new URL('http://localhost:8000/api/subjectpermodule/');
             url.searchParams.append('course_id', courseId);
@@ -92,22 +92,22 @@ export default function Calendario({ tempSelectedKeys,setTempSelectedKeys,materi
                     'School-ID': sessionStorage.getItem('actual_school'),
                 },
             })
-            .then((response) => response.json())
-            .then((data) => {
-                console.log('Data actualizada: ', data);
-                console.log('aaaaaaaaaaaaaaaaaca', courseId, moduleId)
-                //AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACA FILTRAR LA MAT ELIMINADA Y MANDAR LO DEMAS
-                console.log(materias)
-                console.log(
-                    "Maaaaaaaaaaaaaaaaterias",
-                    materias.filter((materia) => !(materia.course_id === courseId && materia.module_id === moduleId))
-                  );
-                setMaterias((materiaAnt)=>materiaAnt.filter((materia) => !(materia.course_id === courseId && materia.module_id === moduleId)));
-            })
-            .catch(error => {
-                console.error('Error fetching schedule data:', error);
-            });
-        }else{
+                .then((response) => response.json())
+                .then((data) => {
+                    console.log('Data actualizada: ', data);
+                    console.log('aaaaaaaaaaaaaaaaaca', courseId, moduleId)
+                    //AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACA FILTRAR LA MAT ELIMINADA Y MANDAR LO DEMAS
+                    console.log(materias)
+                    console.log(
+                        "Maaaaaaaaaaaaaaaaterias",
+                        materias.filter((materia) => !(materia.course_id === courseId && materia.module_id === moduleId))
+                    );
+                    setMaterias((materiaAnt) => materiaAnt.filter((materia) => !(materia.course_id === courseId && materia.module_id === moduleId)));
+                })
+                .catch(error => {
+                    console.error('Error fetching schedule data:', error);
+                });
+        } else {
             fetch(`http://localhost:8000/api/subjectpermodule/`, {
                 method: 'POST',
                 headers: {
@@ -116,28 +116,28 @@ export default function Calendario({ tempSelectedKeys,setTempSelectedKeys,materi
                     'School-ID': sessionStorage.getItem('actual_school'),
                 },
                 body: JSON.stringify({
-                    "schedules":[{
+                    "schedules": [{
                         subject_id: selectedSubjectId,
                         course_id: courseId,
                         module_id: moduleId
                     }]
                 }),
             })
-            .then((response) => response.json())
-            .then((data) => {
-                console.log('Data actualizada: ', data);
-                setMaterias((materiaAnt)=>[data,...materiaAnt]);
-            })
-            .catch(error => {
-                console.error('Error fetching schedule data:', error);
-            });
+                .then((response) => response.json())
+                .then((data) => {
+                    console.log('Data actualizada: ', data);
+                    setMaterias((materiaAnt) => [data, ...materiaAnt]);
+                })
+                .catch(error => {
+                    console.error('Error fetching schedule data:', error);
+                });
         }
     }, []);
-    
-    
+
+
 
     useEffect(() => {
-        if(sessionStorage.getItem('rol') === "Profesor"){
+        if (sessionStorage.getItem('rol') === "Profesor") {
             window.location.reload();
         }
     }, []);
@@ -173,9 +173,9 @@ export default function Calendario({ tempSelectedKeys,setTempSelectedKeys,materi
                 return response.json();
             })
             .then(data => {
-                console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",CursosMostrar)
+                console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", CursosMostrar)
                 console.log(data)
-                if(CursosMostrar){
+                if (CursosMostrar) {
                     data = data.filter((curso) => CursosMostrar.includes(curso.id));
                 }
                 const courses = data.map(curs => ({
@@ -187,17 +187,17 @@ export default function Calendario({ tempSelectedKeys,setTempSelectedKeys,materi
             .catch(error => console.error('Error fetching data:', error));
     }, [CursosMostrar]);
 
-   /* const handleMenuClick = useCallback((e, key,courseId) => {
-        console.log(e)
-        console.log(key)
-        console.log(courseId)
-        console.log("se añadio la materia")
-        //La key sera el id de la materia y puedo llegar a sacar el id del curso y de ahi saco el id del curso y ya tengo la que nceesito y hago el fetch
-        setSelectedItems(prevState => ({
-            ...prevState,
-            [key]: e.key
-        }));
-    }, []);*/
+    /* const handleMenuClick = useCallback((e, key,courseId) => {
+         console.log(e)
+         console.log(key)
+         console.log(courseId)
+         console.log("se añadio la materia")
+         //La key sera el id de la materia y puedo llegar a sacar el id del curso y de ahi saco el id del curso y ya tengo la que nceesito y hago el fetch
+         setSelectedItems(prevState => ({
+             ...prevState,
+             [key]: e.key
+         }));
+     }, []);*/
 
     const makeColorTransparent = useCallback((color, alpha) => {
         alpha = Math.max(0, Math.min(1, alpha));
@@ -276,45 +276,45 @@ export default function Calendario({ tempSelectedKeys,setTempSelectedKeys,materi
                                                     materia.moduleNumber === parseInt(module.moduleNumber) &&
                                                     materia.course_id === course.value
                                                 );
-                                                
-                                                
+
+
                                                 // Definir el sujeto basado en la materia coincidente
                                                 const displaySubject = matchingMateria ? {
                                                     value: matchingMateria.subject_name,
                                                     abreviation: matchingMateria.subject_abreviation,
                                                     color: matchingMateria.subject_color || 'white',
                                                     avatar: (
-                                                        matchingMateria.profile_picture 
-                                                            ? <Avatar size={'small'} src={matchingMateria.profile_picture} /> 
+                                                        matchingMateria.profile_picture
+                                                            ? <Avatar size={'small'} src={matchingMateria.profile_picture} />
                                                             : <Avatar size={'small'} icon={<UserOutlined />} />
                                                     ),
                                                     teacher: matchingMateria.nombre,
-                                                    teacher_id:matchingMateria.teacher_id,
+                                                    teacher_id: matchingMateria.teacher_id,
                                                 } : null;
-                                                
+
 
                                                 return (
                                                     <Col key={key}>
                                                         {mibooleano ? (
                                                             <Dropdown
-                                                            overlay={menu || <Menu><Menu.Item disabled>Cargando...</Menu.Item></Menu>} // Menú por defecto mientras se carga
-                                                            trigger={['click']}
-                                                            onVisibleChange={(visible) => {
-                                                                if (visible) {
-                                                                    handleDropdownClick(module.id, course.value, key,matchingMateria);
-                                                                }
-                                                            }}
-                                                        >
-                                                            <a className='espacio' style={{
-                                                                color: displaySubject ? displaySubject.color : "",
-                                                                backgroundColor: makeColorTransparent(displaySubject ? displaySubject.color : "white", 0.1),
-                                                            }}>
-                                                                <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
-                                                                    {displaySubject ? displaySubject.avatar : ""}
-                                                                    {displaySubject ? displaySubject.abreviation : ""}
-                                                                </div>
-                                                            </a>
-                                                        </Dropdown>                                                        
+                                                                overlay={menu || <Menu><Menu.Item disabled>Cargando...</Menu.Item></Menu>} // Menú por defecto mientras se carga
+                                                                trigger={['click']}
+                                                                onVisibleChange={(visible) => {
+                                                                    if (visible) {
+                                                                        handleDropdownClick(module.id, course.value, key, matchingMateria);
+                                                                    }
+                                                                }}
+                                                            >
+                                                                <a className='espacio' style={{
+                                                                    color: displaySubject ? displaySubject.color : "",
+                                                                    backgroundColor: makeColorTransparent(displaySubject ? displaySubject.color : "#f0f0f0", 0.1),
+                                                                }}>
+                                                                    <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
+                                                                        {displaySubject ? displaySubject.avatar : ""}
+                                                                        {displaySubject ? displaySubject.abreviation : ""}
+                                                                    </div>
+                                                                </a>
+                                                            </Dropdown>
                                                         ) : (
                                                             <Tooltip
                                                                 arrow={false}
@@ -324,14 +324,14 @@ export default function Calendario({ tempSelectedKeys,setTempSelectedKeys,materi
                                                                         <b style={{ color: '#444' }}>{displaySubject.value}</b>
                                                                         <b style={{ color: '#444' }}>{displaySubject.teacher}</b>
                                                                         <p style={{ color: '#444', marginBlock: 5 }}> {`${day} ${module.moduleNumber} módulo, ${course.label}`}</p>
-                                                                        {!tempSelectedKeys?.includes(displaySubject.teacher_id) ? 
-                                                                        <a 
-                                                                            onClick={() => setTempSelectedKeys(tempSelectedKeys ? [...tempSelectedKeys, displaySubject.teacher_id] : [displaySubject.teacher_id])} 
-                                                                            style={{ color: '#227cae', textDecoration: 'none' }}>
-                                                                                
-                                                                            <FilterOutlined /> Filtrar por este profesor
-                                                                        </a>
-                                                                        : null}
+                                                                        {!tempSelectedKeys?.includes(displaySubject.teacher_id) ?
+                                                                            <a
+                                                                                onClick={() => setTempSelectedKeys(tempSelectedKeys ? [...tempSelectedKeys, displaySubject.teacher_id] : [displaySubject.teacher_id])}
+                                                                                style={{ color: '#227cae', textDecoration: 'none' }}>
+
+                                                                                <FilterOutlined /> Filtrar por este profesor
+                                                                            </a>
+                                                                            : null}
                                                                     </div>
                                                                 ) : ""}
                                                                 color='#ffffff'
@@ -339,7 +339,7 @@ export default function Calendario({ tempSelectedKeys,setTempSelectedKeys,materi
                                                             >
                                                                 <a className='espacio' style={{
                                                                     color: displaySubject ? displaySubject.color : "",
-                                                                    backgroundColor: makeColorTransparent(displaySubject ? displaySubject.color : "white", 0.1),
+                                                                    backgroundColor: displaySubject ? makeColorTransparent(displaySubject.color, 0.2) : "#f9f9f9",
                                                                 }}>
                                                                     <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
                                                                         {displaySubject ? displaySubject.avatar : ""}
@@ -360,7 +360,7 @@ export default function Calendario({ tempSelectedKeys,setTempSelectedKeys,materi
 
                 </Row>
             </div>
-            
+
         </>
     );
 
