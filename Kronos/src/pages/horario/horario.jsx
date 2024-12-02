@@ -22,7 +22,7 @@ const roles = [
 
 const dateFormat = 'DD/MM/YYYY';
 const messages = [
-    "Tiempo espera aproximado 2 minutos...",
+    "Creando... Aguarde unos segundos",
     "Sabias que Kronos iba a llamarse Monica en un principio...",
     "Cargando...",
     "En serio no salgas porfas"
@@ -266,9 +266,9 @@ function Horario() {
                 tip={
                     cargandoAuto ? (
                         <div>
-                            <div>Esto podría demorar unos minutos...</div>
+                            <div>Cargando...</div>
                             <div>Por favor, no salga de la página</div>
-                            <div>{tipMessage}</div>
+                            <div>Esto podría demorar unos segundos...</div>
                         </div>
                     ) : (
                         <div>
