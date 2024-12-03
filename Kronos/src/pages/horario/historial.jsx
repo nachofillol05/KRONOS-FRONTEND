@@ -9,7 +9,7 @@ export default function Historial() {
     const searchInput = useRef(null);
 
     useEffect(() => {
-        fetch('http://localhost:8000/api/history_schedule/', {
+        fetch(process.env.REACT_APP_API_URL + '/api/history_schedule/', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',

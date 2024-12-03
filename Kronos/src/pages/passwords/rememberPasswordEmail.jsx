@@ -19,7 +19,7 @@ export default function Login() {
     };
     const EnviarMail = () => {
         setConfirmModalOpen(false)
-        fetch("http://localhost:8000/api/forgotPassword/", {
+        fetch("process.env.REACT_APP_API_URL/api/forgotPassword/", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -71,7 +71,7 @@ export default function Login() {
 
     const onFinish = (values) => {
         console.log('Received values of form: ', values);
-        fetch("http://localhost:8000/api/create_teacher/", {
+        fetch("process.env.REACT_APP_API_URL/api/create_teacher/", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",

@@ -21,7 +21,7 @@ const PrivateRoute = ({ children }) => {
   useEffect(() => {
     const verifyToken = async () => {
       try {
-        const response = await fetch('http://localhost:8000/api/verifyToken/', {
+        const response = await fetch(process.env.REACT_APP_API_URL + '/api/verifyToken/', {
           method: "POST",
           headers: {
             'Content-Type': 'application/json'

@@ -44,7 +44,7 @@ export default function FormCreateWorker({  recargar,setRecargar,handleVolver, t
         
                 console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa ", body);
         
-                const response = await fetch("http://localhost:8000/api/Register/", {
+                const response = await fetch("process.env.REACT_APP_API_URL/api/Register/", {
                     method: "POST",
                     headers: {
                         Authorization: "Token " + localStorage.getItem("token"),

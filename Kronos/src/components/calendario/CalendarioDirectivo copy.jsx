@@ -55,7 +55,7 @@ export default function Calendario({ materias, mibooleano }) {
     }, []);
     const obtenerMateriasModule = (moduleId, courseId) => {
         // Construir la URL con los parámetros
-        const url = new URL('http://localhost:8000/api/subjectpermodule/');
+        const url = new URL(process.env.REACT_APP_API_URL + '/api/subjectpermodule/');
         const params = { module_id: moduleId, course_id: courseId };
 
         // Agregar los parámetros a la URL
@@ -80,7 +80,7 @@ export default function Calendario({ materias, mibooleano }) {
 
 
     /*useEffect(() => {
-        fetch('http://localhost:8000/api/subjects/', {
+        fetch(process.env.REACT_APP_API_URL + '/api/subjects/', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -97,7 +97,7 @@ export default function Calendario({ materias, mibooleano }) {
 */
 
     useEffect(() => {
-        fetch('http://localhost:8000/api/modules/', {
+        fetch(process.env.REACT_APP_API_URL + '/api/modules/', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',

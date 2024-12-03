@@ -17,7 +17,7 @@ const DirectiveRoute = ({ children }) => {
     useEffect(() => {
         const verifyToken = async () => {
             try {
-                const tokenResponse = await fetch('http://localhost:8000/api/verifyToken/', {
+                const tokenResponse = await fetch(process.env.REACT_APP_API_URL + '/api/verifyToken/', {
                     method: "POST",
                     headers: {
                         'Content-Type': 'application/json'

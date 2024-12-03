@@ -12,7 +12,7 @@ export default function ChangePassword() {
     const onFinish = (values) => {
         
         console.log('Received values of form: ', values);
-        fetch(`http://localhost:8000/api/forgot-password/${token}/`, {
+        fetch(`process.env.REACT_APP_API_URL/api/forgot-password/${token}/`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

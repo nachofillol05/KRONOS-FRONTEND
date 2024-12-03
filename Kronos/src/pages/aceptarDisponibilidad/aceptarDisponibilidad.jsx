@@ -19,7 +19,7 @@ export default function AceptarDisponibilidad() {
 
     useEffect(() => {
         // Fetch de módulos
-        fetch('http://localhost:8000/api/modules/', {
+        fetch(process.env.REACT_APP_API_URL + '/api/modules/', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -34,7 +34,7 @@ export default function AceptarDisponibilidad() {
         });
 
         // Fetch de profesores
-        fetch('http://localhost:8000/api/professors/', {
+        fetch(process.env.REACT_APP_API_URL + '/api/professors/', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',

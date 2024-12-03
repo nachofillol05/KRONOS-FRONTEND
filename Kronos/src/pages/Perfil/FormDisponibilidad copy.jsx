@@ -25,7 +25,7 @@ export default function FormDisponibilidad({ onClose }) {
 
     const actualizarAvailability = () => {
         const jsonData = JSON.stringify({ teacher_availability: selectedCells });
-        fetch('http://localhost:8000/api/teacheravailability/', {
+        fetch(process.env.REACT_APP_API_URL + '/api/teacheravailability/', {
             method: 'POST',
             body: jsonData,
             headers: {
@@ -39,7 +39,7 @@ export default function FormDisponibilidad({ onClose }) {
     const days = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes'];
 
     useEffect(() => {
-        fetch('http://localhost:8000/api/modules/', {
+        fetch(process.env.REACT_APP_API_URL + '/api/modules/', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -54,7 +54,7 @@ export default function FormDisponibilidad({ onClose }) {
     }, []);
 
     useEffect(() => {
-        fetch('http://localhost:8000/api/teacheravailability/', {
+        fetch(process.env.REACT_APP_API_URL + '/api/teacheravailability/', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',

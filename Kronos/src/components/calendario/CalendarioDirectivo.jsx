@@ -20,7 +20,7 @@ export default function Calendario({ tempSelectedKeys,setTempSelectedKeys,materi
     // Función para crear el menú dinámicamente al hacer clic
     const handleDropdownClick = (moduleId, courseId, key,matchingMateria) => {
         setMenu(null); // Resetea el menú
-        const url = new URL('http://localhost:8000/api/subjectpermodule/');
+        const url = new URL(process.env.REACT_APP_API_URL + '/api/subjectpermodule/');
         const params = { module_id: moduleId, course_id: courseId };
         Object.keys(params).forEach(paramKey => url.searchParams.append(paramKey, params[paramKey]));
 
@@ -80,7 +80,7 @@ export default function Calendario({ tempSelectedKeys,setTempSelectedKeys,materi
         console.log(selectedSubjectId)
         if(selectedSubjectId === "null"){
             console.log("se elimino la materia")
-            const url = new URL('http://localhost:8000/api/subjectpermodule/');
+            const url = new URL(process.env.REACT_APP_API_URL + '/api/subjectpermodule/');
             url.searchParams.append('course_id', courseId);
             url.searchParams.append('module_id', moduleId);
 
@@ -108,7 +108,7 @@ export default function Calendario({ tempSelectedKeys,setTempSelectedKeys,materi
                 console.error('Error fetching schedule data:', error);
             });
         }else{
-            fetch(`http://localhost:8000/api/subjectpermodule/`, {
+            fetch(`process.env.REACT_APP_API_URL/api/subjectpermodule/`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -144,7 +144,7 @@ export default function Calendario({ tempSelectedKeys,setTempSelectedKeys,materi
 
 
     useEffect(() => {
-        fetch('http://localhost:8000/api/modules/', {
+        fetch(process.env.REACT_APP_API_URL + '/api/modules/', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
