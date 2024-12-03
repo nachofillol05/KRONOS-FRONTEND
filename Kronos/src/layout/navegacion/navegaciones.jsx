@@ -7,21 +7,23 @@ import {
     UserOutlined,
     LogoutOutlined,
     UserSwitchOutlined,
-    BankOutlined
+    BankOutlined,
+    MenuOutlined,
 } from '@ant-design/icons';
-import { Layout, Menu, Dropdown, Spin } from 'antd';
+import { Layout, Menu, Drawer, Spin, Button } from 'antd';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 import './navegaciones.scss';
 
 const { Content, Sider } = Layout;
 
-function getItem(label, key, icon, children) {
+function getItem(label, key, icon, children, onClick) {
     return {
         key,
         icon,
         children,
         label,
+        onClick,
     };
 }
 
@@ -39,8 +41,18 @@ const App = ({ children }) => {
     const [data, setData] = useState(null);
     const [selectHabilitado, setSelectHabilitado] = useState(true);
     const [loading, setLoading] = useState(false);
+    const [isMobile, setIsMobile] = useState(false);
+    const [drawerVisible, setDrawerVisible] = useState(false);
     const navigate = useNavigate();
 
+    useEffect(() => {
+        const handleResize = () => {
+            setIsMobile(window.innerWidth <= 768);
+        };
+        handleResize(); // Check on initial load
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
 
     useEffect(() => {
         const fetchRolesAndSchools = async () => {
@@ -101,14 +113,6 @@ const App = ({ children }) => {
         return null;
     }
 
-    const handleMenuItemClick = ({ key }) => {
-        console.log(key)
-        sessionStorage.setItem('actual_school', key);
-        setSchool(key);
-        sessionStorage.setItem('rol', '');
-        window.location.reload();
-    };
-
     const getSelectedKey = () => {
         switch (location.pathname) {
             case '/horarios':
@@ -129,6 +133,7 @@ const App = ({ children }) => {
     const changeRol = (value) => {
         sessionStorage.setItem('rol', value);
         setRol(value);
+        setDrawerVisible(false);
         window.location.reload();
     };
 
@@ -142,7 +147,7 @@ const App = ({ children }) => {
         return roles
             .filter(role => role !== sessionStorage.getItem('rol'))
             .map(role => (
-                getItem(<a onClick={() => changeRol(role)}>{role}</a>)
+                getItem(<a onClick={() => { changeRol(role) }}>{role}</a>)
             ));
     };
 
@@ -150,42 +155,37 @@ const App = ({ children }) => {
         return dropdownItems
             .filter(item => item.key !== sessionStorage.getItem('actual_school'))
             .map(item => (
-                getItem(<a
-                    onClick={async () => {
-                        console.log("Actualizando escuela a:", item.key);
-                        sessionStorage.setItem('actual_school', item.key);
-                        setSchool(item.key);
-                        sessionStorage.setItem('rol', '');
-
-                        await new Promise(resolve => {
-                            setTimeout(() => {
-                                console.log("Escuela y rol asignados.");
-                                window.location.reload();
-                                resolve();
-                            }, 100);
-                        });
-                    //Ver si puedo actualizar solo lo de adentro y no todo coom hago con los navigate
-                    //Ver como hacer para que cuando se cambie de colegio o se cambie ese valor en el localstorage se vuelva a enviar el fetch
-                    //Parece que esta mandando las request antes de que se cargue el school entonces detecta que esta vacio y vuelve a antes
-                    //HACER QUE EL FETCH ESCUCHE AL SESSIONSTORAGE Y QUE SU ROL SELECCIONADO ES PROF Y ESTA AHI QUE SE ACTUALICE,VER
+                getItem(
+                    <a
+                        onClick={async () => {
+                            sessionStorage.setItem('actual_school', item.key);
+                            setSchool(item.key);
+                            sessionStorage.setItem('rol', '');
+                            await new Promise(resolve => {
+                                setTimeout(() => {
+                                    setDrawerVisible(false);
+                                    window.location.reload();
+                                    resolve();
+                                }, 100);
+                            });
+                            
                         }}
                     >
                         {item.label}
-                    </a>)
+                    </a>
+                )
             ));
     };
 
     const defaultRol = rol || (roles.length > 0 ? roles[0] : undefined);
 
     let currentSchool = JSON.parse(localStorage.getItem('schools') || '[]').find(school => school.pk === Number(sessionStorage.getItem('actual_school')));
-    console.log("que onda con el cambio schooooooooooooooooooooooooool", currentSchool)
     if (!currentSchool) {
         const firstSchool = JSON.parse(localStorage.getItem('schools'))[0];
         sessionStorage.setItem('actual_school', firstSchool.pk);
         currentSchool = firstSchool;
     }
 
-    //Ver aca que hacemos cuando hay 1 solo rol o escuela si mostramos sin select o que para mi si
     const items = [
         dropdownItems.length >= 2
             ? getItem(currentSchool.name, '1', <BankOutlined />, renderSchool())
@@ -193,59 +193,92 @@ const App = ({ children }) => {
         roles.length >= 2
             ? getItem(defaultRol, '2', <UserSwitchOutlined />, renderOptions())
             : null,
-        getItem(<Link to="/horarios">Horarios</Link>, '3', <TableOutlined />),
+        getItem(<Link to="/horarios">Horarios</Link>, '3', <TableOutlined />, null, () => setDrawerVisible(false)),
         ...(rol === 'Directivo' || rol === 'Preceptor' ? [
-            getItem(<Link to="/personal">Personal</Link>, '4', <TeamOutlined />),
-            getItem(<Link to="/materias">Materias</Link>, '5', <ScheduleOutlined />)
+            getItem(<Link to="/personal">Personal</Link>, '4', <TeamOutlined />, null, () => setDrawerVisible(false)),
+            getItem(<Link to="/materias">Materias</Link>, '5', <ScheduleOutlined />, null, () => setDrawerVisible(false)),
         ] : []),
-        getItem(<Link to="/eventos">Eventos</Link>, '6', <ContactsOutlined />),
-        getItem(<Link to="/perfil">Perfil</Link>, '7', <UserOutlined />),
-        getItem(<a onClick={cerrarSesion}>Cerrar sesión</a>, '8', <LogoutOutlined />),
-    ].filter(Boolean); // Remove null items
+        getItem(<Link to="/eventos">Eventos</Link>, '6', <ContactsOutlined />, null, () => setDrawerVisible(false)),
+        getItem(<Link to="/perfil">Perfil</Link>, '7', <UserOutlined />, null, () => setDrawerVisible(false)),
+        getItem(<a onClick={() => { cerrarSesion(); setDrawerVisible(false); }}>Cerrar sesión</a>, '8', <LogoutOutlined />),
+    ].filter(Boolean);
+
+    const menu = (
+        <Menu
+            theme='light'
+            mode='vertical'
+            defaultSelectedKeys={[getSelectedKey()]}
+            items={items}
+        />
+    );
 
     return (
         <Contexto.Provider value={{ setLoading, loading }}>
-
             <Layout style={{ minHeight: '100vh' }}>
-                <Sider
-                    theme='light'
-                    collapsible
-                    collapsed={collapsed}
-                    onCollapse={value => setCollapsed(value)}
-                    width={175}
-                    collapsedWidth={50}
-                    style={{
-                        overflow: 'auto',
-                        height: '100vh',
-                        position: 'fixed',
-                        left: 0,
-                        top: 0,
-                        bottom: 0,
-                        zIndex: 1,
-                    }}
-                >
-                    <div onClick={e => e.preventDefault()} className={`logo-img ${collapsed && 'logo-img-collapsed'}`}>
-                        <img
-                            src={currentSchool.logo || 'https://via.placeholder.com/150'}
-                            alt="logo"
-                            style={{ width: '100%' }}
-                        />
-                    </div>
-
-                    <Menu theme='light' mode='vertical' defaultSelectedKeys={[getSelectedKey()]} items={items} style={{ width: collapsed ? 50 : 175 }} />             
+                {!isMobile ? (
+                    <Sider
+                        theme='light'
+                        collapsible
+                        collapsed={collapsed}
+                        onCollapse={value => setCollapsed(value)}
+                        width={175}
+                        collapsedWidth={50}
+                        style={{
+                            overflow: 'auto',
+                            height: '100vh',
+                            position: 'fixed',
+                            left: 0,
+                            top: 0,
+                            bottom: 0,
+                            zIndex: 1,
+                        }}
+                    >
+                        <div className={`logo-img ${collapsed && 'logo-img-collapsed'}`}>
+                            <img
+                                src={currentSchool.logo || 'https://via.placeholder.com/150'}
+                                alt="logo"
+                                style={{ width: '100%' }}
+                            />
+                        </div>
+                        {menu}
                     </Sider>
-                <Layout style={{ marginLeft: collapsed ? 50 : 200 }}>
-                    <Content style={{ padding: '0 24px', minHeight: 280 }}>
-                        {loading ? (
-                            <div className="spinner-container">
-                                <Spin size="large" />
-                            </div>
-                        ) : (
-                            children
-                        )}
+                ) : (
+                    <>
+                        <Button
+                            icon={<MenuOutlined />}
+                            onClick={() => setDrawerVisible(true)}
+                            style={{ position: 'fixed', top: 16, right: 16, zIndex: 2 }}
+                        />
+                        <Drawer
+                            title="Menú"
+                            placement="left"
+                            closable
+                            onClose={() => setDrawerVisible(false)}
+                            visible={drawerVisible}
+                            width={250} // Limita el ancho del Drawer a 250px
+                            >
+                            {menu}
+                            </Drawer>
+                    </>
+                )}
+
+                <Layout
+                className="site-layout"
+                style={{
+                    marginLeft: isMobile ? 0 : 20, // Ajuste de espacio dependiendo del estado
+                    transition: 'margin-left 0.3s',
+                }}
+                >
+                    <Content
+                        style={{
+                            padding: '0 5%',
+                            overflow: 'initial',
+                            minHeight: '100vh',
+                        }}
+                    >
+                        {children}
                     </Content>
                 </Layout>
-
             </Layout>
         </Contexto.Provider>
     );
