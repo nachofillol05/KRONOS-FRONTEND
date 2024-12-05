@@ -44,7 +44,7 @@ export default function Especificworker({
   const days = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"];
 
   useEffect(() => {
-    fetch("process.env.REACT_APP_API_URL/api/modules/", {
+    fetch(process.env.REACT_APP_API_URL + "/api/modules/", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

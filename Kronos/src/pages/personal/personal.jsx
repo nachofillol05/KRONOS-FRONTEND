@@ -161,7 +161,7 @@ export default function Personal() {
       .validateFields()
       .then((values) => {
         console.log(values, "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
-        fetch("process.env.REACT_APP_API_URL/api/create_teacher/", {
+        fetch(process.env.REACT_APP_API_URL + "/api/create_teacher/", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -235,7 +235,7 @@ export default function Personal() {
           password: values.documento,
         });
         console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa ",body)
-        fetch("process.env.REACT_APP_API_URL/api/Register/", {
+        fetch(process.env.REACT_APP_API_URL + "/api/Register/", {
           method: "POST",
           headers: {
             Authorization: "Token " + localStorage.getItem("token"),
@@ -314,7 +314,7 @@ export default function Personal() {
       const jsonData = JSON.stringify({ email, asunto, contenido });
       console.log("JSON:", jsonData);
 
-      fetch("process.env.REACT_APP_API_URL/api/contacting-staff/", {
+      fetch(process.env.REACT_APP_API_URL + "/api/contacting-staff/", {
         method: "POST",
         body: jsonData,
         headers: {

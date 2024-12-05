@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Flex, List, Divider, Tooltip, Modal, Checkbox, Skeleton,message } from 'antd';
-import { RollbackOutlined, PlusOutlined, MailOutlined } from '@ant-design/icons';
+import { RollbackOutlined, PlusOutlined, MailOutlined, ControlOutlined } from '@ant-design/icons';
 import FilterDropdownPersonalizado from '../../components/filterDropTable/FilterDropPersonalizado';
 
 export default function InfoWorker({ onClose, handleVolver, handleContactar, user, recargar, setRecargar }) {
@@ -13,6 +13,7 @@ export default function InfoWorker({ onClose, handleVolver, handleContactar, use
     const [courses, setCourse] = useState([]);
     const [roles, setRoles] = useState([]);
     const [selectedRoles, setSelectedRoles] = useState([]);
+    const [rolesPrincipio, setRolesPrincipio] = useState([]);
     const [isSkeleton, setIsSkeleton] = useState(true);
     const [addedRoles, setAddedRoles] = useState([]); // Roles añadidos
     const [removedRoles, setRemovedRoles] = useState([]); // Roles eliminados
@@ -20,6 +21,7 @@ export default function InfoWorker({ onClose, handleVolver, handleContactar, use
     const [yearsPrincipio,setYearsPrincipio]=useState(user?.years?.map((year) => year.id) || []);
     const [addedYears,setAddedYears]=useState([]);
     const [removedYears,setRemovedYears]=useState([]);
+    const [error,setError]=useState(false);
 
     useEffect(() => {
         fetch(`http://127.0.0.1:8000/api/rolesUser/${user.id}/`, {
@@ -31,6 +33,8 @@ export default function InfoWorker({ onClose, handleVolver, handleContactar, use
         })
             .then((response) => {
                 if (!response.ok) {
+                    setRoles([]);
+                    setIsSkeleton(false);
                     throw new Error("Network response was not ok");
                 }
                 return response.json();
@@ -39,35 +43,15 @@ export default function InfoWorker({ onClose, handleVolver, handleContactar, use
                 console.log(data.roles)
                 setRoles(data.roles);
                 setSelectedRoles(data.roles);
+                setRolesPrincipio(data.roles);
                 setIsSkeleton(false);
             })
             .catch((error) => console.error("Error fetching data:", error));
     }, []);
-    /*
-    PRUEBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAS
-    useEffect(() => {
-        // Verifica si `selectedYear` ha cambiado respecto a `yearsPrincipio` o si hay cambios en roles
-        const hasChanges = 
-        (removedRoles?.length === 0 || addedRoles?.length === 0) &&
-        (JSON.stringify(yearsPrincipio) !== JSON.stringify(selectedYear)) &&
-        (addedRoles?.includes('Preceptor') && addedYears?.length !== 0);
-        console.log(hasChanges)
-        console.log((removedRoles?.length === 0 || addedRoles?.length === 0))
-        console.log(yearsPrincipio,selectedYear)
-        console.log((JSON.stringify(yearsPrincipio) !== JSON.stringify(selectedYear)))
-        console.log((addedRoles?.includes('Preceptor') && addedYears?.length !== 0))
-    
-    }, [selectedYear, removedRoles, addedRoles, yearsPrincipio,addedYears,removedYears]);
-    PRUEBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAS
-    */
+
     const showModal = () => {
         setIsModalVisible(true);
     };
-
-    useEffect(() => {
-        console.log(addedRoles, removedRoles);
-        console.log((removedRoles?.length === 0 && addedRoles?.length === 0) && (JSON.stringify(yearsPrincipio) === JSON.stringify(selectedYear)))
-    }, [addedRoles, removedRoles]);
 
     useEffect(() => {
         const newAddedYears = selectedYear?.filter(year => !yearsPrincipio?.includes(year));
@@ -78,11 +62,17 @@ export default function InfoWorker({ onClose, handleVolver, handleContactar, use
     }, [selectedYear]);
 
     const handleCheckboxChange = (checkedValues) => {
+        console.log("holaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
         setSelectedRoles(checkedValues);
+        console.log(checkedValues)
 
         // Calcular los roles añadidos y eliminados
         const newAddedRoles = checkedValues.filter(role => !roles.includes(role));
         const newRemovedRoles = roles.filter(role => !checkedValues.includes(role));
+        console.log(newRemovedRoles)
+        if (!checkedValues.includes('Preceptor')) {
+            setSelectedYear(yearsPrincipio);
+        }
         
         setAddedRoles(newAddedRoles);
         setRemovedRoles(newRemovedRoles);
@@ -90,6 +80,7 @@ export default function InfoWorker({ onClose, handleVolver, handleContactar, use
     
 
     const handleAgregar = () => {
+        setError(false);
             addedRoles.forEach(role => {
                 const data = { "role":role, "user_id": user.id };
                 
@@ -107,51 +98,59 @@ export default function InfoWorker({ onClose, handleVolver, handleContactar, use
                     body: JSON.stringify(data),
                 })
                 .then(response => {
-                    if (!response.ok) throw new Error(`Error asignando rol: ${role}`);
-                    return response.json();
+                    if (!response.ok){
+                        setError(true);
+                        if (role === "Preceptor") {
+                            message.error('Seleccione los años del preceptor');
+                        }else{
+                            message.error(`Error asignando rol: ${role}`);
+                        }
+                        
+                        throw new Error(`Error asignando rol: ${role}`);
+                    }else{
+                        if(addedYears?.length!==0){
+                            const data = { "role":"Preceptor", "user_id": user.id, "years_id": addedYears };
+                            fetch("http://127.0.0.1:8000/api/addrole/", {
+                                method: "POST",
+                                headers: {
+                                    "Content-Type": "application/json",
+                                    Authorization: "Token " + localStorage.getItem("token"),
+                                    "School-ID": sessionStorage.getItem("actual_school"),
+                                },
+                                body: JSON.stringify(data),
+                            })
+                            .then(response => {
+                                if (!response.ok) throw new Error(`Error eliminando rol: ${addedYears}`);
+                                return response.json();
+                            })
+                            .then(data => console.log(`Rol ${addedYears} eliminado exitosamente`, data))
+                            .catch(error => console.error("Error:", error));
+                        }
+            
+                        if(removedYears?.length!==0){
+                            const data = { "role":"Preceptor", "user_id": user.id, "years_id": removedYears };
+                            fetch("http://127.0.0.1:8000/api/addrole/", {
+                                method: "DELETE",
+                                headers: {
+                                    "Content-Type": "application/json",
+                                    Authorization: "Token " + localStorage.getItem("token"),
+                                    "School-ID": sessionStorage.getItem("actual_school"),
+                                },
+                                body: JSON.stringify(data),
+                            })
+                            .then(response => {
+                                if (!response.ok) throw new Error(`Error eliminando rol: ${removedYears}`);
+                                return response.json();
+                            })
+                            .then(data => console.log(`Rol ${removedYears} eliminado exitosamente`, data))
+                            .catch(error => console.error("Error:", error));
+                        }
+                        return response.json();
+                    }
                 })
                 .then(data => console.log(`Rol ${role} asignado exitosamente`, data))
                 .catch(error => console.error("Error:", error));
             });
-
-            if(addedYears?.length!==0){
-                const data = { "role":"Preceptor", "user_id": user.id, "years_id": addedYears };
-                fetch("http://127.0.0.1:8000/api/addrole/", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        Authorization: "Token " + localStorage.getItem("token"),
-                        "School-ID": sessionStorage.getItem("actual_school"),
-                    },
-                    body: JSON.stringify(data),
-                })
-                .then(response => {
-                    if (!response.ok) throw new Error(`Error eliminando rol: ${addedYears}`);
-                    return response.json();
-                })
-                .then(data => console.log(`Rol ${addedYears} eliminado exitosamente`, data))
-                .catch(error => console.error("Error:", error));
-            }
-
-            if(removedYears?.length!==0){
-                const data = { "role":"Preceptor", "user_id": user.id, "years_id": removedYears };
-                fetch("http://127.0.0.1:8000/api/addrole/", {
-                    method: "DELETE",
-                    headers: {
-                        "Content-Type": "application/json",
-                        Authorization: "Token " + localStorage.getItem("token"),
-                        "School-ID": sessionStorage.getItem("actual_school"),
-                    },
-                    body: JSON.stringify(data),
-                })
-                .then(response => {
-                    if (!response.ok) throw new Error(`Error eliminando rol: ${removedYears}`);
-                    return response.json();
-                })
-                .then(data => console.log(`Rol ${removedYears} eliminado exitosamente`, data))
-                .catch(error => console.error("Error:", error));
-            }
-        
             // Procesar roles eliminados
             removedRoles.forEach(role => {
                 const data = { role:role, user_id: user.id };
@@ -178,12 +177,19 @@ export default function InfoWorker({ onClose, handleVolver, handleContactar, use
                 .catch(error => console.error("Error:", error));
             });
         
-            message.success('Roles asignados correctamente');
-            setRecargar(!recargar);
-            setIsModalVisible(false);
-            onClose();
+            console.log(error)
+            if (error) {
+                return;
+            }else{
+                message.success('Roles asignados correctamente');
+                setRecargar(!recargar);
+                setIsModalVisible(false);
+                onClose();
+            }
+            
         
     };
+
 
     useEffect(() => {
         fetch("http://127.0.0.1:8000/api/years/", {
@@ -276,7 +282,7 @@ export default function InfoWorker({ onClose, handleVolver, handleContactar, use
                 cancelText="Cancelar"
                 title='Asigna un rol al trabajador'
                 okButtonProps={{
-                    disabled: (removedRoles?.length === 0 && addedRoles?.length === 0) && (JSON.stringify(yearsPrincipio) === JSON.stringify(selectedYear))
+                    disabled: (removedRoles?.length === 0 && addedRoles?.length === 0 && JSON.stringify(yearsPrincipio) === JSON.stringify(selectedYear)) || (JSON.stringify(yearsPrincipio) === JSON.stringify(selectedYear) && addedRoles?.includes('Preceptor')),
                   }}// VEEEEEEEEEEEEEEEEEEEEEEEEER SI ESTO ANDA
             >
                 <p>Por favor seleccione el rol o los roles que se le asignará a {user.first_name + " " + user.last_name}</p>

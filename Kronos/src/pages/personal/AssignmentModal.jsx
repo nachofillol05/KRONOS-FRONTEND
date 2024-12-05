@@ -94,7 +94,7 @@ const AssignmentModal = ({ visible, onClose, user, setCreatedPersonals,personal}
         });
 
         setCreatedPersonals((prev) => prev.map((p) => {
-            if (p.documento === personal.documento) {
+            if (p?.documento === personal?.documento) {
               return { ...p, deshabilitado: true };
             }
             return p;
