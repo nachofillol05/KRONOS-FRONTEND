@@ -30,15 +30,17 @@ const ModalComponent = ({ onClose, record, parentRecord, teachers, setSelectedTe
 
 
                         <Space.Compact style={{ width: '100%' }}>
-                            <Select
+                        <Select
                                 size='large'
                                 style={{ flexGrow: 1 }}
                                 showSearch
                                 placeholder="Buscar profesor"
                                 options={filteredTeachers}
                                 value={selectedTeacherModal}
-                                onChange={value => setTeachers(value)} // Actualiza el valor seleccionado aquí
-                            />
+                                onChange={value => setTeachers(value)}
+                                filterOption={(input, option) =>
+                                    (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
+                                }                            />
                             <Button
                                 size='large'
                                 onClick={() => {
