@@ -40,7 +40,7 @@ export default function Profile() {
   const handleOk = async () => {
     try {
       const values = await formCambio.validateFields();
-      fetch('http://127.0.0.1:8000/api/changePassword/', {
+      fetch(process.env.REACT_APP_API_URL + '/api/changePassword/', {
         method: "POST",
         headers: {
           'Authorization': 'Token ' + localStorage.getItem('token'),
@@ -127,7 +127,7 @@ export default function Profile() {
 
 
   useEffect(() => {
-    fetch('http://127.0.0.1:8000/api/profile/', {
+    fetch(process.env.REACT_APP_API_URL + '/api/profile/', {
       method: "GET",
       headers: {
         'Authorization': 'Token ' + localStorage.getItem('token'),
@@ -170,7 +170,7 @@ export default function Profile() {
   }, [isEditing, profileData]);
 
   useEffect(() => {
-    fetch('http://127.0.0.1:8000/api/documentTypes/', {
+    fetch(process.env.REACT_APP_API_URL + '/api/documentTypes/', {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -187,7 +187,7 @@ export default function Profile() {
   }, []);
 
   useEffect(() => {
-    fetch('http://127.0.0.1:8000/api/nationality/', {
+    fetch(process.env.REACT_APP_API_URL + '/api/nationality/', {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -240,7 +240,7 @@ export default function Profile() {
     };
     console.log('Form values:', body);
     try {
-      const profileResponse = await fetch('http://127.0.0.1:8000/api/profile/', {
+      const profileResponse = await fetch(process.env.REACT_APP_API_URL + '/api/profile/', {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -264,7 +264,7 @@ export default function Profile() {
         const formData = new FormData();
         formData.append('profile_picture', file.originFileObj); // Usar originFileObj
 
-        const pictureResponse = await fetch('http://127.0.0.1:8000/api/profilePicture/', {
+        const pictureResponse = await fetch(process.env.REACT_APP_API_URL + '/api/profilePicture/', {
           method: 'PUT',
           headers: {
             'Authorization': 'Token ' + localStorage.getItem('token'),

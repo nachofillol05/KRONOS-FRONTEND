@@ -8,7 +8,7 @@ function HorarioProfesor() {
     const [subjects, setSubjects] = useState([]);
     const [error, setError] = useState(false);
     useEffect(() => {
-        fetch("http://127.0.0.1:8000/api/ViewTeacherSchedule/", {
+        fetch(process.env.REACT_APP_API_URL + "/api/ViewTeacherSchedule/", {
             method: "GET",
             headers: {
                 Authorization: `Token ${localStorage.getItem("token")}`,

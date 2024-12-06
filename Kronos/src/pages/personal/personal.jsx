@@ -71,7 +71,7 @@ export default function Personal() {
   const DescargarExcel = () => {
     console.log('Descargando...');
 
-    fetch("http://127.0.0.1:8000/api/staff/export", {
+    fetch(process.env.REACT_APP_API_URL + "/api/staff/export", {
       method: "GET",
       headers: {
         Authorization: "Token " + localStorage.getItem("token"),
@@ -280,7 +280,7 @@ export default function Personal() {
     }
   };
   useEffect(() => {
-    fetch("http://127.0.0.1:8000/api/years/", {
+    fetch(process.env.REACT_APP_API_URL + "/api/years/", {
       method: "GET",
       headers: {
         Authorization: "Token " + localStorage.getItem("token"),
@@ -346,7 +346,7 @@ export default function Personal() {
         let fetchPromises = [];
 
         if (activeFilter === 'Profesores') {
-          const url = new URL('http://127.0.0.1:8000/api/teachers/');
+          const url = new URL(process.env.REACT_APP_API_URL + '/api/teachers/');
           if (searchName) url.searchParams.append('search_name', searchName);
           if (subject) url.searchParams.append('subject_id', subject);
 
@@ -373,7 +373,7 @@ export default function Personal() {
         }
 
         else if (activeFilter === 'Preceptores') {
-          const url = new URL('http://127.0.0.1:8000/api/preceptors');
+          const url = new URL(process.env.REACT_APP_API_URL + '/api/preceptors');
           if (searchName) url.searchParams.append('search', searchName);
           if (course) url.searchParams.append('year_id', course);
 
@@ -399,7 +399,7 @@ export default function Personal() {
         }
 
         else if (activeFilter === 'Directivos') {
-          const url = new URL('http://127.0.0.1:8000/api/directives');
+          const url = new URL(process.env.REACT_APP_API_URL + '/api/directives');
           if (searchName) url.searchParams.append('search', searchName);
 
           fetchPromises.push(
@@ -422,7 +422,7 @@ export default function Personal() {
               })
           );
         } else if (activeFilter === 'Todos') {
-          const url = new URL('http://127.0.0.1:8000/api/staff');
+          const url = new URL(process.env.REACT_APP_API_URL + '/api/staff');
           if (searchName) url.searchParams.append('search', searchName);
 
           fetchPromises.push(
@@ -485,7 +485,7 @@ export default function Personal() {
 
   useEffect(() => {
 
-    fetch("http://127.0.0.1:8000/api/subjects/", {
+    fetch(process.env.REACT_APP_API_URL + "/api/subjects/", {
       method: "GET",
       headers: {
         Authorization: "Token " + localStorage.getItem("token"),

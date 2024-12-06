@@ -11,7 +11,7 @@ const SelectCourse = ({ showDrawer }) => {
   const [hoveredInfo, setHoveredInfo] = useState('');
 
   useEffect(() => {
-    fetch("http://127.0.0.1:8000/api/courses/", {
+    fetch(process.env.REACT_APP_API_URL + "/api/courses/", {
       method: "GET",
       headers: {
         'Authorization': 'Token ' + localStorage.getItem('token'),

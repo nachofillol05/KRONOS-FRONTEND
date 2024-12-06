@@ -11,7 +11,7 @@ export default function FormCreateSubject({ handleSubmit, onClose, cursos, value
     const [form] = Form.useForm();
     
     useEffect(() => {
-    const url = new URL('http://127.0.0.1:8000/api/subjects/');
+    const url = new URL(process.env.REACT_APP_API_URL + '/api/subjects/');
         fetch(url.toString(), {
             method: "GET",
             headers: {

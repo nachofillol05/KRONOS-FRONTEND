@@ -108,7 +108,7 @@ export default function Calendario({ tempSelectedKeys,setTempSelectedKeys,materi
                 console.error('Error fetching schedule data:', error);
             });
         }else{
-            fetch(`process.env.REACT_APP_API_URL/api/subjectpermodule/`, {
+            fetch(process.env.REACT_APP_API_URL +`/api/subjectpermodule/`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -159,7 +159,7 @@ export default function Calendario({ tempSelectedKeys,setTempSelectedKeys,materi
     }, []);
 
     useEffect(() => {
-        fetch('http://127.0.0.1:8000/api/courses/', {
+        fetch(process.env.REACT_APP_API_URL + '/api/courses/', {
             method: "GET",
             headers: {
                 'Authorization': 'Token ' + localStorage.getItem('token'),

@@ -36,7 +36,7 @@ function Horario() {
     const [date, setDate] = useState(null);
 
     useEffect(() => {
-        fetch('http://127.0.0.1:8000/api/teachers/', {
+        fetch(process.env.REACT_APP_API_URL + "/api/teachers/', {
             method: "GET",
             headers: {
                 'Authorization': 'Token ' + localStorage.getItem('token'),
@@ -80,7 +80,7 @@ function Horario() {
 
     // Obtención de datos del servidor (materias)
     useEffect(() => {
-        const url = new URL('http://127.0.0.1:8000/api/viewschedule/');
+        const url = new URL(process.env.REACT_APP_API_URL + "/api/viewschedule/');
         if (teacher) url.searchParams.append('teachers', teacher);
         if (course) url.searchParams.append('courses', course);
         if (date) url.searchParams.append('date', date);
@@ -133,7 +133,7 @@ function Horario() {
     const generarHorario = () => {
         setCargandoAuto(true);
         setLoading(true);
-        fetch('http://127.0.0.1:8000/api/new_schedule/', {
+        fetch(process.env.REACT_APP_API_URL + "/api/new_schedule/', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -154,7 +154,7 @@ function Horario() {
     }
 
     const aceptarHorario = () => {
-        fetch('http://127.0.0.1:8000/api/create_schedule/', {
+        fetch(process.env.REACT_APP_API_URL + "/api/create_schedule/', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

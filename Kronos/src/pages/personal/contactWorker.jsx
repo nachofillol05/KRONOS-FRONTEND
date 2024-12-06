@@ -20,7 +20,7 @@ export default function ContactWorker({ onClose,handleVolver, user }) {
     
                 console.log(JSON.stringify(bodyData)); // Verifica que bodyData esté bien estructurado
     
-                fetch('http://127.0.0.1:8000/api/contacting-staff/', {
+                fetch(process.env.REACT_APP_API_URL + '/api/contacting-staff/', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

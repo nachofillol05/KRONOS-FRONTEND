@@ -37,7 +37,7 @@ export default function Materias() {
     const removeTeacher = async (teacherToRemove) => {
         if (teacherToRemove) {
             try {
-                await fetch('http://127.0.0.1:8000/api/teachersubjectschool/' + teacherToRemove + '/', {
+                await fetch(process.env.REACT_APP_API_URL + '/api/teachersubjectschool/' + teacherToRemove + '/', {
                     method: 'DELETE',
                     headers: {
                         'Authorization': 'Token ' + localStorage.getItem('token'),
@@ -58,7 +58,7 @@ export default function Materias() {
             coursesubjects: coursesubject_id,
         }
         setRecargar(!recargar);
-        fetch('http://127.0.0.1:8000/api/teachersubjectschool/', {
+        fetch(process.env.REACT_APP_API_URL + '/api/teachersubjectschool/', {
             method: 'POST',
             headers: {
                 'Authorization': 'Token ' + localStorage.getItem('token'),
@@ -130,7 +130,7 @@ export default function Materias() {
                     courses: []
                 };
                 console.log('Formulario completado:', body);
-                fetch('http://127.0.0.1:8000/api/subjects/', {
+                fetch(process.env.REACT_APP_API_URL + '/api/subjects/', {
                     method: 'POST',
                     headers: {
                         'Authorization': 'Token ' + localStorage.getItem('token'),
@@ -188,7 +188,7 @@ export default function Materias() {
                     studyPlan: values.planEstudio,
                 };
                 console.log('Formulario completado:', body);
-                fetch('http://127.0.0.1:8000/api/coursesubjects/', {
+                fetch(process.env.REACT_APP_API_URL + '/api/coursesubjects/', {
                     method: 'POST',
                     headers: {
                         'Authorization': 'Token ' + localStorage.getItem('token'),
@@ -231,7 +231,7 @@ export default function Materias() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const url = new URL('http://127.0.0.1:8000/api/subjects/');
+                const url = new URL(process.env.REACT_APP_API_URL + '/api/subjects/');
                 if (end_time && start_time) {
                     url.searchParams.append('start_time', start_time);
                     url.searchParams.append('end_time', end_time);
@@ -313,7 +313,7 @@ export default function Materias() {
                     courses: []
                 };
                 console.log('Formulario completado:', body);
-                fetch('http://127.0.0.1:8000/api/subjects/'+values.id+'/', {
+                fetch(process.env.REACT_APP_API_URL + '/api/subjects/'+values.id+'/', {
                     method: 'PUT',
                     headers: {
                         'Authorization': 'Token ' + localStorage.getItem('token'),
@@ -460,7 +460,7 @@ export default function Materias() {
     );
 
     useEffect(() => {
-        fetch('http://127.0.0.1:8000/api/courses/', {
+        fetch(process.env.REACT_APP_API_URL + '/api/courses/', {
             method: "GET",
             headers: {
                 'Authorization': 'Token ' + localStorage.getItem('token'),
@@ -485,7 +485,7 @@ export default function Materias() {
     }, []);
 
     useEffect(() => {
-        fetch('http://127.0.0.1:8000/api/courses/', {
+        fetch(process.env.REACT_APP_API_URL + '/api/courses/', {
             method: "GET",
             headers: {
                 'Authorization': 'Token ' + localStorage.getItem('token'),
@@ -510,7 +510,7 @@ export default function Materias() {
     }, []);
 
     useEffect(() => {
-        fetch('http://127.0.0.1:8000/api/teachers/', {
+        fetch(process.env.REACT_APP_API_URL + '/api/teachers/', {
             method: "GET",
             headers: {
                 'Authorization': 'Token ' + localStorage.getItem('token'),
@@ -552,7 +552,7 @@ export default function Materias() {
     }
 
     const descargarExcel = () => {
-        fetch('http://127.0.0.1:8000/api/subjects/?export=excel', {
+        fetch(process.env.REACT_APP_API_URL + '/api/subjects/?export=excel', {
             method: "GET",
             headers: {
                 Authorization: "Token " + localStorage.getItem("token"),

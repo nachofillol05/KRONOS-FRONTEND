@@ -42,7 +42,7 @@ export default function Login() {
     };
 
     useEffect(() => {
-        fetch('http://127.0.0.1:8000/api/documentTypes/', {
+        fetch(process.env.REACT_APP_API_URL + '/api/documentTypes/', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',

@@ -28,7 +28,7 @@ const DirectiveRoute = ({ children }) => {
                 });
 
                 if (tokenResponse.ok) {
-                    const userResponse = await fetch('http://127.0.0.1:8000/api/isVerified/', {
+                    const userResponse = await fetch(process.env.REACT_APP_API_URL + '/api/isVerified/', {
                         method: "GET",
                         headers: {
                             'Authorization': 'Token ' + token,
@@ -39,7 +39,7 @@ const DirectiveRoute = ({ children }) => {
                     setMailVerified(userData.user_is_verified);
 
                     if (userData.user_is_verified) {
-                        const rolesResponse = await fetch('http://127.0.0.1:8000/api/school/myroles/', {
+                        const rolesResponse = await fetch(process.env.REACT_APP_API_URL + '/api/school/myroles/', {
                             method: "GET",
                             headers: {
                                 'Authorization': 'Token ' + token,

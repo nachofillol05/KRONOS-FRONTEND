@@ -57,7 +57,7 @@ const App = ({ children }) => {
     useEffect(() => {
         const fetchRolesAndSchools = async () => {
             try {
-                const response = await fetch('http://127.0.0.1:8000/api/school/myroles/', {
+                const response = await fetch(process.env.REACT_APP_API_URL + '/api/school/myroles/', {
                     method: 'GET',
                     headers: {
                         'Authorization': 'Token ' + token,

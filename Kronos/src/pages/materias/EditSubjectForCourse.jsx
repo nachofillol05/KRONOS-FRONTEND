@@ -15,7 +15,7 @@ export default function EditSubjectForCourse({ recargar,setRecargar,onClose, val
                     weeklyHours: value.horasCatedras,
                 }
                 
-                fetch('http://127.0.0.1:8000/api/coursesubjects/'+values.id+'/', {
+                fetch(process.env.REACT_APP_API_URL + '/api/coursesubjects/'+values.id+'/', {
                     method: 'PUT',
                     headers: {
                         'Authorization': 'Token ' + localStorage.getItem('token'),

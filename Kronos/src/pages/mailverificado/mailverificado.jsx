@@ -11,7 +11,7 @@ const MailVerificado = () => {
   useEffect(() => {
     const verifyEmail = async () => {
       try {
-          const response = await fetch(`process.env.REACT_APP_API_URL/api/verify-email/${token}`, {
+          const response = await fetch(process.env.REACT_APP_API_URL +`/api/verify-email/${token}`, {
               method: 'GET',
           });
           if (response.ok) {
