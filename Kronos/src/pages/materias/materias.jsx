@@ -641,7 +641,7 @@ export default function Materias() {
                         },
                     })}
                     pagination={false}
-                    scroll={{ x: true, y: 700 }}
+                    scroll={{ x: true }}
                     dataSource={materias}
                     columns={columns}
                     tableLayout="fixed"

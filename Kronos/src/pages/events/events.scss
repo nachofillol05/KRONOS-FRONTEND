@@ -1,14 +1,14 @@
 .contenedor-filtros-eventos {
   width: 100%;
-  padding: 16px;
-  margin-bottom: 5px;
+  margin-top: 1.5vh;
 
   .filters-container {
     display: flex;
     gap: 30px;
     overflow-x: auto;
     white-space: nowrap;
-    padding-bottom: 20px; // Incrementa el espacio para despegar la scrollbar
+    padding-bottom: 10px;
+    width: 90%;
 
     // Mostrar scrollbar
     scrollbar-width: thin; // Estilo para navegadores compatibles
@@ -26,7 +26,6 @@
 
     &::-webkit-scrollbar-track {
       background: #f1f1f1; // Color del fondo de la pista
-      margin-top: 5px; // Separa la barra de desplazamiento
     }
 
     & > * {
@@ -81,11 +80,9 @@
 
 @media (max-width: 768px) {
   .contenedor-filtros-eventos {
-    padding: 12px;
 
     .filters-container {
-      margin: 0 -12px;
-      padding: 0 12px 20px; // Asegura que la separación también exista en móviles
+      padding-bottom: 10px;
       -webkit-overflow-scrolling: touch;
     }
   }

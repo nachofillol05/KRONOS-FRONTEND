@@ -538,7 +538,7 @@ export default function Personal() {
         <Spin size="large" />
       </div>
     ) : (
-      <div className="personal-view-container">
+      <>
         {contextHolder}
         <div className="contenedor-filtros contenedor-filtros-personal">
   <Radio.Group 
@@ -607,7 +607,7 @@ export default function Personal() {
               },
             })}
             pagination={false}
-            scroll={{ x: true, y: 700 }}
+            scroll={{ x: true }}
             dataSource={teachers}
             columns={columns}
             tableLayout={'fixed'}
@@ -694,7 +694,7 @@ export default function Personal() {
             tooltip="Descargar tabla" 
           />
         )}
-      </div>
+        </>
     )
   );
 

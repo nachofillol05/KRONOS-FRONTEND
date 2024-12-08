@@ -2,9 +2,6 @@
   display: flex;
   justify-content: flex-start;
   gap: 30px;
-  height: 10vh !important;
-  padding: 0 10px;
-  margin: 10px 0; // Añadido margen superior e inferior
 
   @media (max-width: 768px) {
     gap: 10px;

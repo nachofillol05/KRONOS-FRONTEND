@@ -5,12 +5,14 @@
   justify-content: flex-start;
   gap: 30px;
   flex-wrap: wrap;
+  padding-bottom: 10px;
   
+
+    
   .ant-select, .ant-input-affix-wrapper {
     width: 250px;
   }
   
-  margin-bottom: 20px;
 }
 
 .table-container {
@@ -60,7 +62,6 @@
     flex-wrap: nowrap;
     overflow-x: auto; // Añadido para scroll horizontal
     gap: 10px;
-    padding: 0 15px; // Añadido para dar espacio en los bordes
     
     .ant-select, .ant-input-affix-wrapper {
       width: 250px; // Ancho fijo para permitir scroll
