@@ -24,7 +24,7 @@ export default function InfoWorker({ onClose, handleVolver, handleContactar, use
     const [error,setError]=useState(false);
 
     useEffect(() => {
-        fetch(`http://127.0.0.1:8000/api/rolesUser/${user.id}/`, {
+        fetch(process.env.REACT_APP_API_URL + `/api/rolesUser/${user.id}/`, {
             method: "GET",
             headers: {
                 Authorization: "Token " + localStorage.getItem("token"),

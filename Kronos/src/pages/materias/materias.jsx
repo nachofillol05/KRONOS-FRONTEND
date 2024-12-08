@@ -150,7 +150,7 @@ export default function Materias() {
 
     const deleteCourseSubject = (record) => {
         console.log(record.id);
-        fetch(`http://127.0.0.1:8000/api/coursesubjects/${record.id}/`, {  // Use backticks for interpolation
+        fetch(process.env.REACT_APP_API_URL + `/api/coursesubjects/${record.id}/`, {  // Use backticks for interpolation
             method: 'DELETE',
             headers: {
                 'Authorization': 'Token ' + localStorage.getItem('token'),
