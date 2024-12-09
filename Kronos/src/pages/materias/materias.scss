@@ -1,11 +1,20 @@
 @import '../../scss/index.scss';
 
+
+.contenedor-global {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100%;
+}
+
 .contenedor-filtros-materias {
   display: flex;
   justify-content: flex-start;
   gap: 30px;
   flex-wrap: wrap;
   padding-bottom: 10px;
+  overflow-y: hidden;
   
 
     
@@ -78,11 +87,14 @@
   }
 }
 
-@media (max-width: 600px) and (orientation: landscape) {
+@media (max-height: 600px) and (orientation: landscape) {
   .contenedor-filtros-materias {
     justify-content: flex-start;
     align-items: center;
     overflow-x: auto;
+    height: 10vh !important;
+    gap: 10px;
+    width: 100%;
     
     .ant-select, .ant-input-affix-wrapper {
       width: auto; // Permite que los elementos se ajusten

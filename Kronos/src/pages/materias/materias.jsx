@@ -597,7 +597,7 @@ export default function Materias() {
                 <Spin size="large" />
             </div>
             :
-            <>
+            <div className='contenedor-global'>
                 {contextHolder}
                 <div className="contenedor-filtros contenedor-filtros-materias">
                     {/* 
@@ -708,7 +708,7 @@ export default function Materias() {
                         setSelectedTeacher={setSelectedTeacher}
                         asignarMateria={asignarMateria}
                     />)}
-            </>
+            </div>
         )
     )
 }

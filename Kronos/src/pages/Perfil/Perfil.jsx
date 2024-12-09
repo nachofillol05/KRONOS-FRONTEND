@@ -317,6 +317,38 @@ export default function Profile() {
     formCambio.resetFields();
     
   };
+  const nameRules = [
+    {
+      pattern: /^[a-zA-ZÀ-ÿ\s]+$/g,
+      message: 'Sólo se permiten letras.',
+    },
+    {
+      required: true,
+      message: 'Este campo es obligatorio.',
+    },
+  ];
+  
+  const phoneRules = [
+    {
+      pattern: /^[0-9]+$/g,
+      message: 'Solo se permiten números.',
+    },
+    {
+      required: true,
+      message: 'Este campo es obligatorio.',
+    },
+  ];
+  
+  const postalCodeRules = [
+    {
+      pattern: /^[0-9]+$/g,
+      message: 'Solo se permiten números.',
+    },
+    {
+      required: true,
+      message: 'Este campo es obligatorio.',
+    },
+  ];
 
   // Validar que la nueva contraseña y la confirmación coincidan
   const validateConfirmPassword = ({ getFieldValue }) => ({
@@ -335,480 +367,253 @@ export default function Profile() {
       </div>
       :
       <>
-        <Tabs onChange={() => { setIsEditing(false) }} defaultActiveKey="1" style={{ marginInline: 'auto', marginTop: '50px' }}>
-          <Tabs.TabPane tab="Datos personales" key="1">
-            <Card
-              className='CardProfile'
-              title='Información Personal'
-              extra={
-                <>
-                  {isEditing ? (
-                    <>
-                      <Button
-                        style={{ width: '100px', marginInline: '10px' }}
-                        onClick={CancelarEdit}
-                        danger
-                      >
-                        Cancelar
-                      </Button>
-                      <Button
-                        type="primary"
-                        style={{ width: '100px' }}
-                        onClick={() => form.submit()}
-                      >
-                        Guardar
-                      </Button>
-                    </>
-                  ) : (
-                    <Button
-                      style={{ width: '100px' }}
-                      onClick={toggleEditMode}
-                    >
-                      Editar
-                    </Button>
-                  )}
-                </>
-              }
-
-            >
-              <Form
-                    requiredMark={false}
-                form={form}
-                onFinish={handleFinishUser}
-                style={{ height: '60vh', overflowY: 'auto', padding: '25px' }}
-              >
-                <Flex>
-                  <Form.Item name="profile_picture">
-                    <Flex vertical align='center' justify='space-between' style={{ height: "100%" }} gap={30}>
-                      <label >Foto de perfil:</label>
-
-                      <div style={{ borderRadius: '50%', width: 200, height: 200 }}>
-                        <img
-                          src={profilePicture ? profilePicture : "https://via.placeholder.com/150"}
-                          style={{ objectFit: 'cover', width: '100%', height: '100%', borderRadius: '50%' }}
-                        />
-                      </div>
-                      {isEditing ?
-                        <Upload className='upload-profile' accept=".jpg,.jpeg,.png,.webp" onChange={handleFileChange} maxCount={1}>
-                          <Button icon={<UploadOutlined />}>Subir imagen</Button>
-                        </Upload>
-                        : null}
-                    </Flex>
-                  </Form.Item>
-
-
-
-                  <div
+        <Tabs
+  onChange={() => { setIsEditing(false); }}
+  defaultActiveKey="1"
   style={{
-    marginLeft: 50,
-    width: "100%",
-    display: "grid",
-    gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
-    gap: 30,
+    marginInline: 'auto',
+    marginTop: '50px',
+    display: 'flex',
   }}
 >
-  <Form.Item
-    style={{ width: '275px' }}
-    layout="vertical"
-    label="Nombre"
-    name="first_name"
-    className="formItemProfile"
-    rules={[
-      {
-      pattern: /^[a-zA-ZÀ-ÿ\s]+$/g,        message: 'Sólo se permiten letras.',
-      },
-      {
-        required: true,
-        message: 'Este campo es obligatorio.',
-      },
-    ]}
+          <Tabs.TabPane tab="Datos personales" key="1">
+          <Card
+  className="CardProfile"
+  title={<h2 style={{ textAlign: "center" }}>Información Personal</h2>}
+  extra={
+    <>
+      {isEditing ? (
+        <>
+          <Button
+            style={{ width: "100px", marginInline: "10px" }}
+            onClick={CancelarEdit}
+            danger
+          >
+            Cancelar
+          </Button>
+          <Button
+            type="primary"
+            style={{ width: "100px" }}
+            onClick={() => form.submit()}
+          >
+            Guardar
+          </Button>
+        </>
+      ) : (
+        <Button style={{ width: "100px" }} onClick={toggleEditMode}>
+          Editar
+        </Button>
+      )}
+    </>
+  }
+  style={{
+    maxWidth: "1000px",
+    margin: "auto",
+    boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
+    borderRadius: "10px",
+    overflow: "hidden",
+  }}
+>
+  <Form
+    requiredMark={false}
+    form={form}
+    onFinish={handleFinishUser}
+    style={{ padding: "25px" }}
   >
-    <Input
-      size="large"
-      style={!isEditing ? customDisabledStyle : { height: '40px' }}
-      disabled={!isEditing}
-    />
-  </Form.Item>
+    <Flex
+      style={{
+        gap: "20px",
+        flexWrap: "wrap",
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    >
+      {/* Foto de perfil */}
+      <Form.Item name="profile_picture" style={{ textAlign: "center" }}>
+        <Flex vertical align="center" gap={20}>
+          <label style={{ fontWeight: "bold" }}>Foto de perfil:</label>
+          <div
+            style={{
+              borderRadius: "50%",
+              width: 150,
+              height: 150,
+              overflow: "hidden",
+              border: "2px solid #d9d9d9",
+            }}
+          >
+            <img
+              src={profilePicture || "https://via.placeholder.com/150"}
+              style={{ objectFit: "cover", width: "100%", height: "100%" }}
+            />
+          </div>
+          {isEditing && (
+            <Upload
+              className="upload-profile"
+              accept=".jpg,.jpeg,.png,.webp"
+              onChange={handleFileChange}
+              maxCount={1}
+            >
+              <Button icon={<UploadOutlined />}>Subir imagen</Button>
+            </Upload>
+          )}
+        </Flex>
+      </Form.Item>
 
-  <Form.Item
-    style={{ width: '275px' }}
-    label="Apellido"
-    name="last_name"
-    layout="vertical"
-    className="formItemProfile"
-    rules={[
-      {
-      pattern: /^[a-zA-ZÀ-ÿ\s]+$/g,        message: 'Sólo se permiten letras.',
-      },
-      {
-        required: true,
-        message: 'Este campo es obligatorio.',
-      },
-    ]}
-  >
-    <Input
-      size="large"
-      style={!isEditing ? customDisabledStyle : { height: '40px' }}
-      disabled={!isEditing}
-    />
-  </Form.Item>
-
-  <Form.Item
-    style={{ width: '275px' }}
-    label="Teléfono"
-    name="phone"
-    layout="vertical"
-    className="formItemProfile"
-    rules={[
-      {
-        pattern: /^[0-9]+$/g,
-        message: 'Solo se permiten números.',
-      },
-      {
-        required: true,
-        message: 'Este campo es obligatorio.',
-      },
-    ]}
-  >
-    <Input
-      size="large"
-      type="number"
-      style={!isEditing ? customDisabledStyle : { height: '40px' }}
-      disabled={!isEditing}
-    />
-  </Form.Item>
-  <Form.Item
-                        layout='vertical'
-                        label={tipoDocumento}
-                        style={{ width: '275xp' }}
-                        name='document'
-                        className='formItemProfile'
-                      >
-
-                        <Input
-                          size='large'
-                          style={{ ...customDisabledStyle,}}
-                          disabled={true}
-                        />
-                      </Form.Item>
-  <Form.Item
-    style={{ width: '275px' }}
-    label="Email"
-    name="email"
-    layout="vertical"
-    className="formItemProfile"
-    rules={[
-      {
-        type: 'email',
-        message: 'Ingrese un correo electrónico válido.',
-      },
-      {
-        required: true,
-        message: 'Este campo es obligatorio.',
-      },
-    ]}
-  >
-    <Input
-      size="large"
-      style={{ ...customDisabledStyle }}
-      disabled
-    />
-  </Form.Item>
-
-  <Form.Item
-    style={{ width: '275px' }}
-    label="Género"
-    name="gender"
-    layout="vertical"
-    className="formItemProfile"
-    rules={[
-      {
-        required: true,
-        message: 'Este campo es obligatorio.',
-      },
-    ]}
-  >
-    {isEditing ? (
-      <Select style={{ height: '40px' }} options={generos} size="large" />
-    ) : (
-      <Input
-        size="large"
-        style={!isEditing ? customDisabledStyle : { height: '40px' }}
-        disabled={!isEditing}
-      />
-    )}
-  </Form.Item>
-
-  <Form.Item
-    style={{ width: '275px' }}
-    label="Nacionalidad"
-    name="nationality"
-    layout="vertical"
-    className="formItemProfile"
-    rules={[
-      {
-        required: true,
-        message: 'Este campo es obligatorio.',
-      },
-    ]}
-  >
-    {isEditing ? (
-      <Select style={{ height: '40px' }} options={nationalities} size="large" />
-    ) : (
-      <Input
-        size="large"
-        style={!isEditing ? customDisabledStyle : { height: '40px' }}
-        disabled={!isEditing}
-      />
-    )}
-  </Form.Item>
-
-  <Form.Item
-    style={{ width: '275px' }}
-    label="Provincia"
-    name="province"
-    layout="vertical"
-    className="formItemProfile"
-    rules={[
-      {
-      pattern: /^[a-zA-ZÀ-ÿ\s]+$/g,        message: 'Sólo se permiten letras.',
-      },
-      {
-        required: true,
-        message: 'Este campo es obligatorio.',
-      },
-    ]}
-  >
-    <Input
-      size="large"
-      style={!isEditing ? customDisabledStyle : { height: '40px' }}
-      disabled={!isEditing}
-    />
-  </Form.Item>
-
-  <Form.Item
-    style={{ width: '275px' }}
-    label="Ciudad"
-    name="city"
-    layout="vertical"
-    className="formItemProfile"
-    rules={[
-      {
-      pattern: /^[a-zA-ZÀ-ÿ\s]+$/g,        message: 'Sólo se permiten letras.',
-      },
-      {
-        required: true,
-        message: 'Este campo es obligatorio.',
-      },
-    ]}
-  >
-    <Input
-      size="large"
-      style={!isEditing ? customDisabledStyle : { height: '40px' }}
-      disabled={!isEditing}
-    />
-  </Form.Item>
-  <Space.Compact>
-                      <Form.Item
-                        style={{ width: '275xp' }}
-                        label="Calle"
-                        name="street"
-                        layout='vertical'
-                        className="formItemProfile"
-                        rules={[
-                          {
-                          pattern: /^[a-zA-ZÀ-ÿ\s]+$/g,                            message: 'Sólo se permiten letras.',
-                          },
-                          {
-                            required: true,
-                            message: 'Este campo es obligatorio.',
-                          },
-                        ]}
-                        >
-                        <Input
-                          size='large'
-                          style={!isEditing ? customDisabledStyle : {}}
-                          disabled={!isEditing}
-                        />
-                      </Form.Item>
-                      <Form.Item
-                        label=" "
-                        style={{ width: 100 }}
-                        name="streetNumber"
-                        layout='vertical'
-                        className="formItemProfile"
-                        rules={[
-                          {
-                            required: true,
-                            message: 'Este campo es obligatorio.',
-                          },
-                        ]}
-                        >
-                        <Input
-                          size='large'
-                          type="number"
-                          style={!isEditing ? customDisabledStyle : {}}
-                          disabled={!isEditing}
-                        />
-                      </Form.Item>
-
-                    </Space.Compact>
-
-  <Form.Item
-    style={{ width: '275px' }}
-    label="Código postal"
-    name="postalCode"
-    layout="vertical"
-    className="formItemProfile"
-    rules={[
-      {
-        pattern: /^[0-9]+$/g,
-        message: 'Solo se permiten números.',
-      },
-      {
-        required: true,
-        message: 'Este campo es obligatorio.',
-      },
-    ]}
-  >
-    <Input
-      size="large"
-      type="number"
-      style={!isEditing ? customDisabledStyle : {}}
-      disabled={!isEditing}
-    />
-  </Form.Item>
-</div>
-
-                </Flex>
-
-
-
-              </Form>
-            </Card>
+      {/* Formulario en formato de cuadrícula */}
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))",
+          gap: "20px",
+          width: "100%",
+        }}
+      >
+        {/* Campos del formulario */}
+        {[
+          { label: "Nombre", name: "first_name", rules: nameRules },
+          { label: "Apellido", name: "last_name", rules: nameRules },
+          { label: "Teléfono", name: "phone", rules: phoneRules },
+          { label: tipoDocumento, name: "document", disabled: true },
+          { label: "Email", name: "email", disabled: true },
+          { label: "Género", name: "gender", type: "select", options: generos },
+          { label: "Nacionalidad", name: "nationality", type: "select", options: nationalities },
+          { label: "Provincia", name: "province", rules: nameRules },
+          { label: "Ciudad", name: "city", rules: nameRules },
+          { label: "Calle", name: "street", rules: nameRules },
+          { label: "Número", name: "streetNumber", type: "number" },
+          { label: "Código Postal", name: "postalCode", type: "number", rules: postalCodeRules },
+        ].map(({ label, name, rules, type, disabled, options }) => (
+          <Form.Item
+            key={name}
+            label={label}
+            name={name}
+            rules={rules || []}
+            style={{ marginBottom: "10px" }}
+          >
+            {type === "select" && isEditing ? (
+              <Select
+                size="large"
+                options={options}
+              />
+            ) : (
+              <Input
+                size="large"
+                type={type || "text"}
+                style={{
+                  ...(!isEditing || disabled ? customDisabledStyle : {}),
+                }}
+                disabled={!isEditing || disabled}
+              />
+            )}
+          </Form.Item>
+        ))}
+      </div>
+    </Flex>
+  </Form>
+</Card>
           </Tabs.TabPane>
           <Tabs.TabPane tab="Datos del colegio" key="2">
             <Card
-              className='CardProfile'
-              title='Información del Colegio'
+  className="CardProfile"
+  title={<h2 style={{ textAlign: "center" }}>Información del Colegio</h2>}
+  style={{
+    maxWidth: "1000px",
+    margin: "auto",
+    boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
+    borderRadius: "10px",
+    overflow: "hidden",
+  }}
+>
+  <Form requiredMark={false} form={formSchool}  style={{ padding: "25px" }}>
+    <Flex
+      style={{
+        gap: "20px",
+        flexWrap: "wrap",
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    >
+      {/* Foto del colegio */}
+      <Form.Item name="school_picture" style={{ textAlign: "center" }}>
+        <Flex vertical align="center" gap={20}>
+          <label style={{ fontWeight: "bold" }}>Logo del Colegio:</label>
+          <div
+            style={{
+              borderRadius: "50%",
+              width: 150,
+              height: 150,
+              overflow: "hidden",
+              border: "2px solid #d9d9d9",
+            }}
+          >
+            <img
+              src={escuelaCompleta || "https://via.placeholder.com/150"}
+              style={{
+                objectFit: "cover",
+                width: "100%",
+                height: "100%",
+              }}
+            />
+          </div>
+          {isEditing && (
+            <Upload
+              className="upload-profile"
+              accept=".jpg,.jpeg,.png,.webp"
+              onChange={handleFileChange}
+              maxCount={1}
             >
-              <Form
-                form={formSchool}
-                layout="vertical"
-                style={{ height: '60vh', overflowY: 'auto', padding: '25px' }}
+              <Button icon={<UploadOutlined />}>Subir Imagen</Button>
+            </Upload>
+          )}
+        </Flex>
+      </Form.Item>
 
-              >
-                <Flex align='center'>
-                  <Form.Item name="school_picture">
-                    <Flex vertical align='center' justify='space-between' style={{ height: "100%" }} gap={30}>
-                      <label >Logo del colegio:</label>
-                      <div style={{ borderRadius: '50%', width: 200, height: 200 }}>
-                        <img
-                          src={escuelaCompleta || "https://via.placeholder.com/150"}
-                          style={{ objectFit: 'cover', width: '100%', height: '100%', borderRadius: '50%' }}
-                        />
-                      </div>
-                      {isEditing ?
-                        <Upload openFileDialogOnClick={false} className='upload-profile' accept=".jpg,.jpeg,.png,.webp" onChange={handleFileChange} maxCount={1}>
-                          <Button
-                            icon={<UploadOutlined />}>
-                            Subir imagen
-                          </Button>
-                        </Upload> : null}
-                    </Flex>
-                  </Form.Item>
+      {/* Campos del formulario */}
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))",
+          gap: "20px",
+          width: "100%",
+        }}
+      >
+        {[
+          { label: "Nombre", name: "name", rules: nameRules },
+          { label: "Abreviación", name: "abreviacion" },
+          { label: "Email", name: "email", disabled: true },
+          { label: "Calle", name: "street" },
+          { label: "Número", name: "streetNumber", type: "number" },
+          { label: "Código Postal", name: "postalCode" },
+        ].map(({ label, name, rules, type, disabled }) => (
+          <Form.Item
+            key={name}
+            label={label}
+            name={name}
+            rules={rules || []}
+            style={{ marginBottom: "10px" }}
+          >
+            {type === "select" ? (
+              <Select
+                size="large"
+                style={(!isEditing || disabled ? customDisabledStyle : {})}
+                disabled={!isEditing || disabled}
+                options={[]}
+              />
+            ) : (
+              <Input
+                size="large"
+                type={type || "text"}
+                style={(!isEditing || disabled ? customDisabledStyle : {})}
+                disabled={!isEditing || disabled}
+              />
+            )}
+          </Form.Item>
+        ))}
+      </div>
+    </Flex>
+  </Form>
+</Card>
 
-                  <div
-                    style={{
-                      marginLeft: 50,
-                      width: "100%",
-                      display: "grid",
-                      gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
-                      gap: 30,
-                    }}
-                  >
-                    <Form.Item
-                      style={{ width: '275xp' }}
-                      layout='vertical'
-                      label="Nombre"
-                      name="name"
-                      className="formItemProfile" >
-                      <Input
-                        size='large'
-                        style={!isEditing ? customDisabledStyle : { height: '40px' }}
-                        disabled={true}
-                      />
-                    </Form.Item>
-                    <Form.Item
-                      label="Abreviacion"
-                      style={{ width: '275xp' }}
-                      name="abreviacion"
-                      layout='vertical'
-                      className="formItemProfile">
-                      <Input
-                        size='large'
-                        autoSize
-                        style={!isEditing ? customDisabledStyle : { flexGrow: 1, height: '40px' }}
-                        disabled={!isEditing}
-                      />
-                    </Form.Item>
-                    <Form.Item
-                      label="Email"
-                      name="email"
-                      layout='vertical'
-                      style={{ width: '275xp' }}
-                      className="formItemProfile">
-                      <Input
-                        size='large'
-                        autoSize
-                        style={!isEditing ? customDisabledStyle : { height: '40px' }}
-                        disabled={true}
-                      />
-                    </Form.Item>
-                    <Space.Compact>
-                      <Form.Item
-                        style={{ width: 'fit-content' }}
-                        label="Calle"
-                        name="street"
-                        layout='vertical'
-                        className="formItemProfile">
-                        <Input
-                          size='large'
-                          style={!isEditing ? customDisabledStyle : {}}
-                          disabled={!isEditing}
-                        />
-                      </Form.Item>
-                      <Form.Item
-                        label="Numero"
-                        style={{ width: 100 }}
-                        name="streetNumber"
-                        layout='vertical'
-                        className="formItemProfile">
-                        <Input
-                          size='large'
-                          type="number"
-                          style={!isEditing ? customDisabledStyle : {}}
-                          disabled={!isEditing}
-                        />
-                      </Form.Item>
-
-                    </Space.Compact>
-                    <Form.Item
-                      style={{ width: '275xp' }}
-                      label="Código postal"
-                      name="postalCode"
-                      layout='vertical'
-                      className="formItemProfile">
-                      <Input
-                        size='large'
-                        style={!isEditing ? customDisabledStyle : {}}
-                        disabled={!isEditing}
-                      />
-                    </Form.Item>
-                  </div>
-                </Flex>
-              </Form>
-            </Card>
           </Tabs.TabPane>
 
         </Tabs >

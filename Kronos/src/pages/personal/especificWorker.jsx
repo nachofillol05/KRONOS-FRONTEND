@@ -10,6 +10,10 @@ import {
   message,
   Spin,
   List,
+  Card,
+  Typography,
+  Avatar
+
 } from "antd";
 import {
   RollbackOutlined,
@@ -17,6 +21,8 @@ import {
   MailOutlined,
 } from "@ant-design/icons";
 import "./personal.scss";
+
+const { Text, Title } = Typography;
 
 export default function Especificworker({
   handleVolverInfo,
@@ -93,51 +99,81 @@ export default function Especificworker({
 
   return (
     <Spin spinning={loading} tip="Mandando mail de recordatorio...">
-      <Flex vertical gap={10}>
-        <Flex align="center" gap={30} style={{ width: "70%", height: "50px" }}>
-          <label>Foto de perfil:</label>
-          <div style={{ borderRadius: "50%", width: 50, height: 50 }}>
-            <img
-              src={
-                worker.profile_picture
-                  ? worker.profile_picture
-                  : "https://via.placeholder.com/150"
-              }
-              style={{
-                objectFit: "cover",
-                width: "100%",
-                height: "100%",
-                borderRadius: "50%",
-              }}
-            />
-          </div>
-        </Flex>
-        <Flex gap={30}>
-          <label>
-            Nombre: {worker?.first_name} {worker?.last_name}
-          </label>
-          <label>
-            Documento: {worker?.documentType?.name}, {worker?.document}
-          </label>
-        </Flex>
-        <Flex gap={30}>
-          <label>Telefono: {worker?.email}</label>
-          <label>Email: {worker?.email}</label>
-        </Flex>
-        <Flex gap={30}>
-          <label>Genero: {worker?.gender}</label>
-          <label>Nacionalidad: {worker?.nationality?.name}</label>
-        </Flex>
-        <Flex gap={30}>
-          <label>Provincia: {worker?.contactInfo?.province}</label>
-          <label>Ciudad: {worker?.contactInfo?.city}</label>
-        </Flex>
-        <Flex gap={30}>
-          <label>Calle: {worker?.contactInfo?.street}</label>
-          <label>Numero: {worker?.contactInfo?.streetNumber}</label>
-          <label>Codigo postal: {worker?.contactInfo?.postalCode}</label>
-        </Flex>
-      </Flex>
+      <Card
+      title={<Title level={5}>Perfil del Trabajador</Title>}
+      bordered
+      style={{ maxWidth: 600, margin: "0 auto", borderRadius: 8 }}
+    >
+      <Row gutter={[16, 16]} align="middle">
+        {/* Foto de perfil */}
+        <Col span={24} style={{ textAlign: "center" }}>
+          <Avatar
+            size={100}
+            src={
+              worker.profile_picture
+                ? worker.profile_picture
+                : "https://via.placeholder.com/150"
+            }
+          />
+        </Col>
+      </Row>
+      <Divider />
+
+      {/* Información Personal */}
+      <Row gutter={[16, 8]}>
+        <Col span={12}>
+          <Text strong>Nombre:</Text> {worker?.first_name} {worker?.last_name}
+        </Col>
+        <Col span={12}>
+          <Text strong>{worker?.documentType?.name}: </Text>
+            {worker?.document}
+        </Col>
+      </Row>
+
+      <Divider />
+
+      {/* Contacto */}
+      <Row gutter={[16, 8]}>
+        <Col span={12}>
+          <Text strong>Teléfono:</Text> {worker?.phone}
+        </Col>
+        <Col span={12}>
+          <Text strong>Email:</Text> {worker?.email}
+        </Col>
+      </Row>
+
+      <Divider />
+
+      {/* Información Adicional */}
+      <Row gutter={[16, 8]}>
+        <Col span={12}>
+          <Text strong>Género:</Text> {worker?.gender}
+        </Col>
+        <Col span={12}>
+          <Text strong>Nacionalidad:</Text> {worker?.nationality?.name}
+        </Col>
+      </Row>
+
+      <Divider />
+
+      {/* Dirección */}
+      <Row gutter={[16, 8]}>
+        <Col span={12}>
+          <Text strong>Provincia:</Text> {worker?.contactInfo?.province}
+        </Col>
+        <Col span={12}>
+          <Text strong>Ciudad:</Text> {worker?.contactInfo?.city}
+        </Col>
+      </Row>
+      <Row gutter={[16, 8]}>
+        <Col span={12}>
+          <Text strong>Dirección:</Text> {worker?.contactInfo?.street} {worker?.contactInfo?.streetNumber}
+        </Col>
+        <Col span={6}>
+          <Text strong>Código postal:</Text> {worker?.contactInfo?.postalCode}
+        </Col>
+      </Row>
+    </Card>
       {rolSeleccionado === "Profesores" && (
         <>
           <Divider orientation="left">Disponiblidad horaria</Divider>

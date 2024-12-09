@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Flex, List, Divider, Tooltip, Modal, Checkbox, Skeleton,message, Card, Typography,Row,Col,Avatar } from 'antd';
+import { Button, Flex, List, Divider, Tooltip, Modal, Checkbox, Skeleton,message,Avatar,Space,Typography } from 'antd';
 import { RollbackOutlined, PlusOutlined, MailOutlined, ControlOutlined } from '@ant-design/icons';
 import FilterDropdownPersonalizado from '../../components/filterDropTable/FilterDropPersonalizado';
 
@@ -220,59 +220,74 @@ export default function InfoWorker({ onClose, handleVolver, handleContactar, use
     return (
         <Skeleton loading={isSkeleton} active>
             <Flex vertical gap={10}>
-            <Card
-                title={<Title level={5}>Perfil del Usuario</Title>}
-                bordered
-                style={{ maxWidth: 600, margin: "0 auto", borderRadius: 8 }}
-                >
-                {/* Foto de perfil */}
-                <Col style={{ textAlign: "center" }}>
-                <Avatar
-                    size={100}
-                    src={
-                    user.profile_picture
-                        ? user.profile_picture
-                        : "https://via.placeholder.com/150"
-                    }
-                />
-                </Col>
-                <Divider />
+                <Space direction="vertical" size="middle" style={{ width: '100%' }}>
+                    {/* Foto de perfil */}
+                    <Space align="center">
+                    <Text strong>Foto de perfil:</Text>
+                    <Avatar
+                        size={64}
+                        src={
+                        user.profile_picture
+                            ? user.profile_picture
+                            : "https://via.placeholder.com/150"
+                        }
+                    />
+                    </Space>
 
-                {/* Nombre y Documento */}
-                <Row gutter={[16, 8]}>
-                    <Col span={12}>
-                    <Text strong>Nombre:</Text> {user.first_name} {user.last_name}
-                    </Col>
-                    <Col span={12}>
-                    <Text strong>{user?.documentType?.name}:</Text> {user.document}
-                    </Col>
-                </Row>
+                    <Divider />
 
-                <Divider />
-
-                {/* Contacto */}
-                <Row gutter={[16, 8]}>
-                    <Col span={12}>
-                    <Text strong>Teléfono:</Text> {user?.phone}
-                    </Col>
-                    <Col span={12}>
-                    <Text strong>Email:</Text> {user?.email}
-                    </Col>
-                </Row>
-
-                <Divider />
-
-                {/* Roles */}
-                <Row>
-                    <Col span={24}>
-                    <Text strong>
-                        {roles.length !== 0
-                        ? `Roles: ${roles.join(", ")}`
-                        : "No pertenece a esta escuela"}
+                    {/* Información básica */}
+                    <Space direction="vertical" size="small">
+                    <Text>
+                        <strong>Nombre:</strong> {user.first_name} {user.last_name}
                     </Text>
-                    </Col>
-                </Row>
-                </Card>
+                    <Text>
+                        <strong>{user?.documentType?.name}:</strong> {user.document}
+                    </Text>
+                    </Space>
+
+                    <Divider />
+
+                    {/* Contacto */}
+                    <Space direction="vertical" size="small">
+                    <Text>
+                        <strong>Teléfono:</strong> {user.phone}
+                    </Text>
+                    <Text>
+                        <strong>Email:</strong> {user.email}
+                    </Text>
+                    </Space>
+
+                    <Divider />
+
+                    {/* Información adicional */}
+                    <Space direction="vertical" size="small">
+                    <Text>
+                        <strong>Género:</strong> {user.gender}
+                    </Text>
+                    <Text>
+                        <strong>Nacionalidad:</strong> {user.nationality}
+                    </Text>
+                    <Text>
+                        <strong>Provincia:</strong> {user.province}
+                    </Text>
+                    <Text>
+                        <strong>Ciudad:</strong> {user.city}
+                    </Text>
+                    <Text>
+                        <strong>Dirección:</strong> {user.address}, Número: {user.number},{" "}
+                        Código Postal: {user.zip_code}
+                    </Text>
+                    </Space>
+
+                    <Divider />
+
+                    {/* Roles */}
+                    <Text>
+                    <strong>Roles:</strong>{" "}
+                    {roles.length !== 0 ? roles.join(", ") : "No pertenece a esta escuela"}
+                    </Text>
+                </Space>
                 {roles.includes('Profesor') && data.length!== 0 && (
                     <>
                         <Divider orientation='left'>Asignaturas</Divider>
